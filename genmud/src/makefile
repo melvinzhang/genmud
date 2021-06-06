@@ -20,7 +20,7 @@ OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 
 CC = gcc
 
-CFLAGS = -c -g -Wall -pedantic
+CFLAGS = -c -O2 -Wall -pedantic
 
 LFLAGS = -lpthread -lcrypt
 

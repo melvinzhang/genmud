@@ -1577,31 +1577,32 @@ update_alignment_resources (void)
       
     }
   
-  
 
 
   /* Loop through alignments and get their total pops and power
      from the societies they "represent". Then collect "taxes"
      on raw materials and dole them out to those who need them. */
   
-  for (align_num = 1; align_num < ALIGN_MAX; align_num++)
+  for (align_num = 0; align_num < ALIGN_MAX; align_num++)
     {
       if ((align = align_info[align_num]) == NULL)
 	continue;
-      num_aligns++;
-      
-      /* Update relics in the relic room. */
-      
-      align->relic_amt = 0;
-      if ((relic_room = find_thing_num (align->relic_ascend_room)) != NULL &&
-	  IS_ROOM (relic_room))
+      if (align_num > 0)
 	{
-	  for (relic = relic_room->cont; relic; relic = relic->next_cont)
-	    if (relic->vnum == RELIC_VNUM)
-	      align->relic_amt++;
+	  num_aligns++;
+	  
+	  /* Update relics in the relic room. */
+	  
+	  align->relic_amt = 0;
+	  if ((relic_room = find_thing_num (align->relic_ascend_room)) != NULL &&
+	      IS_ROOM (relic_room))
+	    {
+	      for (relic = relic_room->cont; relic; relic = relic->next_cont)
+		if (relic->vnum == RELIC_VNUM)
+		  align->relic_amt++;
+	    }
+	  
 	}
-      
-      
       align->population = 0;
       align->power = 0;
       align->num_societies = 0;
@@ -1613,7 +1614,7 @@ update_alignment_resources (void)
       
       for (i = 0; i < RAW_MAX; i++)
 	align->raw_want[i] = 0;
-
+      
       for (society = society_list; society; society = society->next)
 	{
 	  if (society->align != align->vnum)
@@ -1624,7 +1625,9 @@ update_alignment_resources (void)
 	  align->power += society->power;
 	  align->warriors += society->warriors;
 	  
-	
+	  if (align_num == 0)
+	    continue;
+	  
 	  for (i = 0; i < RAW_MAX; i++)
 	    { 
 	      /* Find raw materials needed. If the society needs something,
@@ -1668,6 +1671,10 @@ update_alignment_resources (void)
       total_power += align->power;
       total_population += align->population;
       total_warriors += align->warriors;
+      
+      /* Align 0 doesn't do the tax thing. */
+      if (align_num == 0)
+	continue;
       
       /* Now the taxes are collected and the needs are found. See if
 	 we have enough resources to dole out to everyone who
@@ -1795,18 +1802,21 @@ update_alignment_resources (void)
 	 set as a desperation measure to keep up with the rest of
 	 the world. */
       
-      for (align_num = 1; align_num < ALIGN_MAX; align_num++)
+      for (align_num = 0; align_num < ALIGN_MAX; align_num++)
 	{
 	  if ((align = align_info[align_num]) == NULL)
 	    continue;
 	  
 	  align->pop_pct = (100*align->population) /
-	    (total_population*num_aligns);
+	    (total_population);
 	  align->power_pct = (100*align->power)/
-	    (total_power*num_aligns);
+	    (total_power);
 	  align->warrior_pct = (100*align->warriors)/
-	    (total_warriors*num_aligns);
+	    (total_warriors);
 	  align->ave_pct = (align->pop_pct + align->power_pct + align->warrior_pct)/3;
+	  
+	  if (align_num == 0)
+	    continue;
 	  
 	  if (align->ave_pct < 20) /* In 1 on 1 aligns...this is 10:1 advantage. */
 	    {
@@ -1916,10 +1926,10 @@ help_societies_under_siege(void)
 	  for (ok_society = society_list; ok_society; ok_society = ok_society->next)
 	    {
 	      if (ok_society->align != align->vnum ||
-		  ok_society->population < 40 ||
+		  ok_society->population < 100 ||
 		  ok_society->alert >= ok_society->population/3 ||
 		  nr (1, num_hurt_society) != 1 ||
-		  nr (1,5) != 2)
+		  nr (1,2) != 2)
 		continue;
 	      
 	      update_raiding (ok_society, hurt_society->vnum);

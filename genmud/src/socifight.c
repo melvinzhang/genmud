@@ -187,7 +187,10 @@ society_get_killed (THING *killer, THING *vict)
 	  if ((raw_needed = raw_needed_by_society (ksoc)) > RAW_NONE &&
 	      raw_needed < RAW_MAX)
 	    {
-	      ksoc->raw_curr[raw_needed] += nr (LEVEL (vict)/2, LEVEL(vict));
+	      if (ksoc->raw_curr[raw_needed] < RAW_TAX_AMOUNT)
+		ksoc->raw_curr[raw_needed] += nr (LEVEL(vict)/2, LEVEL(vict));
+	      else
+		ksoc->raw_curr[raw_needed] += 2;
 	    }	  	  
 	  /* Add small morale for killing an enemy. */
 	  add_morale (ksoc, LEVEL(vict)/5);

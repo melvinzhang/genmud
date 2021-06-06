@@ -413,7 +413,7 @@ do_rumors (THING *th, char *arg)
 {
   RUMOR *rumor;
   char buf[STD_LEN];
-  
+  int rumor_type = RUMOR_TYPE_MAX;
   bigbuf[0] = '\0';
   if (!th || !th->in || !IS_PC (th))
     return;
@@ -424,6 +424,15 @@ do_rumors (THING *th, char *arg)
       return;
     }
   
+  if (arg && *arg)
+    {
+      for (rumor_type =0 ; rumor_type < RUMOR_TYPE_MAX; rumor_type++)
+	{
+	  if (!str_prefix (arg, rumor_names[rumor_type]))
+	    break;
+	}
+    }
+			   
   sprintf (buf, "Bottom rumor: %d Top rumor: %d\n\n\n\r",
 	   bottom_rumor, top_rumor);
   add_to_bigbuf (buf);
@@ -431,7 +440,9 @@ do_rumors (THING *th, char *arg)
   for (rumor = rumor_list; rumor; rumor = rumor->next)
     {
       if (rumor->type < 0 || rumor->type >= RUMOR_TYPE_MAX || 
-	  rumor->hours < 0)
+	  rumor->hours < 0 ||
+	  /* See rumors by type. */
+	  (rumor_type < RUMOR_TYPE_MAX && rumor->type != rumor_type))
 	continue;
       
       /* A society activity must initiate the rumor... (this will be expanded

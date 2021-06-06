@@ -3,10 +3,10 @@ Name castegen.are`
 HpMv 0 10 5 100
 HWT 0 0
 Cost 100
-Timer 1
+Timer 4
 Short Caste Tier Names`
 type Lonath`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 28
 END_THING
 

@@ -2,10 +2,10 @@ THING 105200
 Name mobgen.are`
 HpMv 0 10 5 700
 HWT 0 0
-Timer 10
+Timer 4
 Short Mob Generators`
 type Lonath`
-ThFl 135307259
+ThFl 1089531
 Flag Area 0 0 28
 END_THING
 
@@ -39,17 +39,17 @@ HWT 8 30
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 921600
-EDESC armor`
-chitin shell
-`
-EDESC kname`
-ant termite
+EDESC klong`
+giant small large
 `
 EDESC kshort`
 red fire black brown gray
 `
-EDESC klong`
-giant small large
+EDESC kname`
+ant termite
+`
+EDESC armor`
+chitin shell
 `
 END_THING
 
@@ -61,20 +61,20 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 2035712
 Flag Aff 0 0 524288
-EDESC jewelry`
-head claw
-`
-EDESC armor`
-wing skin hide
-`
-EDESC klong`
-Furry fuzzy small giant
+EDESC kname`
+bat
 `
 EDESC kshort`
 black brown red tan white
 `
-EDESC kname`
-bat
+EDESC klong`
+Furry fuzzy small giant
+`
+EDESC armor`
+wing skin hide
+`
+EDESC jewelry`
+head claw
 `
 END_THING
 
@@ -85,20 +85,14 @@ HWT 5 40
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 458752
-EDESC jewelry`
-bone
-`
-EDESC armor`
-fur hide skin pelt
-`
-EDESC klong`
-fuzzy furry chittering
+EDESC kname`
+chipmunk squirrel
 `
 EDESC kshort`
 brown black gray white
 `
-EDESC kname`
-chipmunk squirrel
+EDESC klong`
+fuzzy furry chittering
 `
 END_THING
 
@@ -109,20 +103,20 @@ HWT 5 40
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 2031616
-EDESC jewelry`
-foot bone
-`
-EDESC armor`
-hide skin pelt fur
-`
-EDESC klong`
-Small large furry fuzzy sniffing playful bushy-tailed
+EDESC kname`
+hare rabbit jackrabbit bunny
 `
 EDESC kshort`
 white brown black gray mottled
 `
-EDESC kname`
-hare rabbit jackrabbit bunny
+EDESC klong`
+Small large furry fuzzy sniffing playful bushy-tailed
+`
+EDESC armor`
+hide skin pelt fur
+`
+EDESC jewelry`
+foot bone
 `
 END_THING
 
@@ -133,23 +127,23 @@ HWT 10 100
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 983040
-EDESC weapon`
-bone
-`
-EDESC jewelry`
-bone claw tooth
-`
-EDESC armor`
-hide pelt skin fur
-`
-EDESC klong`
-Bushy-tailed furry sniffing
+EDESC kname`
+jackal fox coyote wolverine hyena 
 `
 EDESC kshort`
 red brown white gray black arctic mottled spotted
 `
-EDESC kname`
-jackal fox coyote wolverine hyena 
+EDESC klong`
+Bushy-tailed furry sniffing
+`
+EDESC armor`
+hide pelt skin fur
+`
+EDESC jewelry`
+bone claw tooth
+`
+EDESC weapon`
+bone
 `
 END_THING
 
@@ -160,17 +154,17 @@ HWT 12 100
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 462848
-EDESC armor`
-fur hide skin pelt
-`
-EDESC klong`
-Big fat waddling large smelly
+EDESC kname`
+groundhog hedgehog opossum badger mole raccoon
 `
 EDESC kshort`
 brown white gray 
 `
-EDESC kname`
-groundhog hedgehog opossum badger mole raccoon
+EDESC klong`
+Big fat waddling large smelly
+`
+EDESC armor`
+fur hide skin pelt
 `
 END_THING
 
@@ -182,23 +176,23 @@ Sex 2
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 458752
-EDESC weapon`
-antler bone
-`
-EDESC jewelry`
-bone tooth
-`
-EDESC armor`
-pelt skin hide fur
-`
-EDESC klong`
-Proud strutting eating observant
+EDESC kname`
+elk moose deer buck reindeer antelope caribou
 `
 EDESC kshort`
 brown white 
 `
-EDESC kname`
-elk moose deer buck reindeer antelope caribou
+EDESC klong`
+Proud strutting eating observant
+`
+EDESC armor`
+pelt skin hide fur
+`
+EDESC jewelry`
+bone tooth
+`
+EDESC weapon`
+antler bone
 `
 END_THING
 
@@ -210,17 +204,17 @@ Sex 1
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 458752
-EDESC armor`
-hide pelt skin fur
-`
-EDESC klong`
-Proud strutting eating observant
+EDESC kname`
+doe
 `
 EDESC kshort`
 white brown 
 `
-EDESC kname`
-doe
+EDESC klong`
+Proud strutting eating observant
+`
+EDESC armor`
+hide pelt skin fur
 `
 END_THING
 
@@ -232,20 +226,20 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 peck`
 Flag Aff 0 0 524288
 Flag Room 0 0 2031616
-EDESC weapon`
-claw talon
-`
-EDESC jewelry`
-bone claw feather talon
-`
-EDESC armor`
-feather
+EDESC kname`
+hawk eagle falcon raven
 `
 EDESC kshort`
 white brown golden black gray
 `
-EDESC kname`
-hawk eagle falcon raven
+EDESC armor`
+feather
+`
+EDESC jewelry`
+bone claw feather talon
+`
+EDESC weapon`
+claw talon
 `
 END_THING
 
@@ -256,14 +250,14 @@ HWT 6 30
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 458752
-EDESC klong`
-sleek
+EDESC kname`
+crow
 `
 EDESC kshort`
 black
 `
-EDESC kname`
-crow
+EDESC klong`
+sleek
 `
 END_THING
 
@@ -274,17 +268,17 @@ HWT 5 40
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 1445888
-EDESC armor`
-skin
-`
-EDESC klong`
-Skinny fat large small croaking
+EDESC kname`
+frog bullfrog toad
 `
 EDESC kshort`
 green brown gray mottled spotted cave
 `
-EDESC kname`
-frog bullfrog toad
+EDESC klong`
+Skinny fat large small croaking
+`
+EDESC armor`
+skin
 `
 END_THING
 
@@ -295,17 +289,17 @@ HWT 15 50
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 1966080
-EDESC armor`
-skin
-`
-EDESC klong`
-Spotted speckled slithering scaly large small
+EDESC kname`
+salamander
 `
 EDESC kshort`
 red green yellow white black gray mottled orange
 `
-EDESC kname`
-salamander
+EDESC klong`
+Spotted speckled slithering scaly large small
+`
+EDESC armor`
+skin
 `
 END_THING
 
@@ -316,17 +310,17 @@ HWT 10 70
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 1572864
-EDESC armor`
-skin
-`
-EDESC klong`
-Spotted speckled scaly giant large small
+EDESC kname`
+lizard
 `
 EDESC kshort`
 red green yellow brown black gray mottlled orange
 `
-EDESC kname`
-lizard
+EDESC klong`
+Spotted speckled scaly giant large small
+`
+EDESC armor`
+skin
 `
 END_THING
 
@@ -338,17 +332,17 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 sting`
 Flag Room 0 0 2035712
 Flag Aff 0 0 524288
-EDESC weapon`
-stinger sting
-`
-EDESC klong`
-Angry swarming buzzing humming
+EDESC kname`
+bee bumblebee wasp hornet
 `
 EDESC kshort`
 yellow black brown
 `
-EDESC kname`
-bee bumblebee wasp hornet
+EDESC klong`
+Angry swarming buzzing humming
+`
+EDESC weapon`
+stinger sting
 `
 END_THING
 
@@ -359,24 +353,24 @@ HWT 25 1200
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 2031616
-EDESC weapon`
-fang claw tooth
-`
-EDESC jewelry`
-bone tooth fang claw
-`
-EDESC armor`
-hide fur skin pelt
-`
-EDESC klong`
-Sniffing alert curious growling
+EDESC kname`
+wolf warg wolfling
+wolfen
 `
 EDESC kshort`
 gray black brown white arctic mottled
 `
-EDESC kname`
-wolf warg wolfling
-wolfen
+EDESC klong`
+Sniffing alert curious growling
+`
+EDESC armor`
+hide fur skin pelt
+`
+EDESC jewelry`
+bone tooth fang claw
+`
+EDESC weapon`
+fang claw tooth
 `
 END_THING
 
@@ -388,23 +382,23 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 claw claw bite`
 Flag Room 0 0 1507328
 Flag Act 0 0 512
-EDESC jewelry`
-tusk bone tooth
-`
-EDESC weapon`
-tusk fang
-`
-EDESC armor`
-hide fur skin
-`
-EDESC klong`
-Snorting growling sniffing scraping tusked  large wild untamed
+EDESC kname`
+boar pig
 `
 EDESC kshort`
 red brown arctic mottled gray
 `
-EDESC kname`
-boar pig
+EDESC klong`
+Snorting growling sniffing scraping tusked  large wild untamed
+`
+EDESC armor`
+hide fur skin
+`
+EDESC weapon`
+tusk fang
+`
+EDESC jewelry`
+tusk bone tooth
 `
 END_THING
 
@@ -417,14 +411,14 @@ Val weapon 0 0 0 0 0 0 0 0 claw bite`
 Flag Act 0 0 1
 Flag Mob 0 0 4
 Flag Room 0 0 4096
-EDESC klong`
-Slobbering shambling moaning staggering
+EDESC kname`
+horror
 `
 EDESC kshort`
 hooked helmed clawed scaly
 `
-EDESC kname`
-horror
+EDESC klong`
+Slobbering shambling moaning staggering
 `
 END_THING
 
@@ -436,17 +430,17 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 peck`
 Flag Room 0 0 2031616
 Flag Aff 0 0 524288
-EDESC jewelry`
-bone feather
-`
-EDESC klong`
-Fluffy small cute tiny fuzzy downy
+EDESC kname`
+hummingbird bird sparrow woodpecker wren owl
 `
 EDESC kshort`
 red brown white gray blue
 `
-EDESC kname`
-hummingbird bird sparrow woodpecker wren owl
+EDESC klong`
+Fluffy small cute tiny fuzzy downy
+`
+EDESC jewelry`
+bone feather
 `
 END_THING
 
@@ -457,14 +451,14 @@ HWT 5 40
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 2035712
-EDESC klong`
-Poisonous stinging large small giant
+EDESC kname`
+beetle bug insect centipede roach maggot
 `
 EDESC kshort`
 brown green black yellow blue gray trapper hunter borer
 `
-EDESC kname`
-beetle bug insect centipede roach maggot
+EDESC klong`
+Poisonous stinging large small giant
 `
 END_THING
 
@@ -475,14 +469,14 @@ HWT 10 50
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 1507328
-EDESC klong`
-white-striped smelly stinky
+EDESC kname`
+skunk
 `
 EDESC kshort`
 black
 `
-EDESC kname`
-skunk
+EDESC klong`
+white-striped smelly stinky
 `
 END_THING
 
@@ -493,20 +487,20 @@ HWT 60 5000
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 196608
-EDESC weapon`
-horns horn
-`
-EDESC armor`
-skin hide fur
-`
-EDESC klong`
-Small proud braying loud large
+EDESC kname`
+sheep goat 'mountain goat' 'billy goat' ram
 `
 EDESC kshort`
 white gray brown
 `
-EDESC kname`
-sheep goat 'mountain goat' 'billy goat' ram
+EDESC klong`
+Small proud braying loud large
+`
+EDESC armor`
+skin hide fur
+`
+EDESC weapon`
+horns horn
 `
 END_THING
 
@@ -518,28 +512,28 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 136253440
 Flag Act 0 0 512
-EDESC jewelry`
-tooth claw fang
-bone
-`
-EDESC weapon`
-tooth claw fang
-`
-EDESC armor`
-hide fur pelt skin
-`
-EDESC klong`
-Crouching angry wary curious tense
-`
-EDESC kshort`
-gray mottled brown black white
-`
 EDESC kname`
 puma bobcat panther jaguar 'mountain lion' cougar
 tiger
 lion
 cheetah
 leopard
+`
+EDESC kshort`
+gray mottled brown black white
+`
+EDESC klong`
+Crouching angry wary curious tense
+`
+EDESC armor`
+hide fur pelt skin
+`
+EDESC weapon`
+tooth claw fang
+`
+EDESC jewelry`
+tooth claw fang
+bone
 `
 END_THING
 
@@ -550,23 +544,23 @@ HWT 20 2000
 ThFl 67745
 Val weapon 1 5 0 0 0 0 0 0 bite`
 Flag Room 0 0 1970176
-EDESC jewelry`
-fang
-`
-EDESC weapon`
-fang
-`
-EDESC armor`
-skin hide scale
-`
-EDESC klong`
-Large giant small slithering still sinuous
+EDESC kname`
+snake boa mamba asp
 `
 EDESC kshort`
 green brown spotted yellow water rock striped tree moss black
 `
-EDESC kname`
-snake boa mamba asp
+EDESC klong`
+Large giant small slithering still sinuous
+`
+EDESC armor`
+skin hide scale
+`
+EDESC weapon`
+fang
+`
+EDESC jewelry`
+fang
 `
 END_THING
 
@@ -578,14 +572,14 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 1970176
 Flag Aff 0 0 524288
-EDESC klong`
-Buzzing annoying
+EDESC kname`
+fly mosquito serpentfly dragonfly
 `
 EDESC kshort`
 black blue brown green
 `
-EDESC kname`
-fly mosquito serpentfly dragonfly
+EDESC klong`
+Buzzing annoying
 `
 END_THING
 
@@ -597,14 +591,14 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 2035712
 Flag Act 0 0 512
-EDESC klong`
-Feral wild snapping growling angry
+EDESC kname`
+dog
 `
 EDESC kshort`
 brown white black mottled spotted mixed-breed
 `
-EDESC kname`
-dog
+EDESC klong`
+Feral wild snapping growling angry
 `
 END_THING
 
@@ -616,17 +610,17 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 1048576
 Flag Act 0 0 512
-EDESC armor`
-hide skin scale
-`
-EDESC klong`
-Large small growling
+EDESC kname`
+crocodile alligator cayman
 `
 EDESC kshort`
 green brown scaly scaled
 `
-EDESC kname`
-crocodile alligator cayman
+EDESC klong`
+Large small growling
+`
+EDESC armor`
+hide skin scale
 `
 END_THING
 
@@ -637,15 +631,15 @@ HWT 5 40
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 1048576
-EDESC klong`
-small large
+EDESC kname`
+leech
 `
 EDESC kshort`
 sucking sticky
 black green blue
 `
-EDESC kname`
-leech
+EDESC klong`
+small large
 `
 END_THING
 
@@ -657,23 +651,23 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 462848
 Flag Act 0 0 512
-EDESC weapon`
-tooth bone claw
-`
-EDESC jewelry`
-tooth bone claw
-`
-EDESC armor`
-skin hide pelt fur
-`
-EDESC klong`
-Large small furry growling
+EDESC kname`
+bear ursar
 `
 EDESC kshort`
 brown black gray grizzly polar
 `
-EDESC kname`
-bear ursar
+EDESC klong`
+Large small furry growling
+`
+EDESC armor`
+skin hide pelt fur
+`
+EDESC jewelry`
+tooth bone claw
+`
+EDESC weapon`
+tooth bone claw
 `
 END_THING
 
@@ -685,14 +679,14 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Act 0 0 16384
 Flag Room 0 0 1441792
-EDESC klong`
-Flying flitting resting soaring
+EDESC kname`
+butterfly
 `
 EDESC kshort`
 red blue green yellow multi-hued spotted orange magenta
 `
-EDESC kname`
-butterfly
+EDESC klong`
+Flying flitting resting soaring
 `
 END_THING
 
@@ -703,23 +697,23 @@ HWT 40 1200
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 1179648
-EDESC jewelry`
-bone claw tooth
-`
-EDESC weapon`
-claw
-`
-EDESC armor`
-skin pelt hide fur
-`
-EDESC klong`
-Lethargic large small sleepy giant
+EDESC kname`
+sloth
 `
 EDESC kshort`
 'three-toed' 'two-toed'
 `
-EDESC kname`
-sloth
+EDESC klong`
+Lethargic large small sleepy giant
+`
+EDESC armor`
+skin pelt hide fur
+`
+EDESC weapon`
+claw
+`
+EDESC jewelry`
+bone claw tooth
 `
 END_THING
 
@@ -730,25 +724,25 @@ HWT 5 40
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 sting`
 Flag Room 0 0 524288
-EDESC weapon`
-stinger claw pincer
-fang
+EDESC kname`
+scorpion
+`
+EDESC kshort`
+black yellow brown gray hunter white
+`
+EDESC klong`
+Large small poisonous
+`
+EDESC armor`
+chitin shell
 `
 EDESC jewelry`
 stinger claw
 pincer
 `
-EDESC armor`
-chitin shell
-`
-EDESC klong`
-Large small poisonous
-`
-EDESC kshort`
-black yellow brown gray hunter white
-`
-EDESC kname`
-scorpion
+EDESC weapon`
+stinger claw pincer
+fang
 `
 END_THING
 
@@ -757,22 +751,22 @@ Name mephit imp`
 Level 10
 HWT 5 20
 ThFl 67745
-Val weapon 0 0 0 0 0 0 0 0 bite`
 Val money 50 0 0 0 0 0 0 0 `
+Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Det 0 0 4
 Flag Aff 0 0 524288
 Flag Mob 0 0 2
-EDESC armor`
-skin
-`
-EDESC klong`
-Small medium large spotted glowing
+EDESC kname`
+mephit imp
 `
 EDESC kshort`
 ice air fire earth water flame wind
 `
-EDESC kname`
-mephit imp
+EDESC klong`
+Small medium large spotted glowing
+`
+EDESC armor`
+skin
 `
 END_THING
 
@@ -782,18 +776,18 @@ Level 10
 HWT 5 40
 ThFl 67745
 Flag Aff 0 0 1048576
+EDESC kname`
+fish
+cod flounder catfish guppy
+`
+EDESC kshort`
+silvery bluish silver pale translucent
+`
 EDESC klong`
 'school of'
 'bunch of'
 ''
 ''
-`
-EDESC kshort`
-silvery bluish silver pale translucent
-`
-EDESC kname`
-fish
-cod flounder catfish guppy
 `
 END_THING
 
@@ -804,23 +798,23 @@ HWT 100 4000
 ThFl 67745
 Flag Act 0 0 512
 Flag Aff 0 0 1048576
-EDESC jewelry`
-tooth
-`
-EDESC weapon`
-tooth
-`
-EDESC armor`
-scale skin hide
-`
-EDESC klong`
-large small dangerous
+EDESC kname`
+shark
 `
 EDESC kshort`
 white hammerhead gray sleek
 `
-EDESC kname`
-shark
+EDESC klong`
+large small dangerous
+`
+EDESC armor`
+scale skin hide
+`
+EDESC weapon`
+tooth
+`
+EDESC jewelry`
+tooth
 `
 END_THING
 
@@ -833,17 +827,17 @@ Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 203296768
 Flag Act 0 0 512
 Flag Aff 0 0 524288
-EDESC armor`
-shell
-`
-EDESC klong`
-Large small
+EDESC kname`
+gargoyle
 `
 EDESC kshort`
 stone iron rock
 `
-EDESC kname`
-gargoyle
+EDESC klong`
+Large small
+`
+EDESC armor`
+shell
 `
 END_THING
 
@@ -855,24 +849,24 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Aff 0 0 65536
 Flag Room 0 0 136253440
-EDESC weapon`
-horn
-`
-EDESC jewelry`
-hoof tooth mane
-`
-EDESC armor`
-pelt hide skin fur
-`
-EDESC klong`
-Large small proud
+EDESC kname`
+unicorn
 `
 EDESC kshort`
 war battle
 white
 `
-EDESC kname`
-unicorn
+EDESC klong`
+Large small proud
+`
+EDESC armor`
+pelt hide skin fur
+`
+EDESC jewelry`
+hoof tooth mane
+`
+EDESC weapon`
+horn
 `
 END_THING
 
@@ -884,20 +878,20 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Aff 0 0 524288
 Flag Room 0 0 136253440
-EDESC jewelry`
-feather bone tooth
-`
-EDESC armor`
-hide skin pelt fur
-`
-EDESC klong`
-large small
+EDESC kname`
+pegasus
 `
 EDESC kshort`
 silver white
 `
-EDESC kname`
-pegasus
+EDESC klong`
+large small
+`
+EDESC armor`
+hide skin pelt fur
+`
+EDESC jewelry`
+feather bone tooth
 `
 END_THING
 
@@ -909,15 +903,15 @@ ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Room 0 0 136253440
 Flag Act 0 0 512
-EDESC klong`
-Large small shiny
-dull
+EDESC kname`
+hulk beast creature dread
 `
 EDESC kshort`
 black white brown green gray mottled striped spotted
 `
-EDESC kname`
-hulk beast creature dread
+EDESC klong`
+Large small shiny
+dull
 `
 END_THING
 
@@ -928,14 +922,14 @@ HWT 50 1000
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 drain`
 Flag Aff 0 0 1572864
-EDESC klong`
-small medium large giant huge
+EDESC kname`
+elemental
 `
 EDESC kshort`
 air earth fire water
 `
-EDESC kname`
-elemental
+EDESC klong`
+small medium large giant huge
 `
 END_THING
 
@@ -945,14 +939,14 @@ Level 100
 HWT 70 10000
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 crush slap smack`
-EDESC klong`
-Small large old creaking
+EDESC kname`
+golem automaton
 `
 EDESC kshort`
 bronze stone gold iron steel diamond bone clay mist
 `
-EDESC kname`
-golem automaton
+EDESC klong`
+Small large old creaking
 `
 END_THING
 
@@ -963,25 +957,25 @@ HWT 80 4000
 ThFl 67745
 Flag Aff 0 0 524288
 Flag Act 0 0 1
-EDESC weapon`
-tooth claw fang talon bone
+EDESC kname`
+griffon hippogriff chimera cockatrice
+griffin
+`
+EDESC kshort`
+Furry feathered brown green black gray white
+`
+EDESC klong`
+Large small medium giant
+`
+EDESC armor`
+hide skin pelt fur
 `
 EDESC jewelry`
 tooth fang claw talon
 bone
 `
-EDESC armor`
-hide skin pelt fur
-`
-EDESC klong`
-Large small medium giant
-`
-EDESC kshort`
-Furry feathered brown green black gray white
-`
-EDESC kname`
-griffon hippogriff chimera cockatrice
-griffin
+EDESC weapon`
+tooth claw fang talon bone
 `
 END_THING
 
@@ -990,18 +984,18 @@ Name mist cloud blob`
 Level 15
 HWT 50 50
 ThFl 67745
-EDESC klong`
-spotted speckled glowing translucent rolling sliding
-tumbling wandering plaid 
-striped checked
+EDESC kname`
+mist cloud blob thing 'icky thing' mold jelly
 `
 EDESC kshort`
 red blue green yellow purple orange black white transparent
 sky-blue
 cyan magenta
 `
-EDESC kname`
-mist cloud blob thing 'icky thing' mold jelly
+EDESC klong`
+spotted speckled glowing translucent rolling sliding
+tumbling wandering plaid 
+striped checked
 `
 END_THING
 
@@ -1012,25 +1006,25 @@ HpMult 2
 HWT 700 30000
 ThFl 67745
 Flag Aff 0 0 524288
-EDESC kname`
-dragon dragon dragonling wyvern drakon
-`
-EDESC kshort`
-red blue green white black purple yellow cyan
-`
-EDESC klong`
-small medium large
-`
-EDESC armor`
-hide skin scale
+EDESC weapon`
+tooth claw talon bone
+fang
 `
 EDESC jewelry`
 tooth claw talon
 bone
 `
-EDESC weapon`
-tooth claw talon bone
-fang
+EDESC armor`
+hide skin scale
+`
+EDESC klong`
+small medium large
+`
+EDESC kshort`
+red blue green white black purple yellow cyan
+`
+EDESC kname`
+dragon dragon dragonling wyvern drakon
 `
 END_THING
 

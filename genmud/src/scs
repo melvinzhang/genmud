@@ -3,6 +3,8 @@
 
 set num = 100
 set topnum = 1000
+limit coredumpsize unlimited
+
 # Go past old logfiles
 
 while (1)

@@ -79,16 +79,8 @@ worldgen_generate_demons (int curr_vnum, int area_size)
 	  IS_AREA (below_area))
 	{
 	  curr_vnum += curr_size;
-	  /* Add the extra room flags to make things more and more
-	     difficult. */
-	  if (times == max_times - 1)
-	    extra_room_flags |= ROOM_ASTRAL;
-	  else if (times == max_times - 2)
-	    extra_room_flags |= ROOM_EARTHY;
-	  else if (times == max_times - 3)
-	    extra_room_flags |= ROOM_FIERY;
-	  else if (times == max_times - 4)
-	    extra_room_flags |= ROOM_WATERY;
+	  
+	  extra_room_flags = ROOM_ASTRAL|ROOM_FIERY;
 	  add_flagval (below_area, FLAG_ROOM1, extra_room_flags);
 	  if (extra_room_flags)
 	    {
@@ -108,16 +100,8 @@ worldgen_generate_demons (int curr_vnum, int area_size)
 		  /* Mobs get extra protections. */
 		  else if (!IS_SET (thg->thing_flags, TH_NO_FIGHT))
 		    {
-		      if (IS_SET (extra_room_flags, ROOM_WATERY))
-			add_flagval (thg, FLAG_AFF, AFF_WATER_BREATH);
-		      if (IS_SET (extra_room_flags, ROOM_EARTHY))
-			add_flagval (thg, FLAG_AFF, AFF_FOGGY);
-		      if (IS_SET (extra_room_flags, ROOM_AIRY))
-			add_flagval (thg, FLAG_AFF, AFF_FLYING);
-		      if (IS_SET (extra_room_flags, ROOM_ASTRAL))
-			add_flagval (thg, FLAG_AFF, AFF_PROTECT);
-		      if (IS_SET (extra_room_flags, ROOM_FIERY))
-			add_flagval (thg, FLAG_PROT, AFF_FIRE);
+		      add_flagval (thg, FLAG_AFF, AFF_PROTECT);
+		      add_flagval (thg, FLAG_PROT, AFF_FIRE);
 		    }
 		}
 	    }
@@ -139,7 +123,7 @@ worldgen_generate_demons (int curr_vnum, int area_size)
   proto->name = new_str ("Demon Demons Demonic");
   proto->sex = SEX_NEUTER;
   add_flagval (proto, FLAG_PROT, ~0);
-  add_flagval (proto, FLAG_AFF, AFF_FLYING | AFF_WATER_BREATH | AFF_FOGGY);
+  add_flagval (proto, FLAG_AFF, AFF_FLYING | AFF_WATER_BREATH | AFF_FOGGY | AFF_PROTECT);
   add_flagval (proto, FLAG_DET, ~0);
   add_flagval (proto, FLAG_ACT1, ACT_AGGRESSIVE | ACT_FASTHUNT);
   add_flagval (proto, FLAG_MOB, MOB_DEMON);

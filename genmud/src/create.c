@@ -75,6 +75,7 @@ gather_raw (THING *th, char *comm_name)
   int i, j, gtype, valnum, ocount;
   bool has_equip, need_eqval, need_eqname, repeated;
   char buf[STD_LEN], *nm;
+  int vnum, rank;
   VALUE *eqval, *flap;
   GATHER *gt;
   SPELL *spl;
@@ -391,20 +392,24 @@ gather_raw (THING *th, char *comm_name)
 	 then if (nr (1, 4) > 1) we stop..i.e. 3/4 of the time. */
     }
   
-  i = 0;
-  while (i < gt->gather_ranks)
+  rank = 0;
+  while (rank < gt->gather_ranks)
     {
       if (gt->stop_here_chance[0] > 0 && gt->stop_here_chance[1] > 0 && 
 	  nr (1, gt->stop_here_chance[0]) > gt->stop_here_chance[1])
 	break;
-      i++;
+      rank++;
     }
-  if (i >= gt->gather_ranks)
-    i = 0;
+  if (rank >= gt->gather_ranks)
+    rank = 0;
   
+  /* Find the vnum. start + (ranks*items_per_rank)*/
+
+  vnum = gt->min_gather + (rank*gt->items_per_rank)+ nr (0, gt->items_per_rank-1);
+
   /* Make the raw material */
   
-  if ((create = create_thing (i + gt->min_gather)) == NULL)
+  if ((create = create_thing (vnum)) == NULL)
     {
       stt ("There isn't anything here...odd. Tell an admin.\n\r", th);
       return;

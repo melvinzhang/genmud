@@ -2239,6 +2239,7 @@ struct gather_raw_data
   bool need_skill;          /* Is this a skill or not? */
   int room_flags;           /* What room flags we need to do this here? */
   int min_gather;           /* Min vnum of gathered. */
+  int items_per_rank;       /* Number of items in each gather rank. */
   int gather_ranks;         /* Number of ranks to be gathered. */
   int stop_here_chance[2];  /* Stop if nr(1,(a)) is > (b). */
   int fail[2];              /* Fail if nr(1,(a)) is > (b). */

@@ -2,10 +2,10 @@ THING 107100
 Name areagen.are`
 HpMv 0 10 5 400
 HWT 0 0
-Timer 4
+Timer 11
 Short The Areagen Area`
 type Lonath`
-ThFl 135307259
+ThFl 1089531
 Flag Area 0 0 28
 END_THING
 
@@ -820,6 +820,10 @@ Blood
 Gloom
 Sorcery
 Magic
+Peril
+Dread
+Fear
+Awe
 `
 END_THING
 
@@ -855,6 +859,8 @@ Gloomy
 Scarred
 Sinister
 Pale
+Perilous
+Dread
 `
 END_THING
 

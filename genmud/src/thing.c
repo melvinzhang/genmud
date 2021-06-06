@@ -1544,7 +1544,7 @@ set_up_thing (THING *th)
   
   th->max_hp = 1;
   for (i = 0; i < LEVEL (th) + 1; i++)
-    th->max_hp += nr (0, 2 + LEVEL (th)/10+(LEVEL(th)/100)*10);
+    th->max_hp += nr (0, 1 + LEVEL (th)/7);
   
   /* Hpmult, 10 = normal, 2 = .2 hps, 100 = 10x hps..max dunno why,
      I guess to keep really stupid cheater mobs from being created. */

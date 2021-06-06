@@ -1222,7 +1222,7 @@ carry_out_upgrades (SOCIETY *soc)
 void 
 weaken_society (SOCIETY *soc)
 {
-  int curr_pop, max_pop, pct, i, chance;
+  int curr_pop, max_pop, i, chance;
   
   
   if (!soc)
@@ -1246,23 +1246,13 @@ weaken_society (SOCIETY *soc)
 	}
       else
 	{
-	  if (soc->quality * 40 > max_pop)
+	  /* Need to check quality/(level/4) > curr/pop_cap, but since
+	     divides suck, do this as a product. */
+	  if (soc->quality *soc->population_cap > curr_pop*soc->level/4 &&
+	      nr (1,5) == 3)
 	    {
-	      pct = (max_pop - soc->quality * 40) * 100 / max_pop;	  
-	      if (np () > pct)
-		soc->quality--;
-	    }      
-	  else if (soc->quality * 30 > curr_pop)
-	    {
-	      if (curr_pop == 0)
-		soc->quality--;
-	      else
-		{
-		  pct = (curr_pop - soc->quality * 30) * 100 / curr_pop;	  
-		  if (np () > pct)
-		    soc->quality--;
-		} 
-	    }
+	      soc->quality--;
+	    }  
 	}
     }
   
@@ -1270,7 +1260,7 @@ weaken_society (SOCIETY *soc)
   /* Do not do this to castes where the current pop is at least 4/5
      the max, or where the current pop is within 2 of the max. This
      will keep small castes from getting obliterated. */
-
+  
   for (i = 0; i < CASTE_MAX; i++)
     {
       /* Make the shops and crafters castes big enough. */
@@ -1291,13 +1281,14 @@ weaken_society (SOCIETY *soc)
       
       if (soc->max_pop[i] < 1)
 	soc->max_pop[i] = 1;
+
       chance = MIN ((soc->max_pop[i] - soc->curr_pop[i]) *10/soc->max_pop[i], 8);
       
       /* Make it very hard to let the children's caste and worker's caste
 	 go down below ?7? people? */
 
       if (nr (1,10) <= chance && 
-	  (soc->max_pop[i] > 5 ||
+	  (soc->max_pop[i] > 10 ||
 	   nr (1,25) == 3))
 	soc->max_pop[i]--;
       
@@ -1308,8 +1299,8 @@ weaken_society (SOCIETY *soc)
       
       
       if ((i == 0  || IS_SET (soc->cflags[i], CASTE_WORKER)) &&
-	  soc->max_pop[i] < 10)
-	soc->max_pop[i] = 10;
+	  soc->max_pop[i] < 15)
+	soc->max_pop[i] = 15;
 
       if (IS_SET (soc->cflags[i], CASTE_WARRIOR))
 	soc->max_pop[i] = MAX (10, soc->max_pop[i]);
@@ -1425,8 +1416,13 @@ find_upgrades_wanted (SOCIETY *soc)
   soc->population_cap = (POP_BEFORE_SETTLE*POP_LEVEL_MULTIPLIER)/(start_member_level);
   if (soc->population_cap < POP_BEFORE_SETTLE/2)
     soc->population_cap = POP_BEFORE_SETTLE/2;
-  if (!IS_SET (soc->goals, BUILD_MEMBER) &&
-      (nr (1, soc->population_cap) > soc->population ||
+
+
+  /* Check to build new members...do this more if the population is
+     small. */
+
+  if (soc->population < soc->population_cap && 
+      (nr (1, soc->population_cap*3) > soc->population ||
        nr (1,30) == 15)) /* small chance to increase pop at any level. */
     {
       if (max_pop < 30)
@@ -1437,27 +1433,25 @@ find_upgrades_wanted (SOCIETY *soc)
 	}      
       else 
 	{
-	  chance = MID (2,  (max_pop - curr_pop) * 10/max_pop, 8);
+	  chance = MID (1,  (max_pop - curr_pop) * 10/max_pop, 7);
 	  if (nr (1,10) <= chance)
 	    soc->goals |= BUILD_MEMBER;
 	}
     }
   
   
-  /* Upgrade quality when the society is large enough. */
+  /* Upgrade quality when the society is large enough compared to
+     its max pop. */
   
-  if ((soc->quality + 1)* 80 < max_pop &&
-      (soc->quality + 1) * 60 < curr_pop &&
-      !IS_SET (soc->goals, BUILD_QUALITY))
-    {
-      if (np ()  < (max_pop - soc->quality * 50)*100/(soc->quality + 1))
-	soc->goals |= BUILD_QUALITY;
-    }
+  if (soc->quality < soc->level/4 &&
+      curr_pop >= max_pop*7/10 &&
+      nr (1,10) == 6)
+    soc->goals |= BUILD_QUALITY;
   
   /* Upgrade max_pop when the curr_pop is too big relative to max_pop. */
 
 
-  if (curr_pop > max_pop * 5/6 && !IS_SET (soc->goals, BUILD_MAXPOP) &&
+  if (curr_pop > max_pop * 2/3 && 
       nr (1,12) == 3)
     {
       if (curr_pop > max_pop *9/10)
@@ -1470,8 +1464,7 @@ find_upgrades_wanted (SOCIETY *soc)
      This is like getting technology since it lets the society gain
      more powerful units. */
   
-  if (!IS_SET (soc->goals, BUILD_TIER) && 
-      curr_pop > max_pop*2/3)
+  if (curr_pop > max_pop*2/3)
     {
       if (nr (1,5) == 3)
 	soc->goals |= BUILD_TIER;
@@ -1699,12 +1692,12 @@ check_society_change_align (SOCIETY *soc)
      affinities, and if so, then do switch. */
       
   /* Need to have lots of things killed. */
-  if (max_killed_by < 60 || 
+  if (max_killed_by < 150 || 
       /* It must shock the society by killing half. */
-      max_killed_by < soc->recent_maxpop/2 ||
+      max_killed_by < soc->recent_maxpop*2/3 ||
       nr (1,70) != 17 ||
       /* The next align up can't be too close in terms of hate. */
-      second_killed_by > max_killed_by/3 ||
+      second_killed_by > max_killed_by/2 ||
       /* Can't be too wedded to its own align. */
       soc->align_affinity[soc->align] >= MAX_AFFINITY/4)
     return;
@@ -2195,9 +2188,10 @@ settle_new_society (SOCIETY *soc)
   
   
   if (!IS_SET (soc->society_flags, SOCIETY_SETTLER) ||
-    soc->population < nr (soc->population_cap/2, 
-			  soc->population_cap) || 
-      soc->settle_hours > 0 || nr (1,SOCIETY_SETTLE_CHANCE) != SOCIETY_SETTLE_CHANCE/2)
+      soc->population < nr (soc->population_cap/2, 
+			    soc->population_cap) || 
+      soc->settle_hours > 0 || 
+      nr (1,SOCIETY_SETTLE_CHANCE) != SOCIETY_SETTLE_CHANCE/2)
     return;
   
   if ((oldarea = find_area_in (soc->room_start)) == NULL)

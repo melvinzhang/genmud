@@ -21,7 +21,6 @@ do_world (THING *th, char *arg)
   int days, hours, minutes, seconds, time_up;
   
   int day = wt_info->val[WVAL_DAY] + 1;
-  
   time_up = current_time - boot_time;
   
   seconds = time_up % 60;

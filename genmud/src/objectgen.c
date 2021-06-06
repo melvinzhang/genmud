@@ -1077,7 +1077,7 @@ objectgen_animal_name (int wear_loc, int weapon_type)
 				-studded or -embedded...*/
   /* The extra descriptions with the object types allowed and the name
      of the thing. (Must use kname) */
-  EDESC *typedesc, *namedesc;
+  EDESC *typedesc = NULL, *namedesc = NULL;
   /* Make it more likely for things other than those with massive
      amounts of prefixes and item types to get a chance. */
   int square_total_names;

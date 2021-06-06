@@ -3,11 +3,11 @@ Name start.are`
 HpMv 0 1 109 998
 HWT 0 0
 Cost 100
-Timer 10
+Timer 13
 Short the start area`
 Long A cold wind blows by...`
 type Lonath`
-ThFl 672137216
+ThFl 537919488
 Flag Area 0 0 28
 END_THING
 
@@ -49,9 +49,8 @@ Short Lonath's Room`
 MIW 1
 Long Lonath's Room is Here.`
 Symbol -`
-ThFl 134742507
+ThFl 524779
 Flag Room 0 0 1
-Reset 278 100 10 1
 EDESC tapestry`
 This large wall-hanging depicts great battles between the forces of good and evil.
 `
@@ -67,7 +66,7 @@ Short The Remort Room`
 MIW 1
 Symbol -`
 ThFl 524779
-Val e_exit 1200201 0 0 0 0 0 0 0 `
+Val d_exit 1206803 0 0 0 0 0 0 0 `
 END_THING
 
 THING 27
@@ -79,7 +78,7 @@ Wear chest`
 MIW 1
 Symbol -`
 ThFl 524779
-Val u_exit 216618 0 0 0 0 0 0 0 `
+Val e_exit 1231729 0 0 0 0 0 0 0 `
 END_THING
 
 THING 40
@@ -242,7 +241,7 @@ Color 8
 Short The Evil Recall Room`
 MIW 1
 Symbol -`
-ThFl 134742507
+ThFl 524779
 Flag Room 0 0 1
 Reset 251 100 1 1
 END_THING
@@ -257,7 +256,7 @@ Desc The Recall Room
 Short The Good Recall Room`
 MIW 1
 Symbol -`
-ThFl 134742507
+ThFl 524779
 Flag Room 0 0 1
 Reset 252 100 1 1
 END_THING
@@ -1375,7 +1374,7 @@ HWT 0 0
 Short the mob randpop`
 Long The mob randpop is here.`
 ThFl 100934
-Val randpop 127100 1398 2 1000 0 0 0 0 `
+Val randpop 127100 1520 2 1000 0 0 0 0 `
 END_THING
 
 THING 279
@@ -1384,7 +1383,7 @@ HWT 0 0
 Short The provision pop`
 Long The provision po pis here.`
 ThFl 101063
-Val randpop 125006 249 1 0 0 0 0 0 `
+Val randpop 125006 229 1 0 0 0 0 0 `
 END_THING
 
 THING 300
@@ -2414,7 +2413,7 @@ END_THING
 THING 710
 Name pile bones`
 HWT 0 0
-Timer 30
+Timer 10
 Short a pile of bones`
 Long A pile of bones is here.`
 ThFl 100934
@@ -2769,9 +2768,50 @@ END_THING
 
 THING 950
 Name vial black ichor`
+Level 10
 HWT 0 0
 Short a vial of $8black$7 ichor`
 Long A vial of $8black$7 ichor is here.`
+ThFl 100934
+Val raw 7 0 0 0 0 0 0 0 `
+END_THING
+
+THING 951
+Name vial red ichor`
+Level 10
+HWT 0 0
+Short A vial of $9red$7 ichor`
+Long A vial of $9red$7 ichor is here.`
+ThFl 100934
+Val raw 7 0 0 0 0 0 0 0 `
+END_THING
+
+THING 952
+Name vial blue ichor`
+Level 10
+HWT 0 0
+Short A vial of $Cblue$7 ichor`
+Long A vial of $Cblue$7 ichor is here.`
+ThFl 100934
+Val raw 7 0 0 0 0 0 0 0 `
+END_THING
+
+THING 953
+Name vial green ichor`
+Level 10
+HWT 0 0
+Short A vial of $2green$7 ichor`
+Long A vial of $2green$7 ichor is here.`
+ThFl 100934
+Val raw 7 0 0 0 0 0 0 0 `
+END_THING
+
+THING 954
+Name vial yellow ichor`
+Level 10
+HWT 0 0
+Short A vial of $Byellow$7 ichor`
+Long A vial of $Byellow$7 ichor is here.`
 ThFl 100934
 Val raw 7 0 0 0 0 0 0 0 `
 END_THING

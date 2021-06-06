@@ -891,7 +891,7 @@ const struct gather_raw_data gather_data[] =
     { "", "", "", ""},
     { 0,0,0,0},
     0, FALSE, FALSE, 0,
-    0, 0, {0,0}, {0,0}},
+    0, 0, 0, {0,0}, {0,0}},
 
   { "mine", "mineral", "minerals", 20, 30,  /* Minerals  1 */
     {190, 0, 0, 0},
@@ -899,7 +899,7 @@ const struct gather_raw_data gather_data[] =
     {"", "", "", ""},
     {0, 0, 0, 0},
     0, TRUE, TRUE, ROOM_UNDERGROUND | ROOM_ROUGH | ROOM_MOUNTAIN, 
-      FORGED_EQ_AREA_VNUM+10, MAX_MINERAL, {2,1}, {2, 1}},
+      FORGED_EQ_AREA_VNUM+10, 1, MAX_MINERAL, {2,1}, {2, 1}},
 
   { "hew", "stone", "stone", 30, 40,  /* Stone  2 */
     {192, 0, 0, 0},
@@ -907,7 +907,7 @@ const struct gather_raw_data gather_data[] =
     {"", "", "", ""},
     {0, 0, 0, 0},
     0, FALSE, FALSE, ROOM_MOUNTAIN | ROOM_UNDERGROUND,
-    900, 4, {3,1}, {2,1}},
+    900, 4, 1, {3,1}, {2,1}},
 
   { "chop", "wood", "wood", 25, 40,  /* Wood  3 */
     {0, 0, 0, 0},
@@ -915,7 +915,7 @@ const struct gather_raw_data gather_data[] =
     {"axe", "", "", ""},
     {0, 0, 0, 0},
     0, TRUE, TRUE, ROOM_FOREST,
-    820, 6, {2, 1}, {2, 1}},
+    820, 6, 1, {2, 1}, {2, 1}},
   
   { "collect", "flower", "flowers", 30, 35,         /* Flowers 4 */
     {0, 0, 0, 0},
@@ -923,7 +923,7 @@ const struct gather_raw_data gather_data[] =
     { "", "", "", ""},
     { 0,0,0,0},
     0, FALSE, FALSE, ROOM_FIELD,
-    800, 4, {2,1}, {3,1}},
+    800, 4, 1, {2,1}, {3,1}},
 
   { "harvest", "food", "food", 30, 40,  /* Food 5 */
     {191, 0, 0, 0},
@@ -931,7 +931,7 @@ const struct gather_raw_data gather_data[] =
     {"", "", "", ""},
     {0, 0, 0, 0},
     0, FALSE, FALSE, ROOM_FIELD,
-    920, 3, {2,1}, {2,1}}, 
+    920, 3, 1, {2,1}, {2,1}}, 
 
   { "gather", "herb", "herbs", 35, 60,  /* Herbs 6 */
     {773, 0, 0, 0},
@@ -939,15 +939,15 @@ const struct gather_raw_data gather_data[] =
     {"sickle", 0, 0, 0},
     {0, 0, 0, 0},
     774, TRUE, TRUE, ROOM_FOREST,
-    850, 7, {5, 4}, {2, 1}},
+    850, 7, 1, {5, 4}, {2, 1}},
   
   { "extrude", "ichor", "ichor", 50, 30, /* Ichor 7 */
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
-    { "", "", "", "" },
+      { "", "", "", "" },
     { CORPSE_VNUM, 708, 0, 0 },
-    0, FALSE, TRUE, 0, 
-    950, 12, {0,0}, {4,1}},
+      0, FALSE, TRUE, 0, 
+	950, 5, 1, {2,1}, {4,1}},
   
   
   { "max", "", "", 0, 0,          /* Max 8 */
@@ -956,7 +956,7 @@ const struct gather_raw_data gather_data[] =
     { "", "", "", ""},
     { 0,0,0,0},
     0, FALSE, FALSE, 0,
-    0, 0, {0,0}, {0,0}},
+    0, 0, 0, {0,0}, {0,0}},
 };
 
 /* These are the various kinds of values you can add onto items if

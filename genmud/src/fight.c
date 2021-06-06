@@ -713,7 +713,10 @@ one_hit (THING *th, THING *vict, THING *weapon, int special)
     {
       if (special != SP_ATT_ATTACK)
 	{
-	  dam += MAX (0, nr (LEVEL(th)/5, LEVEL(th)/3) - 5);
+	  dam += nr (LEVEL(th)/4, LEVEL(th)/2);
+	  dam -= 5;
+	  if (dam < 1)
+	    dam = 1;
 	}
     }
   else
@@ -1046,11 +1049,13 @@ damage (THING *th, THING *vict, int dam, char *word)
   int reduced = 0;
   int flags;
   int th_hurt, vict_hurt; /* Hurt flags for th and vict. */
-
-
+  
+  if (!th || !vict || !th->in || !vict->in)
+    return FALSE;
+  
   /* Check to see if combat can occur here or not. */
 
-  if (vict->in && IS_ROOM_SET (vict->in, ROOM_PEACEFUL))
+  if (IS_ROOM_SET (vict->in, ROOM_PEACEFUL))
     {
       stop_fighting (vict);
       if (FIGHTING (th) == vict)

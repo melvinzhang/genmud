@@ -11,8 +11,8 @@ Flag Area 0 0 28
 END_THING
 
 THING 105001
-Name sentinel`
-Level 15
+Name acolyte`
+Level 17
 HWT 0 0
 Color 7
 Desc This is the area used to generate persons. The name of this room changes since it's used to generate
@@ -20,6 +20,24 @@ persons from society castes.
 `
 Short Person Generator Room`
 MIW 1
+Symbol -`
+ThFl 134742507
+END_THING
+
+THING 105002
+Name paladin`
+Level 30
+HWT 0 0
+Color 7
+Symbol -`
+ThFl 524779
+END_THING
+
+THING 105003
+Name cavalier`
+Level 20
+HWT 0 0
+Color 7
 Symbol -`
 ThFl 524779
 END_THING

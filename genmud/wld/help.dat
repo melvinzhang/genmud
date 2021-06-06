@@ -6386,24 +6386,25 @@ END_HELP
 HELP MORT
 Key HISTORY BACKSTORY`
 Admin `
-Text As I look back the old eras so many centuries ago, I can't help having a
-sense of extreme sadness with regard to how much we could learn from them.
-It was the time when the unified gods followed Antos the Neutral god of
-The Forest, Serenity and Wine, Raksaroh the Evil god of Dreams, Innocence
-and Warriors and Awic the Good deity of Thought and Shopkeepers. the
-Powerful Neutral Uhgese, the Ancient Evil Nequru and the Mighty Good
-Rasipa ensured the peace at the behest of the gods.
+Text As I look back the legendary years so far in the past, I begin having a
+sense of great regret with regard to how much we could gain. It was the
+time when the unified gods followed Muthir the Neutral god of Summer,
+Chivalry and The Ocean, Teftumel the Evil deity of War, Earthquakes and
+Twilight and Sugih the Good god of Enchantment. the Powerful Neutral
+Fipiwi, the Mighty Evil Et'nemo and the Powerful Good Ethafa preserved
+justice at the behest of the gods.
 
-In time the world was sundered. The many nations of the world were
-sundered, and the kingdoms like the High Elf were pushed from their
-houses. Many campaigns were fought and the Ancient Nequru and the other
-ancient races were unable to survive the turmoil. And thus did the power
-of the deities lessen. This is what the Demons waited for as they spilled
-into the world, but were cast back to the Pits at a terrible cost.
+But the cataclysm came. The myriad nations of the world were sundered, and
+the governments like the Wild Elf were forced from their villages. Many
+sieges were fought and the Powerful Ethafa and the other ancient races
+were forced out by the younger races. And thus did the power of the
+deities retreat into the mists of time. This was the thing that the Demons
+had waited eons for as they spilled into the world, but were cast back to
+the Pits at a terrible cost.
 
-The societies descended into dark ages, and the world stayed the same for
-many years. But now, the Demons are threatening the world. The races are
-broken and disorganized and squabbling among themselves. They must be
+The nations staggered into dark ages, and the nations has continued
+unmoving for many ages. But now, the Demons are gathering power. The races
+are broken and disorganized and squabbling among themselves. They must be
 brought together to fight the demons in this Battle for Destiny
 
 `
@@ -6431,19 +6432,19 @@ HELP MORT
 Key WORLDMAP WORLD_MAP`
 Admin `
 Text World Map:
-                 $A,$2#              $7
-                $5^$2*$A,$2*$5^            $7
-              $A,$A,$A,$2#$A,$A,$A,            $7
-          $A,$5^  $2#$2#                 $7
-          $2#$2*  $A,$A,$5^$2*               $7
-           $2*$2* $A,$A,$5^$2*               $7
-           $2*$2*$2*$A,$A,$A,                $7
-             $A,$A,$A,   $2*             $7
-             $A,$A,  $A, $2*             $7
-             $2#$A,$A, $A, $A,             $7
-             $A,$A@$A,$A,$2*$2#$A,$2#            $7
-            $2*$2*$A,$A,$2*$A,$A,$A,$2*            $7
-             $2#$A,$2*$2*$5^$2#$2*$9@            $7
+              $A,$A,$A,$2#$C#              $7
+              $B,$2*$2*$2*$2*$2*$2*            $7
+               $2*$2*$2*$2* $2*$2#           $7
+          $A,$A,   $9@$A,$A,$2*$A, $5^$2*          $7
+          $5^$5^     $2#$2*$2*$2*$5^           $7
+          $B,$A,     $2* $A,$2*$5^$5^          $7
+          $2#$A,$A,$2*$2#$5^$A,  $2*$5^$B,$5^          $7
+          $A,$A,$A,$A,$5^$A,$A,  $F*$5^$B,$5^          $7
+          $A,$C#$5^$2*$5^$2# $2* $5^$B,$B,           $7
+          $A,$A,$A,$B,$F*  $2*$2*$B,$5^            $7
+           $5^$B,$B,$5^$2*  $B,$B,$5^            $7
+            $5^$B,$2#$2#$A,$5^$5^              $7
+             $A,$2*  $A@               $7
 
 
 Evil outpost: $9@$7.   Good outpost: $A@$7.   

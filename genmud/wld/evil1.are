@@ -4,7 +4,7 @@ HpMv 0 10 25 50
 HWT 0 0
 Align 1
 Cost 100
-Timer 15
+Timer 8
 Short The Evil Outpost`
 Long The Evil Outpost comes to life again!`
 type Lonath`
@@ -130,7 +130,7 @@ Desc 1001`
 Short Shopkeeper's Square`
 MIW 1
 Symbol +`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1013 0 0 0 0 0 0 0 `
 Val d_exit 1012 0 0 0 0 0 0 0 `
 Val u_exit 1011 0 0 0 0 0 0 0 `
@@ -228,7 +228,7 @@ Desc 1001`
 Short A Guard Post`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val w_exit 1013 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1031 10 5 1
@@ -256,7 +256,7 @@ Desc 1001`
 Short A Guard Post`
 MIW 1
 Symbol -`
-ThFl 134742507
+ThFl 524779
 Val d_exit 1013 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1031 10 5 1
@@ -285,7 +285,7 @@ MIW 1
 Symbol |`
 ThFl 524779
 Val s_exit 1013 0 0 0 0 0 0 0 `
-Val n_exit 205542 0 0 0 0 0 0 0 `
+Val n_exit 227966 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 END_THING
 

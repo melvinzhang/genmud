@@ -891,7 +891,7 @@ seg_handler (void)
   char errbuf[STD_LEN];
   int count = 0;
   if (++seg_count > 4)
-    exit(11);
+    exit(SIGSEGV);
   sprintf (errbuf, "Ack! Segmentation fault number %d! Attempting to save everything!\n", seg_count);
   log_it (errbuf);
   log_it (prev_command);
@@ -907,7 +907,7 @@ seg_handler (void)
 	 ++count < 20);
   
   kill (getpid(), SIGSEGV);
-  exit(13);
+  exit(SIGSEGV);
 }
 
 

@@ -128,11 +128,11 @@ update_png (void)
 void
 update_thing (THING *th)
 {
-  int mana_rate, hurt_by, hp_rate, mv_rate, actbits, dir;
+  int mana_rate, hurt_by, hp_rate = 0, mv_rate = 0, actbits, dir;
   THING *obj, *new_item, *room;
   VALUE *gem, *shop, *shop2 = NULL, *pet, *soc;
   RACE *race = NULL, *align = NULL;
-  
+  int regen_pct = 100;
   /* Ignore areas and protos which are not rooms. */
   
   
@@ -142,16 +142,28 @@ update_thing (THING *th)
     {
       return;
     }
-	    
+  
+  
   
   /* Only check mobs and pc's online now. */
   
   if (IS_ROOM (th) || (!CAN_MOVE (th) && !CAN_FIGHT (th)) ||
       (IS_PC (th) && th->fd && th->fd->connected > CON_ONLINE))
     return;
+  
  
+  
+
   if (IS_PC (th))
-    hp_rate = 4 + LEVEL (th)/10;
+      { 
+	/* Check for regen pct in astral areas. */
+	if (th->align < ALIGN_MAX &&
+	    th->in && th->in->in && IS_AREA (th->in->in) &&
+	    IS_ROOM_SET (th->in->in, ROOM_ASTRAL) &&
+	    align_info[th->align])
+	  regen_pct = 2*align_info[th->align]->power_pct-100;	
+	hp_rate = 4 + LEVEL (th)/10;
+      }
   else
     hp_rate = 1 + LEVEL (th)/5;
   
@@ -250,8 +262,9 @@ update_thing (THING *th)
 	}
     }
   
-  th->hp += MIN (hp_rate, th->max_hp - th->hp);
-  th->mv += MIN (mv_rate, th->max_mv - th->mv);
+  
+  th->hp += MIN (hp_rate, th->max_hp - th->hp)*regen_pct/100;
+  th->mv += MIN (mv_rate, th->max_mv - th->mv)*regen_pct/100;
   
   if (IS_PC (th)) /* Pc update mana etc... */
     {
@@ -906,12 +919,15 @@ update_fast (THING *th)
   int roomflags, thflags;
   int charge;
   VALUE *gem, *power;
-  
+  int regen_pct = 100; /* Amount that a player regens == 
+			  2*soc_power_pct-100 in astral areas...
+			  it does nothing until you have 50pct and only 50pct 
+			  regen when you have 75 pct of the cities. */
   
   /* Only do this with players.  */
   
   if (!IS_PC (th) || (room = th->in) == NULL || 
-      IS_AREA (room))
+      IS_AREA (room) || !room->in || !IS_AREA(room->in))
     return;
   roomflags = flagbits (room->flags, FLAG_ROOM1);
   
@@ -935,6 +951,9 @@ update_fast (THING *th)
 	    }
 	}
     }
+  if (th->align < ALIGN_MAX &&
+      align_info[th->align] && IS_ROOM_SET (room->in, ROOM_ASTRAL))
+    regen_pct = MAX (0, 2*align_info[th->align]->power_pct-100);
   
   thflags = flagbits (th->flags, FLAG_AFF);
   if (IS_SET (thflags, AFF_REGENERATE))
@@ -942,16 +961,17 @@ update_fast (THING *th)
       if (IS_PC (th))
 	{
 	  if (th->hp < th->max_hp)
-	    th->hp += MIN (th->max_hp - th->hp, nr (3, 6));
-	  if (th->mv < th->max_mv)
+	    
+	    th->hp += MIN (th->max_hp - th->hp, nr (3, 6)*regen_pct/100);
+	  if (th->mv < th->max_mv && regen_pct == 100)
 	    th->mv++;
 	}
       else
 	{
 	  if (th->hp < th->max_hp)
-	    th->hp += MIN (th->max_hp - th->hp, nr (0, th->max_hp/20));
+	    th->hp += MIN (th->max_hp - th->hp, nr (0, th->max_hp/20)*regen_pct/100);
 	  if (th->mv < th->max_mv)
-	    th->mv += MIN (th->max_mv - th->mv, nr (0, LEVEL (th)/20));
+	    th->mv += MIN (th->max_mv - th->mv, nr (0, LEVEL (th)/20)*regen_pct/100);
 	}
     }
   
@@ -960,8 +980,8 @@ update_fast (THING *th)
       if (IS_SET (roomflags, ROOM_EXTRAHEAL))
 	{
 	  if (th->hp < th->max_hp)
-	    th->hp += MIN (th->max_hp - th->hp, 2);
-	  if (th->mv < th->max_mv)
+	    th->hp += MIN (th->max_hp - th->hp, 2*regen_pct/100);
+	  if (th->mv < th->max_mv && regen_pct == 100)
 	    th->mv++;
 	}
       if (IS_SET (roomflags, ROOM_MANADRAIN))
@@ -980,7 +1000,7 @@ update_fast (THING *th)
       else if (IS_SET (roomflags, ROOM_EXTRAMANA))
 	{
 	  if (th->pc->mana < th->pc->max_mana)
-	    th->pc->mana += MIN (th->pc->max_mana - th->pc->mana, 2);
+	    th->pc->mana += MIN (th->pc->max_mana - th->pc->mana, 2*regen_pct/100);
 	  for (obj = th->cont; obj; obj = obj->next_cont)
 	    {
 	      if (obj->wear_loc > ITEM_WEAR_WIELD ||
