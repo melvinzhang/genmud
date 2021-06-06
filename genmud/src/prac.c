@@ -49,6 +49,8 @@ do_practice (THING *th, char *arg)
   char buf[STD_LEN];
   int i, max_prac = MAX_PRAC, count = 0, j, type = SPELLT_MAX;
   bool found = FALSE, is_teacher = FALSE, missing_prereq = FALSE;
+  bool nolearn = FALSE;
+  char arg1[STD_LEN];
   
   if (!th || !th->in || !IS_PC (th))
     return;
@@ -56,8 +58,13 @@ do_practice (THING *th, char *arg)
   
   if (*arg == 'z')
     for (type = 0; type < SPELLT_MAX; type++)
-      if (!str_prefix (arg + 1, spell_types[type]))
-	break;
+      {
+	if (!str_prefix (arg + 1, spell_types[type]))
+	  {
+	    arg = f_word (arg, arg1);
+	    break;
+	  }
+      }
   
   fix_pc (th);
   for (i = 0; i < 3; i++)
@@ -138,10 +145,14 @@ do_practice (THING *th, char *arg)
 	stt ("Nothing.\n\r", th);
       return;
     }
-  else if (!str_cmp (arg, "all") || type != SPELLT_MAX || !*arg)
+  else if (!str_cmp (arg, "all") || type != SPELLT_MAX || !*arg ||
+	   !str_cmp (arg, "nolearn"))
     {
       bigbuf[0] = '\0';
       count = 0;
+      if (!str_cmp (arg, "nolearn"))
+	nolearn = TRUE;
+      
       if (type >= 0 && type < SPELLT_MAX)
 	sprintf (buf, "You know the following %s%s:\n\n\r",
 		 (type == SPELLT_PROF ? "proficiencies" : spell_types[type]),
@@ -152,15 +163,26 @@ do_practice (THING *th, char *arg)
       
       for (i = 0; i < MAX_SPELL; i++)
 	{
-	  if (th->pc->prac[i] > 0 &&
-	      (spell = find_spell (NULL, i)) != NULL &&
+	  if ((spell = find_spell (NULL, i)) != NULL &&
 	      (type == SPELLT_MAX || spell->spell_type == type))
 	    {
-	      sprintf (buf, "%-25s %s ", spell->name, prac_pct (th, spell));
-	      add_to_bigbuf (buf);
-	      if (++count % 2 == 0)
-		add_to_bigbuf ("\n\r");
+	      if (th->pc->prac[i] > 0 && !nolearn) 
+		{
+		  sprintf (buf, "%-25s %s      ", spell->name, prac_pct (th, spell)); 
+		  add_to_bigbuf (buf);
+		  if (++count % 2 == 0)
+		    add_to_bigbuf ("\n\r");
+		}
+	      else if (th->pc->nolearn[i])
+		{
+		  sprintf (buf, "%-25s \x1b[1;31m(Nolearn)  \x1b[0;37m",
+			   spell->name);
+		  add_to_bigbuf (buf);
+		  if (++count % 2 == 0)
+		    add_to_bigbuf ("\n\r");
+		}
 	    }
+	  
 	}
       add_to_bigbuf ("\n\r");
       send_bigbuf (bigbuf, th);
@@ -215,6 +237,8 @@ do_practice (THING *th, char *arg)
       stt ("That spell is of an unknown type!\n\r", th);
       return;
     }
+
+  
   
   /* Atm books let anyone learn anything..but this may
      change. */
@@ -225,7 +249,8 @@ do_practice (THING *th, char *arg)
 	 this will get around that in essentially the same way. */
       
       if (th->pc->prac[spell->vnum] == 0 &&
-	  total_spells (th, spell->spell_type) >= allowed_spells (th, spell->spell_type))
+	  total_spells (th, spell->spell_type) >= 
+	  allowed_spells (th, spell->spell_type))
 	{
 	  sprintf (buf, "You don't have any %s slots left!\n\r",
 		   spell_types[spell->spell_type]);
@@ -321,7 +346,7 @@ void
 do_unlearn (THING *th, char *arg)
 {
   int i;
-  SPELL *spl;
+  SPELL *spl, *spl2;
   
   if (!IS_PC (th))
     return;
@@ -376,8 +401,23 @@ do_unlearn (THING *th, char *arg)
 	}
     }
   
-  /* Note no pracs given back for this, but it does open up a slot! */
+  /* Can't unlearn something if you know any spells that it's a 
+     prereq of. */
 
+  for (i = 0; i < MAX_PREREQ_OF; i++)
+    {
+      if ((spl2 = find_spell (NULL, spl->prereq_of[i])) != NULL &&
+	  spl2->vnum >= 0 && spl2->vnum < MAX_SPELL &&
+	  th->pc->prac[spl2->vnum] > 0)
+	{
+	  stt ("You can't unlearn a spell if you know a spell that comes after it.\n\r", th);
+	  return;
+	}
+    }
+	  
+
+  /* Note no pracs given back for this, but it does open up a slot! */
+  
   th->pc->prac[spl->vnum] = 0;
   stt ("Ok, spell unlearned.\n\r", th);
   return;
@@ -453,7 +493,8 @@ set_up_teachers (void)
   char title[STD_LEN];
   int bad_rooms = 0;
   int area_count = 0;
-  
+  bool has_a_prereq;
+
   /* First if we don't have at least 15 areas, this won't automatically
      set up teachers. */
 
@@ -469,18 +510,30 @@ set_up_teachers (void)
   find_teacher_locations();
   for (spl = spell_list; spl; spl = spl->next)
     {
-      if (spl->teacher[0] == 0 && spl->level >= 20)
+      if (spl->teacher[0] != 0  || spl->level < 20)
+	continue;
+      
+      has_a_prereq = FALSE;
+      
+      for (i = 0; i < NUM_PRE; i++)
+	{
+	  if (spl->prereq[i])
+	    has_a_prereq = TRUE;
+	}
+      if (!has_a_prereq)
 	num_spells_left++;
     }
   
   /* Loop through all spells...*/
   while (num_spells_left > 0)
     {
-      if (bad_rooms > 100)
+      if (bad_rooms > 5000)
 	return;
       /* Make the trainer mob...*/
+      
       if ((room = find_random_room (NULL, FALSE, 0, BADROOM_BITS)) == NULL ||
-	  !room->in || IS_AREA_SET (room->in, AREA_NOREPOP))
+	  !room->in || IS_AREA_SET (room->in, AREA_NOREPOP) ||
+	  LEVEL(room->in) > 60)
 	{
 	  bad_rooms++;
 	  continue;
@@ -489,7 +542,6 @@ set_up_teachers (void)
       if ((mob = create_thing (TEACHER_VNUM)) == NULL)
 	return;
       
-      mob->thing_flags |= TH_NUKE;
       
       /* Add the teaching value if needed */
       if ((teach = FNV (mob, VAL_TEACHER0)) == NULL)
@@ -534,22 +586,35 @@ set_up_teachers (void)
       sprintf (buf, "%s the %s is here.", name, title);
       mob->long_desc = new_str (buf);
       
+      mob->thing_flags |= TH_NO_FIGHT;
       
       for (i = 0; i < NUM_VALS; i++)
 	teach->val[i] = 0;
       
       /* Get the number of spells to add onto this mob. */
-      spells_this_time = nr (1, NUM_VALS);
+      spells_this_time = nr (NUM_VALS/2, NUM_VALS);
       if (spells_this_time > num_spells_left)
 	spells_this_time = num_spells_left;
       
       for (i = 0; i < spells_this_time; i++)
 	{
+	  int j = 0;
 	  spell_chose = nr (1, num_spells_left);
 	  choice = 0;
 	  for (spl = spell_list; spl; spl = spl->next)
 	    {
 	      if (spl->teacher[0] != 0 || spl->level < 20)
+		continue;
+
+	      has_a_prereq = FALSE;
+
+	      for (j = 0; j < NUM_PRE; j++)
+		{
+		  if (spl->prereq[j])
+		    has_a_prereq = TRUE;
+		}
+	      
+	      if (has_a_prereq)
 		continue;
 	      
 	      if (++choice == spell_chose)
@@ -569,5 +634,28 @@ set_up_teachers (void)
 }
 
       
-      
-
+void
+do_nolearn (THING *th, char *arg)
+{
+  SPELL *spl;
+  char buf[STD_LEN];
+  
+  if (!th || !IS_PC (th) || !arg)
+    return;
+  
+  if ((spl = find_spell (arg, 0)) == NULL)
+    {
+      stt ("Nolearn <spellname\n\r", th);
+      return;
+    }
+  
+  if (spl->vnum < 0 || spl->vnum >= MAX_SPELL)
+    return;
+  
+  th->pc->nolearn[spl->vnum] = (th->pc->nolearn[spl->vnum] ? 0 : 1);
+  sprintf (buf, "You will%s learn %s.\n\r", 
+	   (th->pc->nolearn[spl->vnum] ? "" : " not"),
+	   spl->name);
+  stt (buf, th);
+  return;
+}

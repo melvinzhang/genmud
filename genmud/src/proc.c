@@ -67,13 +67,10 @@ find_random_word (char *txt, char *society_name)
 	{
 	  arg = f_word (arg, arg1);
 	  
-	  if (*arg1)
-	    {
-	      if (count == 0)
-		num_choices++;
-	      else if (--num_chose < 1)
-		break;
-	    }
+	  if (count == 0)
+	    num_choices++;
+	  else if (--num_chose < 1)
+	    break;	  
 	}
       while (*arg); 
       
@@ -696,7 +693,9 @@ show_resets (RESET *start)
     {
       thg = find_thing_num (res->vnum);
       sprintf (buf, "Reset \x1b[1;34m%d\x1b[0;37m: (\x1b[1;36m%d\x1b[0;37m - %s) (\x1b[1;37m%d\x1b[0;37m pct) (\x1b[1;32m%d\x1b[0;37m max) (\x1b[1;31m%d\x1b[0;37m nest)\n\r", 
-	       num, res->vnum, (thg ? NAME(thg) : "nothing"), 
+	       num, res->vnum, 
+	       (thg ? 
+		(*NAME(thg) ? NAME(thg) : KEY(thg)) : "nothing"), 
 	       res->pct, res->max_num, res->nest);
       
       strcat (retpos, buf);
@@ -801,6 +800,8 @@ is_named (THING *th, char *arg)
 }
 
 
+/* This capitalizes a word and returns it in another string. We assume
+   that the original string may be const! */
     
 char *
 capitalize (char *arg)
@@ -827,6 +828,36 @@ capitalize (char *arg)
   return ret;
 }
 
+
+/* This capitalizes all words in a string. We assume that the string
+   is not const! This also skips color codes at the start of words. */
+
+void
+capitalize_all_words (char *txt)
+{
+  char *t = txt;
+  bool color_code = FALSE;
+  if (!txt || !*txt)
+    return;
+
+  *t = UC (*t);
+  t++;
+  for (; *t; t++)
+    {
+      if (*t == '\x1b')
+	{
+	  color_code = TRUE;
+	  while (*t && *t != 'm' && *t != ' ')
+	    t++;
+	}
+      else
+	color_code = FALSE;
+      
+      if (*(t-1) == ' ' || color_code)
+	*t = UC (*t);
+    }
+  return;
+}
 
 int
 get_hitroll (THING *th)

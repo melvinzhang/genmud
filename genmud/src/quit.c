@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include "serv.h"
 #include "track.h"
+#include "worldgen.h"
 
 void
 do_qui (THING *th, char *arg)
@@ -551,6 +552,7 @@ do_offensive (THING *th, char *arg)
   sprintf (buf, "Offensive percent set to %d. 50 percent is normal.\n\r", 
   th->pc->off_def);
   stt (buf, th);
+  th->pc->wait += 2*PULSE_PER_SECOND;
   return;
 }
 
@@ -896,6 +898,7 @@ do_remort (THING *th, char *arg)
   char arg1[STD_LEN];
   char buf[STD_LEN];
   RACE *race, *align;
+ 
   if (!IS_PC (th))
     return;
   
@@ -1096,8 +1099,10 @@ do_remort (THING *th, char *arg)
   /* Clear spells */
   
   for (i = 0; i < MAX_SPELL; i++)
-    th->pc->prac[i] = 0;
-  
+    {
+      th->pc->prac[i] = 0;
+      th->pc->learn_tries[i] = 0;
+    }
   /* Remove eq */
 
   for (obj = th->cont; obj != NULL; obj = objn)
@@ -1117,6 +1122,9 @@ do_remort (THING *th, char *arg)
   for (i = 0; i < STAT_MAX; i++)
     th->pc->stat[i] += totals[i];
 
+  /* Clear worldgen quests for this player. */
+
+  clear_player_worldgen_quests (th);
 
   /* Now set up the character anew */
 
@@ -1137,7 +1145,6 @@ do_remort (THING *th, char *arg)
   find_max_mana (th);
   fix_pc (th);
   act ("@1n just remorted.", th, NULL, NULL, NULL, TO_ALL);
-  thing_from (th);
   thing_to (th, find_thing_num (th->align + 100));
   return;
 }

@@ -229,6 +229,7 @@ init_command_list (void)
   add_command ("exlist", do_exlist, BLD_LEVEL, FALSE);
   add_command ("peace", do_peace, 0, FALSE);
   add_command ("pfile", do_pfile, 0, FALSE);
+  add_command ("description", do_description, 0, FALSE);
   add_command ("password", do_password, 0, FALSE);
   add_command ("areagen", do_areagen, MAX_LEVEL, FALSE);
   add_command ("areas", do_areas, 0, FALSE);
@@ -251,6 +252,7 @@ init_command_list (void)
   add_command ("graft", do_graft, 0, FALSE);
   add_command ("investigate", do_investigate, 0, FALSE);
   add_command ("forge", do_forge, 0, FALSE);
+  add_command ("metalgen", do_metalgen, MAX_LEVEL, FALSE);
   add_command ("update", do_update, MAX_LEVEL, FALSE);
   add_command ("enchant", do_enchant, 0, FALSE);
   add_command ("butcher", do_butcher, 0, FALSE);
@@ -263,6 +265,7 @@ init_command_list (void)
   add_command ("wsave", do_worldsave, BLD_LEVEL, FALSE);
   add_command ("weight", do_weight, 0, FALSE);
   add_command ("fortify", do_fortify, 0, FALSE);
+  add_command ("mythology", do_mythology, 0, FALSE);
   add_command ("get", do_get, 0, FALSE);
   add_command ("drop", do_drop, 0, FALSE);
   add_command ("memory", do_memory, MAX_LEVEL, FALSE);
@@ -333,6 +336,7 @@ init_command_list (void)
   add_command ("prompt", do_prompt, 0, FALSE);
   add_command ("follow", do_follow, 0, FALSE);
   add_command ("compare", do_compare, 0, FALSE);
+  add_command ("nolearn", do_nolearn, 0, FALSE);
   add_command ("ditch", do_ditch, 0, FALSE);
   add_command ("break", do_break, 0, FALSE);
   add_command ("twhere", do_twhere, BLD_LEVEL, FALSE);

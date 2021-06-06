@@ -181,7 +181,7 @@ do_channel (THING *th, CHAN *chan, char *arg)
   
   
   if (!th || !chan || !arg || (currchan = chan->number) < 0 
-      || currchan >= MAX_CHANNEL || 
+      || currchan >= MAX_CHANNEL || !CAN_TALK (th) ||
       (!IS_PC (th) && th->position == POSITION_SLEEPING) ||
       (!CAN_TALK(th) && !SERVER_BEING_ATTACKED_YELL))
     { 

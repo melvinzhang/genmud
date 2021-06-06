@@ -45,12 +45,15 @@ const struct flag_data caste1_flags[] =
     {"builder", " Builder", CASTE_BUILDER, "Hall of Builders"},
     {"healer", " Healer", CASTE_HEALER, "Temple"},
     {"wizard", " Wizard", CASTE_WIZARD, "Academy"},
-    {"shopkeeper", " Shopkeeper", CASTE_SHOPKEEPER, "Marketplace"},
-    {"crafter", " Crafter", CASTE_CRAFTER, "Craftsmens' Guild"},
+
+    /* These are things that I don't feel like having in right now. */
+    //{"shopkeeper", " Shopkeeper", CASTE_SHOPKEEPER, "Marketplace"},
+    //{"crafter", " Crafter", CASTE_CRAFTER, "Craftsmens' Guild"},
     /* Generally CASTE_FARMER should be last since their caste
        houses take up a lot more rooms (they overwrite many field
-       or underground rooms rather than just a few in a small area. */
-    {"farmer", " Farmer", CASTE_FARMER, "Farm"},
+       or underground rooms rather than just a few in a small area. 
+    I wlll not use this right now. */
+    //    {"farmer", " Farmer", CASTE_FARMER, "Farm"},
     {"none", "none", 0, "nothing"},
   };
 
@@ -116,10 +119,20 @@ void
 free_society (SOCIETY *soc)
 {
   FLAG *flg, *flgn;
+  THING *player;
   /* Only destructible societies get nuked. */
   if (!soc || !IS_SET (soc->society_flags, SOCIETY_DESTRUCTIBLE))
     return;
 
+  for (player = thing_hash[PLAYER_VNUM % HASH_SIZE]; player; player = player->next)
+    {
+      if (IS_PC (player) && player->pc->editing == soc)
+	{
+	  player->pc->editing = NULL;
+	  if (player->fd)
+	    player->fd->connected = CON_ONLINE;
+	}
+    }
 
   society_from_list (soc);
 
@@ -1561,4 +1574,37 @@ find_random_society (bool only_generated)
   return soc;
 }
   
+
+/* This finds a generated society that isn't nuked of the appropriate
+   alignment...or any alignment if align is < 0 or >= ALIGN_MAX */
+SOCIETY *
+find_random_generated_society (int align)
+{
+  SOCIETY *soc;
+  int num_choices = 0, num_chose = 0, count;
+  
+  for (count = 0; count < 2; count++)
+    {
+      for (soc = society_list; soc; soc = soc->next)
+	{
+	  if (IS_SET (soc->society_flags, SOCIETY_NUKE) ||
+	      soc->generated_from == 0 ||
+	      (align >= 0 && align < ALIGN_MAX &&
+	       soc->align != align))
+	    continue;
+	  
+	  if (count == 0)
+	    num_choices++;
+	  else if (--num_chose < 1)
+	    break;
+	}
+      if (count == 0)
+	{
+	  if (num_choices < 1)
+	    return NULL;
+	  num_chose = nr (1, num_choices);
+	}
+    }
+  return soc;
+}
   

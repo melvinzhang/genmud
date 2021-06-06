@@ -30,13 +30,15 @@ static int aff_rank_levels[AFF_RANK_MAX] =
    a random value. */
 static const char *objectgen_part_names[OBJECTGEN_NAME_MAX] =
   {
-    "owner",
+    "owner", /*0 */
     "a_an",   /* Only set if owner isn't. */
     "prefix",
     "color",
     "gem",
-
-    "metal",
+    
+    "metal", /* 5 */
+    "nonmetal", /* Other things besides metals that an object can
+		   be made of. */
     "society", 
     "type",   /* 8th slot, array[7]. Important to keep distinct. */
     "suffix",
@@ -130,6 +132,7 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
   char fullname[STD_LEN*2];
   char realfullname[STD_LEN * 2];
   char longname[STD_LEN*3];
+  char *t;
   if (!obj || !name || !colorname || obj->wear_pos <= ITEM_WEAR_NONE ||
       obj->wear_pos >= ITEM_WEAR_MAX || obj->wear_pos == ITEM_WEAR_BELT)
     return;
@@ -143,6 +146,13 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	continue;
       if (*fullname)
 	strcat (fullname, " ");
+      if (!*colorname[i] && *name[i])
+	strcpy (colorname[i], name[i]);
+      for (t = name[i]; *t; t++)
+	{
+	  if (*t == '\'' || *t == '\"')
+	    *t = '\0';
+	}
       strcat (fullname, name[i]);
     }
   
@@ -211,7 +221,6 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	}
     }
   
-  fullname[0] = UC(fullname[0]);
   strcpy (realfullname, add_color (fullname));
   
   free_str (obj->short_desc);
@@ -274,6 +283,7 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
     }
   
   free_str (obj->long_desc);
+  longname[0] = UC(longname[0]);
   obj->long_desc = new_str (longname);
   
   
@@ -291,7 +301,7 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 {
   int i;
   char *t;
-  int num_names = 1;
+  int num_names = 1, rem_type;
   int names_used, names_left, num_names_used, choice, name_choices;
   
   
@@ -301,12 +311,17 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
   if (level < 0)
     level = 0;
 
+  /* Generate the names. */
   for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
     {
       name[i][0] = '\0';
       colorname[i][0] = '\0';
       
-      if (i != OBJECTGEN_NAME_TYPE)
+      if (i == OBJECTGEN_NAME_METAL && nr (1,8) == 2)
+	strcpy (name[i], find_gen_word 
+		(OBJECTGEN_AREA_VNUM,
+		 "metal_gen_names", colorname[i]));
+      else if (i != OBJECTGEN_NAME_TYPE)
 	strcpy (name[i], find_gen_word 
 		(OBJECTGEN_AREA_VNUM,
 		 (char *) objectgen_part_names[i], colorname[i]));
@@ -314,6 +329,19 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	strcpy (name[i], objectgen_find_typename (wear_loc, weapon_type));
     }
   
+  /* Choose metal or nonmetal. Most of the time choose metal name. */
+  
+  if (*name[OBJECTGEN_NAME_METAL] && *name[OBJECTGEN_NAME_NONMETAL])
+    {
+      if (nr (1,4) != 3)
+	rem_type = OBJECTGEN_NAME_NONMETAL;
+      else
+	rem_type = OBJECTGEN_NAME_METAL;
+      *name[rem_type] = '\0';
+      *colorname[rem_type] = '\0';
+    }
+  
+      
   /* Add the society name, and if no society name exists, add the owner
      name. */
   
@@ -339,9 +367,7 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	strcpy (name[OBJECTGEN_NAME_TYPE], "armor");
     }
   
-  /* Clear some of the names. The higher the level of the object is,
-     the more names it has. */
-
+  
   /* Set names_used to have bits set for all nonnull names that won't
      be fixed. */
 
@@ -353,7 +379,7 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
     {
       /* Most of the time keep the name on the front, otherwise move
 	 it to the back where the suffix is. */
-      if (nr (1,5) != 2)
+      if (nr (1,10) != 2)
 	*name[OBJECTGEN_NAME_A_AN] = '\0';
       else
 	{
@@ -365,9 +391,13 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 		  colorname[OBJECTGEN_NAME_OWNER]);
 	  *name[OBJECTGEN_NAME_OWNER] = '\0';
 	  *colorname[OBJECTGEN_NAME_OWNER] = '\0';
+	  strcpy (name[OBJECTGEN_NAME_A_AN], "The");
+	  strcpy (colorname[OBJECTGEN_NAME_A_AN], "The");
 	}
     }
-  num_names += nr (0, level/175+1);
+  
+
+  num_names += nr (0, level/125+1);
   if (num_names > 3)
     num_names = 3;
   
@@ -380,17 +410,18 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
   names_left = num_names;
   num_names += num_names_used;
   
-  /* Name choices is set to 5 since there are 5 things you can pick
+  /* Name choices is set to 6 since there are 6 things you can pick
      from besides the type, the a_an and the society/owner name.
 
      Those are: prefix color gem metal suffix. */
-  for (name_choices = 5; name_choices > 0; name_choices--)
+  for (name_choices = OBJECTGEN_NAME_EXTRA; name_choices > 0; name_choices--)
     {
       choice = nr (1, name_choices);
       
       for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
 	{
-	  if (!IS_SET (names_used, (1 << i)) && --choice < 1)
+	  if (!IS_SET (names_used, (1 << i)) && 
+	      *name[i] &&--choice < 1)
 	    break;
 	}
       SBIT (names_used, (1 << i));
@@ -449,8 +480,14 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	*t++ = 's';
       *t = '\0';
     }
-	
   
+  /* If there's a suffix, usually change the "A/An" into a "The" */
+
+  if (*name[OBJECTGEN_NAME_SUFFIX] && nr (1,7) != 3)
+    {
+      strcpy (name[OBJECTGEN_NAME_A_AN], "The");
+      strcpy (colorname[OBJECTGEN_NAME_A_AN], "The");
+    }
       
   return;
 }
@@ -644,8 +681,8 @@ objectgen_setup_stats (THING *obj, int weapon_type)
       
       val->type = VAL_WEAPON;
       
-      val->val[0] = nr (lev_sqrt/3,lev_sqrt*2/3);
-      val->val[1] = nr(lev_sqrt*3/4,lev_sqrt*5/4);
+      val->val[0] = nr (lev_sqrt/2,lev_sqrt*2/3);
+      val->val[1] = nr(lev_sqrt,lev_sqrt*2);
       
       if (weapon_type < 0 || 
 	  weapon_type >= WPN_DAM_MAX)
@@ -855,6 +892,131 @@ objectgen_setup_stats (THING *obj, int weapon_type)
 
   return;
 }
+
+void
+do_metalgen (THING *th, char *arg)
+{
+  THING *obj;
+  if (!IS_PC (th) || LEVEL (th) != MAX_LEVEL)
+    return;
+  
+  generate_metal_names();
+  if ((obj = find_gen_object (OBJECTGEN_AREA_VNUM, "metal_gen_names")) == NULL ||
+      !obj->desc || !*obj->desc)
+    {
+      stt ("Couldn't generate metal names.\n\r", th);
+      return;
+    }
+  stt ("The metal names:\n\n\r", th);
+  stt (obj->desc, th);
+  return;
+}
+
+/* This clears and generates a list of "fake metal" names for use when making
+   objects...*/
+
+void
+generate_metal_names (void)
+{
+  THING *obj; /* The object where the metal names will be stored. */
+  char buf[10*STD_LEN]; /* Where the complete string gets stored. */
+  char name[STD_LEN];   /* Where we store the name. */
+  char colorname[STD_LEN]; /* Where we store the color name. */
+  char *t;
+  int i;
+  bool name_ok = FALSE;
+  int num_generated; /* How many metal names to generate. */
+  /* Keeping track of the colors. */
+  int color[3], num_colors;
+  int name_length; /* Used when setting up colors. */
+  
+  if ((obj = find_gen_object (OBJECTGEN_AREA_VNUM, "metal_gen_names")) == NULL)
+    return;
+
+  
+ 
+  buf[0] = '\0';
+  
+  num_generated = nr (7,15) + 8;
+  for (i = 0; i < num_generated; i++)
+    {
+      do
+	{
+	  name_ok = TRUE;
+	  strcpy (name, create_society_name (NULL));
+	  
+	  for (t = name; *t; t++)
+	    /* Make sure that everything is a letter and not a 
+	       weird letter. */
+	    if (!isalpha(*t) || 
+		LC (*t) == 'q' || LC (*t) == 'x' || LC (*t) == 'z')
+	      name_ok = FALSE;
+	  /* Crop the name. */
+	  name[nr(4,6)] = '\0';
+	  /* Move back to a nonvowel. */
+	  t--;
+	  while (isvowel (*t))
+	    t--;
+	  t++;
+	  *t = '\0';
+	  
+	  /* Make sure the name is long enough. */
+	  if (t < name + 2)
+	    name_ok = FALSE;
+	}
+      while (!name_ok);
+      
+      if (nr (1,3) == 2)
+	strcat (name, "ite");
+      else if (nr (1,2) == 1)
+	strcat (name, "ate");
+      else
+	strcat (name, "ium");
+      
+      name_length = strlen(name);
+      if (nr (1,9) == 2)
+	num_colors = 0;
+      else if (nr (1,3) == 1)
+	num_colors = 1;
+      else if (nr (1,4) != 2)
+	num_colors = 2;
+      else 
+	num_colors = 3;
+      colorname[0] = '\0';
+      if (num_colors > 0)
+	{
+	  sprintf (colorname, " & ");
+	  /* Get the first colors all set to one thing. */
+	  color[2] = color[1] = color[0] = nr (1,15);
+	  
+	  /* Make up the second color. */
+	  while (color[1] == color[0])
+	    color[1] = nr (1,15);
+	  sprintf (colorname + strlen(colorname), "$%c", int_to_hex_digit (color[0]));
+	  for (t = name; *t; t++)
+	    {
+	      if (t-name == name_length/num_colors)
+		sprintf (colorname + strlen (colorname), "$%c",
+			 int_to_hex_digit (color[1]));
+	      if (t-name == 2*name_length/num_colors)
+		sprintf (colorname + strlen (colorname), "$%c",
+			 int_to_hex_digit (color[2]));
+	      sprintf (colorname + strlen (colorname), "%c", *t);
+	    }
+	  strcat (colorname, "$7");
+
+	}
+      strcat (buf, name);
+      strcat (buf, colorname);
+      strcat (buf, "\n\r");
+    }
+  free_str (obj->desc);
+  obj->desc = new_str (add_color(buf));
+
+  return;
+}
+
+
 
 
 

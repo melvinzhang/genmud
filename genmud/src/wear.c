@@ -320,7 +320,6 @@ remove_thing (THING *th, THING *obj, bool guaranteed)
       return;
     }
   
-  thing_from (obj);
   thing_to (obj, th);
   /* Drain gems/powershields */
   

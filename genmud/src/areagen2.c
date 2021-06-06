@@ -1206,6 +1206,33 @@ check_loop_exits (THING *area, int num)
   return;
 }
 
+/* This finds a generator object with a certain name inside of a 
+   certain generator area. */
+
+THING *
+find_gen_object (int area_vnum, char *typename)
+{
+  THING *obj, *area;
+  
+  if (area_vnum < GENERATOR_NOCREATE_VNUM_MIN ||
+      area_vnum >= GENERATOR_NOCREATE_VNUM_MAX ||
+      (area = find_thing_num (area_vnum)) == NULL ||
+      !IS_AREA (area) || !typename || !*typename)
+    return NULL;
+  
+  /* Find the object with the correct name. */
+  for (obj = area->cont; obj; obj = obj->next_cont)
+    {
+      if (is_named (obj, typename))
+	break;
+    }
+  
+  if (!obj || !obj->desc || !*obj->desc)
+    return NULL;
+  
+  return obj;
+}
+
 /*  This finds a descriptive word from the various lists of words
    found in the objectgen area. type tells what kind of wordlist
    we're trying to access, and the word gets placed into buf. 
@@ -1215,32 +1242,19 @@ check_loop_exits (THING *area, int num)
 
 
 char *
-find_gen_word (int area_vnum, char *type, char *color)
+find_gen_word (int area_vnum, char *typename, char *color)
 {
-  THING *area, *obj;
+  THING *obj;
   int num_words = 0, num_chose = 0, count;
   static char buf[STD_LEN];
   char word[STD_LEN], *loc;
-  if (!type || !*type)
-    return 0;
+  if (!typename || !*typename)
+    return NULL;
   
   buf[0] = '\0';
   word[0] = '\0';
   
-  if (area_vnum < GENERATOR_NOCREATE_VNUM_MIN ||
-      area_vnum >= GENERATOR_NOCREATE_VNUM_MAX ||
-      (area = find_thing_num (area_vnum)) == NULL ||
-      !IS_AREA (area))
-    return buf;
-  
-  /* Find the object with the correct name. */
-  for (obj = area->cont; obj; obj = obj->next_cont)
-    {
-      if (is_named (obj, type))
-	break;
-    }
-  
-  if (!obj || !obj->desc || !*obj->desc)
+  if ((obj = find_gen_object (area_vnum, typename)) == NULL)
     return buf;
   
 

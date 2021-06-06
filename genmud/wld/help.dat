@@ -1,3 +1,15 @@
+HELP 0
+Key HISTORY BACKSTORY`
+Text This is the history of the world.
+`
+END_HELP
+
+HELP MAX
+Key PEDIT`
+Text There is no pedit command. To edit a player just do edit 
+<playername>.`
+END_HELP
+
 HELP MAX
 Key SOCIETYGEN SOCIETY_GEN`
 Text  This area (106000-107000) has names of societies 
@@ -2938,6 +2950,9 @@ Slist <guild> slists all spells which require that guild.
 
 Slist offensive/defensive/self/anyone lists all spells with that target
 type.
+
+Slist no_prereq or slist noprereq lists all skills/spells with no
+prerequisites.
  
 These can be combined somewhat, but generally not more than one from
  each category.
@@ -2945,6 +2960,17 @@ These can be combined somewhat, but generally not more than one from
 `
 SeeAlso `
 END_HELP
+
+HELP 0
+Key NOLEARN`
+Text This command lets you specify that you will not try to learn
+certain skills and spells so you can pare the tree of skills
+you want to learn. This lets you decide how to more precisely make
+your character. It can also be useful to do this to get one
+specific skill after a skill you're currently working o first.
+`
+END_HELP
+
 
 HELP MAX
 Key MATH_PARSE`
@@ -3378,6 +3404,16 @@ desc: Sets the thing's description. You can use copyfrom (number) and
       to copy this thing's description to another, respectively.
 
 done: Ends the editing session (wsave changed saves things.)
+
+eds edesc extra_description ex_description:
+
+These let you edit the extra description of a thing.
+
+edesc delete <name> deletes the edesc with this keyword.
+edesc add <names> lets you add an edesc with those names.
+edesc <name> <new name> lets you replace an edesc with an older
+name with a newer list of names. You have to do all at once unfortunately.
+edesc <name> desc lets you edit the description for this name.
 
 flag: See help FLAGS.
 
@@ -4779,7 +4815,7 @@ SeeAlso `
 END_HELP
 
 HELP MORT
-Key PRACTICE`
+Key PRACTICE NOLEARN`
 Admin Note that you can set trainers using 3 values teacher0,
 teacher1, and teacher2. You can also set objects that can
 be picked up to teach..(books), and they set the vict to
@@ -4803,6 +4839,26 @@ lets you practice a specific spell or skill.
 
 Once you have practiced something, it will improve with use.
 See help Improve for information on this.
+
+$9Most spells cannot be learned in this way. You must use the
+prerequisites for a spell a great deal and eventually you will
+be automatically granted the spell assuming that you meet the
+level and guild and max skill/spell and stat requirements.$7
+
+Since you automatically learn subsequent skills by learning current
+ones, and since you have a limited number of skill/spell slots,
+you can set spells to be unlearnable by typing 
+
+nolearn <spellname>
+
+This will set a spell as unlearnable and you won't try to learn
+it. Typing it again makes it available to learn. Once you have
+learned a spell, nolearning the spell does nothing.
+
+You can also use this to target your learns by nolearning all
+spells after a certain on except for one which will target
+your learns onto that particular spell. Then you can switch
+to another spell and so forth if you wish.
 
 `
 SeeAlso `

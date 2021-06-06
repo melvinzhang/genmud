@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 #include <malloc.h>
+#include <stdarg.h>
 #include "serv.h"
 
 
@@ -192,3 +193,32 @@ named_in (char *search_in, char *look_for)
   return FALSE;
 }
 
+/* This loops through an entire list instead of just checking for one
+   word in the list. It also checks for the full word as a strstr that
+   starts at a blank or at the beginning of a word, not as a partial
+   string. */
+
+char *
+full_named_in (char *search_in, char *look_for)
+{ 
+  static char look_for_word[STD_LEN*2];
+  char *pos;
+  if (!search_in || !look_for || !*search_in || !*look_for)
+    return nonstr;
+  
+  /* Strip off the first word in the list of names to look for
+     and look for it. */
+  
+  do 
+    {
+      look_for = f_word (look_for, look_for_word);      
+      if (*look_for_word &&
+	  (pos = strstr (search_in, look_for_word)) != NULL &&
+	  (pos == search_in || isspace (*(pos - 1))))
+	return look_for_word;
+    }
+  while (*look_for);
+  
+  return nonstr;
+}
+  

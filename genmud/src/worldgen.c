@@ -13,6 +13,7 @@
 #include "worldgen.h"
 #include "mobgen.h"
 #include "questgen.h"
+#include "objectgen.h"
 
 /* Are we allowed to have areas in these places? */
 static int worldgen_allowed[WORLDGEN_MAX][WORLDGEN_MAX];
@@ -98,12 +99,27 @@ worldgen (THING *th, char *arg)
   if (th && IS_PC (th) && LEVEL(th) < MAX_LEVEL)
     return;
   
+  if (!str_cmp (arg, "fixed"))
+    {
+      sprintf (buf, "touch %s.worldgen.fixed.dat", WLD_DIR);
+      system (buf);
+      stt ("Ok, worldgen has been fixed. To unlock it remove the .worldgen.fixed.dat file in the wld directory.\n\r", th);
+      return;
+    }
   
   
-
-
+  
+  
   if (!str_cmp (arg, "clear yes"))
     {
+      FILE *f;
+      if ((f = wfopen (".worldgen.fixed.dat", "r")) != NULL)
+	{
+	  stt ("The worldgen has been fixed! delete the file .worldgen.fixed.dat from your wld directory to delete the world!\n\r", th);
+	  fclose (f);
+	  return;
+	}
+
       stt ("The worldgen areas will be gone after the next reboot.\n\r", th);
       do_purge (th, "all");
       do_society (th, "clearall");
@@ -156,7 +172,8 @@ worldgen (THING *th, char *arg)
 	  return;
 	}
       SBIT (server_flags, SERVER_WORLDGEN);
-      do_society (th, "generate");
+      generate_metal_names();
+      do_society (th, "generate");      
       generate_randpop_mobs (th);
       worldgen_generate_areas(area_size);
       worldgen_link_areas();
@@ -1741,8 +1758,8 @@ worldgen_clear_player_items(void)
 	  worldgen_remove_object (player);
 	  if (player->in)
 	    {
-	      write_playerfile (player);
 	      thing_to (player, find_thing_num (player->align+100));
+	      write_playerfile (player);
 	      free_thing (player);
 	    }
 	}
@@ -1792,3 +1809,66 @@ worldgen_remove_object (THING *th)
 }
   
   
+/* This resets worldgen objects onto a thing if it doesn't have any
+   worldgen resets already. */
+
+void
+worldgen_check_resets (THING *th)
+{
+  THING *obj;
+  if (!th || !th->in || IS_SET (th->thing_flags, TH_IS_ROOM | TH_IS_AREA) ||
+      th->vnum < WORLDGEN_START_VNUM || th->vnum >= WORLDGEN_END_VNUM)
+    return;
+  
+  for (obj = th->cont; obj; obj = obj->next_cont)
+    {
+      if (obj->vnum >= WORLDGEN_START_VNUM &&
+	   obj->vnum <= WORLDGEN_END_VNUM)
+	break;
+    }
+  
+  if (obj)
+    return;
+  
+  reset_thing (th, 0);
+  return;
+}
+  
+
+/* This clears all of the worldgen quests that a player has. It's used
+   during remorting so that players can redo quests each remort. */
+
+void
+clear_player_worldgen_quests (THING *th)
+{
+  VALUE *qf, *prev;
+  char *t;
+  int i;
+  if (!th || !IS_PC (th))
+    return;
+  
+  for (qf = th->pc->qf; prev; prev = prev->next)
+    {
+      
+      if (!qf->word || !*qf->word)
+	continue;
+
+      /* Only work with questflags that are 7 chars long and end in qzx. 
+	 Those are the ones auto setup for the worldgen code. */
+      
+      if (strlen (qf->word) < 7)
+	continue;
+      
+      for (t = qf->word; *t; t++);
+      if (*(t-1) != 'x' || *(t-2) != 'z' || *(t-3) != 'q')
+	continue;
+      
+      /* Clear all flags here. */
+      for (i = 0; i < NUM_VALS; i++)
+	qf->val[i] = 0;
+    }
+  return;
+}
+      
+
+      

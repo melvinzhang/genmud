@@ -47,8 +47,7 @@ detailgen (THING *area)
       if ((start_room = find_detail_type (area, used)) != NULL &&
 	  IS_ROOM (start_room) &&
 	  (area_in = find_area_in (start_room->vnum)) != NULL &&
-	  area_in->vnum == DETAILGEN_AREA_VNUM &&
-	  start_room->name && *start_room->name)
+	  area_in->vnum == DETAILGEN_AREA_VNUM)
 	{
 	  /* The weight in the detail room lets you determine
 	     how many times the detail can be added to an area. */
@@ -96,7 +95,7 @@ find_detail_type (THING *area, int used[DETAIL_MAX])
 	  /* We only search rooms in the first half of the detail area
 	     room allocation, and then we only pick rooms with
 	     names. */
-	  if (!IS_ROOM (room) || !room->name || !*room->name ||
+	  if (!IS_ROOM (room) || 
 	      ((room->vnum - detail_area->vnum) >= detail_area->mv/2))
 	    continue;
 			
@@ -186,6 +185,7 @@ add_detail (THING *area, THING *to, THING *detail_thing, int depth)
 {
   THING *newth = NULL, *detail_area;
   bool had_society_name_first = FALSE;
+
   if (!to || !detail_thing || IS_AREA (detail_thing) || 
       depth >= DETAIL_MAX_DEPTH)
     return;
@@ -197,7 +197,7 @@ add_detail (THING *area, THING *to, THING *detail_thing, int depth)
   
   if (*detail_society_name)
     had_society_name_first = TRUE;
-
+  
   if (IS_AREA (to))
     {      
       /* Little check here to make sure that the area we're adding the
@@ -249,7 +249,7 @@ add_detail (THING *area, THING *to, THING *detail_thing, int depth)
        (!IS_ROOM (newth) && !IS_AREA(newth))) &&
       *detail_society_name)
     *detail_society_name = '\0';
-       
+  
   return;
 }
 	  
@@ -269,17 +269,14 @@ start_main_detail_rooms (THING *area, THING *detail_room)
   /* What kinds of rooms this detail can be placed into. */
   int detail_room_bits, extra_detail_room_bits = 0;
   VALUE *oval, *nval;
-  char roomname[STD_LEN];
-  char fullroomname[STD_LEN];
-  char *t;
   if ((detail_area = find_thing_num (DETAILGEN_AREA_VNUM)) == NULL ||
       !IS_AREA (detail_area))
     return;
-
+  
   if (!area || !IS_AREA (area))
     return;
   
-  if (!IS_ROOM (detail_room) || !detail_room->name || !*detail_room->name ||
+  if (!IS_ROOM (detail_room) || 
       ((detail_room->vnum - detail_area->vnum) >= detail_area->mv/2))
     return;
   
@@ -296,6 +293,8 @@ start_main_detail_rooms (THING *area, THING *detail_room)
   if (IS_SET (detail_room_bits, AREAGEN_SECTOR_FLAGS) &&
       !(area_sector_flags & detail_room_bits & AREAGEN_SECTOR_FLAGS))
     return;
+
+  /* Get an appropriate room to use for starting the detail. */
   
   for (count = 0; count < 2; count++)
     {
@@ -306,6 +305,8 @@ start_main_detail_rooms (THING *area, THING *detail_room)
 	  if (!IS_ROOM (room) || room->resets ||
 	      IS_ROOM_SET (room, BADROOM_BITS | ROOM_EASYMOVE) ||
 	      is_named (room, "detail") ||
+	      is_named (room, "in_tree") ||
+	      is_named (room, "catwalk") ||
 	      (detail_room_bits &&
 	       !IS_ROOM_SET (room, detail_room_bits)))
 	    continue;
@@ -352,32 +353,23 @@ start_main_detail_rooms (THING *area, THING *detail_room)
   else
     return;
   
-  /* Now get the name of this detail. */
+  /* Now get the name of this detail and make sure that it exists. */
   
-  if (!str_cmp (detail_room->name, "previous_name") ||
-      !str_cmp (detail_room->name, "same_name"))
-    strcpy (roomname, room->short_desc);
-  else
-    strcpy (roomname, generate_detail_name (detail_room));
   
-  if (!*roomname)
+  generate_detail_name (detail_room, start_room);
+  capitalize_all_words (start_room->short_desc);
+  if (!start_room->short_desc || !*start_room->short_desc)
     return;
+
   detail_room_bits |= extra_detail_room_bits;
   
-  sprintf (fullroomname, "%s %s", a_an (roomname), roomname);
-  fullroomname[0] = UC (fullroomname[0]);
-  
-
-  for (t = fullroomname + 1; *t; t++)
-    {
-      if (*(t-1) == ' ')
-	*t = UC(*t);
-    }
   
   copy_flags (detail_room, start_room);
   remove_flagval (start_room, FLAG_ROOM1, 
 		  flagbits(detail_room->flags, FLAG_ROOM1) & ROOM_SECTOR_FLAGS);
   add_flagval (start_room, FLAG_ROOM1, detail_room_bits);
+
+  /* Copy the flags and values over. */
   for (oval = detail_room->values; oval; oval = oval->next)
     {
       
@@ -389,8 +381,7 @@ start_main_detail_rooms (THING *area, THING *detail_room)
 	}
     }
   undo_marked (start_room);
-  add_main_detail_room (start_room, fullroomname, MAX(1,detail_room->height),
-			detail_room_bits);
+  add_main_detail_room (start_room, MAX(1,detail_room->height), detail_room_bits);
   return;
 }
 
@@ -398,7 +389,7 @@ start_main_detail_rooms (THING *area, THING *detail_room)
 /* This adds a detail room to the map. It adds the room's name. */
 
 void
-add_main_detail_room (THING *room, char *name, int depth_left, int room_bits)
+add_main_detail_room (THING *room, int depth_left, int room_bits)
 {
   THING *nroom;
   VALUE *exit;
@@ -421,9 +412,6 @@ add_main_detail_room (THING *room, char *name, int depth_left, int room_bits)
   strcat (buf, "detail");
   free_str (room->name);
   room->name = new_str (buf);
-  free_str (room->short_desc);
-  room->short_desc = new_str (name);
-  /* Copy the flags and values over. */
   
   /* Now remove old bits except underground and add new bits. */
   
@@ -439,8 +427,12 @@ add_main_detail_room (THING *room, char *name, int depth_left, int room_bits)
     {
       if ((exit = FNV (room, dir + 1)) != NULL &&
 	  (nroom = find_thing_num (exit->val[0])) != NULL &&
-	  IS_ROOM (room))
+	  IS_ROOM (room) &&
+	  !is_named (room, "detail") &&
+	  !is_named (room, "in_tree") &&
+	  !is_named (room, "catwalk"))
 	{
+	  /* Now copy the flags and values over. */
 	  copy_flags (room, nroom); 
 	  for (oval = room->values; oval; oval = oval->next)
 	    {	      
@@ -451,14 +443,18 @@ add_main_detail_room (THING *room, char *name, int depth_left, int room_bits)
 		  add_value (nroom, nval);
 		}
 	    }
-	  add_main_detail_room (nroom, name, depth_left - 1, room_bits);
+	  free_str (nroom->short_desc);
+	  nroom->short_desc = new_str (room->short_desc);
+	  add_main_detail_room (nroom, depth_left - 1, room_bits);
 	}
     }
   return;
 }
 
 /* This starts and adds other detail rooms besides the original ones. 
-   It returns the room where the details were started. */
+   It returns the room where the details were started. This only goes
+   to a depth of 1 room in any dir from the central room... since
+   these are supposed to be smaller. Could change this tho. */
 
 THING *
 start_other_detail_rooms (THING *area, THING *detail_thing)
@@ -468,9 +464,8 @@ start_other_detail_rooms (THING *area, THING *detail_thing)
   int dir;
   int room_flags = 0;
   VALUE *exit;
-  char temproomname[STD_LEN];
-  char roomname[STD_LEN];
-  char *t;
+  
+  /* Sanity checking... */
   
   if (!area || !IS_AREA (area) || !detail_thing ||
       (detail_area = detail_thing->in) == NULL || 
@@ -479,22 +474,8 @@ start_other_detail_rooms (THING *area, THING *detail_thing)
       ((detail_thing->vnum-detail_area->vnum) < detail_area->mv/2))
     return NULL;
   
-  /* Make sure we can get a detail name out of this. */
-
- 
-  strcpy (temproomname, generate_detail_name (detail_thing));
-  if (!*temproomname)
-    return NULL; 
-  sprintf (roomname, "%s %s", a_an(temproomname), temproomname);
   
-  /* Capitalize all words in roomname. */
-  roomname[0] = UC(roomname[0]);
-  for (t = roomname + 1; *t; t++)
-    {
-      if (*(t-1) == ' ')
-	*t = UC(*t);
-    }
-      
+  
   /* Get the room flags we will set. */
 
   room_flags = flagbits (detail_thing->flags, FLAG_ROOM1) & ~ROOM_MINERALS;
@@ -531,12 +512,8 @@ start_other_detail_rooms (THING *area, THING *detail_thing)
   
   /* Now replace the room and things nearby (if needed) */
   
-  if (!str_cmp (detail_thing->name, "previous_name") ||
-      !str_cmp (detail_thing->name, "same_name"))
-    strcpy (roomname, room->short_desc);
-  
-  free_str (room->short_desc);
-  room->short_desc = new_str (roomname);
+  generate_detail_name (detail_thing, room);
+  capitalize_all_words (room->short_desc);
   RBIT (room->thing_flags, TH_MARKED);
   if (room_flags)
     {
@@ -557,8 +534,11 @@ start_other_detail_rooms (THING *area, THING *detail_thing)
 	  IS_ROOM (nroom) && IS_MARKED(nroom) &&
 	  nr (1,4) >= (detail_thing->height-1))
 	{
-	  free_str (nroom->short_desc);
-	  nroom->short_desc = new_str (roomname);
+	  if (!is_named (detail_thing, "same_name"))
+	    {
+	      free_str (nroom->short_desc);
+	      nroom->short_desc = new_str (room->short_desc);
+	    }
 	  RBIT (nroom->thing_flags, TH_MARKED);
 	  if (room_flags)
 	    { 
@@ -572,45 +552,6 @@ start_other_detail_rooms (THING *area, THING *detail_thing)
 }
 
 
-/* This generates a detail based on the data in a thing. 
-   The basic format is to have strings of the form
-   (long_desc) (short_desc) (name)
-   based on the words found in the thing. It may not use all of the choices. */
-
-char *
-generate_detail_name (THING *proto)
-{
-  
-  char name[STD_LEN];
-  char shortdesc[STD_LEN];
-  char longdesc[STD_LEN];
-  static char retbuf[STD_LEN];
-  retbuf[0] = '\0';
-  if (!proto || !proto->name || !*proto->name)
-    return retbuf;
-  
-  /* These attempt to create each name. The only difference is that
-     if you encounter a "society_name" and if it's not set yet,
-     then it sets detail_society_name to that name. If it is set
-     and you encounter it, then it copies the same name into the 
-     word. */
-  
-  strcpy (name, find_random_word 
-	  (proto->name, detail_society_name));  
-  strcpy (shortdesc, find_random_word 
-	  (proto->short_desc, detail_society_name));
-  strcpy (longdesc, find_random_word 
-	  (proto->long_desc, detail_society_name));
- 
-  if (!*name)
-    return retbuf; 
-  
-  sprintf (retbuf, "%s%s%s%s%s", longdesc, (*longdesc ? " " : ""),
-	   shortdesc, (*shortdesc ? " " : ""), name);
-  
-  return retbuf;
-}
-
 
 /* This lets you create a mobject within an area and then add it to
    something as a reset. */
@@ -621,10 +562,6 @@ generate_detail_mobject (THING *area, THING *to, THING *detail_thing)
   THING *detail_area, *mobject, *thg, *new_to;
   int vnum;
   RESET *reset;
-  char detailname[STD_LEN];
-  char name[STD_LEN];
-  char createdname[STD_LEN];
-  bool proper_name_first = FALSE, proper_name_second = FALSE;
   
   if (!area || !IS_AREA (area) || !to || !detail_thing ||
       (IS_AREA (area) && IS_AREA(to) && to != area) ||
@@ -653,77 +590,17 @@ generate_detail_mobject (THING *area, THING *to, THING *detail_thing)
   
  
   
-  /* Make sure that we have a name. */
-  
-  strcpy (detailname, generate_detail_name (detail_thing));
-  
-  if (!*detailname)
-    return NULL;
-  
- /* Find a created society name. */
-  
-  if (nr (1,5) == 2 && CAN_TALK (detail_thing) &&
-      !strstr (detail_thing->name, "proper_name") &&
-      !strstr (detail_thing->short_desc, "proper_name") &&
-      !strstr (detail_thing->long_desc, "proper_name"))    
-    strcpy (createdname, create_society_name(NULL));
-  else
-    {
-      if (!str_cmp (detail_thing->long_desc, "proper_name"))
-	proper_name_first = TRUE;
-      if (!str_cmp (detail_thing->short_desc, "proper_name"))
-	proper_name_second = TRUE;
-      createdname[0] = '\0';
-    }
-  
+ 
 
   mobject = new_thing ();
   copy_thing (detail_thing, mobject);  
+  generate_detail_name (detail_thing, mobject);
   mobject->vnum = vnum;
   if (CAN_TALK (mobject))
     mobject->level += nr (area->level/2, area->level);
   thing_to (mobject, area);
   add_thing_to_list (mobject);
   free_str (mobject->desc);
-  
-  if (createdname[0])
-    sprintf (name, "%s %s", detailname, createdname);
-  else
-    strcpy (name, detailname);
-  
-  free_str (mobject->name);
-  mobject->name = new_str (name);
-  
-  /* Create the full name and capitalize all words in it. */
-  
-  if (*createdname)
-    sprintf (name, "%s the %s", createdname, detailname);
-  else if (proper_name_first)
-    {
-      /* Split the name "Foo something something" 
-	 into "Foo the something something". */
-      char *arg, arg1[STD_LEN], arg2[STD_LEN];
-      arg = detailname;
-      arg = f_word (arg, arg1);
-      *arg1 = UC(*arg1);
-      if (!proper_name_second)
-	sprintf (name, "%s the %s", arg1, arg);
-      else
-	{
-	  arg = f_word (arg, arg2);
-	  *arg2 = UC(*arg2);
-	  sprintf (name, "%s %s the %s", arg1, arg2, arg);
-	}
-    }
-  else
-    sprintf (name, "%s %s",  a_an (detailname), detailname);  
-  free_str (mobject->short_desc);
-  mobject->short_desc = new_str (name);
-  
-  strcat (name, " is here.");
-  name[0] = UC (name[0]);
-  free_str (mobject->long_desc);  
-  mobject->long_desc = new_str (name);
   
   /* Mobs get set to max 1 reset. */
   if (CAN_MOVE (mobject) || CAN_FIGHT (mobject))
@@ -898,3 +775,221 @@ add_detail_resets (THING *area, THING *to, THING *detail_thing, int depth)
   return;
 }
 
+
+/* This generates a detail name based on the extra descs in the object.
+   It requires an extra description named "format" that has a list
+   of phrases enclosed in quotes that it uses to format a string
+  based on other words in other edescs. */
+
+void
+generate_detail_name (THING *proto, THING *target)
+{
+  EDESC *fdesc, *wdesc;
+  char keywords[STD_LEN]; /* Actual names of this thing. */
+  char format[STD_LEN]; /* The format string we use. */
+  char lookup_word[STD_LEN]; /* What word we're looking up in edesc list. */
+  char word[STD_LEN];
+  char sdesc[STD_LEN];
+  char ldesc[STD_LEN*2];
+  char *format_pos; /* Where we are in the format. */
+  bool need_a_an_here;
+
+  /* Proto and target needed. */
+  if (!proto || !target)
+    return;
+
+  /* Same named things don't set a name. */
+
+  if (is_named (proto, "same_name") || is_named (proto, "previous_name"))
+    return;
+  
+  keywords[0] = '\0';
+  format[0] = '\0';
+  lookup_word[0] = '\0';
+  word[0] = '\0';
+  sdesc[0] = '\0';
+  /* Make sure that the "format" string(s) exist. If not, bail out. */
+  if ((fdesc = find_edesc_thing (proto, "format")) != NULL ||
+      (fdesc = find_edesc_thing (proto, "sformat")) != NULL)
+    {
+      strcpy (format, find_random_word (fdesc->desc, NULL));
+    }
+  else /* No explicit format-- fall back on klong kshort kname */
+    {
+      strcpy (format, "a_an klong kshort kname");
+    }
+  if (!*format)
+    return;
+  
+  /* Now make the short desc by going down the format string word by
+     word stripping off words to check against the list of other edescs
+     this detail has. If we have a match, we lookup a word to add into
+     the sdesc. If no match, we plop the word into sdesc. The other
+     thing is that if the lookup_word starts with k, and we find a
+     matching word, then that word we eventually add into the sdesc
+     goes into the keywords list. */
+
+  /* Now go word by word down the format stripping off words and
+     seeing if they exist in the list of edescs we have. */
+
+  format_pos = format;  
+  sdesc[0] = '\0';
+  
+  need_a_an_here = FALSE;
+  do
+    {
+    
+      format_pos = f_word (format_pos, lookup_word);
+      /* If the lookup word is for an a/an we have to wait for the
+	 next word to actually add this word in... */
+      if (!str_cmp (lookup_word, "a_an"))
+	need_a_an_here = TRUE;      
+      else
+	{
+	 
+	  /* If the word belongs to another edesc add a random word... */
+	  if ((wdesc = find_edesc_thing (proto, lookup_word)) != NULL)
+	    {
+	      strcpy (word, find_random_word (wdesc->desc, detail_society_name));
+	      if (LC(*lookup_word) == 'k')
+		{
+		  if (*keywords)
+		    strcat (keywords, " ");
+		  strcat (keywords, word);
+		}
+	      
+	    }
+	  else if (!named_in ("kshort klong kname", lookup_word))
+	    /* Otherwise plop this word directly in there. */
+	    strcpy (word, lookup_word);
+	  else
+	    *word = '\0';
+	  /* If we need an a_an here first, plop it down then put the
+	     word. */
+	  
+	  if (need_a_an_here && *word)
+	    {
+	      if (*sdesc && *word)
+		strcat (sdesc, " ");
+	      strcat (sdesc, a_an (word));
+	      need_a_an_here = FALSE;
+	    }
+	  if (*sdesc)
+	    strcat (sdesc, " ");
+	  strcat (sdesc, word);
+	  
+	}
+    }
+  while (*format_pos);
+  
+  /* So the sdesc is now set up. If it's a room, bail out. Otherwise
+     continue to get the long desc. */
+
+  if (IS_ROOM (target))
+    {
+      free_str (target->short_desc);
+      target->short_desc = new_str (sdesc);
+      return;
+    }
+
+  /* Set the name and short_desc. */
+  
+  free_str (target->name);
+  target->name = new_str (keywords);
+  free_str (target->short_desc);
+  target->short_desc = new_str (sdesc); 
+  /* Check to see if there's a "long format" string. If not, make a simple
+     long desc. */
+
+  if ((fdesc = find_edesc_thing (proto, "lformat")) == NULL ||
+      !fdesc->desc || !*fdesc->desc)
+    {     
+      if (is_named (proto, "plural"))
+	{	  
+	  if (nr (1,2) == 2)
+	    {
+	      sprintf(ldesc,find_gen_word (MOBGEN_DESC_AREA_VNUM, "mob_notice_plural", NULL));
+	      sprintf (ldesc + strlen(ldesc), " %s are here.", sdesc);	      
+	    }
+	  else
+	    {
+	      sprintf(ldesc,find_gen_word (MOBGEN_DESC_AREA_VNUM, "mob_notice_plural_verb", NULL));
+	      sprintf (ldesc + strlen(ldesc), " %s here.", sdesc);	
+	    }
+	}
+      else
+	{
+	  sprintf(ldesc,find_gen_word (MOBGEN_DESC_AREA_VNUM, "mob_notice", NULL));
+	  if (*ldesc)
+	    sprintf (ldesc + strlen(ldesc), " %s here.", sdesc);     
+	  else
+	    sprintf (ldesc, "%s is here.", sdesc);
+	}
+      ldesc[0] = UC(ldesc[0]);
+      free_str (target->long_desc);
+      target->long_desc = new_str (ldesc);
+      return;
+    }
+  
+  /* Otherwise the lformat does exist so pick a format for the long desc. */
+  
+  strcpy (format, find_random_word (fdesc->desc, NULL));
+
+  /* Then loop through it setting it up. This is a little different than
+   the previous setup. In there we had some lookup_words that we used to
+  find random words from the list of words in that edesc. We can't do
+  that here as easily since we need to use the same words as before.
+  So here's what happens. For each lookup word in the format, we check
+  if there's an edesc with that name. If not, we add the word into
+  the list. If so, we then check to see if any words in that list
+  for that edesc were used in the keywords or the short desc. If not,
+  we just pick a random word from the new list. Otherwise we use the
+  old word. */
+
+  
+  format_pos = format;
+  need_a_an_here = FALSE;
+  ldesc[0] = '\0';
+  do
+    {
+      format_pos = f_word (format_pos, lookup_word);
+      /* If the lookup word is for an a/an we have to wait for the
+	 next word to actually add this word in... */
+      if (!str_cmp (lookup_word, "a_an"))
+	need_a_an_here = TRUE;      
+      else
+	{
+        /* If the word belongs to another edesc add a random word... */
+	  if ((wdesc = find_edesc_thing (proto, lookup_word)) != NULL)
+	    {
+	      strcpy (word, full_named_in (wdesc->desc, target->short_desc));
+	      if (!*word)
+		strcpy (word, find_random_word (wdesc->desc, NULL));
+	    }
+	  else if (!named_in ("kname kshort klong", lookup_word))
+	    /* Otherwise plop this word directly in there. */
+	    strcpy (word, lookup_word);
+	  else
+	    *word = '\0';
+	  /* If we need an a_an here first, plop it down then put the
+	     word. */
+	  
+	  if (need_a_an_here && *word)
+	    {
+	      strcat (ldesc, " ");
+	      strcat (ldesc, a_an (word));
+	      need_a_an_here = FALSE;
+	    }
+	  if (*ldesc && *word)
+	    strcat (ldesc, " ");
+	  strcat (ldesc, word);
+	  
+	}
+    }
+  while (*format_pos);
+  ldesc[0] = UC (ldesc[0]);
+  free_str (target->long_desc);
+  target->long_desc = new_str (ldesc);
+  return;
+}
+  

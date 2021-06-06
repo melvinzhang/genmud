@@ -409,7 +409,7 @@ relative_power_to (THING *th, THING *observer)
 
   if (th == observer)
     {
-      sprintf (buf, "%d\n", LEVEL(th));
+      sprintf (buf, "%d", LEVEL(th));
       return buf;
     }
   

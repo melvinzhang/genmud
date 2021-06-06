@@ -148,6 +148,8 @@ new_spell (void)
       newspell->pre_name[i] = nonstr;
       newspell->prereq[i] = NULL;
     }
+  for (i = 0; i < MAX_PREREQ_OF; i++)
+    newspell->prereq_of[i] = 0;
   newspell->mana_amt = 10;
   newspell->mana_type = 0;
   newspell->spell_type = 0;
@@ -1052,7 +1054,9 @@ show_spell (THING *th, SPELL *spl)
 
 /* This first checks if you use a spell/skill correctly, (mobs have a
 chance based on their level), and then if you do use it successfullly
-and are a pc, you get a chance to improve at it. */
+and are a pc, you get a chance to improve at it. This also gives
+you a chance to gain a "learn try" to learn better skills once you've
+mastered previous skills. */
 
 bool
 check_spell (THING *th, char *name, int vnum)
@@ -1066,7 +1070,8 @@ check_spell (THING *th, char *name, int vnum)
   if (!IS_PC (th))
     pct = MIN (80, LEVEL (th)*2/3-20);
   else if (spl->vnum < 1 || spl->vnum >=  MAX_SPELL ||
-	   th->pc->prac[spl->vnum] < 10)
+	   th->pc->prac[spl->vnum] < MIN_PRAC/2 || 
+	   spl->level > LEVEL(th))
     return FALSE;
   else
     pct = th->pc->prac[spl->vnum] + get_stat (th, STAT_LUC)/2 - 8;
@@ -1084,18 +1089,37 @@ check_spell (THING *th, char *name, int vnum)
   if (np () > pct)
     return FALSE;
   
-  if (!IS_PC (th) || (pct = th->pc->prac[spl->vnum]) < MIN_PRAC || pct >= MAX_TRAIN_PCT ||
+  if (!IS_PC (th) || 
+      (pct = th->pc->prac[spl->vnum]) < MIN_PRAC/2 ||
      !IS_ROOM (th->in) || !th->in->in ||
       !DIFF_ALIGN (th->in->in->align, th->align) ||
      (th->pc->no_quit < NO_QUIT_PK && nr (1,4) != 3) || CONSID)
     return TRUE;
+  
   pct = th->pc->prac[spl->vnum];
-  if ((pct * (MAX_TRAIN_PCT - pct) < nr (1, MAX_TRAIN_PCT * MAX_TRAIN_PCT)))
-    return TRUE;
 
-  th->pc->prac[spl->vnum]++;
-  sprintf (buf, "\x1b[1;37m*****[You have become better at %s!]*****\x1b[0;37m\n\r", spl->name);
-  stt (buf, th);
+
+  /* Faster pracs once you're (somewhat) higher level than the spell. */
+ 
+  if (LEVEL(th) < (spl->level+3)*15/14 &&
+      nr (5,20) > (LEVEL(th) - spl->level) &&
+      (pct * (MAX_TRAIN_PCT - pct) < 
+       nr (1, MAX_TRAIN_PCT * MAX_TRAIN_PCT)))
+    return TRUE;
+  
+  if (pct < 100)
+    {
+      th->pc->prac[spl->vnum]++;
+      
+      sprintf (buf, "\x1b[1;37m*****[You have become better at %s!]*****\x1b[0;37m\n\r", spl->name);
+      stt (buf, th);
+    }
+  
+  /* If you're very good at this skill, try to learn another skill based
+     on this one. */
+  if (pct > MAX_PRAC && nr (1,3) != 2)
+    try_to_learn_spell (th, spl);
+      
   return TRUE;
 }
     
@@ -1113,12 +1137,17 @@ do_slist (THING *th, char *arg)
   char *t, *oldarg = arg;
   int spellt = SPELLT_MAX, mana = 0, guild = GUILD_MAX, i, targett = TAR_MAX;
   SPELL *spl;
-
+  bool no_prereq;
+  
   if (str_cmp (arg, "all"))
     {
       while (*arg)
 	{
 	  arg = f_word (arg, arg1);
+	  if (!str_cmp (arg1, "noprereq") ||
+	      !str_cmp (arg1, "no_prereq") ||
+	      !str_cmp (arg1, "no_prereqs"))
+	    no_prereq = TRUE;
 	  if (mana == 0)
 	    {
 	      for (i = 0; i < MANA_MAX; i++)
@@ -1195,6 +1224,20 @@ do_slist (THING *th, char *arg)
 
   for (spl = spell_list; spl; spl = spl->next)
     {
+      if (no_prereq)
+	{
+	  bool has_a_prereq = FALSE;
+	  for (i = 0; i < NUM_PRE; i++)
+	    {
+	      if (spl->prereq[i])
+		{
+		  has_a_prereq = TRUE;
+		  break;
+		}
+	    }
+	  if (has_a_prereq)
+	    continue;
+	}
       if ((spellt != SPELLT_MAX && spl->spell_type != spellt) ||
 	  (targett != TAR_MAX && spl->target_type != targett) ||
 	  (mana && !IS_SET (spl->mana_type, mana)) ||
@@ -1405,7 +1448,17 @@ void
 setup_prereqs (void)
 {
   SPELL *spl;
-  int i;
+  int i, j;
+  char buf[STD_LEN];
+  bool has_a_prereq;
+  
+  /* Clear all "prereq_of" numbers. */
+  
+  for (spl = spell_list; spl; spl = spl->next)
+    {
+      for (i = 0; i < MAX_PREREQ_OF; i++)
+	spl->prereq_of[i] = 0;
+    }
 
   /* Sets up all prereqs, now go for total spells used etc... */
 
@@ -1414,6 +1467,30 @@ setup_prereqs (void)
       for (i = 0; i < NUM_PRE; i++)
 	{
 	  spl->prereq[i] = find_spell (spl->pre_name[i], 0);
+      /* Set spl as one of the things that spl->prereq[i] is a "prereq_of" */
+	  if (spl->prereq[i])
+	    {
+	      for (j = 0; j < MAX_PREREQ_OF; j++)
+		{
+		  if (spl->prereq[i]->prereq_of[j] == 0)
+		    {
+		      spl->prereq[i]->prereq_of[j] = spl->vnum;
+		      break;
+		    }
+		}
+	      if (j == MAX_PREREQ_OF)
+		{
+		  sprintf (buf, "Spell %d is a prereq of more than %d spells!",
+			   spl->prereq[i]->vnum, MAX_PREREQ_OF);
+		  log_it (buf);
+		}
+	    }
+	}
+      has_a_prereq = FALSE;
+      for (i = 0; i < NUM_PRE; i++)
+	{
+	  if (spl->prereq[i])
+	    has_a_prereq = TRUE;
 	}
     }
   
@@ -1429,8 +1506,8 @@ setup_prereqs (void)
       for (i = 0; i < SPELLT_MAX; i++)
 	spl->num_prereq[i] = num_prereqs[i];
     }
-  
-  
+	  
+	  
   return;
 }
 
@@ -1712,5 +1789,125 @@ find_teacher_locations (void)
 	}
     }
   write_spells ();
+  return;
+}
+
+/* This lets a player attempt to learn a spell. What has to happen is that
+   the player checks a random skill that this is a prereq of, and if
+   the player has gotten all prereqs of that skill up to MAX_PRAC+, then it
+   has a chance to "learn the skill" and you get a message saying so.
+   Once your learning tries are >= nr (5,15), you learn the new skill and
+   get it at a low pct. Will have to watch out for race/align/remort maxes
+   in terms of how many spells you can learn. This is Mog's (Justin
+   Dynda's) idea. :) */
+
+void
+try_to_learn_spell (THING *th, SPELL *spl)
+{
+  int i, tries;
+  /* Which spell choice we try to learn. */
+  int num_chose = 0, count = 0, num_choices = 0;
+  SPELL *learnspell = NULL;
+  bool have_all_prereqs = TRUE;
+  char buf[STD_LEN];
+  
+  if (!th || !IS_PC (th) || !spl)
+    return;
+
+/* Get the number of choices to deal with. */
+  
+  for (count = 0; count < 2; count++)
+    {
+      for (i = 0; i < MAX_PREREQ_OF; i++)
+	{
+	  if ((learnspell = find_spell (NULL, spl->prereq_of[i])) == NULL ||
+	      learnspell->vnum < 0 || 
+	      learnspell->vnum >= MAX_SPELL ||
+	      th->pc->nolearn[learnspell->vnum] ||
+	      th->pc->prac[learnspell->vnum] > 0)
+	    continue;
+	  if (count == 0)
+	    num_choices++;
+	  else if (--num_chose < 1)
+	    break;
+	}
+      
+      if (count == 0)
+	{
+	  if (num_choices < 1)
+	    return;
+	  num_chose = nr (1, num_choices);
+	}
+    }
+  
+  /* Little sanity check. */
+  if (!learnspell || learnspell->vnum < 0 || learnspell->vnum >= MAX_SPELL ||
+      th->pc->nolearn[learnspell->vnum] ||
+      th->pc->prac[learnspell->vnum] > 0)
+    return;
+  
+  /* Make sure that the player has all of the prereqs necessary for
+     this skill/spell. */
+
+  for (i = 0; i < NUM_PRE; i++)
+    {
+      if (!learnspell->prereq[i] ||
+	  learnspell->prereq[i]->vnum < 0 ||
+	  learnspell->prereq[i]->vnum >= MAX_SPELL)
+	continue;
+      if (th->pc->prac[learnspell->prereq[i]->vnum] < MAX_PRAC)
+	have_all_prereqs = FALSE;
+    }
+
+  if (!have_all_prereqs)
+    return;
+  
+  /* Now check guilds. */
+
+  for (i = 0; i < GUILD_MAX; i++)
+    {
+      if (learnspell->guild[i] > th->pc->guild[i])
+	{
+	  return;
+	}
+    }
+  
+  /* Now check stats. */
+  
+  for (i = 0; i < STAT_MAX; i++)
+    {
+      if (learnspell->min_stat[i] > get_stat (th, i))
+	return;
+    }
+
+  /* Check for how many spells of this type are allowed. */
+  if (total_spells (th, learnspell->spell_type) >= 
+      allowed_spells (th, learnspell->spell_type))
+    return;
+  
+    
+
+  /* So we have all of the prereqs so give a chance to improve. */
+  
+  tries = ++th->pc->learn_tries[learnspell->vnum];
+  
+  if (nr (5,10) <= tries)
+    {
+      sprintf (buf, "\x1b[1;36mYou %s understand %s!\x1b[0;37m\n\r",
+	       (tries < 2 ? "barely" :
+		(tries < 3 ? "begin to" :
+		 (tries < 4 ? "sort of" :
+		  (tries < 5 ? "mostly" : "can")))),
+	       learnspell->name);
+      stt (buf, th);
+    }
+  else
+    {
+      sprintf (buf, "\x1b[1;37mYou can now use %s!\x1b[0;37m\n\r", 
+	       learnspell->name);
+      stt (buf, th);
+      th->pc->learn_tries[learnspell->vnum] = 0;
+      th->pc->prac[learnspell->vnum] = MIN_PRAC + 1;
+    }
   return;
 }

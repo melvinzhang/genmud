@@ -72,6 +72,11 @@ void areagen (THING *th, char *arg);
 
 char *find_gen_word (int area_vnum, char *typename, char *color);
 
+/* This finds a generator object based on an area vnum and a typename.
+   Used inside of find_gen_word mostly, but also for making metal names. */
+
+THING *find_gen_object (int area_vnum, char *typename);
+
 /* Create a name for an area by taking for example Bob and forest and
    making Bob woods or The Bob woods or The Forest of Bob. */
 

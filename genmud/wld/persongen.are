@@ -3,7 +3,7 @@ Name persongen.are`
 HpMv 0 10 5 200
 HWT 0 0
 Cost 100
-Timer 17
+Timer 9
 Short Person Generators`
 type Lonath`
 ThFl 1089531
@@ -65,7 +65,7 @@ Name priest`
 Level 35
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105013
@@ -73,7 +73,7 @@ Name mystic`
 Level 25
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105014
@@ -88,7 +88,7 @@ Level 40
 HWT 0 0
 Sex 1
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105016
@@ -96,7 +96,7 @@ Name peddler`
 Level 10
 HWT 0 0
 ThFl 2209
-Val shop 1 0 0 0 0 0 0 `
+Val shop 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105017
@@ -110,7 +110,7 @@ Name shaman`
 Level 25
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105019
@@ -146,7 +146,7 @@ Name wizard`
 Level 50
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105024
@@ -154,7 +154,7 @@ Name mage`
 Level 45
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105025
@@ -182,7 +182,7 @@ Name acolyte`
 Level 10
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105029
@@ -277,7 +277,7 @@ Name alchemist`
 Level 30
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105041
@@ -330,7 +330,7 @@ Name novice`
 Level 5
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105048
@@ -365,7 +365,7 @@ Name sage`
 Level 35
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105053
@@ -387,7 +387,7 @@ Name adept`
 Level 25
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105056
@@ -395,7 +395,7 @@ Name soothsayer`
 Level 20
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105057
@@ -417,7 +417,7 @@ Name magician`
 Level 25
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105060
@@ -526,7 +526,7 @@ Name disciple`
 Level 20
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105075
@@ -541,7 +541,7 @@ Name zealot`
 Level 15
 HWT 0 0
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 Flag Act 0 0 512
 END_THING
 
@@ -573,7 +573,7 @@ Level 30
 HWT 0 0
 Sex 2
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105081
@@ -582,7 +582,7 @@ Level 30
 HWT 0 0
 Sex 1
 ThFl 2209
-Val cast 1 0 0 0 0 0 0 `
+Val cast 1 0 0 0 0 0 0 0 `
 END_THING
 
 THING 105082

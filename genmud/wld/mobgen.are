@@ -2,10 +2,10 @@ THING 105200
 Name mobgen.are`
 HpMv 0 10 5 700
 HWT 0 0
-Timer 4
+Timer 9
 Short Mob Generators`
 type Lonath`
-ThFl 135307259
+ThFl 1089531
 Flag Area 0 0 28
 END_THING
 
@@ -393,8 +393,8 @@ HWT 5 20
 Short ice air fire earth`
 Long Small medium large spotted`
 ThFl 67745
-Val money 50 0 0 0 0 0 0 0 `
 Val weapon 0 0 0 0 0 0 0 0 bite`
+Val money 50 0 0 0 0 0 0 0 `
 Flag Det 0 0 4
 Flag Aff 0 0 524288
 Flag Mob 0 0 2

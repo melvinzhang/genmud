@@ -2,7 +2,7 @@
 
 
 
-/* The world is maxxed out at 13x13 areas. */
+/* The world is maxxed out at NxN areas. */
 /* If you change this number it must be congruent to 1 (mod 4). In
    other words, it must be 4k+1 for some positive integer k. */
 #define WORLDGEN_MAX     33
@@ -104,3 +104,12 @@ void worldgen_add_catwalks_between_areas (void);
 /* Create and clear quests */
 void worldgen_clear_quests (THING *);
 void worldgen_generate_quests (void);
+
+/* This checks if the thing needs to have worldgen objects reset on it. */
+
+void worldgen_check_resets (THING *);
+
+/* This clears all questflags a player has (used on remort) so that
+   the player can redo the quests. */
+
+void clear_player_worldgen_quests (THING *);

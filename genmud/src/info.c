@@ -212,8 +212,10 @@ do_memory (THING *th, char *arg)
 	   popul_count, sizeof(POPUL), popul_count * sizeof(POPUL));
   stt (buf, th); 
 #else
-  sprintf (buf, "[%5d] Events    @ %4d B: %-7d\n\r",
-	   event_count, sizeof (EVENT), event_count * sizeof (EVENT));
+  sprintf (buf, "[%5d] Events    @ %4d B: %-7d\n\r [%5d] Edescs    @ %4d B: %-7d\n\r",
+	   event_count, sizeof (EVENT), event_count * sizeof (EVENT),
+	   edesc_count, sizeof (EDESC), edesc_count * sizeof (EDESC)
+	   );
   stt (buf, th); 
 #endif
   
@@ -282,6 +284,8 @@ find_total_memory_used (void)
   mallocs += rumor_count + raid_count;
   total += event_count * sizeof (EVENT);
   mallocs += event_count;
+  total += edesc_count * sizeof(EDESC);
+  mallocs += edesc_count;
 #ifdef USE_WILDERNESS
   total += + popul_count * sizeof (POPUL);
   mallocs += popul_count;
@@ -290,6 +294,7 @@ find_total_memory_used (void)
   mallocs += need_count + social_count;
   
   total += string_count;
+  /* Close...but not quite. */
   total += 8*mallocs;
   total_memory_used = total;
   return total; 

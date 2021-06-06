@@ -16,8 +16,12 @@
 #include "mapgen.h"
 #include "rumor.h"
 #include "event.h"
+#ifdef USE_WILDERNESS
 #include "wilderness.h"
 #include "wildalife.h"
+#endif
+#include "worldgen.h"
+#include "historygen.h"
 
 int listen_socket = 0;
 int max_fd = 0;
@@ -72,6 +76,7 @@ FIGHT *fight_free = NULL;
 RESET *reset_free = NULL;
 PCDATA *pc_free = NULL;
 CLAN *clan_free = NULL;
+EDESC *edesc_free = NULL;
 TROPHY *trophy_free = NULL;
 SPELL *spell_free = NULL;
 SOCIAL *social_list = NULL;
@@ -117,6 +122,7 @@ int help_count = 0;
 int file_desc_count = 0;
 int cmd_count = 0;
 int help_key_count = 0;
+int edesc_count = 0;
 int auction_count = 0;
 int chan_count = 0;
 int channel_count = 0;
@@ -152,6 +158,8 @@ void
 init_variables (void)
 {
   int i, j;
+  nothing_string[0] = '\0';
+  nonstr = &nothing_string[0];
   for (i = 0; i < 256; i++)
     {
       com_list[i] = NULL;
@@ -213,9 +221,8 @@ init_variables (void)
 	}
     }
   
-  nothing_string[0] = '\0';
   prev_command[0] = '\0';
-  nonstr = &nothing_string[0];
+  init_historygen_vars();
   for (i = 0; i < CLAN_MAX; i++)
     top_clan[i] = 0;
   last_thing_edit = current_time;
@@ -360,6 +367,7 @@ read_server (void)
   read_wizlock();
   init_command_list ();
   read_sitebans (); 
+  read_history_data ();
   read_time_weather(); 
   read_socials (); 
   read_score (); 
@@ -675,7 +683,7 @@ read_things (void)
     {
       for (keeper = thing_hash[i]; keeper; keeper = keeper->next)
 	{
-
+	  
 	  /* Ignore anything not in anything, anything in
 	     an area, anything that is not a shop, or anything that
 	     is a shop and is owned by a player. */
@@ -684,7 +692,10 @@ read_things (void)
 	      (shop = FNV (keeper, VAL_SHOP)) == NULL ||
 	      ((shop2 = FNV(keeper, VAL_SHOP2)) != NULL &&
 	       shop2->word && shop2->word[0]))
-	    continue;
+	    {
+	      worldgen_check_resets (keeper);
+	      continue;
+	    }
 	  
 	  for (obj = keeper->cont; obj; obj = objn)
 	    {
@@ -763,9 +774,7 @@ write_world_snapshot (void *arg)
   
   /* Now copy the new backup over the old backup..and hope this
      doesn't fail!!! */
-   sprintf (buf, "mv %sworldinfo.bak %sworldinfo.dat",
-	    WLD_DIR, WLD_DIR);
-  sprintf (buf, "cp %sworldinfo.dat %sworldinfo.bak",
+  sprintf (buf, "mv %sworldinfo.bak %sworldinfo.dat",
 	   WLD_DIR, WLD_DIR);
   system (buf);
 #ifdef USE_WILDERNESS

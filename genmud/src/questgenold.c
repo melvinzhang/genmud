@@ -65,7 +65,7 @@ void
 worldgen_generate_quests (void)
 {
   strcpy (questgen_name, "aa");
-  strcpy (questgen_qflag_name, "aa");
+  strcpy (questgen_qflag_name, "aaaaqzx");
   
   /* These are simple "Get foo from bar for me" quests. Have to
      start somewhere. :) */
@@ -244,7 +244,7 @@ questgen_generate (THING *start_area, THING *end_area, int quest_type)
 	return;
       
       add_reset (quest_room, quest_mob->vnum, 100, 1, 1);
-      add_reset (quest_room, quest_item->vnum, 50, 1, 2);
+      add_reset (quest_room, quest_item->vnum, 10, 1, 2);
       generate_setup_script (quest_giver, quest_mob, quest_room, quest_item);
       generate_given_script (quest_giver, quest_item);
       return;
@@ -420,6 +420,7 @@ generate_given_script (THING *quest_giver, THING *quest_item)
   char qfbuf[STD_LEN];  /* Buffer for the questflag data. */
   int valnum = 0;
   int bitnum = 0;
+  int reward_type;
   
   valnum = questgen_qflag_num/30;
   bitnum = questgen_qflag_num % 30;
@@ -451,6 +452,12 @@ generate_given_script (THING *quest_giver, THING *quest_item)
   add_code_to_table (code);
   txt[0] = '\0';
   
+  /* Get the reward type. */
+  if (nr (1,8) != 2)
+    reward_type = REWARD_MONEY;
+  else
+    reward_type = REWARD_EXPERIENCE;
+
   /* First check if we have the questflag already set. */
 
   sprintf (qfbuf, "@sqf:%s:%d:%d", questgen_qflag_name, valnum, bitnum);
@@ -463,12 +470,21 @@ generate_given_script (THING *quest_giver, THING *quest_item)
   sprintf (buf, "%s = 1\n", qfbuf);
   strcat (txt, buf);
   strcat (txt, "do say Thank you for finding @osd$F!\n");
-  strcat (txt, "@v0 = @ocs\n");
-  strcat (txt, "@v0 * 5\n");
-  strcat (txt, "@rv:money:0 + @v0\n");
+  if (reward_type == REWARD_MONEY)
+    {
+      strcat (txt, "@v0 = @ocs\n");
+      strcat (txt, "@v0 * 5\n");
+      strcat (txt, "@rv:money:0 + @v0\n");
+      strcat (txt , "do say Here's your reward!\n");
+      strcat (txt , "do give @v0 copper @snm\n");
+    }
+  else if (reward_type == REWARD_EXPERIENCE)
+    {
+      sprintf (buf, "@sex + %d\n", 10*exp_to_level(LEVEL(quest_item)));
+      strcat (txt, buf);
+    }
+  
   strcat (txt, "nuke @o\n");
-  strcat (txt , "do say Here's your reward!\n");
-  strcat (txt , "do give @v0 copper @snm\n");
   strcat (txt,  "done\n");
   code->code = new_str (txt);
   return;
@@ -500,3 +516,6 @@ questgen_name_iterate(char *txt)
     }
   return;
 }
+
+
+  

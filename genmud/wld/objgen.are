@@ -2,10 +2,10 @@ THING 108000
 Name objgen.are`
 HpMv 0 10 5 1000
 HWT 0 0
-Timer 15
+Timer 10
 Short The Object Gen Area`
 type Lonath`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 28
 END_THING
 
@@ -48,6 +48,27 @@ Bloodstained
 Bloody
 Screaming
 Furious
+Reinforced
+Rugged
+Cold
+Feral
+Fierce
+Flayed
+Finespun
+Hardened
+Honorable
+Imbued
+Luminous
+Luminescent
+Lupine
+Matchless
+Mischevous
+Radiant
+Radiating
+Softened
+Raw
+Refined
+Totemic
 `
 Short Descriptive name.`
 MIW 1
@@ -130,31 +151,8 @@ Onyx & $8Onyx$7
 Mithril & $EMithril$7
 Adamantium & $DAdamantium$7
 Bronze & $3Bronze$7
-Electrum & $6Electrum$7
-Crystal & $ECrystal$7
-Dragonhide & $1Dragonhide$7
-Dragonhide & $4Dragonhide$7
-Demonhide & $1Demonhide$7
-Dragonscale & $1Dragonscale$7
-Dragonscale & $4Dragonscale$7
-Dragonhide & $FDragonhide$7
-Dragonscale & $FDragonscale$7
-Demonscale & $1Demonscale$7
-Darkstone & $8Darkstone$7
-Whitestone & $FWhitestone$7
-Bone & $FBone$7
-Banded
-Scale
-Forged
-Drakescale & $2Drakescale$7
 Titanium & $FTitanium$7
-Coral & $FCoral$7
-Shell & $FShell$7
-Carapice & $8Carapice$7
-Carapice & $9Carapice$7
-Oakwood & $3Oakwood$7
-Rosewood & $3Rosewood$7
-Ironwood & $3Ironwood$7
+Chain
 `
 Short Descriptive name.`
 END_THING
@@ -254,6 +252,10 @@ Bone
 'the Mountains'
 'the Swamp'
 Fury
+'the Shadow'
+Rapture
+'the Totem'
+Enrapturement
 `
 Short Descriptive name.`
 END_THING
@@ -678,6 +680,7 @@ boots
 'riding boots'
 'war boots'
 'battle boots'
+shoes
 `
 END_THING
 
@@ -715,6 +718,92 @@ Partizan
 Bec-De-Corbin
 Lance
 `
+END_THING
+
+THING 108036
+Name metal_gen_names`
+HWT 0 0
+Desc Yewlium & $FYe$7wl$Fium$7
+Sufium
+Yawneite & $3Ya$6wne$3ite$7
+Iypahate & $3Iy$1pah$3ate$7
+Femium & $CFem$Fium$7
+Daufrite & $ADa$Fufr$Aite$7
+Umyucite
+Fatosite & $7Fato$3site$7
+Gaugite & $9Gau$3gite$7
+Iwfudium
+Mosliate & $6Mosl$5iate$7
+Oripate & $4Ori$Epate$7
+Mukepium & $6Mukepium$7
+Leglite
+Imcamate & $7Imca$2mate$7
+Ubite & $CUb$Fite$7
+Buyhotate & $BBuyh$1otate$7
+Biehium & $2Biehium$7
+Wusevate & $1Wusevate$7
+Jiusite & $DJiu$7site$7
+`
+END_THING
+
+THING 108037
+Name nonmetal`
+HWT 0 0
+Desc Rosewood & $3Rosewood$7
+Ironwood & $8Ironwood$7
+Stonewood & $FStonewood$7
+Whitestone & $FWhitestone$7
+Darkstone & $8Darkstone$7
+Dragonscale & $1Dragonscale$7
+Dragonscale & $2Dragonscale$7
+Dragonscale & $4Dragonscale$7
+Dragonscale & $8Dragonscale$7
+Rosewood & $3Rosewood$7
+Rosewood & $3Rosewood$7
+Whitestone & $FWhitestone$7
+Whitestone & $FWhitestone$7
+Whitestone & $FWhitestone$7
+Coral & $FCoral$7
+ Coral & $FCoral$7
+ Coral & $FCoral$7
+Shell & $FShell$7
+Shell & $FShell$7
+Shell & $FShell$7
+Carapice & $8Carapice$7
+Carapice & $8Carapice$7
+Carapice & $8Carapice$7
+Carapice & $1Carapice$7
+Carapice & $1Carapice$7
+Carapice & $1Carapice$7
+Bone & $FBone$7
+Bone & $FBone$7
+Bone & $FBone$7
+Dragonhide & $1Dragonhide$7
+Dragonhide & $2Dragonhide$7
+Dragonhide & $4Dragonhide$7
+Dragonhide & $8Dragonhide$7
+Crystal & $ECrystal$7
+ Crystal & $ECrystal$7
+ Crystal & $ECrystal$7
+Crystal & $FCrystal$7
+ Crystal & $FCrystal$7
+ Crystal & $FCrystal$7
+Darkstone & $8Darkstone$7
+Darkstone & $8Darkstone$7
+Darkstone & $8Darkstone$7
+Ironwood & $8Ironwood$7
+ Ironwood & $8Ironwood$7
+ Ironwood & $8Ironwood$7
+Hide & $3Hide$7
+Hide & $3Hide$7
+Hide & $3Hide$7
+Leather & $3Leather$7
+Leather & $3Leather$7
+Leather & $3Leather$7
+Leather & $3Leather$7
+Leather & $3Leather$7
+`
+Short Descriptive Name`
 END_THING
 
 END_OF_AREA

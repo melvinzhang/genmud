@@ -4,7 +4,7 @@
 
 /* Max number of details per area is N. */
 
-#define DETAIL_MAX 10
+#define DETAIL_MAX 30
 
 
 /* Max depth you can go to when trying to add details is N. */
@@ -29,7 +29,7 @@ void add_detail (THING *area, THING *to, THING *detail_thing, int depth);
 /* This starts the main detail location then adds it to the area. */
 
 void start_main_detail_rooms (THING *area, THING *detail_thing);
-void add_main_detail_room (THING *room, char *name, int depth_left, int room_bits);
+void add_main_detail_room (THING *room, int depth_left, int room_bits);
 
 /* These start and add secondary details to the detail that's been
    premade. It is assumed that the detail portion of the area is
@@ -52,7 +52,8 @@ THING *generate_detail_mobject (THING *area, THING *to, THING *detail_thing);
 void add_detail_resets (THING *area, THING *to, THING *detail_thing, int depth);
 
 
-/* This creates a detail name based on the info given in the thing. */
+/* This creates a detail name based on the info given in the thing. It puts
+   the names onto the target and uses the given society name and 
+   proper name if needed. */
 
-char *generate_detail_name (THING *proto);
-
+void generate_detail_name (THING *proto, THING *target);

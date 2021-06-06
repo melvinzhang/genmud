@@ -1,0 +1,227 @@
+THING 109500
+Name historygen.are`
+HpMv 0 10 5 500
+HWT 0 0
+Timer 6
+Short The Historygen Area`
+ThFl 1089531
+Flag Area 0 0 28
+END_THING
+
+THING 109501
+HWT 0 0
+Color 7
+Short The Historygen Area`
+MIW 1
+Symbol -`
+ThFl 524779
+END_THING
+
+THING 109506
+Name godly_spheres_good`
+HWT 0 0
+Desc Time
+Space
+Weather
+Peace
+Wisdom
+Knowledge
+Strength
+Protection
+Healing
+Medicine
+'the Weak'
+Power
+Luck
+Fortune
+Fertility
+Winter
+Summer
+Fall
+Spring
+Magic
+Enchantment
+Nature
+'the Woods'
+'the Forest'
+Wealth
+Weal
+Life
+Light
+'the Sun'
+'the Stars'
+'the Moons'
+Animals
+Fortitude
+Solace
+Serenity
+Righteousness
+Sneakiness
+Kindness
+'The Trees'
+'The Mountains'
+'The Ocean'
+'The Streams'
+Water
+Air
+Earth
+Wind
+Blacksmiths
+Farmers
+Shopkeepers
+Merchants
+'the Tides'
+Justice
+Spellcraft
+Endurance
+Martyrdom
+Perserverence
+Loyalty
+Duty
+Obedience
+Navigation
+Seekers
+Dawn
+Birth
+Renewal
+Youth
+Childhood
+Vitality
+Creativity
+Artisans
+Artists
+Craftsmen
+Fatherhood
+Motherhood
+Agriculture
+Skill
+Victory
+Adventurers
+Love
+Passion
+Beauty
+Invention
+Guardians
+Protectors
+Warriors
+Magi
+Hunters
+Dreams
+Redemption
+Poetry
+Wine
+Health
+Song
+Dance
+Nature
+'the Hunt'
+Prosperity
+Silence
+'the Sea'
+'the Mind'
+Thought
+Music
+Creation
+Day
+Stability
+Order
+Fate
+Rain
+Plenty
+Fishermen
+Chivalry
+Purity
+'the Sky'
+History
+'the Ages'
+Innocence
+'the Harvest'
+Destiny
+Commerce
+Success
+Judgment
+Law
+`
+END_THING
+
+THING 109507
+Name age_names`
+HWT 0 0
+Desc Age
+Epoch
+Era
+Time
+`
+END_THING
+
+THING 109508
+Name disaster_names`
+HWT 0 0
+Desc Cataclysm
+Breaking
+Sundering
+Cracking
+Fall
+Catastrophe
+Disaster
+`
+END_THING
+
+THING 109509
+Name godly_spheres_bad`
+HWT 0 0
+Desc War
+Battle
+Shadows
+Thieves
+Power
+Misfortune
+Death
+Darkness
+Trickery
+Subterfuge
+Sneakiness
+Sickness
+Disease
+Decay
+Slaughter
+Blood
+Pain
+Intrigue
+Mischief
+Agony
+Torment
+Suffering
+Lies
+Deception
+Strife
+Illusion
+Vengeance
+Revenge
+Hatred
+Insanity
+Carnage
+Destruction
+Plague
+Pestilence
+Night
+Chaos
+Drought
+Retaliation
+Starvation
+Misdirection
+Loss
+Chance
+Twilight
+Storms
+Thunder
+Lightning
+Fire
+Ice
+Tornadoes
+Earthquakes
+`
+END_THING
+
+END_OF_AREA
+

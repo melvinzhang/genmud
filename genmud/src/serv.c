@@ -240,7 +240,7 @@ bool
 read_into_buffer (FILE_DESC *fd)
 {
   int len, num_read;
-  if (!fd || (len = strlen (fd->read_buffer)) > STD_LEN)
+  if (!fd || (len = strlen (fd->read_buffer)) >= STD_LEN/2)
     return FALSE;
   if ((num_read = read (fd->r_socket, fd->read_buffer + len, STD_LEN/2)) >= STD_LEN *3/2 
       || num_read < 0 || len > STD_LEN * 3/2)

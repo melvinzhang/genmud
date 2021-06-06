@@ -331,7 +331,7 @@ show_build_name (THING *target)
     strcpy (a_anbuf, a_an (typebuf));
   
   sprintf (buf, "%s %s%s%s%s", a_anbuf, burnbuf, ugroundbuf, socinamebuf, typebuf);
-  buf[0] = UC(buf[0]);
+  capitalize_all_words (buf);
   return buf;
 }
   

@@ -2,9 +2,9 @@ THING 107100
 Name areagen.are`
 HpMv 0 10 5 900
 HWT 0 0
-Timer 16
+Timer 9
 Short The Areagen Area`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 28
 END_THING
 
@@ -156,8 +156,8 @@ THING 107111
 Name forest_names`
 HWT 0 0
 Desc Forest Woods Forest Woods Thicket Woodlands Bocage Copse Lands Dale Glen
-Grove Grounds Shire Marches Timberland Forest Woods Forest Woods 
-`
+Grove Grounds Shire Marches Timberland Forest Woods Forest Woods 
+`
 END_THING
 
 THING 107112
@@ -392,6 +392,7 @@ Melted
 Volcanic
 Old
 Maze
+Jagged
 `
 END_THING
 
@@ -507,6 +508,13 @@ Gulf
 Estuary
 Bay
 Pond
+Deep
+Lake
+Lake
+Lake
+Inlet
+Bay
+Estuary
 `
 END_THING
 
@@ -578,6 +586,7 @@ Well
 Pool
 Pond
 Pond
+Deep
 `
 END_THING
 
@@ -638,6 +647,12 @@ Steady
 Old
 Ancient
 Creaky
+Broad
+Wide
+Narrow
+Leaning
+Straight
+Arching
 `
 END_THING
 
@@ -814,6 +829,8 @@ Emerald
 Golden
 Gloomy
 Scarred
+Sinister
+Pale
 `
 END_THING
 

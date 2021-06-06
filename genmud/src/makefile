@@ -1,8 +1,8 @@
 OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 	boot.o \
 	chan.o clan.o consid.o const.o color.o  combatai.o create.o \
-	dam.o detailgen.o edit.o \
-	event.o fight.o fileio.o follow.o guild.o help.o implant.o info.o \
+	dam.o detailgen.o edit.o event.o fight.o fileio.o follow.o \
+	guild.o help.o historygen.o implant.o info.o \
 	int.o kde.o look.o magic.o magicitem.o map.o mapgen.o \
 	mobgen.o money.o move.o myrand.o note.o objectgen.o \
 	parse.o pcio.o pkdata.o prac.o proc.o questgen.o questgenold.o \
@@ -15,7 +15,7 @@ OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 	upd.o wear.o weather.o worldgen.o \
 #	wilderness.o wildalife.o \
 #	THE PRECEEDING LINE IS NOT ADDED IN UNLESS YOU REMOVE THE #
-#	ONLY USE THE PRECEEDING LINE IF YOU WANT THE WILDERNESS AREA!!!
+#	ONLY USE THE PRECEEDING LINE IF YOU WANT THE WILDERNESS MAP!!!
 
 .c.o: serv.h
 	gcc -c -g -Wall -pedantic $<

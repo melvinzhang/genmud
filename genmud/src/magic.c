@@ -540,7 +540,7 @@ do_cast (THING *th, char *arg)
   for (i = 0; i < MAX_COMP; i++)
     {
       if (comp[i] && comp[i]->in == th)
-	thing_from (comp[i]);
+	free_thing (comp[i]);
     }
   th->pc->wait += ticks/3;
   th->position = POSITION_STANDING;
@@ -1344,7 +1344,6 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
 		      continue;
 		    }
 		  act ("@1n disappear@s!", mover, NULL, NULL, NULL, TO_ALL);
-		  thing_from (mover);
 		  thing_to (mover, end_in);
 		  act ("@1n appear@s in a bright flash!", mover, NULL, NULL, NULL, TO_ALL);
 		  do_look (mover, "");

@@ -614,25 +614,28 @@ generate_room_description (THING *room)
 		 it's singular so we do continues. */
 	      if (nr (1,4) == 1)
 		{
-		  sprintf (buf, "%s%sto %s, %s continue%s. ",
+		  sprintf (buf, "%s%s%s%s, %s continue%s. ",
 			   dir_dist[range], (*dir_dist[range] ? " " : ""),
+			   (dir < 4 ? "to " : ""),
 			   dir_track[dir],
 			   nroomname,
 			   (*t == 's' ? "" : "s"));
 		}
 	      else if (nr (1,3) == 2)
 		{
-		  sprintf (buf, "%s %s%s %s to %s. ",			   
-			   nroomname,
-			   (nr (1,3) == 2 ? "is" : "continue"),
-			   (*t == 's' ? "" : "s"),
+		  sprintf (buf, "%s %s %s %s%s. ",			   
+			   nroomname,			   
+			   (nr (1,3) == 2 ? "is" :
+			    (*t == 's' ? "continue" : "continues")),
+			 
 			   dir_dist[range], 
+			   (dir < 4 ? "to " : ""),
 			   dir_track[dir]);
 		  
 		}
 	      else
 		{
-		  sprintf (buf, "%s %s %s %s to %s. ",
+		  sprintf (buf, "%s %s %s %s %s%s. ",
 			   (nr (1,3) == 3 ? "more of" :
 			    nr (1,2) == 2 ? "some more of" : 
 			    "still more of"),
@@ -645,6 +648,7 @@ generate_room_description (THING *room)
 			     (nr (1,3) == 1 ? "can be seen" : 
 			      (nr (1,2) == 2 ? "is" : "appears to be")))),
 			   dir_dist[range],
+			   (dir < 4 ? "to " : ""),
 			   dir_track[dir]);
 		}
 	    }
@@ -652,8 +656,9 @@ generate_room_description (THING *room)
 	    {
 	      if (nr (1,3) == 2)
 		{
-		  sprintf (buf, "%s%sto %s, %s %s. ",
+		  sprintf (buf, "%s%s%s%s, %s %s. ",
 			   dir_dist[range], (*dir_dist[range] ? " " : ""),
+			   dir < 4 ? "to " : "",
 			   dir_track[dir],
 			   (nr (1,5) == 2 ? 
 			    (*t == 's' ? "there are" : "there is") :
@@ -664,7 +669,7 @@ generate_room_description (THING *room)
 		}
 	      else
 		{
-		  sprintf (buf, "%s %s %s to %s. ",
+		  sprintf (buf, "%s %s %s %s%s. ",
 			   (nr (1,5) == 2 ? 
 			    (*t == 's' ? "there are" : "there is") :
 			    nr (1,4) == 1 ? "it looks like" : 
@@ -672,6 +677,7 @@ generate_room_description (THING *room)
 			    nr (1,2) == 1 ? "you see" : "you notice"),
 			   nroomname,
 			   dir_dist[range],
+			   (dir < 4 ? "to " : ""),
 			   dir_track[dir]);
 		}
 	    }

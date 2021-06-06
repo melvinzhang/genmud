@@ -3484,11 +3484,10 @@ society_necro_generate (THING *th)
   for (obj = corpse->cont; obj; obj = objn)
     {
       objn = obj->next_cont;
-      thing_from (obj);
       thing_to (obj, newmem);
     }
   do_wear (newmem, "all");
-  thing_from (corpse);
+  free_thing (corpse);
   return TRUE;
 }
 

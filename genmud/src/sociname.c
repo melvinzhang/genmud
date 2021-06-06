@@ -9,18 +9,32 @@
 static char vowels[NUM_VOWELS+1] = "aeiou";
 static char consonants[NUM_CONSONANTS+1] = "bcdfghjklmnpqrstvwxyz";
 
+/* These are consonants that must be near a vowel, not a consonant due
+   to being too hard to pronounce otherwise. */
+
+#define must_be_near_vowel(a) \
+(LC((a))=='j'|| \
+LC((a))=='q'|| \
+LC((a))=='v'|| \
+LC((a))=='x'|| \
+LC((a))=='y'|| \
+LC((a))=='z' ? TRUE:FALSE) 
+ 
 char *
 create_society_name (VALUE *socval)
 {
   SOCIETY *soc;
   int num_syllables;
-  char syll[STD_LEN], *t, c;
+  char syll[STD_LEN], *t, c, *s;
   int i, count;
   bool added_spacer = FALSE; /* Tells if we added a - or ' to space out the
 				name or not. If not, we don't go to
 				a fourth syllable. */
   bool did_first_consonant = FALSE; /* Did we put the first consonant
 				       into the name? */
+/* Can we have a consonant here or not -- based on whether the previous
+   letter must be followed by a vowel or not. */
+  bool can_have_consonant_here = TRUE; 
   static char namebuf[STD_LEN];
   
   /* This array is used to look at the word as a whole and see if
@@ -29,7 +43,10 @@ create_society_name (VALUE *socval)
   
   char nospacerbuf[STD_LEN];
 
-
+  /* This tells if a letter is allowed to appear at this point. 
+     This is for letters that must be surrounded by vowels. */
+  bool letter_ok = FALSE;
+  
   namebuf[0] = '\0';
   /* Socval is NOT strictly necessary */
   
@@ -55,17 +72,66 @@ create_society_name (VALUE *socval)
     {      
       did_first_consonant = FALSE;
       t = syll;
-      
+      *t = '\0';
       for (count = 0; count < 2; count++)
 	{	  
+	  can_have_consonant_here = TRUE;
+	  if (*nospacerbuf && !*syll)
+	    {
+	      for (s = nospacerbuf; *s; s++);
+	      s--;
+	      if (must_be_near_vowel(*s))
+		can_have_consonant_here = FALSE;
+	      
+	      /* If this is the first letter in a syllable and the
+		 previous two letters are consonants, this one cannot
+		 also be a consonant. */
+	      if (!isvowel(*s) && s > nospacerbuf &&
+		  !isvowel(*(s-1)))
+		can_have_consonant_here = FALSE;
+	    }
+	  
+	  
+	  
 	  /* Almost always do a consonant on the first iteration,
 	     then on the second usually do it, but always do it
 	     if there wasn't a first consonant. */
-	  if ((count == 0 && nr (1,3) != 2) ||
-	      (count == 1 && (nr (1,3) != 3 || !did_first_consonant)))
+	  if (((count == 0 && nr (1,3) != 2) ||
+	       (count == 1 && (nr (1,3) != 3 || !did_first_consonant))) &&
+	      can_have_consonant_here)
 	    {
-	      c = consonants[nr(0, NUM_CONSONANTS-1)];
-	      if (nr (1,5) == 3)
+	      do
+		{
+		  c = consonants[nr(0, NUM_CONSONANTS-1)];
+		  letter_ok = TRUE;
+		  /* If this is the first part of a syllable make
+		     sure that the starting letter can go after the
+		     previous syllabue (certain letters must
+		     come after vowels only... These are also rarer
+		     within words so, quite often, they're just
+		     discarded to try to find a "normal" letter. */
+		  if (must_be_near_vowel(c))
+		    {
+		      /* Many times this letter is discarded to repick. */
+		      if (nr (1,3) != 2)
+			letter_ok = FALSE;
+		      /* Make sure it's after a vowel. */
+		      if (!*syll)
+			{		      
+			  for (s = nospacerbuf; *s; s++);
+			  s--;
+			  if (!isvowel(*s))
+			    letter_ok = FALSE;
+			}
+		    }
+		}
+	      while (!letter_ok);
+	      
+
+	      /* Sometimes certain common letters have common following
+		 letters added onto them. */
+
+	      if (nr (1,10) == 3)
 		{
 		  if (c == 'l')
 		    {
@@ -138,7 +204,9 @@ create_society_name (VALUE *socval)
 	      if (count == 0)
 		did_first_consonant = TRUE;
 	    }
-	  if (count == 0)
+	  if (c == 'q')
+	    *t++ = 'u';
+	  else if (count == 0)
 	    *t++ = vowels[nr(0, NUM_VOWELS-1)];
 	}
       
@@ -149,12 +217,12 @@ create_society_name (VALUE *socval)
       /* Possibly add ' and - to the name...*/
       if (i < num_syllables - 1)
 	{
-	  if (nr (0,50) == 22)
+	  if (nr (0,50) == 14)
 	    {
 	      strcat (namebuf, "'");
 	      added_spacer = TRUE;
 	    }
-	  else if (nr (0,50) == 13)
+	  else if (nr (0,50) == 9)
 	    {
 	      strcat (namebuf, "-");
 	      added_spacer = TRUE;

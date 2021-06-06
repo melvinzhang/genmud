@@ -35,7 +35,8 @@ typedef struct _job_data JOB;
 #define REWARD_ITEM        0
 #define REWARD_MONEY       1
 #define REWARD_PASSWORD    2
-#define REWARD_MAX         3
+#define REWARD_EXPERIENCE  3
+#define REWARD_MAX         4
 
 
 

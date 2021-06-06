@@ -90,6 +90,7 @@ new_thing (void)
   newthing->next_cont = NULL;
   newthing->prev_cont = NULL;
   newthing->fgt = NULL;
+  newthing->edescs = NULL;
   newthing->next_fight = NULL;
   newthing->prev_fight = NULL;
   newthing->flags = NULL;
@@ -217,7 +218,7 @@ free_thing (THING *th)
   thing_from (th);
   
   remove_from_auctions (th);
-
+  
   thg = th->cont;
   th->cont = NULL;
   
@@ -796,11 +797,49 @@ free_fight (FIGHT *fight)
   fight_free = fight;  
   return;
 }
-      
-/* These two deal with making a new pc_data structure available, and also
-   returning it to the free list for use sometime later. */
-
      
+/* These two functions create and destroy extra descriptions. */
+
+EDESC *
+new_edesc (void)
+{
+  EDESC *eds;
+
+  if (edesc_free)
+    {
+      eds = edesc_free;
+      edesc_free = eds->next;
+    }
+  else
+    {
+      eds = mallok (sizeof (EDESC));
+      edesc_count++;
+    }
+  eds->next = NULL;
+  eds->name = nonstr;
+  eds->desc= nonstr;
+  return eds;
+}
+
+/* This frees the strings in an edesc and adds the edesc to the free list. */
+
+void
+free_edesc (EDESC *eds)
+{
+  if (!eds)
+    return;
+  
+  free_str (eds->name);
+  eds->name = nonstr;
+  free_str (eds->desc);
+  eds->desc = nonstr;
+  eds->next = edesc_free;
+  edesc_free = eds;
+  return;
+}
+
+
+
 /* These two things create and remove fights from the game. */
 
 RESET *
@@ -1063,6 +1102,8 @@ add_value (THING *th, VALUE *val)
   return;
 }
 
+
+ 
 /* This removes a value from a thing and then frees it. */
 
 void
@@ -1093,6 +1134,65 @@ remove_value (THING *th, VALUE *remove_me)
 	}
     }
   return;
+}
+
+/* These add and remove edescs from things. */
+
+void 
+add_edesc (THING *th, EDESC *eds)
+{
+  if (!th || !eds)
+    return;
+  
+  eds->next = th->edescs;
+  th->edescs = eds;
+  return;
+}
+
+void
+remove_edesc (THING *th, EDESC *eds)
+{
+  EDESC *prev;
+  
+  if (!th || !eds)
+    return;
+
+  if (eds == th->edescs)
+    {
+      th->edescs = eds->next;
+      eds->next = NULL;
+    }
+  else
+    {
+      for (prev = th->edescs; prev; prev = prev->next)
+	{
+	  if (prev->next == eds)
+	    {
+	      prev->next = eds->next;
+	      eds->next = NULL;
+	      break;
+	    }
+	}
+    }
+  return;
+}
+
+/* This finds an edesc with a certain name on a thing. */
+
+EDESC *
+find_edesc_thing (THING *th, char *name)
+{
+  EDESC *eds;
+  
+  if (!th || !name || !*name || !th->edescs)
+    return NULL;
+  
+  for (eds = th->edescs; eds; eds = eds->next)
+    {
+      if (named_in (eds->name, name))
+	return eds;
+    }
+  return NULL;
 }
 
 
@@ -1320,6 +1420,7 @@ copy_thing (THING *tho, THING *thn)
   thn->prev_cont = NULL;
   thn->next_fight = NULL;
   thn->prev_fight = NULL;
+  thn->edescs = NULL;
   thn->proto = tho;
   /* Now fix up pointers! */
   
@@ -1438,7 +1539,7 @@ set_up_thing (THING *th)
 void
 do_make (THING *th, char *arg)
 {
-  int vnum, num_made = 1, i;
+  int vnum = 0, num_made = 1, i;
   THING *made, *going_to;
   char arg1[STD_LEN];
   char buf[STD_LEN];
@@ -1596,14 +1697,12 @@ do_sacrifice (THING *th, char *arg)
 	    {
 	      act ("$F@1n tries to sacrifice @3n but the gods grant @3n mercy and send @3m home!$7", th, NULL, vict, NULL, TO_ALL);
 	      stt ("You have been spared by the gods!\n\r", vict);
-	      thing_from (vict);
 	      thing_to (vict, find_thing_num (vict->align + 100));
 	      afftype_remove (vict, 0, FLAG_PC1, PC_FREEZE);
 	    }
 	  else
 	    {
 	      act ("$9@1n sacrifices @3n to the gods! Blood everywhere!$7", th, NULL, vict, NULL, TO_ALL);
-	      thing_from (vict);
 	      thing_to (vict, th->in);
 	      SBIT (server_flags, SERVER_SACRIFICE);
 	      get_killed (vict, th);
@@ -1954,7 +2053,7 @@ THING *
 find_thing_num (int num)
 {
   THING *thg;
-  if ((thg = thing_hash[num % HASH_SIZE]) == NULL)
+  if ((thg = thing_hash[num % HASH_SIZE]) == NULL || num < 1)
     return NULL;
   if (thg->vnum == num && thg->in && IS_AREA (thg->in))
     return thg;

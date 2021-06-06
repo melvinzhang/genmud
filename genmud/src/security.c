@@ -262,11 +262,15 @@ free_pbase (PBASE *pb)
   return;
 }
 
+/* This reads in the pbase data. It also checks each pfile as it
+   reads the data in so players that delete don't have pbases anymore. */
+
 void
 read_pbase (void)
 {
   PBASE *pb;
-
+  FILE *pf; /* Playerfile we check. */
+  char buf[STD_LEN];
   FILE_READ_SETUP ("pbase.dat");
   
   FILE_READ_LOOP
@@ -275,8 +279,6 @@ read_pbase (void)
       FKEY("PBASE")
 	{ 
 	  pb = new_pbase ();
-	  pb->next = pbase_list;
-	  pbase_list = pb;
 	  pb->name = new_str (read_string (f));
 	  pb->email = new_str (read_string (f));
 	  pb->site = new_str (read_string (f));
@@ -286,12 +288,23 @@ read_pbase (void)
 	  pb->race = read_number (f);
 	  pb->last_logout = read_number (f);
 	  
+	  /* Check if the player still exists. */
+	  sprintf (buf, "%s%s", PLR_DIR, capitalize(pb->name));
+	  if ((pf = fopen (buf, "r")) != NULL)
+	    {
+	      pb->next = pbase_list;
+	      pbase_list = pb;
+	      fclose (pf);
+	    }
+	  else
+	    free_pbase (pb);
 	}
       FKEY("END_OF_PBASE")
 	break;
       FILE_READ_ERRCHECK("pbase.dat");
     }
   fclose (f);
+  write_pbase();
   return;
 }
 
@@ -363,6 +376,7 @@ check_pbase (THING *th)
   write_pbase ();
   return;
 }
+
 
 /* Gives some pbase information. */
 

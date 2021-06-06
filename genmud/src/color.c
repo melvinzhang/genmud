@@ -154,3 +154,18 @@ convert_color (FILE *f, char *t)
   return t;
 }
   
+/* Makes an int into a singl hex digit. Capped at 0 and F. */
+
+char 
+int_to_hex_digit (int num)
+{
+  if (num < 0)
+    return '0';
+  else if (num > 15)
+    return 'F';
+  
+  if (num <= 9)
+    return '0' + num;
+  
+  return 'A' + num - 10;
+}

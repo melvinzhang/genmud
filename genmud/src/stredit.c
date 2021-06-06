@@ -42,121 +42,130 @@ append_string (THING *th)
       s++;
       switch (UC(*s))
 	{
-	case 'F':
-	  if (!IS_SET (th->pc->pcflags, PCF_EDIT_CODE) &&
-	      *th->pc->curr_string)
-	    format_string (th->pc->curr_string, NULL);
-	  else
-	    stt ("You cannot format code.\n\r", th);	  
-	  return;
-	case 'P':
-	  if (!IS_SET (th->pc->pcflags, PCF_EDIT_CODE) &&
-	      *th->pc->curr_string)
-	    paragraph_format (th->pc->curr_string);
-	  else
-	    stt ("You cannot format code.\n\r", th);	
-	  return;
-	case 'D':
-	  ending = TRUE;
-	  break;
-        case 'S':
-	  show_stredit (th, *th->pc->curr_string, FALSE);
-	  return;
-        case 'R': /* Replace */
-          {
-            char oldstr[STD_LEN];
-            char newstr[STD_LEN];
-            s++;
-            s = f_word (s, oldstr);
-            s = f_word (s, newstr);
-            if (!*oldstr)
+	  case 'F':
+	    if (!IS_SET (th->pc->pcflags, PCF_EDIT_CODE) &&
+		*th->pc->curr_string)
+	      format_string (th->pc->curr_string, NULL);
+	    else
+	      stt ("You cannot format code.\n\r", th);	  
+	    return;
+	  case 'P':
+	    if (!IS_SET (th->pc->pcflags, PCF_EDIT_CODE) &&
+		*th->pc->curr_string)
+	      paragraph_format (th->pc->curr_string);
+	    else
+	      stt ("You cannot format code.\n\r", th);	
+	    return;
+	  case 'D':
+	    ending = TRUE;
+	    break;
+	  case 'S':
+	    show_stredit (th, *th->pc->curr_string, FALSE);
+	    return;
+	  case 'R': /* Replace */
+	    {
+	      char oldstr[STD_LEN];
+	      char newstr[STD_LEN];
+	      s++;
+	      s = f_word (s, oldstr);
+	      s = f_word (s, newstr);
+	      if (!*oldstr)
+		
+		{
+		  stt (".r <old> <new>\n\r", th);
+		  return;
+		}
 	      
-	      {
-                stt (".r <old> <new>\n\r", th);
-                return;
-              }
+	      /* The idea is we take the curr_string and search it for
+		 any instances of oldstr...and if we don't find it at
+		 a given character, we just keep copying the string.
+		 But, if we do find a copy of oldstr, it gets replaced
+		 by newstr (WHICH MAY BE BLANK!!!!), and then we continue
+		 on our way. */
             
-            /* The idea is we take the curr_string and search it for
-               any instances of oldstr...and if we don't find it at
-               a given character, we just keep copying the string.
-               But, if we do find a copy of oldstr, it gets replaced
-               by newstr (WHICH MAY BE BLANK!!!!), and then we continue
-               on our way. */
-            
-            s = buf;
-            for (t = *th->pc->curr_string; *t;)
+	      s = buf;
+	      for (t = *th->pc->curr_string; *t;)
+		{
+		  if (LC (*t) != LC (*oldstr) || str_prefix (oldstr, t))
+		    {
+		      *s = *t;
+		      t++;
+		      s++;
+		    }
+		  else
+		    {
+		      t += strlen (oldstr);
+		      *s = '\0';
+		      strcat (s, newstr);
+		      s += strlen (newstr);
+		    }
+		  if (s - buf > 19000)
+		    break;
+		}
+	      *s = '\0';
+	      if (!bad_pc_description (th, buf))
+		{
+		  free_str (*th->pc->curr_string);
+		  *th->pc->curr_string = new_str (add_color(buf));
+		  stt ("String replaced.\n\r", th);
+		  show_stredit (th, *th->pc->curr_string, FALSE);
+		}
+	      return;
+	    }
+	    break;	  
+	  case 'C':
+	    if (atoi (s + 1) > 0)
 	      {
-                if (LC (*t) != LC (*oldstr) || str_prefix (oldstr, t))
-                  {
-                    *s = *t;
-                    t++;
-                    s++;
-                  }
-                else
-                  {
-                    t += strlen (oldstr);
-                    *s = '\0';
-                    strcat (s, newstr);
-                    s += strlen (newstr);
-                  }
+		clear_line (th, atoi (s + 1));
+		stt ("Ok, line cleared.\n\r", th);
 	      }
-            *s = '\0';
-            free_str (*th->pc->curr_string);
-            *th->pc->curr_string = new_str (add_color(buf));
-            show_stredit (th, *th->pc->curr_string, FALSE);
-            return;
-          }
-          break;	  
-	case 'C':
-	  if (atoi (s + 1) > 0)
-	    {
-	      clear_line (th, atoi (s + 1));
-	      stt ("Ok, line cleared.\n\r", th);
+	    else
+	      {
+		free_str (*th->pc->curr_string);
+		*th->pc->curr_string = nonstr;
+		stt ("Ok, string cleared.\n\r", th);
+	      }
+	    return;
+	  case 'I':
+	    { /* Insert get number of lines to skip */
+	      char arg1[STD_LEN];
+	      char *r;
+	      int num_lines = 1, curr= 1;
+	      s++;
+	      s = f_word (s, arg1);          
+	      if (!is_number (arg1))
+		s = th->fd->command_buffer + 2;
+	      else
+		num_lines = atoi (arg1);
+	      t = buf; 
+	      *t = '\0';
+	      r = *th->pc->curr_string;
+	      for (; *r && curr < num_lines; r++, t++)
+		{
+		  *t = *r;
+		  if (*r == '\n')
+		    curr++;
+		}
+	      *t = '\0';
+	      strcat (buf, s);
+	      strcat (buf, "\n");
+	      strcat (buf, r);
+	      if (!bad_pc_description (th, buf))
+		{
+		  free_str (*th->pc->curr_string); 
+		  *th->pc->curr_string = new_str (add_color (buf));	       
+		  stt ("String inserted.\n\r", th);
+		  show_stredit (th, *th->pc->curr_string, FALSE);
+		}         
 	    }
-	  else
-	    {
-	      free_str (*th->pc->curr_string);
-	      *th->pc->curr_string = nonstr;
-	      stt ("Ok, string cleared.\n\r", th);
-	    }
-	  return;
-        case 'I':
-          { /* Insert get number of lines to skip */
-            char arg1[STD_LEN];
-            char *r;
-            int num_lines = 1, curr= 1;
-            s++;
-            s = f_word (s, arg1);          
-            if (!is_number (arg1))
-              s = th->fd->command_buffer + 2;
-            else
-              num_lines = atoi (arg1);
-            t = buf; 
-            *t = '\0';
-            r = *th->pc->curr_string;
-            for (; *r && curr < num_lines; r++, t++)
-              {
-                *t = *r;
-                if (*r == '\n')
-                  curr++;
-              }
-            *t = '\0';
-            strcat (buf, s);
-	    strcat (buf, "\n");
-            strcat (buf, r);
-            free_str (*th->pc->curr_string);
-            *th->pc->curr_string = new_str (add_color (buf));
-            stt ("String inserted.\n\r", th);
-            show_stredit (th, *th->pc->curr_string, FALSE);
-          }         
-          return;
-	default:
-	  break;
+	    return;
+	  default:
+	    break;
 	}
     }
-
-
-
+  
+  
+  
   if (!ending)
     {
       for (; *s; t++, s++)
@@ -175,9 +184,12 @@ append_string (THING *th)
   
   /* Now we just delete the old string, and we make a new string. */
 
-  free_str (*th->pc->curr_string);
-  *th->pc->curr_string = new_str (add_color(buf));
-  
+ 
+  if (!bad_pc_description (th, buf))    
+    {
+      free_str (*th->pc->curr_string);
+      *th->pc->curr_string = new_str (add_color(buf));
+    }
   
   /* If we stop editing, then we don't keep inside of the editor. */
   
@@ -672,3 +684,28 @@ paragraph_format (char **text)
   return;
 }
 
+/* This tells if a player has a bad description or not. A bad description
+   is one that has too many characters or too many lines in it. */
+
+bool
+bad_pc_description (THING *th, char *buf)
+{
+  /* Bail out on these descriptions since they're ok... */
+  if (!th || !buf || !*buf || !IS_PC (th) || LEVEL (th) >= BLD_LEVEL)
+    return FALSE;
+
+  /* If this isn't the description of the player, then bail out. */
+
+  if (&th->desc != th->pc->curr_string)
+    return FALSE;
+
+  if (strlen (buf) < 2000 && find_num_lines (buf) < 20)
+    return FALSE;
+  
+  /* At this point the buf is >= 3000 chars and >= 20 lines so
+     declare it to be a bad description and bail out. */
+  
+  stt ("This description is too long!!!!! New text ignored!\n\r", th);
+  return TRUE;
+}
+     

@@ -4,17 +4,22 @@
 /* Number of parts to an objgen name. */
 
 /* The type part of the name. */
-#define OBJECTGEN_NAME_OWNER   0
-#define OBJECTGEN_NAME_A_AN    1
-#define OBJECTGEN_NAME_PREFIX  2
-#define OBJECTGEN_NAME_COLOR   3
-#define OBJECTGEN_NAME_GEM     4
-#define OBJECTGEN_NAME_METAL   5
-#define OBJECTGEN_NAME_SOCIETY 6
-#define OBJECTGEN_NAME_TYPE    7
-#define OBJECTGEN_NAME_SUFFIX  8
-#define OBJECTGEN_NAME_MAX     9
+#define OBJECTGEN_NAME_OWNER     0
+#define OBJECTGEN_NAME_A_AN      1
+#define OBJECTGEN_NAME_PREFIX    2
+#define OBJECTGEN_NAME_COLOR     3
+#define OBJECTGEN_NAME_GEM       4
+#define OBJECTGEN_NAME_METAL     5
+#define OBJECTGEN_NAME_NONMETAL  6
+#define OBJECTGEN_NAME_SOCIETY   7
+#define OBJECTGEN_NAME_TYPE      8
+#define OBJECTGEN_NAME_SUFFIX    9
+#define OBJECTGEN_NAME_MAX      10
 
+/* There are four things that are autoset on an object name: those are
+   a_an, owner, society and suffix...the other 6 are optional. */
+
+#define OBJECTGEN_NAME_EXTRA     6
 
 /* Only N affects per rank in the object. */
 #define MAX_AFF_PER_RANK 2
@@ -54,3 +59,8 @@ void objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 /* This sets up the stats and bonuses for the object. */
 
 void objectgen_setup_stats (THING *object, int weapon_type);
+
+
+/* This generates some fake metal names. */
+
+void generate_metal_names (void);

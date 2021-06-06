@@ -2,7 +2,7 @@ THING 105900
 Name mobdescgen.are`
 HpMv 0 10 5 100
 HWT 0 0
-Timer 5
+Timer 9
 Short Mobgen Desc Generators`
 ThFl 1089531
 Flag Area 0 0 28
@@ -73,10 +73,8 @@ Desc ''
 ''
 ''
 'You notice'
-'You notice that'
 'You see'
 'There is'
-'It looks like'
 'There appears to be'
 "There's"
 ''
@@ -92,6 +90,8 @@ Desc ''
 ''
 ''
 ''
+'You notice that there is'
+'You notice there is'
 `
 END_THING
 
@@ -117,6 +117,42 @@ Desc 'somewhere to rest'
 'a place to land'
 'a place to rest'
 'a landing spot'
+`
+END_THING
+
+THING 105912
+Name mob_notice_plural_verb`
+HWT 0 0
+Desc 'There are'
+'There appear to be'
+'It looks like there are'
+'You see that there are'
+'There are'
+''
+''
+''
+`
+END_THING
+
+THING 105913
+Name mob_notice_plural`
+HWT 0 0
+Desc 'You see'
+'You see that'
+'You notice that'
+'You pause to notice the'
+'You see'
+'It appears that'
+'It looks like'
+''
+''
+''
+Some
+Many
+Few
+Several
+Lots of
+A bunch of
 `
 END_THING
 

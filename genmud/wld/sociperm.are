@@ -3,7 +3,7 @@ Name sociperm.are`
 HpMv 0 10 5 2000
 HWT 0 0
 Cost 100
-Timer 28
+Timer 11
 Short Permanent Society Mobs`
 Long You shouldn't be in this area. :)`
 type Lonath`
@@ -371,7 +371,7 @@ Short a mature red dragon`
 Long A mature red dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -385,7 +385,7 @@ Short an adult red dragon`
 Long An adult red dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -399,7 +399,7 @@ Short an old red dragon`
 Long An old red dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -413,7 +413,7 @@ Short a very old red dragon`
 Long A very old red dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -427,7 +427,7 @@ Short an ancient red dragon`
 Long An ancient red dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -441,7 +441,7 @@ Short a mature blue dragon`
 Long A mature blue dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -455,7 +455,7 @@ Short an adult blue dragon`
 Long An adult blue dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -469,7 +469,7 @@ Short an old blue dragon`
 Long An old blue dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -483,7 +483,7 @@ Short a very old blue dragon`
 Long A very old blue dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -497,7 +497,7 @@ Short an ancient blue dragon`
 Long An ancient blue dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -511,7 +511,7 @@ Short a mature green dragon`
 Long A mature green dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -525,7 +525,7 @@ Short an adult green dragon`
 Long An adult green dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -539,7 +539,7 @@ Short an old green dragon`
 Long An old green dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -553,7 +553,7 @@ Short a very old green dragon`
 Long A very old green dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -567,7 +567,7 @@ Short an ancient green dragon`
 Long An ancient green dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -581,7 +581,7 @@ Short a mature white dragon`
 Long A mature white dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -595,7 +595,7 @@ Short an adult white dragon`
 Long An adult white dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -609,7 +609,7 @@ Short an old white dragon`
 Long An old white dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -623,7 +623,7 @@ Short a very old white dragon`
 Long A very old white dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -637,7 +637,7 @@ Short an ancient white dragon`
 Long An ancient white dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -651,7 +651,7 @@ Short a mature black dragon`
 Long A mature black dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -665,7 +665,7 @@ Short an adult black dragon`
 Long An adult black dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -679,7 +679,7 @@ Short an old black dragon`
 Long An old black dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -693,7 +693,7 @@ Short a very old black dragon`
 Long A very old black dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -707,7 +707,7 @@ Short an ancient black dragon`
 Long An ancient black dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -721,7 +721,7 @@ Short a mature purple dragon`
 Long A mature purple dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -735,7 +735,7 @@ Short an adult purple dragon`
 Long An adult purple dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -749,7 +749,7 @@ Short an old purple dragon`
 Long An old purple dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -763,7 +763,7 @@ Short a very old purple dragon`
 Long A very old purple dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -777,7 +777,7 @@ Short an ancient purple dragon`
 Long An ancient purple dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -790,7 +790,7 @@ HWT 0 0
 Short a mature yellow dragon`
 Long A mature yellow dragon is here.`
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -804,7 +804,7 @@ Short an adult yellow dragon`
 Long An adult yellow dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -818,7 +818,7 @@ Short an old yellow dragon`
 Long An old yellow dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -832,7 +832,7 @@ Short a very old yellow dragon`
 Long A very old yellow dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -846,7 +846,7 @@ Short an ancient yellow dragon`
 Long An ancient yellow dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -860,7 +860,7 @@ Short a mature sky-blue dragon`
 Long A mature sky-blue dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -874,7 +874,7 @@ Short an adult sky-blue dragon`
 Long An adult sky-blue dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -888,7 +888,7 @@ Short an old sky-blue dragon`
 Long An old sky-blue dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -902,7 +902,7 @@ Short a very old sky-blue dragon`
 Long A very old sky-blue dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8
@@ -916,7 +916,7 @@ Short an ancient sky-blue dragon`
 Long An ancient sky-blue dragon is here.`
 Sex 2
 ThFl 67745
-Val weapon 10 20 0 0 0 0 0 claw claw bite bite buffet`
+Val weapon 10 20 0 0 0 0 0 0 claw claw bite bite buffet`
 Flag Det 0 0 7
 Flag Aff 0 0 4718592
 Flag Mob 0 0 8

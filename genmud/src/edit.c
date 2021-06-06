@@ -11,6 +11,7 @@
 #ifdef USE_WILDERNESS
 #include "wilderness.h"
 #endif
+#include "worldgen.h"
 /* This lets a character begin to edit a mob/room/obj/area, or
    edit code <name> lets the char edit code for scripts. */
 
@@ -66,6 +67,16 @@ do_edit (THING *th, char *arg)
       return;
 	}
     }
+  if (!str_cmp (arg1, "this") &&
+      IS_PC (th) && th->pc->last_tstat > 0 &&
+      (thg = find_thing_num (th->pc->last_tstat)) != NULL)
+    {
+      stt ("Ok, editing this thing now!\n\r", th);
+      th->fd->connected = CON_EDITING;
+      th->pc->editing = (THING *) thg;
+      show_edit (th);
+      return;
+    }
   if (is_number (arg1) || !*arg1)
     {
       vnum = atoi (arg1);
@@ -84,8 +95,10 @@ do_edit (THING *th, char *arg)
 	  return;
 	}
       else
-	return;
-      
+	{
+	  stt ("You must edit a vnum greater than 0.\n\r", th);
+	  return;      
+	}
     }
   else if (!str_cmp (arg1, "code"))
     {
@@ -350,6 +363,7 @@ show_edit (THING * th)
   char padbuf[STD_LEN];
   char huntbuf[STD_LEN];
   THING *thg;
+  EDESC *eds;
   buf[0] = '\0';
   buf2[0] = '\0';
   
@@ -441,6 +455,15 @@ thg->hp, thg->max_hp,  mvbuf, thg->max_mv, thg->mv, thg->size);
   if (LEVEL (th) >= BLD_LEVEL)
     {
       stt (show_resets (thg->resets), th);
+      /* Show the extra descriptions by showing the names then adding
+	 a brief piece of the description. */
+      for (eds = thg->edescs; eds; eds = eds->next)
+	{
+	  sprintf (buf, "EDesc: \x1b[1;35m%s\x1b[0;37m: ", eds->name);
+	  strncat (buf, eds->desc, MAX(1,(89-strlen(buf))));
+	  strcat (buf, "...\n\r");
+	  stt (buf, th);
+	}
       show_tracks (th, thg);  
       see_needs (th, thg);
     }
@@ -611,7 +634,7 @@ edit (THING *th, char *arg)
 	     pointing to the new room. This isn't necessary, but I've
 	     found that it makes building easier for me since I don't
 	     have to clean up old exits. 
-
+	     
 	     Basically if you dig into a room and it has an exit going
 	     to another room, and that other room has an exit to
 	     the room being dug to, the exit gets nuked. */
@@ -632,7 +655,7 @@ edit (THING *th, char *arg)
 	    }
 	  
 	  nexit->val[0] = thg->vnum; 
-
+	  
 	  
 	  /* This was changed so making new rooms send you to the room,
 	     and just linking leaves you where you are. */
@@ -661,187 +684,266 @@ edit (THING *th, char *arg)
       stt ("<dir> dig/link/delete\n\r", th);
       return;
     }
-
+  
   switch (UC(arg1[0]))
     {
-    case 'A':
-      if (!str_cmp (arg1, "armor"))
-	{
-	  value = atoi (arg);
-	  
-	  if (value < 0 || value > 10000)
-	    {
-	      stt ("The armor must be between 0 and 10000.\n\r", th);
-	      return;
+      case 'A':
+	if (!str_cmp (arg1, "armor"))
+	  {
+	    value = atoi (arg);
+	    
+	    if (value < 0 || value > 10000)
+	      {
+		stt ("The armor must be between 0 and 10000.\n\r", th);
+		return;
+	      }
+	    thg->armor = value;
+	    stt ("Armor val set.\n\r", th);
+	    show_edit (th);
+	    return;
+	  }
+	if (!str_cmp (arg1, "align"))
+	  {
+	    value = atoi (arg);
+	    if (value >= 0 && value < ALIGN_MAX && align_info[value])
+	      {
+		thg->align = value;
+		stt ("Ok, alignment changed.\n\r", th);
+		show_edit (th);
+		return;
+	      }
+	    else
+	      {
+		stt ("Please pick an alignment number.\n\r", th);
+		return;
+	      }
+	  }
+	break;
+      case 'C':
+	if (!str_cmp (arg1, "cost"))
+	  {
+	    value = atoi (arg);
+	    if (value < 0 || value > 20000000)
+	      {
+		stt ("The cost must be between 0 and 20000000.\n\r", th);
+	      }
+	    else
+	      {
+		thg->cost = value;
+		stt ("Cost set.\n\r", th);
+	      }
+	    show_edit (th);
+	    return;
+	  }
+	if (!str_cmp (arg1, "copyfrom"))
+	  {
+	    THING *oth, *from;
+	    value = atoi (arg);	
+	    
+	    if ((oth = find_thing_num (value)) == NULL)
+	      {
+		stt ("copyfrom <vnum>\n\r", th);
+		return;
 	    }
-	  thg->armor = value;
-	  stt ("Armor val set.\n\r", th);
-	  show_edit (th);
-	  return;
-	}
-      if (!str_cmp (arg1, "align"))
-	{
-	  value = atoi (arg);
-	  if (value >= 0 && value < ALIGN_MAX && align_info[value])
-	    {
-	      thg->align = value;
-	      stt ("Ok, alignment changed.\n\r", th);
-	      show_edit (th);
-	      return;
-	    }
-	  else
-	    {
-	      stt ("Please pick an alignment number.\n\r", th);
-	      return;
-	    }
-	}
-      break;
-    case 'C':
-      if (!str_cmp (arg1, "cost"))
-	{
-	  value = atoi (arg);
-	  if (value < 0 || value > 20000000)
-	    {
-	      stt ("The cost must be between 0 and 20000000.\n\r", th);
-	    }
-	  else
-	    {
-	      thg->cost = value;
-	      stt ("Cost set.\n\r", th);
-	    }
-	  show_edit (th);
-	  return;
-	}
-      if (!str_cmp (arg1, "copyfrom"))
-	{
-	  THING *oth, *from;
-	  value = atoi (arg);	
-	  
-	  if ((oth = find_thing_num (value)) == NULL)
-	    {
-	      stt ("copyfrom <vnum>\n\r", th);
-	      return;
-	    }
-	  
-	  if (!oth->desc || !*oth->desc)
-	    {
-	      stt ("That thing doesn't have a description!\n\r", th);
-	      return;	    
-	    }
-	  
-	  /* Where are we copying this from...? */
-	  value = 0;
-	  t = oth->desc;
-	  while (isdigit (*t))
-	    {
-	      value *= 10;
-	      value += *t - '0';
-	      if (value >= 1000000000)
-		break;
-	      t++;
-	    }
-	  
-	  if ((from = find_thing_num (value)) != NULL &&
-	      from->desc && *from->desc)
+	    
+	    if (!oth->desc || !*oth->desc)
+	      {
+		stt ("That thing doesn't have a description!\n\r", th);
+		return;	    
+	      }
+	    
+	    /* Where are we copying this from...? */
+	    value = 0;
+	    t = oth->desc;
+	    while (isdigit (*t))
+	      {
+		value *= 10;
+		value += *t - '0';
+		if (value >= 1000000000)
+		  break;
+		t++;
+	      }
+	    
+	    if ((from = find_thing_num (value)) != NULL &&
+		from->desc && *from->desc)
 	    oth = from;
-	  
+	    
 	 	      
-
-	  if (oth == thg)
-	    {
-	      stt ("You cannot copy over a thing's own desc.\n\r", th);
-	      return;
-	    }
-	  free_str (thg->desc);	  
-	  sprintf (buf, "%d", oth->vnum);
-	  thg->desc = new_str (buf);
-	  stt ("Desc copied.\n\r", th);
-	  show_edit (th);
-	  return;
-	}
-      if (!str_cmp (arg1, "copyto"))
-	{
-	  THING *nth, *from;
-	  char *t;
-	  value = atoi (arg);
-	  from = thg;
-	  
-	  if (!thg->desc || !*thg->desc)
-	    {
-	      stt ("There is no description on this thing!\n\r", th);
-	      return;
-	    }
-	  
-	  if ((nth = find_thing_num (value)) == NULL)
-	    {
-	      stt ("copyto <vnum>\n\r", th);
-	      return;
-	    }
-	  t = thg->desc;
-	  value = 0;
-	  while (isdigit (*t))
-	    {
-	      value *= 10;
-	      value += *t - '0';
-	      if (value >= 1000000000)
-		break;
-	      t++;
-	    }
-	  
-	  if ((from = find_thing_num (value)) == NULL ||
-	      !from->desc || !from->desc)
+	    
+	    if (oth == thg)
+	      {
+		stt ("You cannot copy over a thing's own desc.\n\r", th);
+		return;
+	      }
+	    free_str (thg->desc);	  
+	    sprintf (buf, "%d", oth->vnum);
+	    thg->desc = new_str (buf);
+	    stt ("Desc copied.\n\r", th);
+	    show_edit (th);
+	    return;
+	  }
+	if (!str_cmp (arg1, "copyto"))
+	  {
+	    THING *nth, *from;
+	    char *t;
+	    value = atoi (arg);
 	    from = thg;
-	  
-	  
-	  
-	  if (nth == from)
-	    {
-	      stt ("You cannot copy over a thing's own desc.\n\r", th);
-	      return;
-	    }
-	  free_str (nth->desc);
-	  sprintf (buf, "%d", from->vnum);
-	  nth->desc = new_str (buf);
-	  stt ("Desc copied.\n\r", th);
-	  show_edit (th);
-	  return;
-	}
-      if (!str_cmp (arg1, "color"))
-	{
-	  
-	  if (*arg >= '0' && *arg <= '9')
-	    thg->color = *arg - '0';
-	  else if (LC (*arg) >= 'a' && LC (*arg) <= 'f')
-	    thg->color = LC(*arg) - 'a';
-	  else 
-	    {
-	      stt ("Color 0-F.\n\r", th);
-	      return;
-	    }
-	  stt ("Ok, Color changed.\n\r", th);
-	  show_edit (th);
-	  return;
-	}
-      break;
-    case 'D':
-      if (!str_cmp (arg1, "desc") || !str_prefix ("descr", arg1))
-	{
-	  THING *newedit;
-	  if ((value = atoi (thg->desc)) > 0 &&
-	      (newedit = find_thing_num (value)) != NULL &&
-	      newedit->desc && *newedit->desc)
-	    {
-	      free_str (thg->desc);
-	      thg->desc = new_str (newedit->desc);
-	    }
-	  new_stredit (th, &thg->desc);
-	  if (thg->in && IS_AREA (thg->in))
-	    SBIT (thg->in->thing_flags, TH_CHANGED);
-	  return;
-	}
-      break;
-    case 'F':
-      if (!str_cmp (arg1, "flag") || !str_cmp (arg1, "flags"))
+	    
+	    if (!thg->desc || !*thg->desc)
+	      {
+		stt ("There is no description on this thing!\n\r", th);
+		return;
+	      }
+	    
+	    if ((nth = find_thing_num (value)) == NULL)
+	      {
+		stt ("copyto <vnum>\n\r", th);
+		return;
+	      }
+	    t = thg->desc;
+	    value = 0;
+	    while (isdigit (*t))
+	      {
+		value *= 10;
+		value += *t - '0';
+		if (value >= 1000000000)
+		  break;
+		t++;
+	      }
+	    
+	    if ((from = find_thing_num (value)) == NULL ||
+		!from->desc || !from->desc)
+	      from = thg;
+	    
+	    
+	    
+	    if (nth == from)
+	      {
+		stt ("You cannot copy over a thing's own desc.\n\r", th);
+		return;
+	      }
+	    free_str (nth->desc);
+	    sprintf (buf, "%d", from->vnum);
+	    nth->desc = new_str (buf);
+	    stt ("Desc copied.\n\r", th);
+	    show_edit (th);
+	    return;
+	  }
+	if (!str_cmp (arg1, "color"))
+	  {
+	    
+	    if (*arg >= '0' && *arg <= '9')
+	      thg->color = *arg - '0';
+	    else if (LC (*arg) >= 'a' && LC (*arg) <= 'f')
+	      thg->color = LC(*arg) - 'a';
+	    else 
+	      {
+		stt ("Color 0-F.\n\r", th);
+		return;
+	      }
+	    stt ("Ok, Color changed.\n\r", th);
+	    show_edit (th);
+	    return;
+	  }
+	break;
+      case 'D':
+	if (!str_cmp (arg1, "desc") || !str_prefix ("descr", arg1))
+	  {
+	    THING *newedit;
+	    if ((value = atoi (thg->desc)) > 0 &&
+		(newedit = find_thing_num (value)) != NULL &&
+		newedit->desc && *newedit->desc)
+	      {
+		free_str (thg->desc);
+		thg->desc = new_str (newedit->desc);
+	      }
+	    new_stredit (th, &thg->desc);
+	    if (thg->in && IS_AREA (thg->in))
+	      SBIT (thg->in->thing_flags, TH_CHANGED);
+	    return;
+	  }
+	break;	
+      case 'E':
+	/* Extra descriptions...add auto on name and add descs after that. */
+	
+	if (named_in ("eds edesc extra extra_description exdesc", arg1))
+	  {
+	    EDESC *eds;
+	    char *eds_arg; /* Used for parsing new names. */
+	    arg = f_word (arg, arg1);
+	    if (!str_cmp (arg1, "delete"))
+	      {
+		if ((eds = find_edesc_thing (thg, arg)) != NULL)
+		  {
+		    remove_edesc (thg, eds);
+		    free_edesc (eds);
+		    stt ("Extra description removed.\n\r", th);
+		    show_edit (th);
+		    return;
+		  }
+		else
+		  {
+		    stt ("That thing doesn't have that extra description on it.\n\r", th);
+		    return;
+		  }
+	      }
+	    if (!str_cmp (arg1, "add"))
+	      {
+		if (!*arg || isspace (*arg))
+		  {
+		    stt ("edesc add <names>\n\r", th);
+		    return;
+		  }
+
+		if ((eds = find_edesc_thing (thg, arg)) != NULL)
+		  {
+		    stt ("This extra description already exists!\n\r", th);
+		    return;
+		  }
+		eds = new_edesc();
+		eds->name = new_str (arg);
+		add_edesc (thg, eds);		
+		stt ("New edesc added.\n\r", th);
+		show_edit (th);
+		return;
+	      }
+	    if ((eds = find_edesc_thing (thg, arg1)) != NULL)	      
+	      {
+		if (!str_cmp (arg, "desc") || !str_cmp (arg, "description"))
+		  {
+		    new_stredit (th, &eds->desc);
+		    return;
+		  }
+		if (!arg || !*arg)
+		  {
+		    stt ("edesc <name> <new names>. The new names cannot be blank\n\r", th);
+		    return;
+		  }
+		eds_arg = arg;
+		while (*eds_arg && eds_arg)
+		  {
+		    eds_arg = f_word (eds_arg, arg1);		    
+		    if (!str_cmp (arg1, "add") || !str_cmp (arg1, "delete") ||
+			!str_cmp (arg1, "desc") || !str_cmp (arg1, "description"))
+		      {
+			stt ("Your object name cannot contain the words: add, delete, desc, or description.\n\r", th);
+			return;
+		      }
+		  }
+		
+		free_str (eds->name);
+		eds->name = new_str (arg);
+		stt ("List of names changed on extra description.\n\r", th);
+		show_edit (th);
+		return;
+	      }
+	    stt ("edesc: add <name>, delete <name>,  <name> desc, <name> <new names>\n\r", th);
+	    return;
+	  }
+
+
+      case 'F':
+	if (!str_cmp (arg1, "flag") || !str_cmp (arg1, "flags"))
 	{
 	  edit_flags (th, &thg->flags, arg);
 	  show_edit (th);
@@ -2339,18 +2441,26 @@ do_twhere (THING *th, char *arg)
   
   THING *thg;
   int i, pad, j;
+  char arg1[STD_LEN];
   char buf[STD_LEN];
   char padbuf[STD_LEN];
   bool found = FALSE;
   bool prisoner = FALSE;
+  bool worldgen = FALSE;
   if (!*arg)
     {
-      stt ("twhere <name> shows the locations of all things named this.\n\r", th);
+      stt ("twhere [worldgen] <name> shows the locations of all things named this.\n\r", th);
       return;
     }
-  if (!str_cmp (arg, "prisoner") || 
-      !str_cmp (arg, "kidnapped"))
+  arg = f_word (arg, arg1);
+  if (!str_cmp (arg1, "prisoner") || 
+      !str_cmp (arg1, "kidnapped"))
     prisoner = TRUE;
+  if (!str_cmp (arg1, "worldgen"))
+    {
+      worldgen = TRUE;
+      f_word (arg, arg1);
+    }
   bigbuf[0] = '\0';
   sprintf (buf, "All locations of \"%s\":\n\n\r", arg);
   add_to_bigbuf (buf);
@@ -2362,12 +2472,19 @@ do_twhere (THING *th, char *arg)
 	      IS_AREA (thg))
 	    continue;
 	  
+	  /* Worldgen argument only finds worldgen objects. */
+	  if (worldgen && 
+	      (thg->vnum < WORLDGEN_START_VNUM || 
+	       thg->vnum > WORLDGEN_END_VNUM) &&
+	      thg->vnum < GENERATOR_NOCREATE_VNUM_MAX)
+	    continue;
+	  
 	  if (prisoner) 
 	    {
 	      if (!IS_ACT1_SET (thg, ACT_PRISONER))
 		continue;
 	    }
-	  else if (!is_named (thg, arg))
+	  else if (!is_named (thg, arg1))
 	    continue;
 	  
 	  found = TRUE;
@@ -2454,6 +2571,7 @@ do_tstat (THING *th, char *arg)
   RBIT (server_flags, SERVER_TSTAT);
   th->fd->connected = old_conn;
   th->pc->editing = old_edit;
+  th->pc->last_tstat = vict->vnum;
   return;
 }
   
@@ -2873,4 +2991,16 @@ calculate_randpop_vnum (VALUE *rnd, int level)
 }
   
 
+/* This lets you edit your own description. This is limited in stredit.c
+   so asshole players can't make huge descs. */
 
+void
+do_description (THING *th, char *arg)
+{
+  if (!IS_PC (th))
+    return;
+  
+  stt ("You may now edit your description.\n\r", th);
+  new_stredit (th, &th->desc);
+  return;
+}

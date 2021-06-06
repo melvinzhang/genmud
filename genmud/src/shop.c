@@ -193,7 +193,6 @@ do_sell (THING *th, char *arg)
       return;
     }
   
-  thing_from (obj);
   thing_to (obj, keeper);
   if ((proto = find_thing_num (obj->vnum)) != NULL &&
       proto->in && IS_AREA (proto->in))
@@ -665,7 +664,6 @@ do_manage (THING *th, char *arg)
   for (obj = keeper->cont; obj; obj = objn)
     {
       objn = obj->next_cont;
-      thing_from (obj);
       free_thing (obj);
     }
   act ("@1n begin@s to manage the shop run by @2n.", th, keeper, NULL, NULL, TO_ALL);

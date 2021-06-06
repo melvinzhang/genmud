@@ -933,3 +933,6 @@ SOCIETY *find_random_society (bool only_generated);
 /* This lets a society member raise the dead. */
 
 bool society_necro_generate (THING *th);
+
+/* Find a random generated society. */
+SOCIETY *find_random_generated_society (int align);

@@ -14,7 +14,7 @@ RawCurr 0 0 0 0 0 0 0 0
 RawWant 0 0 0 0 0 0 0 0 
 END_ALIGN
 ALIGN
-Name Darkie`
+Name Evil`
 Flag Det 0 0 4
 Stats 1 0 1 0 0 0 
 Spell 0 1 0 0 0 
@@ -30,7 +30,7 @@ RawCurr 0 0 0 0 0 0 0 0
 RawWant 0 0 0 0 0 0 0 0 
 END_ALIGN
 ALIGN
-Name Whitie`
+Name Good`
 Stats 0 1 0 1 0 0 
 Spell 2 0 0 0 0 
 RegenBonus 0 0 0

@@ -10,6 +10,7 @@
 #include "society.h"
 #include "script.h"
 #include "track.h"
+#include "worldgen.h"
 
 /* The next two functions deal with reading and writing a thing
    to and from the game. */
@@ -21,6 +22,7 @@ write_thing (FILE *f, THING *th)
   VALUE *value;
   RESET *rst;
   FLAG *flag;
+  EDESC *eds;
   if (!th || !f)
     return;
   
@@ -73,6 +75,8 @@ write_thing (FILE *f, THING *th)
     write_flag (f, flag);
   for (rst = th->resets; rst; rst = rst->next)
     write_reset (f, rst);
+  for (eds = th->edescs; eds; eds = eds->next)
+    write_edesc (f, eds);
   if (IS_PC (th))
     write_pcdata (f, th);
   fprintf (f, "END_THING\n\n");
@@ -148,12 +152,19 @@ read_thing (FILE *f)
 	      found = TRUE;
 	    }
 	  break;
-	case 'E':
+	case 'E':	  
 	  if (!str_cmp (word, "END_THING"))
 	    { 
 	     
 	      return th;
 	    }
+	  if (!str_cmp (word, "EDESC"))
+	    {
+	      EDESC *eds = read_edesc (f);
+	      if (eds)
+		add_edesc (th, eds);
+	      found = TRUE;
+	    }	   
 	break;
 	case 'F':
 	  if (!str_cmp (word, "Flag"))
@@ -476,6 +487,8 @@ write_short_thing (FILE *f, THING *th, int nest)
       if (!sameval)
 	write_value (f, value);
     }
+
+  /* Do not write EDESCS on SHORT THINGS!!!! */
   
   /* Only write flags that a) were put there by something like a spell or
      b) are timed. Otherwise, they are just extraneous data. */
@@ -593,6 +606,8 @@ read_short_thing (FILE *f, THING *to, CLAN *cln)
   th->position = read_number (f);
   if (IS_ROOM (th))
     th->light = 0;
+
+  /* DO NOT READ EDESCS ON SHORT THINGS! */
 
   FILE_READ_LOOP
     {
@@ -722,7 +737,6 @@ read_short_thing (FILE *f, THING *to, CLAN *cln)
 		  if (thing_nest[i])
 		    {
 		      thing_to (th, thing_nest[i]);
-		      
 		      break;
 		    }
 		}
@@ -805,15 +819,41 @@ write_value (FILE *f, VALUE *value)
 }
 
 
+/* These read and write extra descriptions. */
+
+EDESC *
+read_edesc (FILE *f)
+{
+  EDESC *eds;
+  if (!f || (eds = new_edesc()) == NULL)
+    return NULL;
+  eds->name = new_str (read_string (f));
+  eds->desc = new_str (read_string (f));
+  return eds;
+}
+  
+/* This writes an edesc to a file. */
+
+void
+write_edesc (FILE *f, EDESC *eds)
+{
+  if (!f || !eds || !eds->name || !eds->desc)
+    return;
+  
+  write_string (f, "EDESC", eds->name);
+  fprintf (f, "%s%c\n", eds->desc, END_STRING_CHAR);
+  return;
+}
+
 /* These two functions read and write a reset. */
 
 RESET *
 read_reset (FILE *f)
 {
   RESET *newreset;
-  if (!f)
+  if (!f || (newreset = new_reset ()) == NULL)
     return NULL;
-  newreset = new_reset ();
+
   newreset->vnum = read_number (f);
   newreset->pct = read_number (f);
   newreset->max_num = read_number (f);
@@ -882,7 +922,7 @@ read_pcdata (FILE *f, THING *th)
 {
   PCDATA *pc;
   char word[STD_LEN];
-  int i, value, badcount = 0;
+  int i, badcount = 0;
   SPELL *spl;
   
   bool found = FALSE;
@@ -1138,13 +1178,19 @@ read_pcdata (FILE *f, THING *th)
 	case 'S': 
 	  if (!str_cmp (word, "SPSK"))
 	    {
-	      value = read_number (f);
 	      strcpy (word, read_string (f));
 	      if ((spl = find_spell (word, 0)) != NULL &&
 		  spl->vnum < MAX_SPELL)
 		{
-		  pc->prac[spl->vnum] = value;
+		  pc->prac[spl->vnum] = read_number (f);
+		  pc->learn_tries[spl->vnum] = read_number (f);
+		  pc->nolearn[spl->vnum] = read_number (f);
 		}
+	      else
+		{
+		  read_number (f);
+		  read_number (f);
+		}	       
 	      found = TRUE;
 	    }
 	  if (!str_cmp (word, "Stats"))
@@ -1339,10 +1385,15 @@ write_pcdata (FILE *f, THING *th)
     }
   for (i = 0; i < MAX_SPELL; i++)
     {
-      if (pc->prac[i] > 0 && (spl = find_spell (NULL, i)) != NULL &&
+      if ((pc->prac[i] > 0 || pc->learn_tries[i] > 0 ||
+	   pc->nolearn[i] > 0) 
+	  && (spl = find_spell (NULL, i)) != NULL &&
 	  spl->name && *spl->name)
 	{
-	  fprintf (f, "SPSK %d %s%c\n", pc->prac[i], spl->name, END_STRING_CHAR);
+	  fprintf (f, "SPSK %s%c %d %d %d\n", 
+		   spl->name, END_STRING_CHAR, 
+		   pc->prac[i], pc->learn_tries[i],
+		   pc->nolearn[i]);
 	}
     }
   for (i = 0; i < MAX_ALIAS; i++)

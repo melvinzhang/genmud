@@ -18,6 +18,7 @@
 #define QUEST_THING_MAX           4
 
 
+
 /* This clears all of the quests set on mobs within the worldgen
    areas. */
 

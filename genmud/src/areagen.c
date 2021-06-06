@@ -136,7 +136,7 @@ areagen (THING *th, char *arg)
   if (type == 0 || !IS_SET (type, ROOM_SECTOR_FLAGS) ||
       !IS_SET (type, AREAGEN_SECTOR_FLAGS))
     {
-      stt ("areagen <start> <size> <type> [<level>]\n\r", th);
+      stt ("areagen <start> <size> <type> [level]\n\r", th);
       stt ("The type must be a room sector flag!\n\r", th);
       return;
     }
@@ -171,10 +171,7 @@ areagen (THING *th, char *arg)
 	  for (t = namebuf; *t; t++)
 	    {
 	      if (*t == '-' ||
-		  *t == '\'' ||
-		  LC (*t) == 'q' ||
-		  LC(*t) == 'z' ||
-		  LC (*t) == 'x')
+		  *t == '\'')
 		{
 		  name_ok = FALSE;
 		  break;
@@ -1026,7 +1023,7 @@ add_lakes (THING *area)
 	  sprintf (name, "%s %s%s",
 		   (*prefixname ? a_an(prefixname) : a_an (typename)),
 		   prefixname, typename);
-	  name[0] = UC(name[0]);
+	  capitalize_all_words (name);
 	  strcpy (fullname, name);
 	}      
       else
@@ -1051,19 +1048,18 @@ add_lakes (THING *area)
 	  else if (nr (1,3) == 2)
 	    {
 	      if (nr (1,2) == 1)
-		sprintf (name, "%s Lake", create_society_name(NULL));
+		sprintf (fullname, "%s Lake", create_society_name(NULL));
 	      else
-		sprintf (name, "Lake %s", create_society_name(NULL));
+		sprintf (fullname, "Lake %s", create_society_name(NULL));
 	    }
 	  else
 	    {
-	      sprintf (name, "%s %s %s",
+	      sprintf (fullname, "%s %s%s%s",
 		       (*prefixname ? a_an (prefixname) : a_an(typename)),
-		       prefixname,
+		       prefixname, (*prefixname ? " " : ""),
 		       typename);
 	    }
-	  name[0] = UC (name[0]);
-	  strcpy (fullname, name);
+	  capitalize_all_words (fullname);
 	}
       if (sector_type == ROOM_DESERT)
 	lake_size = 1;
@@ -1075,7 +1071,7 @@ add_lakes (THING *area)
       /* This recursively adds a lake to the area. */
       
       undo_marked(room);
-      add_lake (room, name, sector_type, 1, lake_size);
+      add_lake (room, fullname, sector_type, 1, lake_size);
       undo_marked(room);
 
       /* This adds forest and field rooms next to the oasis. */
@@ -1598,7 +1594,7 @@ generate_patch_name (int sector_type, int patch_type)
       sprintf (buf, "%s%s%s", undergroundname, prefixname, patchname);
       sprintf (retbuf, "%s %s", a_an (buf), buf);
     }
-  retbuf[0] = UC(retbuf[0]);  
+  capitalize_all_words (retbuf);
   return retbuf;
 }
 
@@ -2068,7 +2064,7 @@ add_tree (THING *base_room)
   
   if (!*prefixname || !*treename)
     return;
-
+  
   
   sprintf (fullname, "%s %s %s",
 	   a_an (prefixname), prefixname, treename);
@@ -2129,11 +2125,11 @@ add_tree (THING *base_room)
 	    sprintf (currname, "The top of %s%s",
 		     fullname, (nr(1,3) == 2 ? " Tree" : ""));
 	}
-      currname[0] = UC(currname[0]);
+      capitalize_all_words(currname);
       /* Added new trunk room. */
       if ((trunk_room = make_room_dir (trunk_room, DIR_UP, currname, ROOM_FOREST)) == NULL)
 	break;
-      
+      append_name (trunk_room, "in_tree");
       SBIT (trunk_room->thing_flags, TH_MARKED);
       
       /* Only make branches if we already decided to. */
@@ -2216,11 +2212,12 @@ add_tree (THING *base_room)
 	    }
 	  
 	  side_branch_depth = 0;
-	  *currname = UC(*currname);
+	  capitalize_all_words (currname);
 	  for (dist = 0; dist < branch_length; dist++)
 	    {
 	      if ((room = make_room_dir (room, dir, currname, ROOM_FOREST)) == NULL)
 		break;
+	      append_name (room, "in_tree");
 	      SBIT (room->thing_flags, TH_MARKED);
 	      if (branch_length == 3 && dist > 0 &&
 		  ((side_branch_depth == 0 && nr (1,5) == 2) ||

@@ -3,11 +3,11 @@ Name start.are`
 HpMv 0 1 100 998
 HWT 0 0
 Cost 100
-Timer 10
+Timer 4
 Short the start area`
 Long A cold wind blows by...`
 type Lonath`
-ThFl 672137216
+ThFl 537919488
 Flag Area 0 0 28
 END_THING
 
@@ -43,6 +43,7 @@ HpMult 0
 HWT 0 0
 Color 8
 Desc This is my room. :)
+It has a toilet and a tapestry in it.
 `
 Short Lonath's Room`
 MIW 1
@@ -50,6 +51,15 @@ Long Lonath's Room is Here.`
 Symbol -`
 ThFl 524779
 Flag Room 0 0 1
+EDESC potty toilet`
+This is where Lonath relaxes with his list of people who are naughty, and
+people who are really naughty. Nobody here is nice. It's very clean
+because he can aim and he uses those little wipey things that keep the
+stink and whatnot from building up too much.
+`
+EDESC tapestry`
+This large wall-hanging depicts Lonath in battle with the forces of PortalWhoreness!
+`
 END_THING
 
 THING 26
@@ -1448,7 +1458,7 @@ HWT 0 0
 Short the mob randpop`
 Long The mob randpop is here.`
 ThFl 100934
-Val randpop 101100 968 2 1000 0 0 0 0 `
+Val randpop 101100 955 2 1000 0 0 0 0 `
 END_THING
 
 THING 300
@@ -1534,8 +1544,8 @@ Short a knife`
 Wear wield`
 Long A knife is here.`
 ThFl 100934
-Val tool 6 0 0 0 0 0 0 0 `
 Val weapon 1 2 0 0 0 0 0 0 `
+Val tool 6 0 0 0 0 0 0 0 `
 END_THING
 
 THING 356

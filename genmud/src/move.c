@@ -270,7 +270,6 @@ move_thing (THING *initiator, THING *mover, THING *start_in, THING *end_in)
     }
   
 
-  thing_from (mover);
   thing_to (mover, end_in);
   if (was_editing_this && mover->pc)
     mover->pc->editing = end_in;
@@ -1868,14 +1867,14 @@ move_dir (THING *th, int dir)
   if (start_in->cont)
     {
       if (RIDER (th) && RIDER(th)->in == to)
-	sprintf (buf, "@3n goes %s riding @2n.", dir_name[dir]);
+	sprintf (buf, "@1n goes %s riding @2n.", dir_name[dir]);
       else
-	sprintf (buf, "@3n goes %s.", dir_name[dir]);
+	sprintf (buf, "@1n goes %s.", dir_name[dir]);
       for (viewer = start_in->cont; viewer; viewer = viewer->next_cont)
 	{
-	  if (nr (1,15) == 4 || !IS_SET (mover_aff_bits, AFF_SNEAK) ||
+	  if (!IS_SET (mover_aff_bits, AFF_SNEAK) || nr (1,15) == 4 ||
 	      IS_DET (viewer, AFF_SNEAK))
-	    act (buf, viewer, RIDER(th), th, NULL, TO_CHAR);
+	    act (buf, th, RIDER(th), viewer, NULL, TO_VICT);
 	}
     }
   
@@ -1913,17 +1912,18 @@ move_dir (THING *th, int dir)
   if (th->in)
     {
       if (RIDER(th) && RIDER(th)->in == th->in)
-	sprintf (buf, "@2n arrives from %s carrying @3n.",
+	sprintf (buf, "@1n arrives from %s carrying @2n.",
 		 dir_track_in[RDIR(dir)]);
       else
-	sprintf (buf, "@2n arrives from %s.", dir_track_in[RDIR(dir)]);
+	sprintf (buf, "@1n arrives from %s.", dir_track_in[RDIR(dir)]);
       
       for (viewer = th->in->cont; viewer; viewer = viewer->next_cont)
 	{
 	  if (viewer != th && viewer != RIDER(th) &&
 	      (!IS_SET (mover_aff_bits, AFF_SNEAK) || nr (1,15) == 3 ||
-	       IS_DET (viewer, AFF_SNEAK)))
-	    act (buf, viewer, th, RIDER(th), NULL, TO_CHAR);
+	       IS_DET (viewer, AFF_SNEAK)) &&
+	      viewer->position > POSITION_SLEEPING)
+	    act (buf, th, RIDER(th), viewer, NULL, TO_VICT);
 	}
     }
   
@@ -2019,7 +2019,6 @@ do_transfer (THING *th, char *arg)
 	  if (!IS_PC (vict) || vict == th || vict->in == th->in)
 	    continue;
 	  act ("@1n disappear@s in a *poof* of smoke!", vict, NULL, NULL, NULL, TO_ALL);
-	  thing_from (vict);
 	  thing_to (vict, th->in);
 	  act ("@1n arrive@s in a *poof* of smoke!", vict, NULL, NULL, NULL, TO_ALL);
 	}
@@ -2033,7 +2032,6 @@ do_transfer (THING *th, char *arg)
       return;
     }
   act ("@1n leave@s in a *poof* of smoke!", vict, NULL, NULL, NULL, TO_ALL);
-  thing_from (vict);
   thing_to (vict, th->in);
   act ("@1n arrive@s in a *poof* of smoke!", vict, NULL, NULL, NULL, TO_ALL);
   return;
@@ -2053,7 +2051,11 @@ do_goto (THING *th, char *arg)
   char arg1[STD_LEN];
   char *oldarg = arg;
 #endif 
-  THING *dest = NULL, *thg;
+  THING *dest = NULL, *thg, *vict, *victn, *in_now;
+
+  if (!th || !th->in)
+    return;
+  in_now = th->in;
   if (!*arg)
     {
 #ifdef USE_WILDERNESS
@@ -2114,28 +2116,39 @@ do_goto (THING *th, char *arg)
       return;
     }
   act ("@1n leave@s in a swirling mist of smoke.", th, NULL, NULL, NULL, TO_ALL);
-  thing_from (th);
   thing_to (th, dest);
-  
   act ("@1n arrive@s with a loud band. :P", th, NULL, NULL, NULL, TO_ALL);
   do_look (th, "");
   if (!IS_PC (th))
     return;
-
-  if (IS_PC2_SET (th, PC2_MAPPING))
+  for (vict = in_now->cont; vict; vict = victn)
     {
-      if (!USING_KDE (th))
-	create_map (th, th->in, SMAP_MAXX, SMAP_MAXY);
-      else
-	update_kde (th, KDE_UPDATE_MAP);
-    }
-
-  if (th->fd && th->fd->connected == CON_EDITING &&
-      (thg = (THING *) th->pc->editing ) != NULL && IS_ROOM (th->in) &&
-        IS_ROOM (thg))
-    {
-      th->pc->editing = th->in;
-      show_edit (th);
+      victn = vict->next_cont;
+      /* Lets followers goto also? Restrict to admins? */
+      if ((LEVEL(vict) >= BLD_LEVEL && FOLLOWING(vict) == th) 
+	  || vict == th)
+	{
+	  act ("@1n leave@s in a swirling mist of smoke.", vict, NULL, NULL, NULL, TO_ALL);
+	  thing_to (vict, dest);
+	  act ("@1n arrive@s with a loud band. :P", vict, NULL, NULL, NULL, TO_ALL);
+	  do_look (vict, "");
+	  if (!IS_PC (vict))
+	    continue;
+	  if (IS_PC2_SET (vict, PC2_MAPPING))
+	    {
+	      if (!USING_KDE (vict))
+		create_map (vict, vict->in, SMAP_MAXX, SMAP_MAXY);
+	      else
+		update_kde (vict, KDE_UPDATE_MAP);
+	    }
+	  if (vict->fd && vict->fd->connected == CON_EDITING &&
+	      (thg = (THING *) vict->pc->editing ) != NULL && IS_ROOM (vict->in) &&
+	      IS_ROOM (thg))
+	    {
+	      vict->pc->editing = vict->in;
+	      show_edit (vict);
+	    }
+	}
     }
   return;
 }
@@ -3009,7 +3022,6 @@ do_climb (THING *th, char *arg)
       th->fgt->rider = NULL;
     }
   act ("@1n climb@s @t @3n.", th, NULL, obj, dir_name[dir], TO_ALL);
-  thing_from (th);
   thing_to (th, room);
   act ("@1n step@s off @3n.", th, NULL, obj, NULL, TO_ROOM);
    create_map (th, th->in, SMAP_MAXX, SMAP_MAXY);
@@ -3453,7 +3465,6 @@ do_push (THING *th, char *arg)
   if (nr (1,3) == 3 && 
       nr (1,4*get_stat(vict, STAT_STR)) < get_stat (th, STAT_STR))
     {
-      thing_from (vict);
       thing_to (vict, to_room);
       act ("@1n push@s @2n @t!", th, vict, NULL, dir_name[dir], TO_ALL);
       act ("@1n get@s pushed in from @t!", vict, NULL, NULL, dir_track[dir], TO_ALL);

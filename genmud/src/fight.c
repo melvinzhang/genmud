@@ -1797,7 +1797,6 @@ get_killed (THING *vict, THING *killer)
 	      for (obj = corpse->cont; obj; obj = objn)
 		{
 		  objn = obj->next_cont;
-		  thing_from (obj);
 		  thing_to (obj, corpse->in);
 		}
 	      free_thing (corpse);
@@ -1995,10 +1994,7 @@ make_corpse (THING *vict, THING *killer)
       objn = obj->next_cont;
       /* if (IS_OBJ_SET (obj, OBJ_SAVE)) continue; */
       remove_thing (vict, obj, TRUE);
-      thing_from (obj);
-      if (obj->in)
-        continue;
-      else if (corpse)
+      if (corpse)
 	thing_to (obj, corpse);
       else
 	thing_to (obj, vict->in);
@@ -2504,7 +2500,6 @@ do_load (THING *th, char *arg)
 	      return;
 	    }
 	}
-      thing_from (ammo);
       thing_to (ammo, ranged);
       act ("@1n load@s @2n into @1s @3n.", th, ammo, ranged, NULL, TO_ALL);
       return;
@@ -2529,7 +2524,6 @@ do_load (THING *th, char *arg)
 	    continue;
 	  loaded = TRUE;
 	  act ("@1n load@s @2n into @1s @3n.", th, ammo, ranged, NULL, TO_ALL);
-	  thing_from (ammo);
 	  thing_to (ammo, ranged);
 	  break;
 	}
@@ -2569,7 +2563,6 @@ do_unload (THING *th, char *arg)
       objn = obj->next_cont;
       
       act ("@1n unload@s @2n from @3n.", th, obj, ranged, NULL, TO_ALL);
-      thing_from (obj);
       thing_to (obj, th);
     }
   return;
@@ -3038,7 +3031,6 @@ do_capture (THING *th, char *arg)
 
   act ("$E@1n reach@s out with @1s soul prison and draw@s @3p soul into it!$7", th, NULL, vict, NULL, TO_ALL);
   stop_fighting (vict);
-  thing_from (vict);
   thing_to (vict, prison);
   
   flg = new_flag ();
@@ -3127,7 +3119,6 @@ do_disarm (THING *th, char *arg)
     }
 
   
-  thing_from (obj);
   thing_to (obj, th->in);
   act ("$9@1n disarm@s @3n and send@s @2n$9 flying!$7", th, obj, vict, NULL, TO_ALL);
   if (IS_PC (th))

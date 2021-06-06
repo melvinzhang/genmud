@@ -108,7 +108,7 @@ show_thing_to_thing (THING *th, THING *target, int flags)
 	  if ((curr_tar = target->proto) == NULL)
 	    curr_tar = target;
 	  if ((curr_tar2 = find_thing_num (atoi (curr_tar->desc))) != NULL)
-	    curr_tar = curr_tar2;
+	    curr_tar = curr_tar2; 
 	  if (curr_tar && curr_tar->desc && *curr_tar->desc)
 	    stt (curr_tar->desc, th);
 	}
@@ -246,10 +246,10 @@ do_look (THING *th, char *arg)
 {
   char arg1[STD_LEN];
   char buf[STD_LEN];
-  THING *look_at = NULL, *map_room, *portal_room;
+  THING *look_at = NULL, *map_room, *portal_room, *obj;
   int flags = 0, dir = DIR_MAX;
   VALUE *map, *exit, *portal;
-
+  EDESC *eds;
   if (!th || !th->in || !th->fd)
     return;  
   arg = f_word (arg, arg1);
@@ -281,6 +281,7 @@ do_look (THING *th, char *arg)
       show_thing_to_thing (th, look_at, LOOK_SHOW_SHORT | LOOK_SHOW_EXITS | LOOK_SHOW_CONTENTS | LOOK_SHOW_DESC);
       return;
     }
+  /* Look here...autolook when moving. */
   if (arg1[0] == '\0' || !str_cmp (arg1, "zzduhql"))
     {
       look_at = th->in;
@@ -291,6 +292,7 @@ do_look (THING *th, char *arg)
 	  !RUNNING)
 	flags |= LOOK_SHOW_DESC;
     }  
+  /* Look outside if we're in something. */
   else if (!str_cmp (arg1, "out"))
     {
       if (th->in && th->in->in &&
@@ -307,6 +309,7 @@ do_look (THING *th, char *arg)
 	  return;
 	}
     }
+  /* Look inside of an object. */
   else if (!str_cmp (arg1, "i") || 
 	   !str_cmp (arg1, "in") ||
 	   !str_cmp (arg1, "inside") )
@@ -330,6 +333,36 @@ do_look (THING *th, char *arg)
     }
   else if ((look_at = find_thing_here (th, arg1, FALSE)) == NULL)
     {
+      /* Check extra descriptions on all things here. */
+      if ((eds = find_edesc_thing (th->in, arg1)) != NULL)
+	{
+	  sprintf (buf, "You examine %s...\n\r", NAME(th->in));
+	      stt (buf, th);
+	  stt (eds->desc, th);
+	  return;
+	}
+      for (obj = th->in->cont; obj; obj = obj->next_cont)
+	{
+	  if (can_see (th, obj) && 
+	      (eds = find_edesc_thing (obj, arg1)) != NULL)
+	    {  
+	      sprintf (buf, "You examine %s...\n\r", NAME(obj));
+	      stt (buf, th);
+	      stt (eds->desc, th);
+	      return;
+	    }
+	}
+      for (obj = th->cont; obj; obj = obj->next_cont)
+	{
+	  if (can_see (th, obj) && 
+	      (eds = find_edesc_thing (obj, arg1)) != NULL)
+	    {  
+	      sprintf (buf, "You examine %s...\n\r", NAME(obj));
+	      stt (buf, th);
+	      stt (eds->desc, th);
+	      return;
+	    }
+	}
       stt ("You don't see that here to look at!\n\r", th);
       return;
     }
