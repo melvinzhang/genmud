@@ -1,6 +1,6 @@
 ALIGN
 Name Neutral`
-Stats 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
 Spell 0 0 0 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
@@ -16,22 +16,22 @@ END_ALIGN
 ALIGN
 Name Evil`
 Flag Det 0 0 4
-Stats 1 0 1 0 0 0 
+Stats 1 0 1 0 0 0 0 
 Spell 0 1 0 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
 AscendFrom 0
-HatedSociety 1
-Goals 50
+HatedSociety 2
+Goals 66
 Relic 1001 0 1018
 Parts 0 0 0 0 
 HWT 0 0 0 0
-RawCurr 124500 124188 124188 124188 123568 123258 123568 123878 
+RawCurr 124500 124487 124487 124487 124467 124457 124467 124477 
 RawWant 0 0 0 0 0 0 0 0 
 END_ALIGN
 ALIGN
 Name Good`
-Stats 0 1 0 1 0 0 
+Stats 0 1 0 1 0 0 0 
 Spell 2 0 0 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
@@ -41,7 +41,7 @@ Goals 50
 Relic 1051 0 1068
 Parts 0 0 0 0 
 HWT 0 0 0 0
-RawCurr 124500 124225 124225 124225 123675 123400 123675 123950 
+RawCurr 124500 124488 124488 124488 124468 124458 124468 124478 
 RawWant 0 0 0 0 0 0 0 0 
 END_ALIGN
 

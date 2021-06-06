@@ -2,9 +2,10 @@ THING 107500
 Name provisiongen.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 6
+Timer 14
 Short The provision generators`
-ThFl 1089531
+type Lonath`
+ThFl 135307259
 Flag Area 0 0 28
 END_THING
 
@@ -25,12 +26,12 @@ THING 107506
 HWT 0 0
 ThFl 100934
 Val food 1 0 0 0 0 0 0 0 `
-EDESC kname`
-apple orange pear banana kiwi peach
-`
 EDESC kshort`
 delicious ripe unripe hard soft mushy firm sweet 
 fresh old moldy
+`
+EDESC kname`
+apple orange pear banana kiwi peach
 `
 END_THING
 
@@ -38,19 +39,19 @@ THING 107507
 HWT 0 0
 ThFl 100934
 Val food 1 0 0 0 0 0 0 0 `
-EDESC kname`
-chicken beef lamb turkey duck pig
-`
-EDESC kshort`
-leg breast loin pieces chunks meat sausage jerky
+EDESC format`
+'some klong kshort of kname'
+'some klong kname kshort'
 `
 EDESC klong`
 delicious dried salted spiced moldy smelly old fresh 
 spicy dry moist stringy
 `
-EDESC format`
-'some klong kshort of kname'
-'some klong kname kshort'
+EDESC kshort`
+leg breast loin pieces chunks meat sausage jerky
+`
+EDESC kname`
+chicken beef lamb turkey duck pig
 `
 END_THING
 
@@ -58,16 +59,16 @@ THING 107508
 HWT 0 0
 ThFl 100934
 Val food 1 0 0 0 0 0 0 0 `
-EDESC format`
-'some kshort kname'
+EDESC kshort`
+delicious rotten old moldy fresh firm soft mushy crisp
+browning bruised
 `
 EDESC kname`
 carrots celery cabbage tomatoes lettuce broccoli cauliflower
 cucumbers sprouts potatoes okra onions
 `
-EDESC kshort`
-delicious rotten old moldy fresh firm soft mushy crisp
-browning bruised
+EDESC format`
+'some kshort kname'
 `
 END_THING
 
@@ -75,11 +76,11 @@ THING 107509
 HWT 0 0
 ThFl 100934
 Val drink 1 0 0 0 0 0 0 0 `
-EDESC kname`
-waterskin skin bladder cask flask jar glass bottle pouch
-`
 EDESC kshort`
 large small medium tiny huge giant
+`
+EDESC kname`
+waterskin skin bladder cask flask jar glass bottle pouch
 `
 END_THING
 
@@ -87,16 +88,16 @@ THING 107510
 HWT 0 0
 ThFl 100934
 Val map 1 0 0 0 0 0 0 0 `
-EDESC kname`
-map
+EDESC klong`
+old ancient forgotten translucent transparent
+cryptic mystical mysterious
 `
 EDESC kshort`
 tattered dusty cracked faint faded painted bloody crumpled
 paper trollskin demonskin
 `
-EDESC klong`
-old ancient forgotten translucent transparent
-cryptic mystical mysterious
+EDESC kname`
+map
 `
 END_THING
 
@@ -104,15 +105,15 @@ THING 107511
 HWT 0 0
 ThFl 100930
 Val i_exit 0 3 3 0 0 0 0 0 `
-EDESC klong`
-small large tiny huge giant
+EDESC kname`
+sack bag backpack
+pouch
 `
 EDESC kshort`
 cloth leather ripped dirty clean woven brown gray
 `
-EDESC kname`
-sack bag backpack
-pouch
+EDESC klong`
+small large tiny huge giant
 `
 END_THING
 

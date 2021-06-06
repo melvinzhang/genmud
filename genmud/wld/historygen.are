@@ -2,8 +2,9 @@ THING 109500
 Name historygen.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 19
+Timer 17
 Short The Historygen Area`
+type Lonath`
 ThFl 135307259
 Flag Area 0 0 28
 END_THING
@@ -14,7 +15,7 @@ Color 7
 Short The Historygen Area`
 MIW 1
 Symbol -`
-ThFl 134742507
+ThFl 524779
 END_THING
 
 THING 109506

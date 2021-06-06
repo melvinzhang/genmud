@@ -31,6 +31,7 @@ const char *stat_name[] =
   "dexterity",
   "constitution",
   "luck",
+  "charisma",
 };
 
 const char *stat_short_name[] =
@@ -41,6 +42,7 @@ const char *stat_short_name[] =
   "dex", 
   "con",
   "luc",
+  "cha",
 };
 
 const char *parts_names[PARTS_MAX] =
@@ -154,6 +156,7 @@ const char *value_list[VAL_MAX] =
   "madeof",
   "replaceby",
   "qflag",
+  "package",
 };
 
 
@@ -169,6 +172,7 @@ const struct flag_data affectlist[] =
   {"dex", "Dex", FLAG_AFF_DEX, "This thing affects dexterity."},
   {"con", "Con", FLAG_AFF_CON, "This thing affects constitution."},
   {"luc", "Luc", FLAG_AFF_LUC, "This thing affects luck."},  
+  {"cha", "Cha", FLAG_AFF_CHA, "This thing affects charisma."},  
   {"dam", "Dam", FLAG_AFF_DAM, "This thing affects how hard something hits."},
   {"hit", "Hit", FLAG_AFF_HIT, "This affects how often something hits."},
   {"mv", "Mv", FLAG_AFF_MV, "This affects the mv of the thing."},
@@ -554,6 +558,7 @@ const struct flag_data guild_info[] =
   {"alchemist", " Alchemist's Guild", STAT_MAX, "Helps to make magical items."},
   {"knight", " Knight's Guild", STAT_MAX, "Helps with defensive fighting techniques."},
   {"mystic", " Mystic's Guild", STAT_MAX, "Helps with detection and transport magic."},
+  {"diplomat", " Diplomat's Guild", STAT_CHA, "Lets you use reason to bring societies to your side." },
   {"max", " MAX_GUILD", STAT_MAX, "No guild here."},
 };
 
@@ -1271,4 +1276,31 @@ const char *tool_names[TOOL_MAX] =
     "pipe",
   };
 
+const char *disease_symptoms[MAX_DISEASE_SYMPTOMS] =
+  { 
+    "cough",
+    "wheeze",
+    "sneeze",
+    "shiver",
+    "look ill", /* 5 */
+    
+    "look sick",
+    "look dizzy",
+    "moan in pain",
+    "get a glazed look",
+    "hack",  /* 10 */
+    
+    "groan",
+    "groan in agony",
+    "whimper",
+    "cough",
+    "cough", /* 15 */
+   
+    "cough",
+    "sneeze",
+    "sneeze",
+    "sniffle",
+    "snuffle",  /* 20 */
 
+    
+  };

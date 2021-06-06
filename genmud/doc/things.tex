@@ -231,7 +231,8 @@ Here is a list of the thing flags and what they essentially allow you do block c
 
 \item TH\_SCRIPT           0x01000000   -- This thing has a script  attached to it. I do this just so that it's a little faster going down the event list for repeated events if you KNOW something isn't gonna have a script associated with it.
 
-\item TH\_DROP\_DESTROY     0x02000000   -- This is destroyed if dropped. 
+\item TH\_DROP\_DESTROY     0x02000000   -- This is destroyed if dropped or
+  given. 
 
 \item TH\_NO\_GIVE          0x04000000   -- You cannot give this thing, but I guess you can drop it.
 
@@ -337,9 +338,39 @@ The rest of this section will consist of a keyword you enter, and then the type 
 
 \item wear -- This sets the wear location of the thing. Every thing can only have one wear location to save space, but I guess you could change this to allow things to be worn all over if you feel like it.
 
+
 \end{itemize}
 
 
 The rest of the things you can edit will come up in the next chapters.
 
 
+\section{Other Data in Things}
+
+Things also have the following data:
+
+\begin{itemize}
+
+\item last\_in: The room this thing was last in.
+
+\item fgt, next\_fight, prev\_fight: These are used to create a list of things
+  that can fight and hunt. The fgt struct keeps all of the data for tracking
+  and hunting and mounts in it.
+
+\item needs: These are used for society needs and have lists of things that
+  society members need to get or give.
+
+\item events: A list of events this thing has happening to it for the event
+  queue system. See the events chapter for more info on this.
+
+
+\item exits, goodroo\_exits: These are used to make pathfinding faster by
+  shortcircuiting searches either by requiring certain exits, or certain exits
+  that lead to rooms that aren't dangerous or hard to pass through.
+
+\item symbol: Used when this thing is shown on the overhead map. color: color
+  of this thing on the overhead map. kde\_pixmap: used when players use the kde
+  client. ascii\_symbol: used when players have upper ascii character
+  available to them (PC2\_ASCII config option set).
+
+\end{itemize}

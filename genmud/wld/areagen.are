@@ -2,9 +2,10 @@ THING 107100
 Name areagen.are`
 HpMv 0 10 5 400
 HWT 0 0
-Timer 9
+Timer 4
 Short The Areagen Area`
-ThFl 1089531
+type Lonath`
+ThFl 135307259
 Flag Area 0 0 28
 END_THING
 
@@ -36,7 +37,6 @@ Highlands
 Mountains
 Heights
 Canyon
-Crag
 Lands
 Grounds
 Range
@@ -49,6 +49,8 @@ Spires
 Peaks
 Mount
 Cliffs
+'Mountain Range'
+Mountains
 `
 END_THING
 
@@ -145,7 +147,6 @@ Washout
 'Dry Creekbed'
 Promontory
 Peak
-Crag
 Hilltop
 Grounds
 Canyon
@@ -376,6 +377,9 @@ Halls
 Passages
 Grottos
 Grotto
+Caves
+Caves
+Ways
 `
 END_THING
 
@@ -916,6 +920,7 @@ Crooked
 Rocky
 Stony
 Stone
+Craggu
 `
 END_THING
 

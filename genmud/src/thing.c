@@ -966,7 +966,9 @@ new_pc (void)
       newpc->aliasname[i] = nonstr;
       newpc->aliasexp[i] = nonstr;
     }
-
+  
+  for (i = 0; i < REWARD_MAX; i++)
+    newpc->society_rewards_thing[i] = NULL;
   /* Set up scrollback stuff. */
 
   for (i = 0; i < MAX_CHANNEL; i++)
@@ -1229,7 +1231,7 @@ remove_edesc (THING *th, EDESC *eds)
 /* This finds an edesc with a certain name on a thing. */
 
 EDESC *
-find_edesc_thing (THING *th, char *name)
+find_edesc_thing (THING *th, char *name, bool fullname)
 {
   EDESC *eds;
   
@@ -1238,7 +1240,12 @@ find_edesc_thing (THING *th, char *name)
   
   for (eds = th->edescs; eds; eds = eds->next)
     {
-      if (named_in (eds->name, name))
+      if (fullname)
+	{
+	  if (!str_cmp (eds->name, name))
+	    return eds;
+	}
+      else if (named_in (eds->name, name))
 	return eds;
     }
   return NULL;
@@ -1901,7 +1908,7 @@ replace_thing (THING *told, THING *tnew)
   
   char arg1[STD_LEN];
   if (!told || !tnew || IS_PC (told) || IS_PC (tnew) || 
-      !told->in)
+      !told->in || IS_AREA (told->in))
     {
       if (tnew && !IS_PC (tnew))
 	free_thing (tnew);
@@ -2131,7 +2138,7 @@ find_thing_num (int num)
      protos are at the start of the thing hash lists and if not
      we are scrood...this will then travel down the entire list and
      start finding random things. */
-  while (thg && thg->in);
+  while (thg && thg->in && IS_AREA (thg->in));
   
   
   

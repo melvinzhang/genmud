@@ -24,6 +24,8 @@ society_activity (THING *th)
   int flags, guard_count, postnum;
   SPELL *spl;
   SOCIETY *rsoc;
+
+
   
   /* First deal with prisoners. */
 
@@ -45,7 +47,14 @@ society_activity (THING *th)
       (rsoc = find_society_num (soc->val[0])) == NULL)
     return;
   
-  if (nr (1,512) == 243)
+  /* Societies are much less likely to do something if they're 
+     demoralized. */
+  
+  if (nr (-MAX_MORALE,0) > rsoc->morale)
+    return;
+  
+
+  if (nr (1,79) == 24)
     share_rumors (th);
   
   /* Hurt things look for help. */
@@ -158,7 +167,7 @@ society_activity (THING *th)
       !IS_SET (rsoc->society_flags, SOCIETY_NORESOURCES))
     society_worker_activity (th);
   
-  if (nr (1,2) == 1)
+  if (nr (1,2) == 1 || IS_SET (rsoc->society_flags, SOCIETY_OVERLORD))
     {
 
       /* Builders slowly build cities, and if they have raw 
@@ -268,10 +277,10 @@ void
 society_item_move (THING *th, THING *item, THING *society_member)
 {
   SOCIETY *society;
-  VALUE *raw, *socval, *val;
-  int reward = 0;
+  VALUE *raw, *socval, *val, *package;
+  int reward = 0, raw_power_added;
   RACE *align;
-  
+  char buf[STD_LEN];
   /* Do some sanity checking and setup to get all of the
      necessary variables. */
 
@@ -284,17 +293,25 @@ society_item_move (THING *th, THING *item, THING *society_member)
   /* Move a raw material. It works if you give the item to anyone
      except a child and a military person. */
   if ((raw = FNV (item, VAL_RAW)) != NULL &&
-      IS_SET (socval->val[2], ~(BATTLE_CASTES | CASTE_CHILDREN)))
+      IS_SET (socval->val[2], ~(BATTLE_CASTES | CASTE_CHILDREN)) &&
+      raw->val[0] >= 0 && raw->val[0] < RAW_MAX)
     {  
       if (raw->val[0] == RAW_MINERAL)
-	society->raw_curr[raw->val[0]] += (raw->val[1] + 1) * 
+        raw_power_added = (raw->val[1] + 1) * 
 	  SOCIETY_RAW_POWER;
       else
-	society->raw_curr[raw->val[0]]+= SOCIETY_RAW_POWER;
+	raw_power_added = SOCIETY_RAW_POWER;
+      if (IS_SET (society->society_flags, SOCIETY_OVERLORD))
+	raw_power_added = raw_power_added * 5/3;
+      
+      society->raw_curr[raw->val[0]] += raw_power_added;
+      
+      /* If the society has an overlord, they work better. */
+      
       reward = 1;
 
       /* If the society or align needs this, give more of a reward. */
-
+      
       /* Now give the bonus if any. */
       if (((society->raw_want[raw->val[0]] > 0 ||
 	    society->raw_curr[raw->val[0]] <= RAW_TAX_AMOUNT) ||
@@ -302,9 +319,9 @@ society_item_move (THING *th, THING *item, THING *society_member)
 	    (align->raw_curr[raw->val[0]] <= RAW_TAX_AMOUNT ||
 	     align->raw_want[raw->val[0]] > 0))))
 	reward = 8;
-
-
-      society_give_reward (society_member, th, reward);
+      
+      add_society_reward (th, item, REWARD_ITEM, reward);
+      add_morale (society, reward/2);
       /* This gets freed so builders don't have tens of thousands
 	 of objects on them constantly. */
       free_thing (item);
@@ -326,85 +343,51 @@ society_item_move (THING *th, THING *item, THING *society_member)
 	reward /= 2;
       if (reward < 1)
 	reward = 1;
-      society_give_reward (society_member, th, reward);
+      add_society_reward (th, item, REWARD_ITEM, reward);
+      add_morale (society, reward/2);
       return;
     }
-  return;
-}
+  
+  /* Now deal with packages. A package delivered to the wrong society
+     gives the giver *NOTHING*. The package is destroyed and the
+     player sucks. If it's given to the correct society, then the
+     player gets a BIG reward given to everyone in the room and
+     the society gets a big boost to its raw materials. (3x the amt
+     lost at the start). */
 
-/* This makes somebody in the room give the player a reward. */
-
-void
-society_somebody_give_reward (THING *receiver, int reward)
-{
-  THING *person;
-  int num_choices = 0, num_chose = 0, count;
-  VALUE *socval;
-
-  if (!receiver || !IS_PC (receiver) || !receiver->in ||
-      reward <= 0)
-    return;
-  for (count = 0; count < 2; count++)
+  if ((package = FNV (item, VAL_PACKAGE)) != NULL &&
+      IS_SET (socval->val[2], ~CASTE_CHILDREN))
     {
-      for (person = receiver->in->cont; person; person = person->next_cont)
+      int i;
+      /* Oopsie, wrong society! */
+      if (society->vnum != package->val[0])
 	{
-	  if ((socval = FNV (person, VAL_SOCIETY)) == NULL ||
-	      DIFF_ALIGN (person->align, receiver->align) ||
-	      IS_SET (socval->val[2], CASTE_CHILDREN) ||
-	      person->position <= POSITION_SLEEPING)
-	    continue;
-	  
-	  if (count == 0)
-	    num_choices++;
-	  else if (--num_chose < 1)
-	    break;
+	  do_say (society_member, "Thank you, but I'm not sure what to do with this.");
+	  return;
 	}
-      if (count == 0)
-	{
-	  if (num_choices < 1)
-	    return;
-	  num_chose = nr (1, num_choices);
-	}
+      
+      /* Correct society. */
+      
+      sprintf (buf, "Aaah, %s\x1b[1;37m. We have been in desperate need of this item. Thank you for delivering it, %s.", NAME(item), NAME(th));
+      do_say (society_member, buf);
+      
+      if (package->val[1] < RAW_MAX)
+	package->val[1] = RAW_MAX;
+      
+      /* Give the raw materials bonus to this society. */
+      for (i = 0; i < RAW_MAX; i++)
+	society->raw_curr[i] += (3*package->val[1])/RAW_MAX;
+      
+      add_society_reward (th, item, REWARD_PACKAGE, package->val[1]);
+      add_morale (society, reward/2);
+      item->timer = 1;
+      package->val[0] = 0;
+      package->val[1] = 0;
     }
-  
-  if (person && (socval = FNV (person, VAL_SOCIETY)) != NULL &&
-      !DIFF_ALIGN (receiver->align, person->align))
-    society_give_reward (person, receiver, reward);
   return;
 }
 
-/* This gives a reward of money, exp and maybe quest points to a person
-   who does something good for a society member. */
 
-void
-society_give_reward (THING *giver, THING *receiver, int reward)
-{
-  char buf[STD_LEN];
-  
-  if (!giver || !receiver || !IS_PC (receiver) ||
-      (find_society_in (giver) == NULL) ||
-      DIFF_ALIGN (giver->align, receiver->align) || 
-      giver->position <= POSITION_SLEEPING || 
-      IS_ACT1_SET (giver, ACT_PRISONER))
-    return;
-  
-  sprintf (buf, "Thank you %s.", NAME (receiver));
-  do_say (giver, buf);
-  /* Cap the reward. */
-  reward = MID (1, reward, 1000);
-  
-  /* First add the exp. */
-  add_exp (receiver, reward*100);
-  
-  add_money (receiver, reward);
-  act ("@1n give@s some money to @3f.", giver, NULL, receiver, NULL, TO_ALL);
-  
-  receiver->pc->quest_points += reward/10;
-  if (reward < 10 && nr (1,10) <= reward)
-    receiver->pc->quest_points++;
-  return;
-}
-    
 
 
 
@@ -1103,8 +1086,8 @@ make_new_member (SOCIETY *soc)
 	  (proto->max_mv == 0 ||
 	   proto->mv < proto->max_mv) &&
 	  ((room = find_thing_num (nr (soc->room_start, soc->room_end))) != NULL) &&
-	  IS_ROOM (room) &&
-	  !IS_ROOM_SET (room, BADROOM_BITS) &&
+	  IS_ROOM (room) && !IS_AREA (room) &&
+	  !IS_ROOM_SET (room, BADROOM_BITS & ~flagbits(soc->flags, FLAG_ROOM1)) &&
 	  /* This is to make powerful mobs pop more slowly. Like crap mobs
 	     like elves pop fast, but dragons pop slow. If the level of
 	     the starting mob is really high, then there is only a small
@@ -1442,8 +1425,6 @@ find_upgrades_wanted (SOCIETY *soc)
   soc->population_cap = (POP_BEFORE_SETTLE*POP_LEVEL_MULTIPLIER)/(start_member_level);
   if (soc->population_cap < POP_BEFORE_SETTLE/2)
     soc->population_cap = POP_BEFORE_SETTLE/2;
-  if (IS_SET (soc->society_flags, SOCIETY_FASTGROW))
-    soc->population_cap *= 2;
   if (!IS_SET (soc->goals, BUILD_MEMBER) &&
       (nr (1, soc->population_cap) > soc->population ||
        nr (1,30) == 15)) /* small chance to increase pop at any level. */
@@ -1617,7 +1598,7 @@ increase_tier (SOCIETY *soc)
 	{
 	  if (soc->start[i] > 0 &&
 	      soc->max_tier[i] > 0 &&
-	      soc->max_pop[i] >= 10 * (soc->curr_tier[i] + 1) &&
+	      soc->max_pop[i] >= 5 * (soc->curr_tier[i] + 1) &&
 	      soc->curr_tier[i] < soc->max_tier[i])
 	    {
 	      if (pass == 0)
@@ -1639,7 +1620,7 @@ increase_tier (SOCIETY *soc)
 
   if (i == CASTE_MAX)
     return FALSE;
-
+  
   /* Or else we did find a caste to upgrade, and we do it. */
   
   soc->curr_tier[i]++;
@@ -1654,11 +1635,11 @@ void
 check_society_change_align (SOCIETY *soc)
 {
   int max_killed_by = 0, max_killed_by_align = -1, i;
-  int second_killed_by = 0;
+  int second_killed_by = 0, second_killed_by_align = -1;
   char buf[STD_LEN];
   THING *area;
 
-  if (!soc || IS_SET (soc->society_flags, SOCIETY_FIXED_ALIGN) ||
+  if (!soc || IS_SET (soc->society_flags, SOCIETY_FIXED_ALIGN | SOCIETY_OVERLORD) ||
       soc->align < 0 || soc->align >= ALIGN_MAX)
     return;
   
@@ -1694,7 +1675,7 @@ check_society_change_align (SOCIETY *soc)
 	  max_killed_by_align = i;
 	}
     }
-
+  
   if (max_killed_by_align == -1)
     return;
   
@@ -1702,37 +1683,44 @@ check_society_change_align (SOCIETY *soc)
     {
       if (i != max_killed_by_align &&
 	  soc->killed_by[i] > second_killed_by)
-	second_killed_by = soc->killed_by[i];
+	{
+	  second_killed_by = soc->killed_by[i];
+	  second_killed_by_align = i;
+	}
     }
   
   /* Find the second highest number now. */
 
   
-
   /* Don't let them switch if this is really small. Don't switch if the
      number of kills is much smaller than the recent maxpop. Also don't
      switch if the second_killed_by is close to max_killed_by (since then
-     it can't decide who's worse... */
+     it can't decide who's worse... Instead see if there are any big
+     affinities, and if so, then do switch. */
       
-  if (max_killed_by < 85 || 
-      max_killed_by < soc->recent_maxpop*3/4 ||
-      nr (max_killed_by, soc->recent_maxpop) < soc->recent_maxpop*9/10 ||
-      nr (1,30) != 17 ||
-      second_killed_by > max_killed_by/3)
+  /* Need to have lots of things killed. */
+  if (max_killed_by < 60 || 
+      /* It must shock the society by killing half. */
+      max_killed_by < soc->recent_maxpop/2 ||
+      nr (1,70) != 17 ||
+      /* The next align up can't be too close in terms of hate. */
+      second_killed_by > max_killed_by/3 ||
+      /* Can't be too wedded to its own align. */
+      soc->align_affinity[soc->align] >= MAX_AFFINITY/4)
     return;
   
   /* Now, once we have the percents and the opp align deaths,
      check the percentages. */
-
+  
   /* Check if the society switches to neutral due to same side killings. */
-
+  
   if (soc->align > 0 && !DIFF_ALIGN (soc->align, max_killed_by_align) && 
       nr (1,10) == 4)
     {
       if (align_info[soc->align] && align_info[0])
 	{
 	  area = find_area_in (soc->room_start);
-	  sprintf (buf, "\x1b[1;37mThe %s of %s have gotten sick of the abuse from the %ss, and have decided to become %ss.\x1b[0;37m\n\r",
+	  sprintf (buf, "\x1b[1;37mThe %s of %s have gotten sick of the abuse from the %s warriors, and have decided to become %s.\x1b[0;37m\n\r",
 		   soc->pname, (area ? NAME (area) : "somewhere"),
 		   align_info[soc->align]->name, align_info[0]->name);
 	  echo (buf);
@@ -1750,7 +1738,7 @@ check_society_change_align (SOCIETY *soc)
       if (align_info[soc->align] && align_info[max_killed_by_align])
 	{
 	  area = find_area_in (soc->room_start);
-	  sprintf (buf, "\x1b[1;37mThe %s of %s have gotten sick of being beaten up by the %ss, and have decided to join them.\x1b[0;37m\n\r",
+	  sprintf (buf, "\x1b[1;37mThe %s of %s have gotten sick of being beaten up by the %s side, and have decided to join it.\x1b[0;37m\n\r",
 		   soc->pname, (area ? NAME (area) : "somewhere"), 
 		   align_info[max_killed_by_align]->name);
 	  echo (buf);
@@ -2368,8 +2356,9 @@ society_can_settle_in_area (SOCIETY *soc, THING *ar)
   int society_badroom_bits;
 
 
+  /* Don't allow societies to settle in lowlevel areas. */
   
-  if (!soc || !ar || !IS_AREA (ar))
+  if (!soc || !ar || !IS_AREA (ar) || LEVEL(ar) < 30)
     return FALSE;
   
   
@@ -3397,8 +3386,13 @@ update_prisoner_status (THING *th)
 	     "safely". :) */
 	  THING *person;
 	  for (person = th->in->cont; person; person = person->next_cont)
-	    society_give_reward (th, person, LEVEL(th)*5);
-	  
+	    {
+	      if (!DIFF_ALIGN (person->align, th->align) &&
+		  IS_PC (person))		
+		{
+		  add_society_reward (person, th, REWARD_KIDNAP, LEVEL(th)*5);
+		}
+	    }
 	  if (th->fgt && th->fgt->following)
 	    th->fgt->following = NULL;
 	  socval->val[5] = 0;
@@ -3464,10 +3458,10 @@ do_bribe (THING *th, char *arg)
   SOCIETY *soc;
   VALUE *build;
   THING *area;
-  int convert_cost, stay_cost;
+  int convert_cost, stay_cost, cost_reduction_percent;
   char buf[STD_LEN];
   
-  if (!th || !th->in || !IS_PC (th))
+  if (!th || !th->in || !IS_PC (th) || th->align >= ALIGN_MAX)
     return;
 
   if ((build = FNV (th->in, VAL_BUILD)) == NULL ||
@@ -3478,13 +3472,13 @@ do_bribe (THING *th, char *arg)
     }
   area = find_area_in (soc->room_start);
   /* Cost is society power in gold (x100 copper). */
-  convert_cost = MAX (100000, soc->power*BRIBE_POWER_MULTIPLIER);
-  stay_cost = MAX (20000, soc->power*BRIBE_SAME_ALIGN_STAY);
+  convert_cost = MAX (1000000, soc->power*BRIBE_POWER_MULTIPLIER);
+  stay_cost = MAX (200000, soc->power*BRIBE_SAME_ALIGN_STAY);
   /* The more times it's been switching sides, the more expensive it is to
      get it to change. */
   convert_cost += convert_cost*(soc->level_bonus*soc->level_bonus)/5;
   stay_cost += stay_cost*(soc->level_bonus*soc->level_bonus)/5;
- 
+  
   if (str_cmp (arg, "yes now"))
     {
       /* Mess up the costs a bit...*/
@@ -3493,18 +3487,29 @@ do_bribe (THING *th, char *arg)
       stay_cost += nr (0,stay_cost/3);
       stay_cost -= nr(0, stay_cost/2);
       
+      cost_reduction_percent = MID (0, soc->align_affinity[th->align], 95);
+      
+      convert_cost = (100-cost_reduction_percent)*convert_cost/100;
+      stay_cost = (100-cost_reduction_percent)*stay_cost/100;
+
+      /* Now alter the costs based on the affinity involved. */
+      
+      
+
       th->pc->wait += 100;
       if (DIFF_ALIGN (th->align, soc->align))
 	{
-	  if (!IS_SET (soc->society_flags, SOCIETY_FIXED_ALIGN))
-	    sprintf (buf, "It would cost about %d coins to get the %s of %s to change sides.\n\r", convert_cost, soc->pname, (area ? NAME(area) : "Somewhere"));
+	  if (IS_SET (soc->society_flags, SOCIETY_OVERLORD))
+	    sprintf (buf, "The %s of %s are held in thrall by a powerful leader.\n\r", society_pname(soc), (area ? NAME(area) : "these lands"));
+	  else if (!IS_SET (soc->society_flags, SOCIETY_FIXED_ALIGN))
+	    sprintf (buf, "It would cost about %d coins to get the %s of %s to change sides.\n\r", convert_cost, society_pname(soc), (area ? NAME(area) : "these lands"));
 	  else 
 	    sprintf (buf, "The %s of %s can't be bought. Sorry.\n\r",
-		     soc->pname, (area ? NAME(area) : "Somewhere"));
+		     society_pname(soc), (area ? NAME(area) : "these lands"));
 	}
       else
 	sprintf (buf, "It would cost about %d coins to strengthen the ties the %s of %s have to your alignment.\n\r", 
-	stay_cost,	 soc->pname, (area ? NAME(area) : "Somewhere"));
+	stay_cost,  society_pname(soc) , (area ? NAME(area) : "these lands"));
       
       stt (buf, th);
       return;
@@ -3513,22 +3518,30 @@ do_bribe (THING *th, char *arg)
   
   /* If they're of a different alignment, they must be able to switch...*/
   
-  if (DIFF_ALIGN (th->align, soc->align) && 
-      IS_SET (soc->society_flags, SOCIETY_FIXED_ALIGN))
+  if (DIFF_ALIGN (th->align, soc->align))
     {
-      sprintf (buf, "The %s of %s can't be bought. Sorry.\n\r", 
-	       soc->pname, (area ? NAME(area) : "Somewhere"));
-      stt (buf, th);
-      return;
+      if (IS_SET (soc->society_flags, SOCIETY_OVERLORD))
+	{
+	  sprintf (buf, "The %s of %s are held in thrall by a powerful leader.\n\r", society_pname (soc), (area ? NAME(area) : "these lands"));	  
+	  stt (buf, th);
+	  return;
+	}
+      else if(IS_SET (soc->society_flags, SOCIETY_FIXED_ALIGN))
+	{
+	  sprintf (buf, "The %s of %s can't be bought. Sorry.\n\r", 
+		   society_pname(soc), (area ? NAME(area) : "these lands"));
+	  stt (buf, th);
+	  return;
+	}
     }
-
+  
   /* Keep them in this alignment...*/
 
   if (soc->align > 0 && !DIFF_ALIGN (th->align, soc->align))
     {
       if (total_money (th) >= stay_cost)
 	{
-	  sprintf (buf, "The %s of %s are happy to receive your generous donation of seed money that they can now use to help their widows and orphans to better their lives.\n\r", soc->pname, (area ? NAME(area) : "Somewhere"));
+	  sprintf (buf, "The %s of %s are happy to receive your generous donation of seed money that they can now use to help their widows and orphans to better their lives.\n\r", society_pname(soc), (area ? NAME(area) : "these lands"));
 	  stt (buf, th);
 	  soc->alert /= 2;
 	  soc->level_bonus++;
@@ -3536,7 +3549,8 @@ do_bribe (THING *th, char *arg)
       else
 	{
 	  sprintf (buf, "The %s of %s are glad to take your money, but you'll have to dig a little deeper next time to keep them happy.\n\r",
-		   soc->pname, (area ? NAME(area) : "Somewhere"));
+		   society_pname(soc), (area ? NAME(area) : "these lands"));
+	  soc->align_affinity[th->align] = 0;
 	  stt (buf, th);
 	}
       sub_money (th, stay_cost);
@@ -3546,7 +3560,7 @@ do_bribe (THING *th, char *arg)
       if (total_money (th) >= convert_cost)
 	{
 	  sprintf (buf, "After careful consideration, the %s of %s have accepted your offer and have joined the %s cause!\n\r", 
-		   soc->pname, (area ? NAME(area) : "Somewhere"),
+		   society_pname(soc), (area ? NAME(area) : "these lands"),
 		   FRACE(th)->name);
 	  stt (buf, th);
 	  soc->level_bonus++;
@@ -3557,7 +3571,7 @@ do_bribe (THING *th, char *arg)
       else
 	{
 	  sprintf (buf, "You are way too cheap. The %s of %s don't want to deal with someone that cheap.\n\r",
-		   soc->pname, (area ? NAME(area) : "Somewhere"));
+		   society_pname(soc), (area ? NAME(area) : "these lands"));
 	  stt (buf, th);
 	}
       sub_money (th, convert_cost);
@@ -3575,7 +3589,8 @@ society_necro_generate (THING *th)
   VALUE *socval;
   SOCIETY *soc;
 
-  if (!th || !th->in || (socval = FNV (th, VAL_SOCIETY)) == NULL ||
+  if (!th || !th->in || !IS_ROOM (th->in) ||
+      (socval = FNV (th, VAL_SOCIETY)) == NULL ||
       (soc = find_society_in (th)) == NULL ||
       !IS_SET (soc->society_flags, SOCIETY_NECRO_GENERATE) ||
       !IS_SET (socval->val[2], CASTE_HEALER | CASTE_WIZARD))
@@ -3622,4 +3637,3 @@ society_necro_generate (THING *th)
   free_thing (corpse);
   return TRUE;
 }
-

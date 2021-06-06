@@ -1471,7 +1471,7 @@ attack_stuff (THING *th)
   
   if (vict)
     {
-      act ("@1n being attacked.", vict, NULL, NULL, NULL, TO_ALL);
+      act ("@1n are@s being attacked.", vict, NULL, NULL, NULL, TO_ALL);
       /* See if the victim has been captured. */
       if ((vsocval = FNV (vict, VAL_SOCIETY)) != NULL)
 	esociety = find_society_num (vsocval->val[5]);

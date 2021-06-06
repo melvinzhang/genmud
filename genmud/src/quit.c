@@ -107,14 +107,14 @@ do_quit (THING *th, char *arg)
 
   if (th->fd)
     {
-      write_fd_direct (th->fd, "Bye Bye Now!\n\r");
       th->fd->write_buffer[0] = '\0';
       th->fd->write_pos = th->fd->write_buffer;
+      write_to_buffer ("Bye Bye Now!\n\r", th->fd);
       th->fd->th = NULL;
       close_fd (th->fd);
       th->fd = NULL;
     }
-
+  
   check_pbase (th);
 
   free_thing (th);
@@ -165,7 +165,7 @@ do_levels (THING *th, char *arg)
   stt ("Note that exp is zeroed out after every level, so you\n\r", th);
   stt ("Really need the experience amounts listed below.\n\n\r", th);
   
-
+  
   num_lines = (end - start + 1)/4 + ((end - start + 1) % 4 ? 1 : 0);
  
   for (i = 0; i < num_lines; i++)
@@ -501,8 +501,10 @@ kill_exp (THING *killer, THING *vict)
 		  
 		  update_trophies (rth, vict, num_points, lev_helpers);
 		  update_kde (rth, KDE_UPDATE_PK);
-		  if (DIFF_ALIGN (rth->align, vict->align))
-		    society_somebody_give_reward (rth, LEVEL(vict)/5);
+		  if (DIFF_ALIGN (rth->align, vict->align) &&
+		      CAN_TALK (vict) &&
+		      find_society_in (vict))
+		    add_society_reward (rth, vict, REWARD_KILL, LEVEL(vict)/5);
 		}
 	    }
 	}
@@ -992,7 +994,7 @@ do_remort (THING *th, char *arg)
     }
       
 
-  if (!th->in || !IS_ROOM(th->in) || th->in->vnum != REMORT_ROOM)
+  if (!th->in || !IS_ROOM(th->in) || th->in->vnum != REMORT_ROOM_VNUM)
     {
       stt ("You must be in the remort room to remort!\n\r", th);
       return;
@@ -1317,3 +1319,62 @@ exp_to_level (int lev)
     return 0;
   return 50 * lev *lev *lev;
 }
+
+
+/* This lets you slay (monsters only). The first function is to keep 
+   accidental slays from happening. */
+
+void 
+do_sla (THING *th, char *arg)
+{
+  stt("You must type slay fully.\n\r", th);
+  return;
+}
+
+
+void
+do_slay (THING *th, char *arg)
+{
+  THING *vict, *victn;
+  
+  if (!th || !IS_PC (th) || LEVEL (th) != MAX_LEVEL ||
+      !th->in)
+    return;
+
+  if (!arg || !*arg)
+    {
+      stt ("slay <victim> or slay all\n\r", th);
+      return;
+    }
+
+  if (!str_cmp (arg, "all"))
+    {
+      for (vict = th->in->cont; vict; vict = victn)
+	{
+	  victn = vict->next_cont;
+	  if (IS_PC (vict) || !CAN_FIGHT(vict))
+	    continue;
+	  act ("@1n slay@s @3n.", th, NULL, vict, NULL, TO_ALL);
+	  get_killed (vict, th);
+	}
+      return;
+    }
+
+  if ((vict = find_thing_in (th, arg)) == NULL)
+    {
+      stt ("They aren't here to slay!\n\r", th);
+      return;
+    }
+
+  if (IS_PC (vict))
+    {
+      stt ("You can't slay players!\n\r", th);
+      return;
+    }
+  
+  act ("@1n slay@s @3n.", th, NULL, vict, NULL, TO_ALL);
+  get_killed (vict, th);
+  return;
+}
+  
+  

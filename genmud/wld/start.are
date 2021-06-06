@@ -3,11 +3,11 @@ Name start.are`
 HpMv 0 1 109 998
 HWT 0 0
 Cost 100
-Timer 7
+Timer 10
 Short the start area`
 Long A cold wind blows by...`
 type Lonath`
-ThFl 537919488
+ThFl 672137216
 Flag Area 0 0 28
 END_THING
 
@@ -49,8 +49,9 @@ Short Lonath's Room`
 MIW 1
 Long Lonath's Room is Here.`
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Flag Room 0 0 1
+Reset 278 100 10 1
 EDESC tapestry`
 This large wall-hanging depicts great battles between the forces of good and evil.
 `
@@ -60,11 +61,13 @@ THING 26
 Name remort room`
 HWT 0 0
 Color 7
+Desc You can remort here. Congratulations.
+`
 Short The Remort Room`
 MIW 1
 Symbol -`
 ThFl 524779
-Val d_exit 11468 259 259 0 0 0 0 0 floor`
+Val e_exit 1200201 0 0 0 0 0 0 0 `
 END_THING
 
 THING 27
@@ -76,7 +79,7 @@ Wear chest`
 MIW 1
 Symbol -`
 ThFl 524779
-Val w_exit 11647 0 0 0 0 0 0 0 `
+Val u_exit 216618 0 0 0 0 0 0 0 `
 END_THING
 
 THING 40
@@ -239,7 +242,7 @@ Color 8
 Short The Evil Recall Room`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Flag Room 0 0 1
 Reset 251 100 1 1
 END_THING
@@ -254,7 +257,7 @@ Desc The Recall Room
 Short The Good Recall Room`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Flag Room 0 0 1
 Reset 252 100 1 1
 END_THING
@@ -1157,113 +1160,6 @@ Long A saw used for cutting stone is here.`
 ThFl 100934
 END_THING
 
-THING 200
-Name guildmaster warrior`
-Level 200
-HWT 66 1600
-Short the warrior guildmaster`
-MIW 1
-Long The warrior guildmaster is here.`
-Sex 2
-ThFl 16779425
-Val guild 1 1 5 0 0 0 0 0 `
-END_THING
-
-THING 201
-Name guildmaster wizard`
-Level 200
-HWT 66 1600
-Short the wizard guildmaster`
-MIW 1
-Long The wizard guildmaster is here.`
-Sex 2
-ThFl 2209
-Val guild 2 1 5 0 0 0 0 0 `
-END_THING
-
-THING 202
-Name guildmaster healer`
-Level 200
-HWT 66 1600
-Short the healer guildmaster`
-MIW 1
-Long The healer guildmaster is here.`
-Sex 2
-ThFl 2209
-Val guild 3 1 5 0 0 0 0 0 `
-END_THING
-
-THING 203
-Name guildmaster thief`
-Level 200
-HWT 66 1600
-Short the thief guildmaster`
-MIW 1
-Long The thief guildmaster is here.`
-Sex 2
-ThFl 2209
-Val guild 4 1 5 0 0 0 0 0 `
-END_THING
-
-THING 204
-Name guildmaster ranger`
-Level 200
-HWT 66 1600
-Short the ranger guildmaster`
-MIW 1
-Long The ranger guildmaster is here.`
-Sex 2
-ThFl 2209
-Val guild 5 1 5 0 0 0 0 0 `
-END_THING
-
-THING 205
-Name guildmaster tinker`
-Level 200
-HWT 66 1600
-Short the tinker guildmaster`
-MIW 1
-Long The tinker guildmaster is here.`
-Sex 2
-ThFl 2209
-Val guild 6 1 5 0 0 0 0 0 `
-END_THING
-
-THING 206
-Name guildmaster alchemist`
-Level 200
-HWT 66 1600
-Short the alchemist guildmaster`
-MIW 1
-Long The alchemist guildmaster is here.`
-Sex 2
-ThFl 2209
-Val guild 7 1 5 0 0 0 0 0 `
-END_THING
-
-THING 207
-Name guildmaster knight`
-Level 200
-HWT 66 1600
-Short the knight guildmaster`
-MIW 1
-Long The knight guildmaster is here.`
-Sex 2
-ThFl 2209
-Val guild 8 1 5 0 0 0 0 0 `
-END_THING
-
-THING 208
-Name guildmaster mystic`
-Level 200
-HWT 65 1600
-Short the Mystic's guildmaster`
-MIW 1
-Long The mystic guildmaster is here.`
-ThFl 2209
-Val guild 8 1 5 0 0 0 0 0 `
-END_THING
-
 THING 216
 Name test mob`
 HWT 0 0
@@ -1346,6 +1242,13 @@ HWT 65 2000
 Short a trainer`
 Long A trainer is here.`
 ThFl 34977
+END_THING
+
+THING 240
+Level 20
+HWT 4 20
+Timer 10
+ThFl 100934
 END_THING
 
 THING 250
@@ -1472,7 +1375,7 @@ HWT 0 0
 Short the mob randpop`
 Long The mob randpop is here.`
 ThFl 100934
-Val randpop 101100 1254 2 1000 0 0 0 0 `
+Val randpop 127100 1398 2 1000 0 0 0 0 `
 END_THING
 
 THING 279
@@ -1481,7 +1384,7 @@ HWT 0 0
 Short The provision pop`
 Long The provision po pis here.`
 ThFl 101063
-Val randpop 125006 245 1 0 0 0 0 0 `
+Val randpop 125006 249 1 0 0 0 0 0 `
 END_THING
 
 THING 300
@@ -1567,8 +1470,8 @@ Short a knife`
 Wear wield`
 Long A knife is here.`
 ThFl 100934
-Val weapon 1 2 0 0 0 0 0 0 `
 Val tool 6 0 0 0 0 0 0 0 `
+Val weapon 1 2 0 0 0 0 0 0 `
 END_THING
 
 THING 356
@@ -2559,6 +2462,15 @@ Wear wield`
 Long Some belted ammo is here.`
 ThFl 100934
 Val ammo 1 20 200 200 10 0 0 0 `
+END_THING
+
+THING 744
+Name fountain`
+HWT 60 20000
+Short A fountain`
+Long A $Ffountain$6 bubbling with $Cwater$6 is here.$7`
+ThFl 101062
+Val drink 0 0 0 0 0 0 0 0 unlim`
 END_THING
 
 THING 745

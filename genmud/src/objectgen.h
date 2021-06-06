@@ -11,10 +11,11 @@
 #define OBJECTGEN_NAME_GEM       4
 #define OBJECTGEN_NAME_METAL     5
 #define OBJECTGEN_NAME_NONMETAL  6
-#define OBJECTGEN_NAME_SOCIETY   7
-#define OBJECTGEN_NAME_TYPE      8
-#define OBJECTGEN_NAME_SUFFIX    9
-#define OBJECTGEN_NAME_MAX      10
+#define OBJECTGEN_NAME_ANIMAL    7
+#define OBJECTGEN_NAME_SOCIETY   8
+#define OBJECTGEN_NAME_TYPE      9
+#define OBJECTGEN_NAME_SUFFIX   10
+#define OBJECTGEN_NAME_MAX      11
 
 /* There are four things that are autoset on an object name: those are
    a_an, owner, society and suffix...the other 6 are optional. */
@@ -43,14 +44,14 @@ int objectgen_find_wear_location (void);
 
 /* This returns an item name based on the type requested. */
 
-char *objectgen_find_typename (int wear_loc, int *weapon_type);
+char *objectgen_find_typename (int wear_loc, int weapon_type);
 
 /* This generates all of the names that will go into the object. */
 
 void objectgen_generate_names (char names[OBJECTGEN_NAME_MAX][STD_LEN], 
 			       char color[OBJECTGEN_NAME_MAX][STD_LEN],
 			       int wear_loc, char *society_name, 
-			       char *owner_name, int *weapon_type, int level);
+			       char *owner_name, int weapon_type, int level);
 /* This sets up the various names on the object that we're actually making. */
 
 void objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
@@ -60,6 +61,9 @@ void objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 
 void objectgen_setup_stats (THING *object, int weapon_type);
 
+/* This returns a random weapon type...weighted toward slashing. */
+
+int generate_weapon_type (void);
 
 /* This generates some fake metal names. */
 
@@ -72,3 +76,8 @@ void generate_provisions (THING *);
 /* This clears the provisions load area. */
 
 void clear_provisions (THING *);
+
+/* This generates an animal name like "lizard skin" "wolf tooth" or something
+   like that. */
+
+char *objectgen_animal_name (int wear_loc, int weapon_type);

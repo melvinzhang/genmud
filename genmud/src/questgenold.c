@@ -485,9 +485,9 @@ generate_given_script (THING *quest_giver, THING *quest_item)
   
   /* Get the reward type. */
   if (nr (1,8) != 2)
-    reward_type = REWARD_MONEY;
+    reward_type = QUEST_REWARD_MONEY;
   else
-    reward_type = REWARD_EXPERIENCE;
+    reward_type = QUEST_REWARD_EXPERIENCE;
 
   /* First check if we have the questflag already set. */
 
@@ -501,7 +501,7 @@ generate_given_script (THING *quest_giver, THING *quest_item)
   sprintf (buf, "%s = 1\n", qfbuf);
   strcat (txt, buf);
   strcat (txt, "do say Thank you for finding @osd$F!\n");
-  if (reward_type == REWARD_MONEY)
+  if (reward_type == QUEST_REWARD_MONEY)
     {
       strcat (txt, "@v0 = @ocs\n");
       strcat (txt, "@v0 * 5\n");
@@ -509,7 +509,7 @@ generate_given_script (THING *quest_giver, THING *quest_item)
       strcat (txt , "do say Here's your reward!\n");
       strcat (txt , "do give @v0 copper @snm\n");
     }
-  else if (reward_type == REWARD_EXPERIENCE)
+  else if (reward_type == QUEST_REWARD_EXPERIENCE)
     {
       sprintf (buf, "@sex + %d\n", 10*exp_to_level(LEVEL(quest_item)));
       strcat (txt, buf);

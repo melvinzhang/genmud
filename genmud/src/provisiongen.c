@@ -224,7 +224,8 @@ generate_provisions (THING *th)
 		obj->size *= 2;
 	      if (is_named (obj, "giant") || is_named (obj, "huge"))
 		obj->size *= 3;
-	    }	     		    
+	    }	     	
+	  obj->next_cont = NULL;
 	  thing_to (obj, load_area);
 	  add_thing_to_list (obj);
 	}

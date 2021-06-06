@@ -28,6 +28,7 @@ const struct flag_data society1_flags[] =
     {"necrogenerate", " NecroGenerate", SOCIETY_NECRO_GENERATE, "Society mages/clerics raise new dead members of the society."},
     {"marked", " Marked", SOCIETY_MARKED, "This society is marked for some purpose."},
     {"fastgrow", " Fastgrow", SOCIETY_FASTGROW, "This society is larger and grows faster than others."},
+    {"overlord", " Overlord", SOCIETY_OVERLORD, "This society has an overlord,"},
     {"none", "none", 0, "nothing"},
   };
 
@@ -719,6 +720,11 @@ update_society (SOCIETY *soc, bool rapid)
   if (!rapid)
     {  
       update_society_population(soc);
+
+      if (!find_society_overlord (soc))
+	RBIT (soc->society_flags, SOCIETY_OVERLORD);
+      else
+	SBIT (soc->society_flags, SOCIETY_OVERLORD);
       if (soc->alert > 0)
 		soc->alert--;
       if (soc->last_alert > 0)
@@ -729,6 +735,16 @@ update_society (SOCIETY *soc, bool rapid)
 	soc->raid_hours--;
       if (soc->assist_hours > 0)
 	soc->assist_hours--;
+      if (soc->morale < 0)
+	soc->morale += MAX(1,-soc->morale/20);
+      if (soc->morale > 0)
+	soc->morale -= MAX (1,soc->morale/20);      
+      
+      /* Overlords make morale tend to 0 fast. */
+      
+      if (IS_SET (soc->society_flags, SOCIETY_OVERLORD))
+	soc->morale = soc->morale * 3/4;
+
       if (soc->alert_hours > 0) /* If the alert hours go to 0, attack. */
 	{
 	  if (--soc->alert_hours == 0)
@@ -759,6 +775,8 @@ update_society (SOCIETY *soc, bool rapid)
 	      /* Removes 1 or killed_by/100...faster decay? */
 	      soc->killed_by[i] -= MAX (1, soc->killed_by[i]/100);
 	    }
+	  if (--soc->align_affinity[i] < 0)
+	    soc->align_affinity[i] = 0;
 	  
 	}
       
@@ -1144,10 +1162,22 @@ update_society_members (SOCIETY *soc)
 		continue;
 	      
 	      /* What rank we are within the caste atm. */
-	      c_rank = th->vnum - soc->start[caste_num] + 1;
+	      /* c_rank starts at 0. */
+	      c_rank = th->vnum - soc->start[caste_num];
 	      
 	      /* What the highest rank in the caste is. */
-	      t_rank = soc->curr_tier[caste_num];
+	      t_rank = soc->curr_tier[caste_num] - 1;
+	      
+	      /* Leader caste has an extra tier that isn't used very
+		 often. It's the "overlord" tier that only makes 
+		 societies get overlords when there are 3 things just
+		 below overlord level. */
+	      if (IS_SET (soc->cflags[caste_num], CASTE_LEADER) &&
+		  c_rank == t_rank - 1)
+		{
+		  if (!society_can_add_overlord (soc))
+		    continue;
+		}
 	      
 	      vnum = 0;
 		  
@@ -1172,7 +1202,7 @@ update_society_members (SOCIETY *soc)
 		    {
 		      vnum = soc->start[new_cnum];
 		    } 
-
+		  
 		  /* Don't ever have too many shopkeepers...or 
 		     crafters starts to look stupid. */
 		  
@@ -1187,26 +1217,25 @@ update_society_members (SOCIETY *soc)
 		    continue;
 		  
 		  
-		} /* Increase within a tier. */
+		} /* Increase tier within a caste. */
 	      else if (c_rank < t_rank && 
-		       nr (0, c_rank + 5) == (c_rank + 1)/2)
+		       nr (0, c_rank+3) == (c_rank + 1)/2)
 		{
 		  int c_rank_pop, n_rank_pop;
 		  c_rank_pop = find_pop_caste_tier (soc->vnum,
 						    caste_num,
-						    c_rank - 1);
+						    c_rank);
 		  n_rank_pop = find_pop_caste_tier (soc->vnum,
 						    caste_num,
-						    c_rank);
+						    c_rank+1);
 		  
 		  /* Don't let the max tier get too big. It is restricted
-		     to 1/10 the total pop of the caste. Except for
+		     to 1/N the total pop of the caste. Except for
 		     children that can max as many as they want. */
 		  
 		  if (caste_num > 0 && 
 		      c_rank + 1 >= soc->max_tier[caste_num] &&
-		      c_rank > 1 &&
-		      soc->max_pop[caste_num] < 10 * n_rank_pop)
+		      soc->max_pop[caste_num] <  10 * n_rank_pop)
 		    continue;
 		  
 		  
@@ -1216,9 +1245,8 @@ update_society_members (SOCIETY *soc)
 		     population is larger than the next one up. Ignore this
 		     if the populations are too small. */
 		  
-		  if ((n_rank_pop > 0) &&
-		      (c_rank_pop <= n_rank_pop + 2 ||
-		       c_rank_pop < n_rank_pop * 5/4))
+		  if (c_rank_pop <= n_rank_pop &&
+		      c_rank_pop > 2)
 		    continue;
 		  
 		  /* Check if the prototype exists. */
@@ -1332,7 +1360,8 @@ update_society_members (SOCIETY *soc)
 		      relic->long_desc= new_str (buf);
 		      sprintf (buf, "relic %s", soc->name);
 		      relic->name = new_str (buf);
-		      thing_to (relic, newmem);
+		      thing_to (relic, newmem);		      
+		      SBIT (soc->society_flags, SOCIETY_OVERLORD);
 		    }		  
 
 		  /* Reset some objects on this thing if it's not
@@ -1352,7 +1381,7 @@ update_society_members (SOCIETY *soc)
    has captured someone and ask them to get that person back. */
 
 bool 
-got_kidnapped_message (THING *th, THING *mob)
+send_kidnapped_message (THING *th, THING *mob)
 {
   THING *thg, *victim = NULL, *area_in;
   int caste, tier, count;
@@ -1735,6 +1764,9 @@ society_get_disease (void)
   VALUE *socval;
   FLAG *flg;
   
+  if (nr (1,10) != 2)
+    return;
+
   /* Choose a society with a big population. */
 
   for (count = 0; count < 2; count++)
@@ -1783,4 +1815,148 @@ society_get_disease (void)
     }
   add_rumor (RUMOR_PLAGUE, soc->vnum, 0, 0, 0);
   return;
+}
+
+
+/* This returns the name of a society or the plural name of a 
+   society, respectively. */
+
+char *
+society_name (SOCIETY *soc)
+{
+  static char name[STD_LEN];
+  if (!soc || !soc->name || !*soc->name)
+    return "people";
+  
+  name[0] = '\0';
+
+  if (soc->adj && *soc->adj)
+    {
+      strcat (name, soc->adj);
+      strcat (name, " ");
+    }
+  strcat (name, soc->name);
+  return name;
+}
+/* This returns the name of a society or the plural name of a 
+   society, respectively. */
+
+char *
+society_pname (SOCIETY *soc)
+{
+  static char pname[STD_LEN];
+  if (!soc || !soc->pname || !*soc->pname)
+    return "people";
+  
+  pname[0] = '\0';
+
+  if (soc->adj && *soc->adj)
+    {
+      strcat (pname, soc->adj);
+      strcat (pname, " ");
+    }
+  strcat (pname, soc->pname);
+  return pname;
+}
+
+
+/* This adds morale to a society. */
+
+void
+add_morale (SOCIETY *soc, int amount)
+{
+  if (!soc)
+    return;
+
+  soc->morale += amount;
+  soc->morale = MID (-MAX_MORALE, soc->morale, MAX_MORALE);
+  return;
+}
+
+/* This checks if a society can add an overlord. It can only happen if
+   there are three+ society leaders one rank below the max rank and
+   if there is no overlord. Then, the overlord gets made. */
+
+bool
+society_can_add_overlord (SOCIETY *soc)
+{
+  THING *mob, *proto;
+  int vnum, count;
+  int leader_count = 0, overlord_count = 0;
+  int cnum;
+  VALUE *socval;
+  
+  if (!soc)
+    return FALSE;
+
+  for (cnum = 0; cnum < CASTE_MAX; cnum++)
+    {
+      if (IS_SET (soc->cflags[cnum], CASTE_LEADER))
+	{
+	  /* Loop through 2 times. First time, get the number of maximal
+	     leaders besides the overlord, then next time check for
+	     the overlord. */
+	  for (count = 0; count < 2; count++)
+	    {
+	      vnum = soc->start[cnum] + soc->max_tier[cnum] - 2 + count;
+	      
+	      /* Make sure that the overlord proto exists and that
+		 it's called an "overlord" */
+	      if (count == 1)
+		{
+		  if ((proto = find_thing_num (vnum)) == NULL ||
+		      !is_named (proto, "overlord"))
+		    return FALSE;
+		}
+	      
+	      for (mob = thing_hash[vnum % HASH_SIZE]; mob; mob = mob->next)
+		{
+		  if ((socval = FNV (mob, VAL_SOCIETY)) != NULL &&
+		      socval->val[0] == soc->vnum)
+		    {
+		      if (count == 0)
+			leader_count++;
+		      else
+			overlord_count++;
+		    }
+		}
+	    }
+	}
+    }
+  
+  /* Only return true if the leader_count is >= 3 and there is no
+     overlord. */
+
+  if (leader_count >= 3 && overlord_count == 0)
+    return TRUE;
+  return FALSE;
+}
+
+/* This checks if a society even has an overlord. */
+THING * find_society_overlord (SOCIETY *soc)
+{
+  THING *mob;
+  int vnum;
+  int cnum;
+  VALUE *socval;
+  
+  if (!soc)
+    return NULL;
+  
+  for (cnum = 0; cnum < CASTE_MAX; cnum++)
+    {
+      if (IS_SET (soc->cflags[cnum], CASTE_LEADER))
+	{
+	  vnum = soc->start[cnum] + soc->max_tier[cnum] - 1;
+	  for (mob = thing_hash[vnum % HASH_SIZE]; mob; mob = mob->next)
+	    {
+	      /* An overlord is a leader of max tier. */
+	      if ((socval = FNV (mob, VAL_SOCIETY)) != NULL &&
+		  socval->val[0] == soc->vnum &&
+		  is_named (mob, "overlord"))
+		return mob;
+	    }
+	}
+    }
+  return NULL;
 }

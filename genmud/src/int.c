@@ -219,12 +219,14 @@ init_command_list (void)
 #ifdef USE_WILDERNES
   add_command ("sectors", do_sectors, BLD_LEVEL, FALSE);
 #endif
+  add_command ("inspire", do_inspire, 0, FALSE);
+  add_command ("demoralize", do_demoralize, 0, FALSE);
   add_command ("channels", do_channels, 0, FALSE);
   add_command ("chop", do_chop, 0, FALSE);
   add_command ("capture", do_capture, 0, FALSE);
   add_command ("gather", do_gather, 0, FALSE);
   add_command ("collect", do_collect, 0, FALSE);
-  add_command ("echo", do_echo, MAX_LEVEL, FALSE);
+  add_command ("echo", do_echo, 0, FALSE);
   add_command ("extrude", do_extrude, 0, FALSE);
   add_command ("exlist", do_exlist, BLD_LEVEL, FALSE);
   add_command ("peace", do_peace, 0, FALSE);
@@ -232,6 +234,7 @@ init_command_list (void)
   add_command ("description", do_description, 0, FALSE);
   add_command ("password", do_password, 0, FALSE);
   add_command ("areagen", do_areagen, MAX_LEVEL, FALSE);
+  add_command ("play", do_play, 0, FALSE);
   add_command ("areas", do_areas, 0, FALSE);
   add_command ("log", do_log, MAX_LEVEL, TRUE);
   add_command ("snoop", do_snoop, MAX_LEVEL, FALSE);
@@ -268,6 +271,7 @@ init_command_list (void)
   add_command ("mythology", do_mythology, 0, FALSE);
   add_command ("get", do_get, 0, FALSE);
   add_command ("drop", do_drop, 0, FALSE);
+  add_command ("diplomacy", do_diplomacy, 0, FALSE);
   add_command ("divine", do_divine, 0, FALSE);
   add_command ("memory", do_memory, MAX_LEVEL, FALSE);
   add_command ("enter", do_enter, 0, FALSE);
@@ -278,7 +282,7 @@ init_command_list (void)
   add_command ("scribe", do_scribe, 0, FALSE);
   add_command ("mount", do_mount, 0, FALSE);
   add_command ("dismount", do_dismount, 0, FALSE);
-  add_command ("players", do_pbase, 0, FALSE);
+  add_command ("pbase", do_pbase, 0, FALSE);
   add_command ("buck", do_buck, 0, FALSE);
   add_command ("exits", do_exits, 0, FALSE);
   add_command ("think", do_think, 0, FALSE);
@@ -290,6 +294,8 @@ init_command_list (void)
   add_command ("map", do_map, MAX_LEVEL, FALSE);
   add_command ("commands", do_commands, 0, FALSE);
   add_command ("slist", do_slist, 0, FALSE);
+  add_command ("slay", do_slay, MAX_LEVEL, FALSE);
+  add_command ("sla", do_sla, MAX_LEVEL, FALSE);
   add_command ("eat", do_eat, 0, FALSE);
   add_command ("fill", do_fill, 0, FALSE);
   add_command ("sneak", do_sneak, 0, FALSE);
@@ -308,6 +314,7 @@ init_command_list (void)
   add_command ("flee", do_flee, 0, FALSE);
   add_command ("bs", do_backstab, 0, FALSE);
   add_command ("fire", do_fire, 0, FALSE);
+  add_command ("examine", do_look, 0, FALSE);
   add_command ("aim", do_fire, 0, FALSE);
   add_command ("load", do_load, 0, FALSE);
   add_command ("unload", do_unload, 0, FALSE);

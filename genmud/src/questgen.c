@@ -305,15 +305,15 @@ generate_job (JOB *next_job)
       
       switch (job->prev[i]->reward_type)
 	{
-	  case REWARD_ITEM:
+	  case QUEST_REWARD_ITEM:
 	    job->job_type[i] = JOB_GIVE_ITEM;
 	    job->job_num[i] = job->prev[i]->reward_num;
 	    break;
-	  case REWARD_MONEY:
+	  case QUEST_REWARD_MONEY:
 	    job->job_type[i] = JOB_GIVE_MONEY;
 	    job->job_num[i] = job->prev[i]->reward_num;
 	    break;
-	  case REWARD_PASSWORD:
+	  case QUEST_REWARD_PASSWORD:
 	    job->job_type[i] = JOB_GIVE_PASSWORD;
 	    strcpy (job->job_password[i], job->prev[i]->reward_password);
 	    break;

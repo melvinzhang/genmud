@@ -39,6 +39,7 @@ static const char *objectgen_part_names[OBJECTGEN_NAME_MAX] =
     "metal", /* 5 */
     "nonmetal", /* Other things besides metals that an object can
 		   be made of. */
+    "animal", /* Things like skin, bones, feathers etc... */
     "society", 
     "type",   /* 8th slot, array[7]. Important to keep distinct. */
     "suffix",
@@ -64,6 +65,9 @@ objectgen (THING *area, int wear_loc, int level, int curr_vnum, char *society_na
 	  return NULL;
 	}
     }
+  if (wear_loc == ITEM_WEAR_WIELD)
+    weapon_type = generate_weapon_type ();
+  
   
   /* See if we have an open vnum slot. */
   if (curr_vnum > 0)
@@ -93,8 +97,7 @@ objectgen (THING *area, int wear_loc, int level, int curr_vnum, char *society_na
   /* Get the descriptions of the object. */
   
   objectgen_generate_names (name, color, wear_loc, society_name, 
-			    owner_name, &weapon_type,
-			    level);
+			    owner_name, weapon_type, level);
   
   
   if ((obj = new_thing()) == NULL)
@@ -120,6 +123,23 @@ objectgen (THING *area, int wear_loc, int level, int curr_vnum, char *society_na
   return obj;
 }
 
+/* This gives the type of weapon you will make...it's weighted toward
+   making swords. */
+
+int
+generate_weapon_type (void)
+{
+  int weapon_type;
+  if (nr (1,12) == 3)
+    weapon_type = WPN_DAM_WHIP;
+  else if (nr (1,9) == 2)
+    weapon_type = WPN_DAM_CONCUSSION;
+  else if (nr (1,4) == 1)
+    weapon_type = WPN_DAM_PIERCE;
+  else
+    weapon_type = WPN_DAM_SLASH;
+  return weapon_type;
+}
 
 
 /* This sets up the names for the object by looking at the list of names. */
@@ -297,20 +317,20 @@ void
 objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN], 
 			  char colorname[OBJECTGEN_NAME_MAX][STD_LEN],
 			  int wear_loc, char *society_name, 
-			  char *owner_name, int *weapon_type, int level)
+			  char *owner_name, int weapon_type, int level)
 {
   int i;
   char *t;
-  int num_names = 1, rem_type;
+  int num_names = 1;
   int names_used, names_left, num_names_used, choice, name_choices;
   
   
-  if (!name || !colorname || !weapon_type)
+  if (!name || !colorname)
     return;
   
   if (level < 0)
     level = 0;
-
+  
   /* Generate the names. */
   for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
     {
@@ -321,6 +341,8 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	strcpy (name[i], find_gen_word 
 		(OBJECTGEN_AREA_VNUM,
 		 "metal_gen_names", colorname[i]));
+      else if (i == OBJECTGEN_NAME_ANIMAL)
+	strcpy (name[i], objectgen_animal_name (wear_loc, weapon_type));
       else if (i != OBJECTGEN_NAME_TYPE)
 	strcpy (name[i], find_gen_word 
 		(OBJECTGEN_AREA_VNUM,
@@ -329,21 +351,43 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	strcpy (name[i], objectgen_find_typename (wear_loc, weapon_type));
     }
   
-  /* Choose metal or nonmetal. Most of the time choose metal name.
-     Also, if the item is not a single body slot, choose metal. 
-     Metal is for jewelry and wpns. */
+  /* Choose metal or nonmetal or animal genned. 
+
+  Metal is for all. nonmetal is for armor, animal is for all. 
   
-  if (*name[OBJECTGEN_NAME_METAL] && *name[OBJECTGEN_NAME_NONMETAL])
+  Breakdown: 70pct metal, 20pct animal, 10pct nonmetal. */
+  
+  
+  if ((nr (1,10) <= 7 ||
+       (!*name[OBJECTGEN_NAME_NONMETAL] &&
+	!*name[OBJECTGEN_NAME_ANIMAL])) && 
+      *name[OBJECTGEN_NAME_METAL])
     {
-      if (nr (1,3) != 2 ||
-	  wear_loc <= ITEM_WEAR_NONE || wear_loc >= ITEM_WEAR_MAX ||
-	  wear_data[wear_loc].how_many_worn > 1)
-	rem_type = OBJECTGEN_NAME_NONMETAL;
-      else
-	rem_type = OBJECTGEN_NAME_METAL;
-      *name[rem_type] = '\0';
-      *colorname[rem_type] = '\0';
+      *name[OBJECTGEN_NAME_NONMETAL] = '\0';
+      *name[OBJECTGEN_NAME_ANIMAL] = '\0'; 
+      *colorname[OBJECTGEN_NAME_NONMETAL] = '\0';
+      *colorname[OBJECTGEN_NAME_ANIMAL] = '\0';
+    }      
+  /* Allow animal names */ 
+  else if (*name[OBJECTGEN_NAME_ANIMAL] &&
+	   (nr (1,3) != 2 || 
+	    !*name[OBJECTGEN_NAME_NONMETAL] ||
+	    wear_loc <= ITEM_WEAR_NONE || wear_loc >= ITEM_WEAR_MAX ||
+	    wear_loc == ITEM_WEAR_BELT))
+    {
+      *name[OBJECTGEN_NAME_NONMETAL] = '\0';
+      *name[OBJECTGEN_NAME_METAL] = '\0'; 
+      *colorname[OBJECTGEN_NAME_NONMETAL] = '\0';
+      *colorname[OBJECTGEN_NAME_METAL] = '\0';
     }
+  else
+    {
+      *name[OBJECTGEN_NAME_METAL] = '\0';
+      *name[OBJECTGEN_NAME_ANIMAL] = '\0';
+      *colorname[OBJECTGEN_NAME_METAL] = '\0';
+      *colorname[OBJECTGEN_NAME_ANIMAL] = '\0';
+    }
+      
   
       
   /* Add the society name, and if no society name exists, add the owner
@@ -406,9 +450,9 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
       strcpy (name[OBJECTGEN_NAME_A_AN], "The");
       strcpy (colorname[OBJECTGEN_NAME_A_AN], "The");
     }
-  num_names += nr (1, level/125+1);
-  if (num_names > 3)
-    num_names = 3;
+  num_names += nr (2, level/100+2);
+  if (num_names > 4)
+    num_names = 4;
   
   num_names_used = 0;
   for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
@@ -573,7 +617,7 @@ objectgen_find_wear_location (void)
    There's some special coding to handle weapons. */
 
 char *
-objectgen_find_typename (int wear_loc, int *weapon_type)
+objectgen_find_typename (int wear_loc, int weapon_type)
 {
   static char retbuf[STD_LEN];
   char typebuf[STD_LEN];
@@ -582,36 +626,16 @@ objectgen_find_typename (int wear_loc, int *weapon_type)
   retbuf[0] = '\0';
   typebuf[0] = '\0';
   if (wear_loc <= ITEM_WEAR_NONE || wear_loc >= ITEM_WEAR_MAX ||
-      wear_loc == ITEM_WEAR_BELT || !weapon_type)
+      wear_loc == ITEM_WEAR_BELT || 
+      (wear_loc == ITEM_WEAR_WIELD &&
+       (weapon_type < 0 || weapon_type >= WPN_DAM_MAX)))
     return retbuf;
   
   if (wear_loc == ITEM_WEAR_WIELD)
-    {
-      switch (nr (1,10))
-	{
-	  case 5:
-	    strcpy (typebuf, "whipping");
-	    *weapon_type = WPN_DAM_WHIP;
-	    break;
-	  case 1:
-	  case 9:
-	    strcpy (typebuf, "concussion");
-	    *weapon_type = WPN_DAM_CONCUSSION;
-	    break;
-	  case 2:
-	  case 6:
-	    strcpy (typebuf, "piercing");
-	    *weapon_type = WPN_DAM_PIERCE;
-	    break;
-	  default:
-	    strcpy (typebuf, "slashing");
-	    *weapon_type = WPN_DAM_SLASH;
-	}
-    }
+    strcpy (typebuf, weapon_damage_types[weapon_type]);
   else
-    {
-      strcpy (typebuf, wear_data[wear_loc].name);
-    }
+    strcpy (typebuf, wear_data[wear_loc].name);
+  
   strcpy (retbuf, find_gen_word (OBJECTGEN_AREA_VNUM, typebuf, &color));
   return retbuf;
 }
@@ -1023,7 +1047,156 @@ generate_metal_names (void)
   return;
 }
 
+/* This generates and object name using some kind of animal parts name. 
+   It loops through all of the randmob generators that have edescs
+   of the appropriate type: armor weapon jewelry, and then if that
+   thing has the correct part type, it then counts the number of
+   words in kname and (armor/jewelry/weapon) and multiplies them to
+   get the total number of combinations possible. In the second pass, it
+   of course then finds the correct word to use by subtracting these
+   products until their choice is <= 0. The weapon types can only be
+   slashing and piercing, or concussion if it has the word "bone" in its
+   weapon location. */
 
 
+char *
+objectgen_animal_name (int wear_loc, int weapon_type)
+{
+  THING *proto, *area;
+  
+  char object_type[STD_LEN]; /* Armor/wpn/jewelry */
+  /* Number of diff mob names and body part names for that thing. */
+  int num_proto_names, num_object_names, total_names;
+  
+  int count, num_choices = 0, num_chose = 0;
+  
+  char animal_name[STD_LEN];
+  char part_name[STD_LEN];
+  static char whole_name[STD_LEN];
+  char suffix_name[STD_LEN]; /* Used to put suffixes on items like
+				-studded or -embedded...*/
+  /* The extra descriptions with the object types allowed and the name
+     of the thing. (Must use kname) */
+  EDESC *typedesc, *namedesc;
+  /* Make it more likely for things other than those with massive
+     amounts of prefixes and item types to get a chance. */
+  int square_total_names;
+  
+  if (wear_loc <= ITEM_WEAR_NONE ||
+      wear_loc >= ITEM_WEAR_MAX ||
+      wear_loc == ITEM_WEAR_BELT)
+    return nonstr;
+  
+  if (wear_loc == ITEM_WEAR_WIELD && 
+      (weapon_type < 0 || weapon_type >= WPN_DAM_MAX))
+    return nonstr;
+  
+  if ((area = find_thing_num (MOBGEN_PROTO_AREA_VNUM)) == NULL)
+    return nonstr;
+  
+  if (wear_loc == ITEM_WEAR_WIELD)
+    strcpy (object_type, "weapon");
+  else if (wear_data[wear_loc].how_many_worn <= 1)
+    strcpy (object_type, "armor");
+  else
+    strcpy (object_type, "jewelry");
+  
+  whole_name[0] = '\0';
+  for (count = 0; count < 2; count++)
+    {
+      for (proto = area->cont; proto; proto = proto->next_cont)
+	{
+	  /* Check if it has the proper edesc. */
+	  if ((typedesc = find_edesc_thing (proto, object_type, TRUE)) == NULL ||
+	      (namedesc = find_edesc_thing (proto, "kname", TRUE)) == NULL)	    
+	    continue;
+	  
+	  num_proto_names = find_num_words (namedesc->desc);
+	  num_object_names = find_num_words (typedesc->desc);
+	  
+	  square_total_names = num_proto_names*num_object_names;
+	  
+	  total_names = 0;
+	  while (total_names*total_names < square_total_names)
+	    total_names++;
+	  
+	  if (total_names < 1)
+	    continue;
+	  
+	  if (count == 0)
+	    num_choices += total_names;
+	  else 
+	    {
+	      num_chose -= total_names;
+	      if (num_chose < 1)
+		break;
+	    }
+	}
 
+      if (count == 0)
+	{
+	  if (num_choices < 1)
+	    return nonstr;
+	  num_chose = nr (1, num_choices);
+	}
+    }
 
+  if (!proto || !namedesc || !typedesc)
+    return nonstr;
+  
+  strcpy (animal_name, find_random_word (namedesc->desc, NULL));
+  strcpy (part_name, find_random_word (typedesc->desc, NULL));
+  suffix_name[0] = '\0';
+  /* Animal weapon parts in weapons have to be handled more delicately.
+     "bones" can go into piercing/slashing/conc. 
+     
+     teeth/fangs/claws/talons/pincers only go into slashing/piercing
+     but can be embedded or spiked into conc/whipping. */
+
+  if (wear_loc == ITEM_WEAR_WIELD)
+    {
+      if (weapon_type == WPN_DAM_WHIP)
+	{
+	  if (!named_in (part_name, "fang claw tooth"))
+	    return nonstr;
+	}
+      else if (weapon_type == WPN_DAM_CONCUSSION)
+	{
+	  if (str_cmp (part_name, "bone"))
+	    {
+	      strcpy (suffix_name, find_random_word ("-studded -embedded -spiked", NULL));
+	    }
+	}
+      else 
+	suffix_name[0] = '\0';
+    }
+  /* Jewelry may have a -studded suffix for non feather things. */
+  else if (!str_cmp (object_type, "jewelry"))
+    {
+      if (str_cmp (part_name, "feather") &&
+	  str_cmp (part_name, "feathers") &&
+	  nr (1,5) == 2)
+	{
+	  strcpy (suffix_name, find_random_word ("-studded", NULL));
+	}
+    }
+  
+  /* Now set up the name: animal_name(middle)part_name-suffix_name */
+  
+ 
+  /* No space in middle. */
+  if (nr (1,5) != 3 &&
+      named_in (part_name, "hide skin scale tooth claw fang bone"))
+    sprintf (whole_name, "%s%s%s", animal_name, part_name, suffix_name);
+  else if (nr (1,5) == 2 && !*suffix_name) /* Hyphen -- only if no suffix */
+    sprintf (whole_name, "%s-%s", animal_name, part_name);
+  else /* Space */
+    {
+      /* Check for possessive form. */
+      if (nr (1,3) == 2)
+	possessive_form (animal_name);
+      sprintf (whole_name, "%s %s%s", animal_name, part_name, suffix_name);
+    }
+    
+  return whole_name;
+}

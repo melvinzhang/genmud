@@ -28,7 +28,7 @@
 					 to see which ones should be made
 					 into guard posts. */
 
-#define POP_BEFORE_SETTLE     400   /* Soc needs N members before it
+#define POP_BEFORE_SETTLE     200   /* Soc needs N members before it
 					attempts to make a new society. */
 
 #define SOCIETY_SETTLE_CHANCE 230   /* 1 out of N chance to settle
@@ -128,7 +128,7 @@
 #define CAPTURE_CHANCE      300      /* A raider has a 1 out of this chance
 					of taking a prisoner. */
 
-#define RELIC_CHANCE        400      /* A maxxed out leader has a 1 out of 
+#define RELIC_CHANCE         10      /* An overlord leader has a 1 out of 
 					this chance of loading a relic. */
 
 #define SOCIETY_GEN_CASTE_TIER_MAX 40 /* Max N tiers of names to choose
@@ -136,8 +136,10 @@
 
 #define NUM_VOWELS              10 /* This is because the vowels are 
 				      weighted..e = 3x, aio = 2x, u = 1x. */
-#define NUM_CONSONANTS          21
 
+
+#define MAX_MORALE           200 /* Max that morale can be (min is neg
+				     of this. */
 
 /* These are the vnums used to make the "ancient races" and "organizations"
    created in the historygen code. It's so that they have special vnums
@@ -195,6 +197,8 @@
 #define NEED_REQUEST_TIMER   300 
 
 
+#define MAX_AFFINITY 95 /* Maximum affinity percent a society can have. */
+
 /* When a thing needs something, it either needs to get it, or it needs
    to make it or it needs to give it to someone */
 
@@ -251,6 +255,10 @@
 #define SOCIETY_FASTGROW        0x00001000 /* More powerful...does
 					      things bigger and faster
 					      than other societies. */
+#define SOCIETY_OVERLORD        0x00002000 /* This society has an 
+					      overlord -- makes them
+					      work better and not switch
+					      alignment. */
 
 /* These are the base society flags given to societies when they're
    generated. */
@@ -396,6 +404,7 @@ struct society_data
   int alife_home_y;           /* Y coord of this society's homeland. */
   int kills[ALIGN_MAX];       /* How many opp align kills this soc has. */
   int killed_by[ALIGN_MAX];   /* What aligns have killed this thing...*/
+  int align_affinity[ALIGN_MAX]; /* How much you like an alignment. */
   int crafters_needed;        /* What kinds of craftsmen the society needs. */
   int shops_needed;           /* What kinds of shopkeepers the society needs. */
   /* Array of bits representing rumors known to society members. */
@@ -412,6 +421,9 @@ struct society_data
   int relic_raid_gather_point; /* Place where raiders gather. */
   int relic_raid_target;      /* Place raiders will go. */
   int abandon_hours;          /* Hours until we can abandon again. */
+  int morale;                 /* Morale of society--goes up with 
+				 winning battles, down with losing. 
+				 Affected by diplomats. Tends to 0 -- normal */
 };
 
 /**********************************************************************/
@@ -687,7 +699,7 @@ bool relic_raid_actual (SOCIETY *);
    member will sometimes check if there's someone/something kidnapped
    or taken and if so, it will tell the player who has the person/item. */
 
-bool got_kidnapped_message (THING *player, THING *mob);
+bool send_kidnapped_message (THING *player, THING *mob);
 
 /* This checks if the mob is kidnapped, and if so, it updates its
    prisoner state. */
@@ -751,6 +763,15 @@ void society_item_move (THING *th, THING *mover, THING *builder);
 /* This deals with updates when a society member kills or is killed. */
 
 void society_get_killed (THING *killer, THING *vict);
+
+
+/* This returns the name of the society. */
+
+char *society_name (SOCIETY *soc);
+
+char *society_pname (SOCIETY *soc);
+
+
 
 THING *find_weakest_room (SOCIETY *soc); /* Finds the room in the society
 					    rooms with the most powerful
@@ -996,8 +1017,33 @@ void society_get_disease (void);
 /* This lets a society member reward a player for helping out. It gives
    money, exp and quest points. */
 
-void society_give_reward (THING *giver, THING *receiver, int reward);
+bool society_give_reward (THING *giver, THING *receiver, int type, int reward);
 
 /* This makes somebody in the room give a reward to the player. */
 
-void society_somebody_give_reward (THING *player, int reward);
+bool society_somebody_give_reward (THING *player, int type, int reward);
+
+
+/* This adds a reward to a player. */
+
+void add_society_reward (THING *th, THING *to, int type, int amount);
+
+/* This updates the rewards that are "owed" to a player. In one case, this
+   decrements the rewards they've earned. In another, it pays them for 
+   doing something good. */
+
+void update_society_rewards (THING *th, bool payout_now);
+
+/* This lets you add or subtract morale from a society so that the
+   amounts stay within the proper ranges. */
+
+void add_morale (SOCIETY *soc, int amount);
+
+/* This checks if a society can add an overlord. */
+
+bool society_can_add_overlord (SOCIETY *);
+
+/* This checks if a society already has an overlord and returns it if it
+   does. */
+
+THING *find_society_overlord (SOCIETY *soc);

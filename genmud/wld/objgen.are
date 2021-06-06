@@ -2,7 +2,7 @@ THING 108000
 Name objgen.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 11
+Timer 16
 Short The Object Gen Area`
 type Lonath`
 ThFl 135307259
@@ -542,21 +542,17 @@ HWT 0 0
 Desc dagger
 'short dagger'
 'long dagger'
-fang
 dagger
 knife
 'wavy-bladed dagger'
 'double-pronged dagger'
 'long knife'
-tooth
 poker
 dirk
 'main gauche'
 quill
-pincer
 spike
 tanto
-stinger
 shard
 `
 END_THING
@@ -578,7 +574,6 @@ axe
 'lochaber axe'
 'war sword'
 cleaver
-claw
 scimitar
 rapier
 cutlass
@@ -737,27 +732,29 @@ END_THING
 THING 108036
 Name metal_gen_names`
 HWT 0 0
-Desc Dinate & $6Di$Bna$6te$7
-Equunite & $CEquunite$7
-Cimirium & $3Cimirium$7
-Duvabium
-Kunate & $7Ku$Cna$7te$7
-Somate & $5Somate$7
-Famite & $BFa$6mi$Bte$7
-Huegate & $DHue$Bgate$7
-Maloxite & $2Ma$9lox$2ite$7
-Fawate & $6Faw$3ate$7
-Ruxium & $8Ruxium$7
-Ifosium & $3If$7os$3ium$7
-Wigium & $FWi$Bgi$Fum$7
-Ulsewate & $7Ul$4sew$7ate$7
-Marite & $5Ma$6ri$5te$7
-Nanite & $4Na$Cni$4te$7
-Enonite & $DEnonite$7
-Laewium & $6Laewium$7
-Duohium
-Gadium & $7Ga$8di$7um$7
-`
+Desc Buwite & $9Buwite$7
+Uhhewium & $2Uhhe$Awium$7
+Cinate & $4Cinate$7
+Retium & $CRet$Dium$7
+Rihate & $FRihate$7
+Egukium & $7Egukium$7
+Piiwium & $8Pi$7iw$8ium$7
+Kerorium & $BKe$Eror$Bium$7
+Feropium & $1Feropium$7
+Nisium & $DNisium$7
+Ingemate & $1Ingemate$7
+Dilate & $9Dilate$7
+Equuhium & $FEquu$9hium$7
+Milium & $2Milium$7
+Marigate & $2Ma$8rig$2ate$7
+Nionium
+Tepetite & $1Te$8pet$1ite$7
+Elipium & $BEl$1ip$Bium$7
+Sabite & $9Sa$2bi$9te$7
+Nepium & $8Nepium$7
+Pecium & $BPec$5ium$7
+Fegate & $EFe$8ga$Ete$7
+`
 END_THING
 
 THING 108037

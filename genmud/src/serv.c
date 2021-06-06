@@ -614,6 +614,7 @@ new_fd (void)
   fd->write_buffer[0] = '\0';
   fd->write_pos = fd->write_buffer;
   fd->repeat = 0;
+  fd->next = NULL;
   fd->channel_repeat = 0;
   for (fdn = fd_list; fdn != NULL; fdn = fdn->next)
     num_connected++;
@@ -830,6 +831,7 @@ close_fd (FILE_DESC *fd)
 	    }
 	}
     }
+  fd->next = NULL;
   for (fd2 = fd_list; fd2; fd2 = fd2->next)
     max_fd = MAX (max_fd, fd2->r_socket);
        

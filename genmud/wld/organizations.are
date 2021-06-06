@@ -2,8 +2,9 @@ THING 108500
 Name organizations.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 18
+Timer 12
 Short The organizations area`
+type Lonath`
 ThFl 135307259
 Flag Area 0 0 28
 END_THING

@@ -32,11 +32,11 @@ typedef struct _job_data JOB;
 
 
 /* Types of rewards given. */
-#define REWARD_ITEM        0
-#define REWARD_MONEY       1
-#define REWARD_PASSWORD    2
-#define REWARD_EXPERIENCE  3
-#define REWARD_MAX         4
+#define QUEST_REWARD_ITEM        0
+#define QUEST_REWARD_MONEY       1
+#define QUEST_REWARD_PASSWORD    2
+#define QUEST_REWARD_EXPERIENCE  3
+#define QUEST_REWARD_MAX         4
 
 
 

@@ -621,7 +621,7 @@ add_free_thing_event (THING *th)
   if (!th || IS_PC (th))
     return;
   
-  if ((event = create_repeating_event (th, 10*UPD_PER_SECOND, free_thing_final_event)) != NULL)
+  if ((event = create_repeating_event (th, 60*UPD_PER_SECOND, free_thing_final_event)) != NULL)
     {
       event->flags = 0;
       event_from_thing (event);

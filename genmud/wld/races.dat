@@ -1,6 +1,6 @@
 RACE Name Human`
 Flag armor 0 0 10
-Stats 25 25 25 25 25 25 
+Stats 25 25 25 25 25 25 25 
 Spell 43 18 8 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
@@ -17,7 +17,7 @@ RACE Name Ogre`
 Flag sp_attack 0 0 3
 Flag dam 0 0 4
 Flag armor 0 0 20
-Stats 30 21 22 21 28 25 
+Stats 30 21 22 21 28 25 25 
 Spell 20 23 7 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
@@ -32,7 +32,7 @@ RawWant 0 0 0 0 0 0 0 0
 END_RACE
 RACE Name Troll`
 Flag armor 0 0 15
-Stats 28 20 20 24 30 25 
+Stats 28 20 20 24 30 25 25 
 Spell 14 22 7 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
@@ -47,7 +47,7 @@ RawWant 0 0 0 0 0 0 0 0
 END_RACE
 RACE Name Minotaur`
 Flag armor 0 0 20
-Stats 27 20 20 27 28 25 
+Stats 27 20 20 27 28 25 25 
 Spell 6 17 5 0 0 
 RegenBonus 0 0 0
 NatSpells 564 552 0 0 
@@ -63,7 +63,7 @@ END_RACE
 RACE Name Dwarf`
 Flag armor 0 0 15
 Flag kickdam 0 0 3
-Stats 26 23 26 20 27 25 
+Stats 26 23 26 20 27 25 25 
 Spell 34 15 6 0 0 
 RegenBonus 0 0 0
 NatSpells 0 551 0 0 
@@ -79,7 +79,7 @@ END_RACE
 RACE Name Draconian`
 Flag Aff 0 0 524288
 Flag armor 0 0 10
-Stats 26 27 23 20 26 25 
+Stats 26 27 23 20 26 25 25 
 Spell 37 16 5 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
@@ -95,7 +95,7 @@ END_RACE
 RACE Name Goblin`
 Flag armor 0 0 10
 Flag Aff 0 0 16
-Stats 25 22 21 30 24 25 
+Stats 25 22 21 30 24 25 25 
 Spell 26 18 6 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
@@ -111,7 +111,7 @@ END_RACE
 RACE Name Wood-Elf`
 Flag Det 0 0 2
 Flag armor 0 0 5
-Stats 22 22 27 28 23 25 
+Stats 22 22 27 28 23 25 25 
 Spell 36 14 5 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
@@ -127,7 +127,7 @@ END_RACE
 RACE Name Elf`
 Flag armor 0 0 5
 Flag Det 0 0 4
-Stats 21 27 23 28 23 25 
+Stats 21 27 23 28 23 25 25 
 Spell 39 14 5 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
@@ -143,7 +143,7 @@ END_RACE
 RACE Name Gnome`
 Flag armor 0 0 5
 Flag Det 0 0 32
-Stats 21 27 30 22 22 25 
+Stats 21 27 30 22 22 25 25 
 Spell 44 7 9 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
@@ -158,7 +158,7 @@ RawWant 0 0 0 0 0 0 0 0
 END_RACE
 RACE Name Sprite`
 Flag Aff 0 0 524288
-Stats 20 30 28 22 22 25 
+Stats 20 30 28 22 22 25 25 
 Spell 52 5 4 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
@@ -172,7 +172,7 @@ RawCurr 0 0 0 0 0 0 0 0
 RawWant 0 0 0 0 0 0 0 0 
 END_RACE
 RACE Name Dragon`
-Stats 30 30 30 30 30 30 
+Stats 30 30 30 30 30 30 30 
 Spell 50 30 15 15 15 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 

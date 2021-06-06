@@ -149,8 +149,12 @@ update_thing (THING *th)
   if (IS_ROOM (th) || (!CAN_MOVE (th) && !CAN_FIGHT (th)) ||
       (IS_PC (th) && th->fd && th->fd->connected > CON_ONLINE))
     return;
+ 
+  if (IS_PC (th))
+    hp_rate = 4 + LEVEL (th)/10;
+  else
+    hp_rate = 1 + LEVEL (th)/5;
   
-  hp_rate = (IS_PC (th) ? 4 : 1) + LEVEL (th)/10;
   mv_rate = 3 + LEVEL (th)/20;
   
   if (th->position <= POSITION_RESTING)
@@ -183,20 +187,31 @@ update_thing (THING *th)
     {
       if (IS_SET (hurt_by, AFF_DISEASE))
 	{
-	  hp_rate = 0;
-	  mv_rate = 0;
-	  if (damage (th, th, MAX (3, th->hp/20), "plague"))
-	    return;
+	  if (IS_PC (th))
+	    {
+	      if (damage (th, th, MAX (3, th->hp/20), "plague"))
+		return;
+	      hp_rate /=2;
+	      mv_rate /=2;
+	    }
+	  else
+	    {
+	      hp_rate = 0;
+	      mv_rate = 0;
+	      if (damage (th, th, MAX (3, th->hp/10), "plague"))
+		return;
+	    }
 	  th->mv -= MAX (3, th->mv/20);
-	  if (nr (1,20) == 3)
-	    act ("@1n look@s very very ill...", th, NULL, NULL, NULL, TO_ALL);	    
-	  if (nr (1,90) == 35 && th->in)
+	  if (nr (1,5) == 2)
+	    act ("@1n starts to @t.", th, NULL, NULL,
+		 (char *) disease_symptoms[nr (0, MAX_DISEASE_SYMPTOMS-1)], TO_ALL);	    
+	  if (nr (1,37) == 23 && th->in)
 	    {
 	      THING *other, *othern;
 	      for (other = th->in->cont; other; other = other = othern)
 		{
 		  othern = other->next_cont;
-		  if (nr (1,35) == 2 && CAN_MOVE (other) && 
+		  if (nr (1,19) == 7 && CAN_MOVE (other) && 
 		      !IS_PROT (other, AFF_DISEASE) &&
 		      other != th && !IS_HURT (other, AFF_DISEASE))
 		    {
@@ -283,6 +298,8 @@ update_thing (THING *th)
       int itemcount = 0;
       if ((shop = FNV (th, VAL_SHOP)) != NULL)
 	{
+	  
+
 	  if (shop->val[3] > 0 && /* Hours */
 	      shop->val[4] > 0 && /* Item number */
 	      wt_info->val[WVAL_HOUR] % shop->val[3] == 0 && 
@@ -315,6 +332,10 @@ update_thing (THING *th)
 	  
 	  if (total_money (th) < LEVEL (th) * 10 && nr (1,20) == 2)
 	    add_money (th, MAX (10, (LEVEL (th) * 10 - total_money (th))/10));
+
+	  /* If the shop is opening, then reset the mob again. */
+	  if (wt_info && wt_info->val[WVAL_HOUR] == shop->val[0])
+	    reset_thing (th, 0);
 	}
       
       /* Sanity check fighting. */
@@ -669,6 +690,7 @@ update_thing_hour (THING *th)
 	  if (th->pc->align_hate[i] < 0)
 	    th->pc->align_hate[i] = 0;
 	}
+      update_society_rewards (th, FALSE);
       if (LEVEL(th) < BLD_LEVEL)
 	{
 	  killed = FALSE;
@@ -894,6 +916,10 @@ update_fast (THING *th)
   roomflags = flagbits (room->flags, FLAG_ROOM1);
   
   
+  /* Update society rewards by rewarding the player. */
+  if (nr (1,3) == 2)
+    update_society_rewards (th, TRUE);
+
   for (obj = th->cont; obj; obj = obj->next_cont)
     {
       if (obj->wear_loc != ITEM_WEAR_FLOAT)

@@ -62,6 +62,7 @@ then you need to increase the WORLDGEN\_VNUM\_SIZE variable in
 worldgen.h.
 
 
+
 \begin{itemize}
 
 \item Societies get generated using the code in socigen.c. They get
@@ -121,6 +122,13 @@ southern edge of the map.
 
 \item Following the outpost addition, some simple quests (fedex quests)
 are generated using the questgen code.
+
+\item The history of the world including deities, powerful races, and the
+  history itself are generated.
+
+\item The overall map of the world is saved under the help WORLDMAP
+  helpfile. That way players can have an idea of the shape of the world
+  without knowing all of the details.
 
 \item Then the world is purged, the teachers of various skills are
   created and sent into the world, and the overhead map symbols for the

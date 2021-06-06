@@ -72,6 +72,11 @@ read_society (FILE *f)
 	  for (i = 0; i < ALIGN_MAX; i++)
 	    soc->kills[i] = read_number (f);
 	}
+      FKEY("Affinity")
+	{
+	  for (i = 0; i < ALIGN_MAX; i++)
+	    soc->align_affinity[i] = read_number (f);
+	}
       FKEY("KilledBy")
 	{
 	  for (i = 0; i < ALIGN_MAX; i++)
@@ -105,6 +110,7 @@ read_society (FILE *f)
 	  soc->generated_from = read_number (f);
 	  soc->level = read_number (f);
 	  soc->abandon_hours = read_number (f);
+	  soc->morale = read_number (f);
 	  if ((room = find_thing_num (soc->room_start)) == NULL ||
 	      !IS_ROOM (room))
 	    {
@@ -248,7 +254,7 @@ write_society (FILE *f, SOCIETY *soc)
   write_string (f, "PName", soc->pname);
   write_string (f, "AName", soc->aname);
   write_string (f, "Adj", soc->adj);
-  fprintf (f, "Gen %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+  fprintf (f, "Gen %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
 	   soc->vnum, 
 	   soc->society_flags, 
 	   soc->room_start, 
@@ -264,7 +270,8 @@ write_society (FILE *f, SOCIETY *soc)
 	   soc->recent_maxpop,
 	   soc->generated_from,
 	   soc->level,
-	   soc->abandon_hours);
+	   soc->abandon_hours,
+	   soc->morale);
   fprintf (f, "Needs %d %d\n",
 	   soc->crafters_needed, soc->shops_needed);
 
@@ -274,7 +281,13 @@ write_society (FILE *f, SOCIETY *soc)
   
   fprintf (f, "Alife %d %d %d %d\n", soc->alife_combat_bonus, soc->alife_growth_bonus, soc->alife_home_x, soc->alife_home_y);
  
-
+/* Write what affinity this society has vs diff aligns. */
+  
+  fprintf (f, "Affinity");
+  for (i = 0; i < ALIGN_MAX; i++)
+    fprintf (f, " %d", soc->align_affinity[i]);
+  fprintf (f, "\n");
+  
   /* Write the kills this society has vs diff aligns. */
   
   fprintf (f, "Kills");

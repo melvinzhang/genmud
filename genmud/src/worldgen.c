@@ -207,6 +207,8 @@ worldgen (THING *th, char *arg)
       historygen ();
       worldgen_society_seed();
       worldgen_link_align_outposts();
+      worldgen_link_special_room (IMPLANT_ROOM_VNUM);
+      worldgen_link_special_room (REMORT_ROOM_VNUM);
       if (th)
 	worldgen_show_sectors (th);
       worldgen_show_sectors (NULL);
@@ -214,6 +216,7 @@ worldgen (THING *th, char *arg)
       
       do_purge (th, "all");
       set_up_teachers();
+      worldgen_place_guildmasters ();
       set_up_map(NULL);
       remove_newbie_area_aggros ();
       reset_world();
@@ -700,7 +703,7 @@ worldgen_generate_areas (int area_size)
 		    }
 		  /* Make sure that this area will still fit in the
 		     alloted space. */
-		  curr_size = nr (area_size/2, area_size *2);
+		  curr_size = nr (area_size*3/4, area_size*5/4);
 		  curr_size = (curr_size/55+1)*50;
 		  if (curr_top_vnum + area_size < 
 		      WORLDGEN_UNDERWORLD_START_VNUM)
@@ -2037,225 +2040,3 @@ clear_player_worldgen_quests (THING *th)
   return;
 }
       
-
-/* This generates areas for demons to live in down below the underworld
-   and it generates the demons, too. */
-
-void
-worldgen_generate_demons (int curr_vnum, int area_size)
-{
-  int times, max_underworld_level = 0, max_times;
-  int tier; /* Caste tier for generating names. */
-  THING *above_area = NULL, *below_area = NULL, *area;
-  THING *proto, *thg;
-  char buf[STD_LEN];
-  char demon_names[STD_LEN];
-  char demon_name[STD_LEN];
-  char proto_desc[STD_LEN*10];
-  char *t;
-  int caste;
-  int curr_size, curr_level;
-  int extra_room_flags= 0;
-  bool name_is_ok = FALSE;
-  VALUE *val;
-  SOCIETY *soc;
-  /* First find the max level for an underworld area. This is where
-     we will link the demonic realms below it. */
-
-  for (area = the_world->cont; area; area = area->next_cont)
-    {
-      if (area->vnum >= WORLDGEN_START_VNUM &&
-	  area->vnum <= WORLDGEN_END_VNUM &&
-	  IS_AREA (area) &&
-	  IS_ROOM_SET (area, ROOM_UNDERGROUND) &&
-	  LEVEL(area) >= max_underworld_level)
-	{
-	  above_area = area;
-	  max_underworld_level = area->level;
-	}
-    }
-  area_size = (area_size/50 + 1)*50;
-  if (!above_area)
-    return;
-  
-  max_times = nr (4,6);
-  curr_level = max_underworld_level;
-  /* Now create each area. */
-  for (times = 0; times < max_times; times++)
-    {
-      curr_level += max_underworld_level/5;
-      curr_size = nr (area_size*2/3, area_size*3/2);
-      sprintf (buf, "%d %d underground %d",
-	       curr_vnum,
-	       curr_size,
-	       curr_level);
-      areagen (NULL, buf);
-      /* If the area was made, fix it up some. */
-      if ((below_area = find_thing_num (curr_vnum)) != NULL &&
-	  IS_AREA (below_area))
-	{
-	  curr_vnum += curr_size;
-	  /* Add the extra room flags to make things more and more
-	     difficult. */
-	  if (times == max_times - 1)
-	    extra_room_flags |= ROOM_ASTRAL;
-	  else if (times == max_times - 2)
-	    extra_room_flags |= ROOM_EARTHY;
-	  else if (times == max_times - 3)
-	    extra_room_flags |= ROOM_FIERY;
-	  else if (times == max_times - 4)
-	    extra_room_flags |= ROOM_WATERY;
-	  
-	  if (extra_room_flags)
-	    {
-	      for (thg = below_area->cont; thg; thg = thg->next_cont)
-		{
-		  /* Replace all rooms w/same name with hellish rooms. */
-		  if (IS_ROOM (thg))
-		    {
-		      if (!str_cmp (NAME(thg), NAME(below_area)))
-			{
-			  
-			  add_flagval (thg, FLAG_ROOM1, extra_room_flags);
-			  free_str (thg->short_desc);
-			  thg->short_desc = new_str ("The Pits of Hell");
-			}
-		    }
-		  /* Mobs get extra protections. */
-		  else if (!IS_SET (thg->thing_flags, TH_NO_FIGHT))
-		    {
-		      if (IS_SET (extra_room_flags, ROOM_WATERY))
-			add_flagval (thg, FLAG_AFF, AFF_WATER_BREATH);
-		      if (IS_SET (extra_room_flags, ROOM_EARTHY))
-			add_flagval (thg, FLAG_AFF, AFF_FOGGY);
-		      if (IS_SET (extra_room_flags, ROOM_AIRY))
-			add_flagval (thg, FLAG_AFF, AFF_FLYING);
-		      if (IS_SET (extra_room_flags, ROOM_ASTRAL))
-			add_flagval (thg, FLAG_AFF, AFF_PROTECT);
-		      if (IS_SET (extra_room_flags, ROOM_FIERY))
-			add_flagval (thg, FLAG_PROT, AFF_FIRE);
-		    }
-		}
-	    }
-	  
-	  free_str (below_area->short_desc);
-	  below_area->short_desc = new_str ("The Pits of Hell");
-	  /* Now link the areas. */
-	  worldgen_link_above_to_below (above_area, below_area);
-	  above_area = below_area;
-	}
-    }
-  /* NOTE THAT THE BELOW AREA WILL BE USED BELOW TO CREATE THE PLACE
-     WHERE THE DEMON SOCIETY STARTS! */
-
-  /* Now generate the demon society. */
-
-  proto = new_thing();
-  proto->level = 350;
-  proto->name = new_str ("Demon Demons Demonic");
-  proto->sex = SEX_NEUTER;
-  add_flagval (proto, FLAG_PROT, ~0);
-  add_flagval (proto, FLAG_AFF, AFF_FLYING | AFF_WATER_BREATH | AFF_FOGGY);
-  add_flagval (proto, FLAG_DET, ~0);
-  add_flagval (proto, FLAG_ACT1, ACT_AGGRESSIVE | ACT_FASTHUNT);
-  add_flagval (proto, FLAG_MOB, MOB_DEMON);
-  add_flagval (proto, FLAG_SOCIETY, SOCIETY_NORESOURCES | SOCIETY_NOSLEEP | SOCIETY_NONAMES);
-  add_flagval (proto, FLAG_ROOM1, BADROOM_BITS);
-  proto->align = 0;
-  proto->vnum = DEMON_SOCIGEN_VNUM;
-  proto->height = nr (300,600);
-  proto->weight = nr (10000, 20000);
-  
-  /* Give special attack names. */
-  val = new_value();
-  val->type = VAL_WEAPON;
-  set_value_word (val, "claw claw bite strike");
-  add_value (proto, val);
-  
-  *proto_desc = '\0';
-  for (caste = 0; caste < CASTE_MAX &&
-	 caste1_flags[caste].flagval != 0; caste++)
-    {
-      sprintf (demon_names, "Caste %s", caste1_flags[caste].app);
-      
-      /* Make all of the demonic tier names. */
-      for (tier = 0; tier < 10; tier++)
-	{
-	  strcat (demon_names, " ");
-	  do
-	    {
-	      name_is_ok = FALSE;
-	      strcpy (demon_name, create_society_name (NULL));
-	      
-	      /* Name must be long enough. */
-	      if (strlen (demon_name) < 6)
-		continue;
-	      
-	      /* Name must have a strange letter or a symbol in it. */
-	      for (t = demon_name; *t; t++)
-		{
-		  if (!isalpha (*t))
-		    name_is_ok = TRUE;
-		  if (must_be_near_vowel (*t))
-		    name_is_ok = TRUE;
-		}
-	    }
-	  while (!name_is_ok);
-	  *demon_name = UC (*demon_name);
-	  strcat (demon_names, demon_name);
-	  
-	}
-      strcat (demon_names, "\n\r");
-      strcat (proto_desc, demon_names);
-    }
-  proto->desc = new_str (proto_desc);
-  soc = generate_society (proto);
-  free_thing (proto);
-  
-  if (soc)
-    {
-      soc->room_start = below_area->vnum + 1;
-      soc->room_end = below_area->vnum + below_area->mv;
-      /* Make this area pop a LOT of randpop mobs. Help those
-	 demons grow by giving them something to kill. :) */
-      add_reset (below_area, MOB_RANDPOP_VNUM, 50, 200, 1);
-    }
-  return;
-}
-
-
-/* This removes aggro monsters from lowlevel areas. */
-
-void
-remove_newbie_area_aggros (void)
-{
-  THING *area, *mob;
-  RESET *rst;
-
-  for (area = the_world->cont; area; area = area->next_cont)
-    {
-      if (area->vnum < WORLDGEN_START_VNUM ||
-	  area->vnum > WORLDGEN_END_VNUM ||
-	  LEVEL (area) >= 60)
-	continue;
-      
-      for (mob = area->cont; mob; mob = mob->next_cont)
-	{
-	  remove_flagval (mob, FLAG_ACT1, ACT_AGGRESSIVE | ACT_ANGRY);
-	}
-
-      /* Now add more "animal" resets to these areas so players have
-	 more stuff to kill. */
-
-      for (rst = area->resets; rst; rst = rst->next)
-	{
-	  if (rst->vnum == MOB_RANDPOP_VNUM)
-	    break;
-	}
-      if (!rst)
-	add_reset (area, MOB_RANDPOP_VNUM, 50, area->mv/2, 1);
-      else
-	rst->max_num *= 2;
-    }
-  return;
-}

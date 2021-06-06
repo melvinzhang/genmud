@@ -23,6 +23,7 @@ do_buy (THING *th, char *arg)
   int total_count = 1;   /* Total number of items to buy. */
   char *itemname = nonstr; /* The final name of the item. */
   int shoptime = wt_info->val[WVAL_HOUR];
+  int item_cost;
   if (!th || !th->in)
     return;
   
@@ -81,19 +82,26 @@ do_buy (THING *th, char *arg)
 	  if (item_offset > 0 && ++current_item_offset < item_offset)
 	    continue;
 	  
+	  /* Cost is 150pct of item cost. */
+	  item_cost = obj->cost * shop->val[2]*3/200;
+	  /* Charisma affects item cost. */
+	  item_cost += (STAT_MAX/2-get_stat(th, STAT_CHA))*item_cost/100;
 	  if ((shop2 = FNV (keeper, VAL_SHOP2)) != NULL &&
 	      !str_cmp (shop2->word, th->name))
 	    {
 	      stt ("You own the shop, so here you are!\n\r", th);
 	    }
-	  else if (total_money (th) < obj->cost *shop->val[2]/100)
+	  else if (total_money (th) < item_cost)
 	    {
-	      sprintf (buf, "This item costs %d coins, and you only have %d on you.\n\r", obj->cost * shop->val[2]/100, total_money (th));
+	      sprintf (buf, "This item costs %d coins, and you only have %d on you.\n\r", item_cost, total_money (th));
 	      stt (buf, th);
 	      return;
-	    }	  	  
-	  sub_money (th, obj->cost * shop->val[2]/100);
-	  add_money (keeper, obj->cost * shop->val[2]/100);
+	    }
+	  else
+	    {
+	      sub_money (th, item_cost);
+	      add_money (keeper, item_cost);
+	    }
 	  act ("@1n buy@s @2n from @3n.", th, obj, keeper, NULL, TO_ALL);
 	  thing_from (obj);
 	  if ((proto = find_thing_num (obj->vnum)) != NULL &&
@@ -145,6 +153,7 @@ do_sell (THING *th, char *arg)
   THING *proto;
   char buf[STD_LEN];
   int shoptime = wt_info->val[WVAL_HOUR];
+  int item_cost;
   if (!th || !th->in)
     return;
 
@@ -187,7 +196,9 @@ do_sell (THING *th, char *arg)
       stt ("That isn't even worth anything!\n\r", th);
       return;
     }
-  if (total_money (keeper) < obj->cost * shop->val[2]/100)
+  item_cost = obj->cost * shop->val[2]/100;
+  item_cost += (get_stat (th, STAT_CHA)-STAT_MAX/2)*item_cost/100;
+  if (total_money (keeper) < item_cost)
     {
       stt ("The shopkeeper does not have enough money to buy that!\n\r", th);
       return;
@@ -200,8 +211,8 @@ do_sell (THING *th, char *arg)
       proto->cost = MAX (2, (proto->cost -1));
       SBIT (proto->in->thing_flags, TH_CHANGED);
     }
-  add_money (th, obj->cost * shop->val[2]/100);
-  sub_money (keeper, obj->cost *shop->val[2]/100);
+  add_money (th, item_cost);
+  sub_money (keeper, item_cost);
   
   act ("@1n sell@s @2n to @3n.", th, obj, keeper, NULL, TO_ALL);
   sprintf (buf, "You get %d coins.\n\r", obj->cost*shop->val[2]/100);

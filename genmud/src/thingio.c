@@ -1233,15 +1233,21 @@ read_pcdata (FILE *f, THING *th)
 		  }	       
 		found = TRUE;
 	      }
+	    if (!str_cmp (word, "STOTH"))
+	      {
+		read_short_thing (f, th, NULL);
+		found = TRUE;
+	      }
 	    if (!str_cmp (word, "Stats"))
 	      {
 		for (i = 0; i < STAT_MAX; i++)
 		  pc->stat[i] = read_number (f);
 		found = TRUE;
 	      }
-	    if (!str_cmp (word, "STOTH"))
+	    if (!str_cmp (word, "SocietyRewards"))
 	      {
-		read_short_thing (f, th, NULL);
+		for (i = 0; i < REWARD_MAX; i++)
+		  pc->society_rewards[i] = read_number (f);
 		found = TRUE;
 	      }
 	    break;
@@ -1357,6 +1363,10 @@ write_pcdata (FILE *f, THING *th)
   for (i = 0; i < MAX_CHANNEL; i++)
     fprintf (f, "%d ", pc->channel_off[i]);
   fprintf (f, "\n"); 
+  fprintf (f, "SocietyRewards ");
+  for (i = 0; i < REWARD_MAX; i++)
+    fprintf (f, "%d ", pc->society_rewards[i]);
+  fprintf (f, "\n"); 
   fprintf (f, "AlignHate ");
   for (i = 0; i < ALIGN_MAX; i++)
     fprintf (f, "%d ", pc->align_hate[i]);
@@ -1371,6 +1381,7 @@ write_pcdata (FILE *f, THING *th)
   for (i = AFF_START; i < AFF_MAX; i++)
     fprintf (f, "%d ", pc->aff[i]);
   fprintf (f, "\n"); 
+
   fprintf (f, "Gathered ");
   for (i = 0; i < RAW_MAX; i++)
     fprintf (f, "%d ", pc->gathered[i]);

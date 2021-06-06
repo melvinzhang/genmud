@@ -2,7 +2,6 @@ start.are
 evil1.are
 good1.are
 forgedeq.are
-randmobs.are
 areadetails.are
 persongen.are
 mobgen.are
@@ -19,5 +18,6 @@ sociperm.are
 socigenmob.are
 deities.are
 provisions.are
+mobgenload.are
 
 END_AREA_LIST

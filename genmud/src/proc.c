@@ -414,7 +414,7 @@ show_flags (FLAG *startflag, int type, bool builder)
 			   (flg->timer != 0 ? "and " : "" ), durat);
 		}
 	      else
-		sprintf (buf, "%s affects%s by %d %s%s\n\r",
+		sprintf (buf, "%s affects %s by %d %s%s\n\r",
 			 sname, 
 			 affectlist[flg->type - AFF_START].app,
 			 flg->val, (flg->timer != 0 ? "and " : ""),
@@ -522,120 +522,131 @@ show_value (VALUE *val, bool details)
     {
       switch (val->type)
 	{
-	case VAL_WEAPON:
-	  spl = find_spell(NULL, val->val[5]);
-	  if (spl && spl->spell_type != SPELLT_POISON)
-	    spl = NULL;
-	  sprintf (ret, "Weapon: Dam: %d-%d pts  Type: %s  Speed: %d  Poison Shots: %d  Type: %s  Damage Name: %s", val->val[0], val->val[1], 
-		   (val->val[2] >= WPN_DAM_SLASH && val->val[2] < WPN_DAM_MAX ? weapon_damage_types[val->val[2]] : "slashing"),
-		   val->val[3], val->val[4], (spl ? spl->name : "none"),
-		   (val->word && *val->word ? val->word : "regular"));
-	  break;
-	case VAL_GEM:
-	  sprintf (ret, "Gem: Colors: %s  Max Mana: %d  Level: %d",
-		   list_flagnames (FLAG_MANA, val->val[0]), val->val[2], val->val[3]);
-	  break;
-	case VAL_ARMOR:
-	  sprintf (ret, "Armor: Head: %d  Body: %d  Arms: %d  Legs: %d", val->val[0], val->val[1], val->val[2], val->val[3]);
-	  break;
-	case VAL_FOOD:
-	  sprintf (ret, "Food: Amount: %d  Spells: ",
-		   val->val[0]);
-	  for (i = 3; i < NUM_VALS; i++)
-	    if ((spl = find_spell (NULL, val->val[i])) != NULL &&
-		spl->spell_type == SPELLT_SPELL)
-	      {
-		strcat (ret, spl->name);
-		strcat (ret, " ");
-	      }
-	  break;
-	case VAL_DRINK:
-	  sprintf (ret, "Drink: Curr/Max Drinks %d/%d Spells: ",
-		   val->val[0], val->val[1]);
-	  for (i = 3; i < NUM_VALS; i++)
-	    if ((spl = find_spell (NULL, val->val[i])) != NULL && 
-		spl->spell_type == SPELLT_SPELL)
-	      {
-		strcat (ret, spl->name);
-		strcat (ret, " ");
-	      }
-	  break;
-	case VAL_MAGIC:
-	  sprintf (ret, "Magic Item: Flags: %d  Curr/Max Charges: %d/%d ",
-		   val->val[0], val->val[1], val->val[2]);
-	  for (i = 3; i < NUM_VALS; i++)
-	    if ((spl = find_spell (NULL, val->val[i])) != NULL && 
-		spl->spell_type == SPELLT_SPELL)
-	      {
-		strcat (ret, spl->name);
-		strcat (ret, " ");
-	      }
-	  break;
-	case VAL_TOOL:
-	  if (val->val[0] > 0 && val->val[0] < TOOL_MAX)
-	    sprintf (ret, "This tool can be used as %s %s",
-		     a_an(tool_names[val->val[0]]),
-		     tool_names[val->val[0]]);
-	  else
-	    *ret = '\0';
-	  break;
-	case VAL_RAW:
-	  sprintf (ret, "This is a raw material.");
-	  break;
-	case VAL_AMMO:
-	  sprintf (ret, "Ammo: Dam: %d-%d pts  Curr Shots: %d  Max Shots: %d  Type: %d", val->val[0], val->val[1], val->val[2], val->val[3], val->val[4]);
-	  break;
-	case VAL_RANGED:
-	  sprintf (ret, "Ranged Weapon: Speed: %d  Shots/Aim %d  Range: %d  Multiplier: %d.%dx Type: %d", val->val[0], val->val[1], val->val[2], val->val[3]/10, val->val[3] % 10, val->val[4]);
-	  break;
-	case VAL_SHOP:
-	  obj = find_thing_num (val->val[4]);
-	  sprintf (ret, "Shop: Hours Open: %d to %d  Profit Pct: %d  Make Hrs: %d  Makes: %d  (%s) Num To Decrease: %d  Sells: %s",
-		   (val->val[0] < val->val[1] ? val->val[0] : val->val[1]),
-		   (val->val[0] < val->val[1] ? val->val[1] : val->val[0]),
-		   val->val[2], val->val[3], val->val[4], 
-		   (obj ? obj->short_desc : "nothing"), val->val[5],
-		   (val->word ? val->word : "nothing"));
-	  break;
-	case VAL_TEACHER0:
-	case VAL_TEACHER1:
-	case VAL_TEACHER2:
-	case VAL_CAST:
-	  if (val->type == VAL_CAST)
-	    sprintf (ret, "Casts: ");
-	  else
-	    sprintf (ret, "Teacher: ");
-	  for (i = 0; i < NUM_VALS; i++)
-	    {
-	      if ((spl = find_spell (NULL, val->val[i])) != NULL)
+	  case VAL_WEAPON:
+	    spl = find_spell(NULL, val->val[5]);
+	    if (spl && spl->spell_type != SPELLT_POISON)
+	      spl = NULL;
+	    sprintf (ret, "Weapon: Dam: %d-%d pts  Type: %s  Speed: %d  Poison Shots: %d  Type: %s  Damage Name: %s", val->val[0], val->val[1], 
+		     (val->val[2] >= WPN_DAM_SLASH && val->val[2] < WPN_DAM_MAX ? weapon_damage_types[val->val[2]] : "slashing"),
+		     val->val[3], val->val[4], (spl ? spl->name : "none"),
+		     (val->word && *val->word ? val->word : "regular"));
+	    break;
+	  case VAL_GEM:
+	    sprintf (ret, "Gem: Colors: %s  Max Mana: %d  Level: %d",
+		     list_flagnames (FLAG_MANA, val->val[0]), val->val[2], val->val[3]);
+	    break;
+	  case VAL_ARMOR:
+	    sprintf (ret, "Armor: Head: %d  Body: %d  Arms: %d  Legs: %d", val->val[0], val->val[1], val->val[2], val->val[3]);
+	    break;
+	  case VAL_FOOD:
+	    sprintf (ret, "Food: Amount: %d  Spells: ",
+		     val->val[0]);
+	    for (i = 3; i < NUM_VALS; i++)
+	      if ((spl = find_spell (NULL, val->val[i])) != NULL &&
+		  spl->spell_type == SPELLT_SPELL)
 		{
 		  strcat (ret, spl->name);
 		  strcat (ret, " ");
 		}
+	    break;
+	  case VAL_DRINK:
+	    sprintf (ret, "Drink: Curr/Max Drinks %d/%d Spells: ",
+		     val->val[0], val->val[1]);
+	    for (i = 3; i < NUM_VALS; i++)
+	      if ((spl = find_spell (NULL, val->val[i])) != NULL && 
+		  spl->spell_type == SPELLT_SPELL)
+		{
+		  strcat (ret, spl->name);
+		  strcat (ret, " ");
+		}
+	    break;
+	  case VAL_PACKAGE:
+	    {
+	      SOCIETY *soc;
+	      THING *area;
+	      if ((soc = find_society_num (val->val[0])) != NULL &&
+		  (area = find_area_in (soc->room_start)) != NULL)
+		{
+		  sprintf (ret, "Must be taken to the %s of %s as quickly as possible.", society_pname(soc), NAME(area));
+		}
 	    }
+	    break;
+	  case VAL_MAGIC:
+	    sprintf (ret, "Magic Item: Flags: %d  Curr/Max Charges: %d/%d ",
+		     val->val[0], val->val[1], val->val[2]);
+	    for (i = 3; i < NUM_VALS; i++)
+	    if ((spl = find_spell (NULL, val->val[i])) != NULL && 
+		spl->spell_type == SPELLT_SPELL)
+	      {
+		strcat (ret, spl->name);
+		strcat (ret, " ");
+	      }
+	    break;
+	  case VAL_TOOL:
+	    if (val->val[0] > 0 && val->val[0] < TOOL_MAX)
+	      sprintf (ret, "This tool can be used as %s %s",
+		       a_an(tool_names[val->val[0]]),
+		       tool_names[val->val[0]]);
+	    else
+	      *ret = '\0';
+	    break;
+	case VAL_RAW:
+	  sprintf (ret, "This is a raw material.");
 	  break;
-	case VAL_PET:
-	  sprintf (ret, "Pet Owner: %s", val->word);
+	  case VAL_AMMO:
+	    sprintf (ret, "Ammo: Dam: %d-%d pts  Curr Shots: %d  Max Shots: %d  Type: %d", val->val[0], val->val[1], val->val[2], val->val[3], val->val[4]);
+	    break;
+	  case VAL_RANGED:
+	    sprintf (ret, "Ranged Weapon: Speed: %d  Shots/Aim %d  Range: %d  Multiplier: %d.%dx Type: %d", val->val[0], val->val[1], val->val[2], val->val[3]/10, val->val[3] % 10, val->val[4]);
+	    break;
+	  case VAL_SHOP:
+	    obj = find_thing_num (val->val[4]);
+	    sprintf (ret, "Shop: Hours Open: %d to %d  Profit Pct: %d  Make Hrs: %d  Makes: %d  (%s) Num To Decrease: %d  Sells: %s",
+		     (val->val[0] < val->val[1] ? val->val[0] : val->val[1]),
+		     (val->val[0] < val->val[1] ? val->val[1] : val->val[0]),
+		     val->val[2], val->val[3], val->val[4], 
+		     (obj ? obj->short_desc : "nothing"), val->val[5],
+		     (val->word ? val->word : "nothing"));
+	    break;
+	  case VAL_TEACHER0:
+	  case VAL_TEACHER1:
+	  case VAL_TEACHER2:
+	  case VAL_CAST:
+	    if (val->type == VAL_CAST)
+	      sprintf (ret, "Casts: ");
+	    else
+	      sprintf (ret, "Teacher: ");
+	    for (i = 0; i < NUM_VALS; i++)
+	      {
+		if ((spl = find_spell (NULL, val->val[i])) != NULL)
+		  {
+		    strcat (ret, spl->name);
+		  strcat (ret, " ");
+		  }
+	      }
+	    break;
+	  case VAL_PET:
+	    sprintf (ret, "Pet Owner: %s", val->word);
+	    break;
+	  case VAL_GUARD:
+	    sprintf (ret, "Guards: Flags: %d  Things: %d %d %d  Clan/Sect Num: %d %d  Directions: %s", val->val[0], val->val[1], val->val[2], val->val[3], val->val[4], val->val[5], (val->word && *val->word ? val->word : "none"));
+	    break;
+	  case VAL_POWERSHIELD:
+	    sprintf (ret, "Powershield: Max Power: %d", val->val[2]);
 	  break;
-	case VAL_GUARD:
-	  sprintf (ret, "Guards: Flags: %d  Things: %d %d %d  Clan/Sect Num: %d %d  Directions: %s", val->val[0], val->val[1], val->val[2], val->val[3], val->val[4], val->val[5], (val->word && *val->word ? val->word : "none"));
-	  break;
-	case VAL_POWERSHIELD:
-	  sprintf (ret, "Powershield: Max Power: %d", val->val[2]);
-	  break;
-	case VAL_MAP:
+	  case VAL_MAP:
 	  obj = find_thing_num (val->val[0]);
 	  sprintf (ret, "This map shows the area near %s.", 
 		   (obj ? obj->short_desc : "nowhere"));
 	  break;
-	case VAL_GUILD:
-	  if (val->val[0] < 1 && val->val[0] > GUILD_MAX)
+	  case VAL_GUILD:
+	    if (val->val[0] < 0 || val->val[0] >= GUILD_MAX)
+	      break;
+	    sprintf (ret, "%s guildmaster for tiers %d to %d", 
+		     guild_info[val->val[0]].app,
+		     (val->val[2] > 0 ? val->val[1] : 0),
+		     (val->val[2] > 0 ? val->val[2] : GUILD_TIER_MAX));
 	    break;
-	  sprintf (ret, "%s guildmaster for tiers %d to %d", 
-		   guild_info[val->val[0] -1].app,
-		   (val->val[2] > 0 ? val->val[1] : 0),
-		   (val->val[2] > 0 ? val->val[2] : GUILD_TIER_MAX));
-	  break;
 	  case VAL_MONEY:
 	    sprintf (ret, "This thing has money on it.");
 	    break;
@@ -648,17 +659,17 @@ show_value (VALUE *val, bool details)
 		     val->val[2], val->val[3], val->val[4], val->val[5], 
 		     val->word);
 	    
-	default:
-	  break;
-	  break;
-	case VAL_LIGHT:
-	  sprintf (ret, "Light: %d out of %d hours   Flags: %d",
-		   val->val[0], val->val[1], val->val[2]);
-	  break;
-	case VAL_RANDPOP:
-	  sprintf (ret, "Randpop: Start: %d Num/Tier: %d  Num Tiers: %d  Level Advance: %d  Rand Advance: nr(1,%d) < %d",
-		   val->val[0], val->val[1], val->val[2], val->val[3], val->val[4], val->val[5]);
-	  break;
+	  default:
+	    break;
+	    break;
+	  case VAL_LIGHT:
+	    sprintf (ret, "Light: %d out of %d hours   Flags: %d",
+		     val->val[0], val->val[1], val->val[2]);
+	    break;
+	  case VAL_RANDPOP:
+	    sprintf (ret, "Randpop: Start: %d Num/Tier: %d  Num Tiers: %d  Level Advance: %d  Rand Advance: nr(1,%d) < %d",
+		     val->val[0], val->val[1], val->val[2], val->val[3], val->val[4], val->val[5]);
+	    break;
 	}
     } 
   if (*ret)

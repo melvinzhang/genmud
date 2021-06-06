@@ -189,7 +189,8 @@ society_get_killed (THING *killer, THING *vict)
 	    {
 	      ksoc->raw_curr[raw_needed] += nr (LEVEL (vict)/2, LEVEL(vict));
 	    }	  	  
-	  
+	  /* Add small morale for killing an enemy. */
+	  add_morale (ksoc, LEVEL(vict)/5);
 	}
       if (ksoc && vict->align < ALIGN_MAX && vict->align > 0)
 	ksoc->kills[vict->align] += LEVEL(vict)/10;
@@ -209,21 +210,29 @@ society_get_killed (THING *killer, THING *vict)
     return;
   
  
-
+  /* Lower morale of societies with members that get killed. */
+  add_morale (vsoc, -LEVEL(vict)/20);
 
   
   if ((raid = find_raid_num (vsocval->val[4])) != NULL)
     raid->raider_power_lost += POWER(vict);
   
-  if ((!IS_SET (vsocval->val[2], BATTLE_CASTES) ||
-       (vict->in && vict->in->in &&
-	    (find_area_in (vsoc->room_start) == vict->in->in))))
+  if (!IS_SET (vsocval->val[2], BATTLE_CASTES) ||
+      (vict->in && vict->in->in &&
+       (find_area_in (vsoc->room_start) == vict->in->in)))
     {
       vsoc->last_killer = killer;
       vsoc->alert++;
       check_society_alert (vsoc);	      
     }
   
+  /* When an overlord is killed, I really should put an 
+     update here to say that we remove SOCIETY_OVERLORD flag from
+     the society, but I will not. I will leave it to be updated
+     in society_update since it's cheaper there, and it's also
+     more interesting since there's a delay before the society
+     starts acting more normal even after the leader dies. */
+
   /* If a player kills and the vict is from the most hated 
      society that the player's alignment has, then the player gets
      a bonus. */

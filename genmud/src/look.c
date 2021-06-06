@@ -336,7 +336,7 @@ do_look (THING *th, char *arg)
   else if ((look_at = find_thing_here (th, arg1, FALSE)) == NULL)
     {
       /* Check extra descriptions on all things here. */
-      if ((eds = find_edesc_thing (th->in, arg1)) != NULL)
+      if ((eds = find_edesc_thing (th->in, arg1, FALSE)) != NULL)
 	{
 	  sprintf (buf, "You examine %s...\n\r", NAME(th->in));
 	      stt (buf, th);
@@ -346,7 +346,7 @@ do_look (THING *th, char *arg)
       for (obj = th->in->cont; obj; obj = obj->next_cont)
 	{
 	  if (can_see (th, obj) && 
-	      (eds = find_edesc_thing (obj, arg1)) != NULL)
+	      (eds = find_edesc_thing (obj, arg1, FALSE)) != NULL)
 	    {  
 	      sprintf (buf, "You examine %s...\n\r", NAME(obj));
 	      stt (buf, th);
@@ -357,7 +357,7 @@ do_look (THING *th, char *arg)
       for (obj = th->cont; obj; obj = obj->next_cont)
 	{
 	  if (can_see (th, obj) && 
-	      (eds = find_edesc_thing (obj, arg1)) != NULL)
+	      (eds = find_edesc_thing (obj, arg1, FALSE)) != NULL)
 	    {  
 	      sprintf (buf, "You examine %s...\n\r", NAME(obj));
 	      stt (buf, th);
@@ -1069,8 +1069,11 @@ show_contents_list (THING *th, THING *target, int flags)
 	    {
 	      strncpy (listbuf[i], buf, LBUF_SIZE -1);
               listbuf[i][LBUF_SIZE-1] = '\0';
-	      if (IS_SET (flags, LOOK_SHOW_SHOP))
-		cost[i] = cont->cost;
+	      if (IS_SET (flags, LOOK_SHOW_SHOP) && shop)
+		{
+		  cost[i] = cont->cost*shop->val[2]/100;
+		  cost[i] -= (get_stat (th, STAT_CHA)-STAT_MAX/2)*cost[i]/100;
+		}
 	    }	 
 	  if (combine)
 	    listnum[i]++;

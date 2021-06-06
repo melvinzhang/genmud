@@ -178,7 +178,7 @@ move_thing (THING *initiator, THING *mover, THING *start_in, THING *end_in)
 	}
       if (IS_SET (mover->thing_flags, TH_DROP_DESTROY))
 	{
-	  act ("@1p @2n goes *poof* as @1e drop@s it!", initiator, mover, NULL, NULL, TO_ALL);
+	  act ("@1p @2n goes *poof* as @1h drop@s it!", initiator, mover, NULL, NULL, TO_ALL);
 	  free_thing (mover);
 	  return FALSE;
 	}
@@ -1834,7 +1834,7 @@ move_dir (THING *th, int dir)
 	     underground or (you suck at swimming and arent flying)). */
 	  
 	  if (!IS_SET (mover_aff_bits, AFF_WATER_BREATH) &&
-	      (IS_SET (to_room_bits, ROOM_UNDERWATER) ||
+	      (IS_SET (to_room_bits, ROOM_UNDERWATER | ROOM_WATERY) ||
 	       (!IS_SET (mover_aff_bits, AFF_FLYING) &&
 		!check_spell (th, NULL, 303 /* Swim */))))
 	    {
@@ -2943,8 +2943,8 @@ do_drink (THING *th, char *arg)
       return;
     }
   
-  act ("@1n drink@s @3n.", th, NULL, drink, NULL, TO_ALL);
-
+  act ("@1n drink@s from @3n.", th, NULL, drink, NULL, TO_ALL);
+  
   if (IS_PC (th))
     {
       th->pc->cond[COND_THIRST] = MIN (COND_FULL, th->pc->cond[COND_THIRST] + 20);
@@ -2967,12 +2967,14 @@ do_drink (THING *th, char *arg)
 	}
     }
   
-  if (drk->val[1] > 0 && --drk->val[0] < 1 && did_cast)
+  if (drk->val[1] > 0 && --drk->val[0] < 1)
     {
-      free_thing (drink);
+      if (!did_cast)
+	stt ("Your container is now empty.\n\r", th);
+      else
+	free_thing (drink);
     }
-  return;
-  
+  return;  
 }
 
 

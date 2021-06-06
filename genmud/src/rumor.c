@@ -7,6 +7,8 @@
 #include "society.h"
 #include "track.h"
 #include "rumor.h"
+#include "objectgen.h"
+#include "historygen.h"
 
 
 
@@ -450,8 +452,17 @@ do_rumors (THING *th, char *arg)
 void
 do_news (THING *th, char *arg)
 {
-  if (th && IS_PC (th))
-    send_mortal_rumor (th);
+  if (!th || !IS_PC (th))    
+    return;
+
+  /* First, if the person asks for delivery news, give a small chance
+     of having something to deliver. */
+  
+  if ((!str_cmp (arg, "delivery") || !str_cmp (arg, "package")) &&
+      get_delivery_quest (th))
+    return;
+  
+  send_mortal_rumor (th);
   return;
 }
 
@@ -468,6 +479,7 @@ send_mortal_rumor (THING *th)
   int mob_choices = 0, mob_chose = 0;
   char buf[STD_LEN];
   
+
   /* If a mortal wants to get a rumor...first find a mob
      that can give rumors. It must be able to talk and
      it must be of the same alignment as the player. */
@@ -521,10 +533,16 @@ send_mortal_rumor (THING *th)
   /* First try kidnapped messages. */
   
   if ((socval = FNV (mob, VAL_SOCIETY)) != NULL &&
-      (soc = find_society_num (socval->val[0])) != NULL &&
-      mob->align > 0 && got_kidnapped_message (th, mob))
-    return;
+      (soc = find_society_num (socval->val[0])) != NULL)
+    {
+      if (mob->align > 0 && send_kidnapped_message (th, mob))
+	return;
+      
+      if (send_overlord_message (th, mob))
+	return;
+    }
   
+
   if ( nr (1,32) == 4 && socval && soc &&
        (align = find_align (NULL, soc->align)) != NULL &&
        (soc2 = find_society_num (align->most_hated_society)) != NULL &&
@@ -1214,5 +1232,216 @@ share_rumors (THING *th)
 
 
 
+/* This sends a message about an enemy overlord. It checks all nonallied
+   societies and picks one with an overlord to tell the player about. */
 
+bool
+send_overlord_message (THING *th, THING *mob)
+{
+  THING *overlord = NULL;
+  
+  SOCIETY *soc;
+  int count, num_choices = 0, num_chose = 0;
+  VALUE *socval;
+  char buf[STD_LEN];
+  THING *area = NULL;
+  if (nr (1,45) != 2 ||
+      !th || !mob || !IS_PC (th) || IS_PC (mob) ||
+      (socval = FNV (mob, VAL_SOCIETY)) == NULL ||
+      DIFF_ALIGN (th->align, mob->align))
+    return FALSE;
+		     
+  for (count = 0; count < 2; count++)
+    {
+      for (soc = society_list; soc; soc = soc->next)
+	{
+	  if (!DIFF_ALIGN (soc->align, mob->align) ||
+	      (overlord = find_society_overlord (soc)) == NULL)
+	    continue;
+	  
+	  if (count == 0)
+	    num_choices++;
+	  else if (--num_chose < 1)
+	    break;
+	}
 
+      if (count == 0)
+	{
+	  if (num_choices < 1)
+	    return FALSE;
+	  num_chose = nr (1, num_choices);
+	}
+    }
+  
+  if (!overlord || !soc || 
+      (socval = FNV (overlord, VAL_SOCIETY)) == NULL ||
+      socval->val[0] != soc->vnum ||
+      !is_named (overlord, "overlord"))
+    return FALSE;
+  
+  area = find_area_in (soc->room_start);
+
+  sprintf (buf, "The %s of %s have a powerful leader named %s.\n\r",
+	   society_pname (soc), (area ? NAME(area) : "these lands"),
+	   (socval->word && *socval->word ? socval->word : "something that I can't recall right now"));
+  do_say (mob, buf);
+  return TRUE;
+}
+      
+
+/* This gives a player a "Delivery" quest to take a package to a
+   leader of another society. It is a timed quest and other
+   societies and alignments will try to stop the player from 
+   completing the quest. */
+
+bool
+get_delivery_quest (THING *th)
+{
+  THING *leader_mob = NULL, *society_mob = NULL, *obj = NULL, *mob;
+  SOCIETY *start_soc = NULL, *weakest_society = NULL, *soc = NULL;
+  VALUE *socval = NULL, *package = NULL;
+  int lowest_power = 100000000;
+  int count, num_choices = 0, num_chose = 0;
+  char buf[STD_LEN];
+  int weapon_type = -1;
+  int i;
+  char name[OBJECTGEN_NAME_MAX][STD_LEN];
+  char color[OBJECTGEN_NAME_MAX][STD_LEN];
+  THING *area = NULL;
+  
+  if (!th || !IS_PC (th) || !th->in)
+    return FALSE;
+  for (count = 0; count < 2; count++)
+    {
+      for (mob = th->in->cont; mob; mob = mob->next_cont)
+	{
+	  if ((socval = FNV (mob, VAL_SOCIETY)) == NULL ||
+	      (start_soc = find_society_num (socval->val[0])) == NULL ||
+	      DIFF_ALIGN (start_soc->align, th->align) ||
+	      DIFF_ALIGN (mob->align, th->align) || 
+	      mob->position < POSITION_STANDING ||
+	      mob->align == 0 ||
+	      !CAN_TALK (mob))
+	    continue;
+	  
+	  if (IS_SET (socval->val[2], CASTE_LEADER))
+	    {
+	      if (count == 0)		
+		num_choices++;
+	      else if (--num_chose < 1)
+		{
+		  leader_mob = mob;
+		  society_mob = mob;
+		  break;
+		}
+	    }
+	  else
+	    society_mob = mob;
+	}
+      
+      if (count == 0)
+	{
+	  if (num_choices <1)
+	    break;
+	  num_chose = nr (1, num_choices);
+	}
+    }
+  
+  /* Nothing at all...*/
+  if (!society_mob)
+    {
+      stt ("Nobody here has any packages to deliver.\n\r", th);
+      return TRUE;
+    }
+
+  /* No leader...*/
+  if (!leader_mob)
+    {
+      do_say (society_mob, "Sorry, I don't have anything for you to deliver. You should talk to one of our leaders.");
+      return TRUE;
+    }
+  /* Make sure there's a target society to send supplies to. It sends them
+     to the weakest society. If this is the weakest society on
+     this side, don't do anything. */
+  
+  for (soc = society_list; soc; soc = soc->next)
+    {
+      if (DIFF_ALIGN (soc->align, start_soc->align))
+	continue;
+      
+      if (soc->power < lowest_power &&
+	  (area = find_area_in (soc->room_start)) != NULL)
+	{
+	  weakest_society = soc;
+	  lowest_power = soc->power;
+	}
+    }
+  
+	
+  /* Most of the time the leader ignores you. They also ignore you
+     if you've asked for a quest recently or if the weakest society on
+     this side doesn't exist, or if this is the weakest society or
+     if the package can't be made. */
+  if (nr (1,15) != 4 || 
+      (LEVEL (th) < MAX_LEVEL && current_time - th->pc->last_rumor < 120) ||
+      !weakest_society || weakest_society == soc ||
+      (obj = create_thing (PACKAGE_VNUM)) == NULL)
+    {
+      do_say (leader_mob, "Sorry, I don't have anything for you to deliver right now."); 
+      if (current_time - th->pc->last_rumor >= 120)
+	th->pc->last_rumor = current_time;
+      return TRUE;
+    }
+
+  
+  
+  /* Make up a delivery. */
+  
+  do
+    obj->wear_pos = nr (ITEM_WEAR_NONE + 1, ITEM_WEAR_MAX-1);
+  while (obj->wear_pos == ITEM_WEAR_BELT);
+  weapon_type = generate_weapon_type();
+  objectgen_generate_names (name, color, obj->wear_pos,
+			    NULL, NULL,
+			    weapon_type, DEITY_LEVEL);
+  
+  for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
+    {
+      echo (name[i]);
+      echo ("\n\r");
+    }
+  objectgen_setup_names (obj, name, color);
+  
+  /* Only 30 ticks to deliver this. */
+  obj->timer = PACKAGE_DELIVERY_HOURS;
+  if ((package = FNV (obj, VAL_PACKAGE)) == NULL)
+    {
+      package = new_value();
+      package->type = VAL_PACKAGE;
+      add_value (obj, package);
+    }
+  package->val[0] = weakest_society->vnum;
+  
+  /* Find the power of the package. 1/3 of all resources. */
+  
+  
+  package->val[1] = 0;
+  for (i = 0; i < RAW_MAX; i++)
+    {
+      package->val[1] += start_soc->raw_curr[i]/20;
+      start_soc->raw_curr[i] -= start_soc->raw_curr[i]/20;
+    }
+  
+  
+  sprintf (buf, "%s, lease deliver %s \x1b[1;37mto the %s of %s within the next day.",
+	   NAME(th), NAME(obj), society_pname(weakest_society), NAME(area));
+  do_say (leader_mob, buf); 
+  do_say (leader_mob, "Be careful and never let it out of your possession.");
+  thing_from (obj);
+  thing_to (obj, th);
+  act ("@1n give@s @2n to @3f.", leader_mob, obj, th, NULL, TO_ALL);
+  th->pc->no_quit = PACKAGE_DELIVERY_HOURS + 4;
+  th->pc->last_rumor = current_time;
+  return TRUE;
+}
+  

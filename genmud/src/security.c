@@ -470,6 +470,7 @@ do_finger (THING *th, char *arg)
   THING *vict;
   PBASE *pb;
   char buf[STD_LEN];
+  RACE *race, *align;
   
   if (!*arg)
     {
@@ -492,16 +493,42 @@ do_finger (THING *th, char *arg)
       return;
     }
   
+  race = find_race (NULL, pb->race);
+  align = find_align (NULL, pb->align);
   if (!vict || !can_see (th, vict))
     {
       int playtime = (current_time - pb->last_logout)/3600;
-      sprintf (buf, "%s logged on %d hour%s ago.\n\r", 
-	       pb->name, playtime, (playtime == 1 ? "" : "s"));
+      if (LEVEL (th) < BLD_LEVEL || !race || !align)
+	sprintf (buf, "%s logged on %d hour%s ago.\n\r", 
+		 pb->name, playtime, (playtime == 1 ? "" : "s"));
+      else
+	{
+	  sprintf (buf, "%s the level %d %s %s with %d remort%s logged on %d hour%s ago.\n\r", 
+		   pb->name, 
+		   pb->level,
+		   align->name,
+		   race->name,
+		   pb->remorts,
+		   (pb->remorts == 1 ? "" : "s"),
+		   playtime, 
+		   (playtime == 1 ? "" : "s"));
+	}
       stt (buf, th);
     }
   else
     {
-      sprintf (buf, "%s is currently playing.\n\r", NAME (vict));
+      if (LEVEL (th) < BLD_LEVEL || !race || !align)
+	sprintf (buf, "%s is currently playing.\n\r", NAME (vict));
+      else
+	{
+	  sprintf (buf, "%s the level %d %s %s with %d remort%s is currently playing.\n\r", 
+		   pb->name, 
+		   pb->level,
+		   align->name,
+		   race->name,
+		   pb->remorts,
+		   (pb->remorts == 1 ? "" : "s"));
+	}
       stt (buf, th);
     }
   if (LEVEL (th) < MAX_LEVEL)

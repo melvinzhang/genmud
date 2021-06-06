@@ -179,7 +179,7 @@ do_build (THING *th, char* arg)
 	{
 	  act ("@1n work@s on putting out the fire!", th, NULL, NULL, NULL, TO_ALL);
 	}
-      society_somebody_give_reward (th, nr (10,20));
+      add_society_reward (th, th->in, REWARD_BUILD, nr (10,20));
       if (IS_PC (th))
 	th->pc->wait += 30;
       return;
@@ -196,7 +196,7 @@ do_build (THING *th, char* arg)
 	  worst_build_val->val[1]++;
 	  worst_build_val->val[2] = 0;
 	}
-      society_somebody_give_reward (th, nr (10,20));
+      add_society_reward (th, th->in, REWARD_BUILD, nr (10,20));
     }
   
   if (worst_room->in && IS_AREA (worst_room->in))
@@ -273,7 +273,7 @@ show_build_name (THING *target)
   
   burn_rank = MID (0, build->val[4]/10, BURN_MESSAGE_MAX-1);
   strcpy (burnbuf, burn_message[burn_rank]);
-	
+  
   if (IS_ROOM_SET (target, ROOM_UNDERGROUND))
     strcpy (ugroundbuf,  "Underground ");
   else
@@ -342,7 +342,9 @@ show_build_name (THING *target)
 
   /* Now set up the name and info.  */
   
-  if (soc->adj && *soc->adj)
+  if (soc->adj && *soc->adj && 
+      soc->generated_from != ORGANIZATION_SOCIGEN_VNUM &&
+      soc->generated_from != ANCIENT_RACE_SOCIGEN_VNUM)
     sprintf (socinamebuf, "%s ", soc->adj);
   else
     socinamebuf[0] = '\0';
@@ -1047,7 +1049,7 @@ do_raze (THING *th, char *arg)
   if (IS_PC (th))
     th->pc->wait += 50;
 
-  society_somebody_give_reward (th, 20);
+  add_society_reward (th, th->in, REWARD_RAZE, 20);
   
   return;
 }

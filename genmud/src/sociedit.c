@@ -65,6 +65,27 @@ society_edit (THING *th, char *arg)
       show_society (th, soc);
       return;
     }
+  if (!str_cmp (arg1, "affinity"))
+    {
+      arg = f_word (arg, arg1);
+      if (!str_cmp (arg1, "all"))
+	{
+	  for (i = 0; i < ALIGN_MAX; i++)
+	    soc->align_affinity[i] = atoi (arg);
+	  show_society (th,soc);
+	  return;
+	}
+      if ((anum = atoi (arg1)) <= 0 || anum > ALIGN_MAX)
+	{
+	  sprintf (buf, "You must choose an alignment between 0 and %d.\n\r",
+		   ALIGN_MAX - 1);
+	  stt (buf, th);
+	  return;
+	}
+      soc->align_affinity[anum] = atoi (arg);
+      show_society (th, soc);
+      return;
+    }
   if (!str_cmp (arg1, "flag"))
     {
       edit_flags (th, &soc->flags, arg);
@@ -192,7 +213,13 @@ society_edit (THING *th, char *arg)
       show_society (th, soc);
       return;
     }
-  
+  else if (!str_cmp (arg1, "morale"))
+    {
+      soc->morale = MID (-MAX_MORALE, atoi(arg), MAX_MORALE);
+      stt ("Morale changed.\n\r", th);
+      show_society (th, soc);
+      return;
+    }
   else if (!str_cmp (arg1, "assist"))
     {
       soc->assist_hours = atoi(arg);
@@ -547,13 +574,14 @@ show_society (THING *th, SOCIETY *soc)
 	   soc->vnum, soc->name,
 	   soc->pname, soc->aname);
   stt (buf, th);
-  sprintf (buf, "LevBon: %d Align: %d Generator: %d Adj: %s. CraftNeed: %d  ShopNeed: %d\n\rPop: %d(%d)  Hrs(Setl.: %d  Raid: %d  Ast.: %d) Wr%%: %d Pow: %d\n\r",
+  sprintf (buf, "LevBon: %d Align: %d Generator: %d Adj: %s. CraftNeed: %d  ShopNeed: %d Morale: %d\n\rPop: %d(%d)  Hrs(Setl.: %d  Raid: %d  Ast.: %d) Wr%%: %d Pow: %d\n\r",
 	   soc->level_bonus, 
 	   soc->align,
 	   soc->generated_from,
 	   soc->adj, 
 	   soc->crafters_needed,
 	   soc->shops_needed,
+	   soc->morale,
 	   soc->population, 
 	   soc->recent_maxpop,
 	   soc->settle_hours,
@@ -587,15 +615,26 @@ show_society (THING *th, SOCIETY *soc)
 	}
     }
   strcat (buf, "\n\r");
-  stt (buf, th);
-  buf[0] = '\0';
-  sprintf (buf, "Killed_By: ");
+  sprintf (buf, "Kills: ");
   for (i = 0; i < ALIGN_MAX; i++)
     {
       if (align_info[i])
 	{
 	  sprintf (buf2, "%d: %d  ",
-		   i, soc->killed_by[i]);
+		   i, soc->kills[i]);
+	  strcat (buf, buf2);
+	}
+    }
+  strcat (buf, "\n\r");
+  stt (buf, th);
+  buf[0] = '\0';
+  sprintf (buf, "Affinity: ");
+  for (i = 0; i < ALIGN_MAX; i++)
+    {
+      if (align_info[i])
+	{
+	  sprintf (buf2, "%d: %d  ",
+		   i, soc->align_affinity[i]);
 	  strcat (buf, buf2);
 	}
     }

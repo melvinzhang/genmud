@@ -80,6 +80,7 @@ wear_thing (THING *th, THING *obj)
   
   if ((slot = find_free_eq_slot(th, obj)) == -1)
     {   
+      act ("You can't find a place to wear @3n.", th, NULL, obj, NULL, TO_CHAR);
       return;
     }
   if ((armor = FNV (obj, VAL_ARMOR)) != NULL && IS_PC (th))

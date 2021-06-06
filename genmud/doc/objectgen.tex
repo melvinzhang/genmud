@@ -35,6 +35,16 @@ only 2-3 words are allowed and if one of the words is a name or a
 society name, those are generally kept. Then, the words are strung
 together to form the name and short desc and long desc for the item.
 
+Randomized mineral names are created just to add some flavor. The generation
+code uses the society name generation code followed by -ate or -ite or -ium.
+
+You can also have "body parts" from various kinds of randpop mobs in the
+object names. Each mob prototype can have an armor, jewelry and weapon edesc
+that tell you what kind of names can be put on what kind of items. For
+example: the wolf generator has armor: fur pelt skin hide and the dragon
+weapon edesc has claw talon tooth bone. Then you get things like wolfhide
+gloves, dragon bone swords etc...
+
 \section{Stats}
 The stats of the item are then generated and the level is set, and the
 armor value or weapon values are set. All of the item stats are roughly
@@ -55,3 +65,17 @@ Highlevel items also get some of the object flags like glow and hum put on
 them, and wielded items get a chance of all kinds of object flags to
 be put on them since those flags are required to hit powerful mobs.
 
+
+\section{Provision Generation}
+
+Because I don't feel like making tons of food and drinks and bags and whatnot,
+there is code to create these items automatically from templates. The objects
+used to make these items are stored in provisiongen.are (currently 107500),
+and the items that actually get made are stored in provisions.are (currently
+125000). Maps of random parts of the world also get made, along with the food,
+nd drinks and lights and containers.
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 

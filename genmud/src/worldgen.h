@@ -131,3 +131,21 @@ void worldgen_generate_demons (int curr_underworld_vnum, int area_size);
 /* This removes aggros from newbie areas so players have a half a 
    chance. */
 void remove_newbie_area_aggros (void);
+
+
+/* This creates and places guildmasters around the world. Newbie
+   guildmasters go near homelands, midlevel ones go near midlevel 
+   areas and highlevel guildmasters go near highlevel areas. */
+
+void worldgen_place_guildmasters (void);
+
+
+/* This adds a guildmaster of the proper guild and rank to the 
+   given area. */
+
+void add_guildmaster_to_area (THING *area, int guild, int rank);
+
+
+/* This links special rooms to the world like implant/remort rooms. */
+
+void worldgen_link_special_room (int special_room_vnum);

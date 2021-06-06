@@ -5,9 +5,11 @@
 #include "serv.h"
 #include "society.h"
 
-
+/* These are weighted by how often I think these letters should 
+   show up in words....*/
 const char vowels[NUM_VOWELS+1] = "aaeeeiioou";
-static char consonants[NUM_CONSONANTS+1] = "bcdfghjklmnpqrstvwxyz";
+static char *consonants = 
+"bbbcccccccdddfffffggggghhhhhhhhhjjkkkkllllllllllmmmmmmmmmnnnnnnnnnnnpppppppppqrrrrrrrrrssssssssssttttttttttttvwwwwwwxyyz";
 
 /* These are consonants that must be near a vowel, not a consonant due
    to being too hard to pronounce otherwise. */
@@ -28,17 +30,22 @@ create_society_name (VALUE *socval)
    letter must be followed by a vowel or not. */
   bool can_have_consonant_here = TRUE; 
   static char namebuf[STD_LEN];
-  
   /* This array is used to look at the word as a whole and see if
      any cuss words are in it. If they are, we don't allow the name
      to be made. */
   
   char nospacerbuf[STD_LEN];
-
+  static bool done_once = FALSE;
+  static int consonant_length = 0;
+ 
   /* This tells if a letter is allowed to appear at this point. 
      This is for letters that must be surrounded by vowels. */
   bool letter_ok = FALSE;
-  
+   if (!done_once)
+    {
+      consonant_length = strlen (consonants);
+      done_once = TRUE;
+    }
   namebuf[0] = '\0';
   /* Socval is NOT strictly necessary */
   
@@ -94,7 +101,7 @@ create_society_name (VALUE *socval)
 	    {
 	      do
 		{
-		  c = consonants[nr(0, NUM_CONSONANTS-1)];
+		  c = consonants[nr(0,consonant_length -1)];
 		  letter_ok = TRUE;
 		  /* If this is the first part of a syllable make
 		     sure that the starting letter can go after the
@@ -188,6 +195,10 @@ create_society_name (VALUE *socval)
 			  *t++ = 'h';
 			}
 		    }
+		  else if (c == 'k' && nr (1,4) == 2)
+		    {
+		      *t++ = 'h';
+		    }
 		  else		    
 		    *t++ = c;
 		}
@@ -244,6 +255,14 @@ create_society_name (VALUE *socval)
 	  in practice. */
     create_society_name (socval);
   
+  for (t = namebuf; *t; t++);
+  t--;
+  if (*t == 'f' && nr (1,5) == 3)
+    {
+      *(t+1) = 't';
+      *(t+2) = '\0';
+    }
+    
   return namebuf;
 }
 

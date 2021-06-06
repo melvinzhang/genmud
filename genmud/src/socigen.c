@@ -335,9 +335,11 @@ generate_society (THING *proto)
 		      break;
 		    }
 		  caste_flags[cnum] = caste1_flags[castenum].flagval;
+		  if (IS_SET (caste_flags[cnum], BATTLE_CASTES & ~CASTE_WARRIOR))
+		    caste_tiers[cnum]--;
 		  castenum++;
 		}
-	     
+	      
 	    }
 	  
 	  /* So now we know the castes we have and the amount of tiers and
@@ -403,8 +405,18 @@ generate_society (THING *proto)
 		    caste_tiers[cnum]++;
 		}
 	      
+
 	      if (caste_tiers[cnum] < 1)
 		continue;
+	      
+	      /* Now for leader's caste, add another tier -- overlord
+		 tier. */
+	      if (IS_SET (caste_flags[cnum], CASTE_LEADER))
+		{
+		  caste_tiers[cnum]++;
+		  tiernames_used |= (1 << caste_tiers[cnum]);
+		  strcpy (tiernames[caste_tiers[cnum]], "Overlord");
+		}
 	      
 	      /* Generate a mob for each tier and then add a couple of extra
 		 spaces after the last one for some room to grow. */
@@ -448,13 +460,21 @@ generate_society (THING *proto)
 		  mob->level = (base_caste_level *
 				(caste_tiers[cnum]+current_tier_place))
 		    /(caste_tiers[cnum]);
-
+		  
 		  /* Leaders are MUCH tougher. */
 		  if (IS_SET (caste1_flags[cnum].flagval, CASTE_LEADER))
 		    {
 		      mob->level += mob->level/5;
-		      mob->max_hp = 20;
+		      mob->max_hp = 25;
+		      /* Overlords are MUCH tougher than that. */
+		      if (!str_cmp (tiernames[tier], "Overlord"))
+			{
+			  mob->level += mob->level/5;
+			  mob->max_hp = 40;
+			}
 		    }
+		  
+		  
 		  current_tier_place++;
 		  
 		  sprintf (buf, "%s %s", socinamebuf, tierbuf);
@@ -516,9 +536,9 @@ generate_society (THING *proto)
 	  /* Set the base chance for this to appear. */
 	  
 	  if (IS_SET (caste_flags[cnum], CASTE_WARRIOR))
-	    soc->base_chance[cnum] = nr (10,12);
+	    soc->base_chance[cnum] = nr (9,11);
 	  else if (IS_SET (caste_flags[cnum], CASTE_WORKER))
-	    soc->base_chance[cnum] = nr (10,12);
+	    soc->base_chance[cnum] = nr (9,11);
 	  else if (IS_SET (caste_flags[cnum], BATTLE_CASTES))
 	    soc->base_chance[cnum] = nr (2,3);
 	  else

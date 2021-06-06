@@ -575,7 +575,7 @@ do_align (THING *th, char *arg)
   
   if (arg[0] == '\0' || !str_cmp (arg, "list"))
     {
-      stt ("    Name            St In Wi De Co Lu  Sp/Sk/Pr/Tr/Po   Special\n\r", th);
+      stt ("    Name            St In Wi De Co Lu Ch  Sp/Sk/Pr/Tr/Po   Special\n\r", th);
       for (i = 0; i < ALIGN_MAX; i++)
 	{
 	  if (align_info[i])
@@ -678,7 +678,7 @@ do_race (THING *th, char *arg)
   
   if (arg[0] == '\0' || !str_cmp (arg, "list"))
     {
-      stt ("    Name            St In Wi De Co Lu  Sp Sk Pr Po Tr   Special\n\r", th);
+      stt ("    Name            St In Wi De Co Lu Ch  Sp Sk Pr Po Tr   Special\n\r", th);
       for (i = 0; i < RACE_MAX; i++)
 	{
 	  if (race_info[i] &&
@@ -1652,11 +1652,11 @@ update_alignment_resources (void)
 		      align->raw_curr[i] += (society->raw_curr[i]-RAW_TAX_AMOUNT/4)/5;
 		      society->raw_curr[i] -= (society->raw_curr[i]-RAW_TAX_AMOUNT/4)/5;
 		    }	     
-		  else /* Take 5 pct of reserves if the society doesn't
+		  else /* Take 2 pct of reserves if the society doesn't
 			  have much to give. */
 		    {		      
-		      align->raw_curr[i] += society->raw_curr[i]/20;
-		      society->raw_curr[i] -= society->raw_curr[i]/20;
+		      align->raw_curr[i] += society->raw_curr[i]/50;
+		      society->raw_curr[i] -= society->raw_curr[i]/50;
 		    }
 		}
 	    }	  
@@ -1682,32 +1682,52 @@ update_alignment_resources (void)
 	     current amount and the needed amount...so we may end
 	     up with less available than we had hoped. */
 	  
-	  raw_available = MIN (align->raw_curr[i], align->raw_want[i]);
+	  raw_available = align->raw_curr[i];
 	  raw_used = 0;
 	  
 	  for (society = society_list; society != NULL; society = society->next)
 	    {
-	      /* If a society needs raw materials, add the amount they need
-		 modulo the amount that's available. Only do this for
-		 societies that aren't going to be nuked. */
+	      /* Find out the total amount of raw materials we need. */
+	      
+	      if (society->raw_want[i] > 0 &&
+		  !IS_SET (society->society_flags, SOCIETY_NUKE))
+		{
+		  raw_used += RAW_WANT_MULT * society->raw_want[i];
+		}
+	    }
+
+	  if (raw_used < 1)
+	    continue;
+	  
+	  /* See if we have enough available. If we have enough available
+	     make the available amount the "raw_used" amount. */
+	  
+	  if (raw_used <= raw_available)
+	    raw_available = raw_used;
+	      
+	  
+	  for (society = society_list; society != NULL; society = society->next)
+	    {
+	      /* If the society needs raw materials, take the amount
+		 they need and multiply by the amt available/amt wanted. */
 	      
 	      if (society->raw_want[i] > 0 &&
 		  !IS_SET (society->society_flags, SOCIETY_NUKE))
 		{
 		  society->raw_curr[i] += 
-		    RAW_WANT_MULT * society->raw_want[i] * raw_available/align->raw_want[i];
-		  raw_used += 
-		    RAW_WANT_MULT * society->raw_want[i]*raw_available/align->raw_want[i];
+		    RAW_WANT_MULT*society->raw_want[i]*raw_available/raw_used;
+		  raw_used += RAW_WANT_MULT*society->raw_want[i]*raw_available/raw_used;	  
 		}
 	    }
+	  
 	  
 	  /* Subtract the raw materials we used up from the alignment
 	     stores. */
 	  
 	  if (raw_used > 0)
 	    {
-	      align->raw_curr[i] -= MIN (align->raw_curr[i], raw_used);
-	      align->raw_want[i] -= MIN (align->raw_want[i], raw_used);
+	      align->raw_curr[i] -= raw_available;
+	      align->raw_want[i] = 0;
 	    }
 	}
 
@@ -1850,7 +1870,7 @@ help_societies_under_siege(void)
     {
      
       if ((align = align_info[align_num]) == NULL ||
-	  align->warriors < 2000 || nr (1,200) != 37)
+	  align->warriors < 5000 || nr (1,200) != 37)
 	continue;
       
       /* Number of hurt and ok societies. */

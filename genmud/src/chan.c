@@ -648,7 +648,13 @@ process_yell (THING *yeller, char *buf)
 void
 do_echo (THING *th, char *arg)
 {
-  if (th && IS_PC (th) && LEVEL (th) == MAX_LEVEL && arg && *arg)
+  if (th && IS_PC (th) && LEVEL (th) < MAX_LEVEL)
+    {
+      stt ("Huh?\n\r", th);
+      return;
+    }
+  
+  if (arg && *arg)
     echo (arg);
   return;
 }

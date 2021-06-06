@@ -23,9 +23,9 @@ Flags 1
 END_CHAN
 
 CHAN
+Name gt`
 Name gtell`
 Name ;`
-Name gt`
 Message $A@1n tell@s the group`
 Flags 64
 END_CHAN

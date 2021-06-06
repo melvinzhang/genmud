@@ -453,7 +453,6 @@ show_help_file (THING *th, HELP *help)
   add_to_bigbuf (help->text);
   if (help->see_also && *help->see_also)
     {
-      add_to_bigbuf (HELP_BORDER);
       add_to_bigbuf ("\n\rSee Also Help\x1b[1;36m ");
       add_to_bigbuf (help->see_also);
       add_to_bigbuf ("\x1b[0;37m\n\n\r");

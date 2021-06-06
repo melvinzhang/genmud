@@ -106,7 +106,7 @@ do_guild (THING *th, char *arg)
 	  (guild = FNV (gm, VAL_GUILD)) == NULL ||
 	  guild->val[0] < 1 || guild->val[0] > GUILD_MAX)
 	continue;      
-      type = guild->val[0] - 1;
+      type = guild->val[0];
       break;
     }
   

@@ -1,6 +1,7 @@
 OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 	boot.o chan.o clan.o consid.o const.o color.o  combatai.o \
-	create.o dam.o detailgen.o disaster.o edit.o event.o fight.o \
+	create.o dam.o detailgen.o \
+	disaster.o edit.o event.o fight.o \
 	fileio.o follow.o \
 	guild.o help.o historygen.o implant.o info.o \
 	int.o kde.o look.o magic.o magicitem.o map.o mapgen.o \
@@ -10,19 +11,25 @@ OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 	script.o scriptio.o scriptedit.o scriptline.o security.o serv.o \
 	shop.o socials.o socibuild.o sociedit.o society.o societyio.o \
 	socifight.o socirun.o socirts.o socigen.o sociname.o socineed.o \
-	sociraid.o \
+	sociraid.o sociplay.o socireward.o socidiplomat.o \
 	spell.o stredit.o stringgen.o stringparse.o thing.o thingio.o \
-	track.o upd.o wear.o weather.o worldgen.o \
+	track.o upd.o wear.o weather.o worldgen.o worldgen2.o\
 #	wilderness.o wildalife.o \
 #	THE PRECEEDING LINE IS NOT ADDED IN UNLESS YOU REMOVE THE #
 #	ONLY USE THE PRECEEDING LINE IF YOU WANT THE WILDERNESS MAP!!!
 
+CC = gcc
+
+CFLAGS = -c -g -Wall -pedantic
+
+LFLAGS = -lpthread -lcrypt
+
 .c.o: serv.h
-	gcc -c -O2 -Wall -pedantic $<
+	$(CC) $(CFLAGS) $<
 
 mud: $(OBJS)
 	rm -f mud
-	gcc -lpthread -lcrypt -o mud $(OBJS)
+	$(CC) $(LFLAGS) -o mud $(OBJS)
 
 clean:
 	\rm -rf *.o mud

@@ -1057,6 +1057,8 @@ fix_pc (THING *th)
      badly. This is an approximate record of your player's power...
      not exact. */
   
+  find_max_mana (th);
+  
   if (th->pc->damage_total > 1000000 && th->pc->damage_rounds >= 10)
     {
       th->pc->damage_total /= 10;

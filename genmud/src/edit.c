@@ -398,7 +398,7 @@ show_edit (THING * th)
     {
       thg->thing_flags |= TH_CHANGED;
       sprintf (hpbuf, "Hp?");
-      sprintf (mvbuf, "NumRm/Th");
+      sprintf (mvbuf, "NumTh/Rm");
     }
   else
     {
@@ -878,7 +878,7 @@ edit (THING *th, char *arg)
 	    arg = f_word (arg, arg1);
 	    if (!str_cmp (arg1, "delete"))
 	      {
-		if ((eds = find_edesc_thing (thg, arg)) != NULL)
+		if ((eds = find_edesc_thing (thg, arg, TRUE)) != NULL)
 		  {
 		    remove_edesc (thg, eds);
 		    free_edesc (eds);
@@ -900,7 +900,7 @@ edit (THING *th, char *arg)
 		    return;
 		  }
 
-		if ((eds = find_edesc_thing (thg, arg)) != NULL)
+		if ((eds = find_edesc_thing (thg, arg, TRUE)) != NULL)
 		  {
 		    stt ("This extra description already exists!\n\r", th);
 		    return;
@@ -912,7 +912,7 @@ edit (THING *th, char *arg)
 		show_edit (th);
 		return;
 	      }
-	    if ((eds = find_edesc_thing (thg, arg1)) != NULL)	      
+	    if ((eds = find_edesc_thing (thg, arg1, TRUE)) != NULL)	      
 	      {
 		if (!str_cmp (arg, "desc") || !str_cmp (arg, "description"))
 		  {
@@ -1866,6 +1866,15 @@ reset_thing (THING *th, int rdepth)
           else
   	    rsvnum = reset->vnum;
 	  
+	  /* This doesn't quite work. This is the code that makes
+	     things limited. It doesn't work since players may have
+	     objects (or pets) that should really be limited, but 
+	     since I don't feel like doing the bookkeeping for keeping
+	     items really limited, they're only limited in the game..
+	     so if a player has a limited item and isn't logged in,
+	     another one may load. It isn't perfect, but I can't
+	     think of how to do this without using a lot of extra
+	     memory and CPU which I don't think is really worth it. */
           if ((basething = find_thing_num (rsvnum)) == NULL ||
 	      IS_SET (basething->thing_flags, TH_IS_ROOM | TH_IS_AREA) ||
 	      (basething->max_mv > 0 && 

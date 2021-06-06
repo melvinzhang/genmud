@@ -51,6 +51,7 @@ and they will have interesting things to do  (or they can ignore them).
 \item RUMOR\_SWITCH: A society switched alignment either because they were
   beaten up, or they were bribed.
 
+
 \item RUMOR\_DEFEAT: A society was reduced to 0 population and it was
   destructible, so it gets destroyed forever.
 
@@ -66,6 +67,13 @@ of an alignment. This is so that the players aren't really safe in their
 hometowns. There is only a tiny chance of this happening, but if the
 wrong society does this, (and they will eventually do this) then the
 players could be in a world of hurt.
+
+\item RUMOR\_ABANDON: A society is getting beaten up and it leaves its
+home.
+
+\item RUMOR\_PLAGUE: A society's population is large and it gets the
+  plague. Players can heal the society members for rewards if they choose.
+
 
 \end{itemize}
 
@@ -121,6 +129,24 @@ Here are the kinds of quests players can currently get:
 \item They may also get a message saying that the society or the alignment
   needs raw materials and if so, they get told what kinds of raw
   materials to give. The players get a small bonus if they do this.
+
+\item Overlord: Top level leaders in societies are overlords. There can only
+  be one per society. When an overlord is created, the society gets certain
+  bonuses to production and combat, and it can't switch alignment. Overlords
+  are very difficult to kill, and as such they deserve special mention. Once
+  in a while when players ask for rumors, they may find out about enemy
+  overlords. Killing an enemy overlord can be a very good thing.
+
+
+\item Packages/deliveries: If they talk to a leader, they may get a message
+  that they should take an item to another society. What happens here is that
+  a percentage of the originating society's raw materials are deleted and put
+  into an object that has a VAL\_PACKAGE on it. The v[0] in the package value
+  tells what society the package is supposed to go to. The v[1] is the sum of
+  all of the raw materials removed from the originating society. If the player
+  successfully gets the package to another society quickly enough (within
+  PACKAGE\_DELIVERY\_HOURS hours), then the ending society gets 3x as much
+  resources as were given up by the original society.
 
 \end{itemize}
 

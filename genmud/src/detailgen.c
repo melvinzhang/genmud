@@ -826,9 +826,12 @@ generate_detail_name (THING *proto, THING *target)
   char word[STD_LEN];
   char sdesc[STD_LEN];
   char ldesc[STD_LEN*2];
+  char lformat[STD_LEN];
   char *format_pos; /* Where we are in the format. */
   bool need_a_an_here;
-
+  bool use_plural = FALSE;  /* Is this a plural name? */
+  bool use_notice = FALSE;  /* Do we have the "You notice" prefix on the ldesc? */
+  char *t;
   /* Proto and target needed. */
   if (!proto || !target)
     return;
@@ -843,9 +846,10 @@ generate_detail_name (THING *proto, THING *target)
   lookup_word[0] = '\0';
   word[0] = '\0';
   sdesc[0] = '\0';
+  lformat[0] = '\0';
   /* Make sure that the "format" string(s) exist. If not, bail out. */
-  if ((fdesc = find_edesc_thing (proto, "format")) != NULL ||
-      (fdesc = find_edesc_thing (proto, "sformat")) != NULL)
+  if ((fdesc = find_edesc_thing (proto, "format", TRUE)) != NULL ||
+      (fdesc = find_edesc_thing (proto, "sformat", TRUE)) != NULL)
     {
       strcpy (format, find_random_word (fdesc->desc, NULL));
     }
@@ -855,6 +859,9 @@ generate_detail_name (THING *proto, THING *target)
     }
   if (!*format)
     return;
+
+  if (is_named (proto, "plural"))
+    use_plural = TRUE;
   
   /* Now make the short desc by going down the format string word by
      word stripping off words to check against the list of other edescs
@@ -873,7 +880,7 @@ generate_detail_name (THING *proto, THING *target)
   need_a_an_here = FALSE;
   do
     {
-    
+      
       format_pos = f_word (format_pos, lookup_word);
       /* If the lookup word is for an a/an we have to wait for the
 	 next word to actually add this word in... */
@@ -881,9 +888,9 @@ generate_detail_name (THING *proto, THING *target)
 	need_a_an_here = TRUE;      
       else
 	{
-	 
+	  
 	  /* If the word belongs to another edesc add a random word... */
-	  if ((wdesc = find_edesc_thing (proto, lookup_word)) != NULL)
+	  if ((wdesc = find_edesc_thing (proto, lookup_word, TRUE)) != NULL)
 	    {
 	      strcpy (word, find_random_word (wdesc->desc, detail_society_name));
 	      if (LC(*lookup_word) == 'k')
@@ -894,7 +901,7 @@ generate_detail_name (THING *proto, THING *target)
 		}
 	      
 	    }
-	  else if (!named_in ("kshort klong kname", lookup_word))
+	  else if (!named_in_full_word ("kshort klong kname", lookup_word))
 	    /* Otherwise plop this word directly in there. */
 	    strcpy (word, lookup_word);
 	  else
@@ -906,7 +913,10 @@ generate_detail_name (THING *proto, THING *target)
 	    {
 	      if (*sdesc && *word)
 		strcat (sdesc, " ");
-	      strcat (sdesc, a_an (word));
+	      if (use_plural)
+		strcat (sdesc, find_gen_word (MOBGEN_DESC_AREA_VNUM, "a_an_plural", NULL));
+	      else
+		strcat (sdesc, a_an (word));
 	      need_a_an_here = FALSE;
 	    }
 	  if (*sdesc)
@@ -934,43 +944,96 @@ generate_detail_name (THING *proto, THING *target)
   target->name = new_str (keywords);
   free_str (target->short_desc);
   target->short_desc = new_str (sdesc); 
-  /* Check to see if there's a "long format" string. If not, make a simple
-     long desc. */
 
-  if ((fdesc = find_edesc_thing (proto, "lformat")) == NULL ||
-      !fdesc->desc || !*fdesc->desc)
-    {     
-      if (is_named (proto, "plural"))
-	{	  
-	  if (nr (1,2) == 2)
+  /* Check to see if there's a "long format" string. If not, make a simple
+     long desc. These complex long descs are used for mobs only. */
+  
+  if ((CAN_FIGHT (proto) || CAN_MOVE (proto)))
+    {
+      lformat[0] = '\0';
+      /* Try to get a proper format. */
+      if ((fdesc = find_edesc_thing (proto, "lformat", TRUE)) != NULL &&
+	  fdesc->desc && *fdesc->desc)
+	strcpy (lformat, find_random_word (fdesc->desc, NULL));
+      if (!*lformat) /* If none, then set it up by hand. */
+	{ 
+	  *lformat = '\0';
+	  
+	  if (is_named (proto, "plural"))
+	    use_plural = TRUE;
+	  /* You notice.. */
+	  if (nr (1,3) == 2)
 	    {
-	      sprintf(ldesc,find_gen_word (MOBGEN_DESC_AREA_VNUM, "mob_notice_plural", NULL));
-	      sprintf (ldesc + strlen(ldesc), " %s are here.", sdesc);	      
+	      if (use_plural)
+		strcat (lformat, "mob_notice_plural ");
+	      else
+		strcat (lformat, "mob_notice ");	  
 	    }
-	  else
+	  
+	  if (*lformat)
+	    use_notice = TRUE;
+	  
+	  /* The mob name */
+	  strcat (lformat, " ");
+	  strcat (lformat, sdesc);
+	  strcat (lformat, " ");
+	  
+	  /* Is here..*/
+	  if (!use_notice)
 	    {
-	      sprintf(ldesc,find_gen_word (MOBGEN_DESC_AREA_VNUM, "mob_notice_plural_verb", NULL));
-	      sprintf (ldesc + strlen(ldesc), " %s here.", sdesc);	
+	      if (use_plural)
+		strcat (lformat, "are ");
+	      else
+		strcat (lformat, "is ");
+	    }
+	  
+	  /* If the thing can talk, it's doing something reasonable
+	     and intelligent so we don't say it's lookig for food
+	     and whatnot. */
+	  
+	  if (CAN_TALK (proto))
+	    strcat (lformat, "near_here");
+	  else /* Otherwise it has to look for food and so forth. */
+	    {	  
+	      if (nr (1,3) != 2)
+		{
+		  if (IS_AFF (proto, AFF_WATER_BREATH))
+		    strcat (lformat, "swimming ");
+		  else if (!IS_AFF (proto, AFF_FLYING))
+		    strcat (lformat, "mob_action ");
+		  else
+		    strcat (lformat, "mob_action_flying ");
+		  
+		  /* Here */
+		  strcat (lformat, "near_here ");
+		  
+		  /* Searching */
+		  if (nr (1,3) != 2)
+		    {
+		      strcat (lformat, "mob_searching ");
+		      
+		      /* Searching for */
+		      if (!IS_AFF (proto, AFF_FLYING) || nr (1,10) != 3)
+			strcat (lformat, "mob_searchfor ");
+		      else
+			strcat (lformat, "mob_searchrest ");
+		    }
+		}
+	      else
+		strcat (lformat, "here ");
 	    }
 	}
-      else
-	{
-	  sprintf(ldesc,find_gen_word (MOBGEN_DESC_AREA_VNUM, "mob_notice", NULL));
-	  if (*ldesc)
-	    sprintf (ldesc + strlen(ldesc), " %s here.", sdesc);     
-	  else
-	    sprintf (ldesc, "%s is here.", sdesc);
-	}
-      ldesc[0] = UC(ldesc[0]);
-      free_str (target->long_desc);
-      target->long_desc = new_str (ldesc);
-      return;
+    }
+  else
+    { 
+      lformat[0] = '\0';
+      if ((fdesc = find_edesc_thing (proto, "lformat", TRUE)) != NULL &&
+	  fdesc->desc && *fdesc->desc)
+	strcpy (lformat, find_random_word (fdesc->desc, NULL));
+      if (!*lformat)
+	sprintf (lformat, "%s is here", sdesc);
     }
   
-  /* Otherwise the lformat does exist so pick a format for the long desc. */
-  
-  strcpy (format, find_random_word (fdesc->desc, NULL));
-
   /* Then loop through it setting it up. This is a little different than
    the previous setup. In there we had some lookup_words that we used to
   find random words from the list of words in that edesc. We can't do
@@ -981,9 +1044,8 @@ generate_detail_name (THING *proto, THING *target)
   for that edesc were used in the keywords or the short desc. If not,
   we just pick a random word from the new list. Otherwise we use the
   old word. */
-
   
-  format_pos = format;
+  format_pos = lformat;
   need_a_an_here = FALSE;
   ldesc[0] = '\0';
   do
@@ -995,25 +1057,29 @@ generate_detail_name (THING *proto, THING *target)
 	need_a_an_here = TRUE;      
       else
 	{
+	  *word = '\0';
         /* If the word belongs to another edesc add a random word... */
-	  if ((wdesc = find_edesc_thing (proto, lookup_word)) != NULL)
+	  if ((wdesc = find_edesc_thing (proto, lookup_word, TRUE)) != NULL)
 	    {
 	      strcpy (word, full_named_in (wdesc->desc, target->short_desc));
 	      if (!*word)
 		strcpy (word, find_random_word (wdesc->desc, NULL));
 	    }
-	  else if (!named_in ("kname kshort klong", lookup_word))
-	    /* Otherwise plop this word directly in there. */
+	  else 
+	    strcpy (word, find_gen_word (MOBGEN_DESC_AREA_VNUM, lookup_word, NULL));
+	  if (!*word)
 	    strcpy (word, lookup_word);
-	  else
-	    *word = '\0';
+	  
 	  /* If we need an a_an here first, plop it down then put the
 	     word. */
 	  
 	  if (need_a_an_here && *word)
 	    {
 	      strcat (ldesc, " ");
-	      strcat (ldesc, a_an (word));
+	      if (use_plural)
+		strcat (ldesc, find_gen_word (MOBGEN_DESC_AREA_VNUM, "a_an_plural", NULL));
+	      else
+		strcat (ldesc, a_an (word));
 	      need_a_an_here = FALSE;
 	    }
 	  if (*ldesc && *word)
@@ -1024,6 +1090,14 @@ generate_detail_name (THING *proto, THING *target)
     }
   while (*format_pos);
   ldesc[0] = UC (ldesc[0]);
+  for (t = ldesc; *t; t++);
+  t--;
+  if (*t != '.')
+    {
+      t++;
+      *t = '.';
+      *(t+1) = '\0';
+    }
   free_str (target->long_desc);
   target->long_desc = new_str (ldesc);
   return;

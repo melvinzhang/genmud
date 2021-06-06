@@ -1103,10 +1103,13 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
 		      else
 			continue; 
 		      /* Bonus for healing. */
-		      if (vflag->type == FLAG_HURT)
-			society_give_reward (targ, th, (LEVEL (spl)+LEVEL(targ))/3);	       		 
-		      
+		      if (vflag->type == FLAG_HURT &&
+			  find_society_in (targ)  &&
+			  !DIFF_ALIGN (targ->align, th->align))
+			add_society_reward (th, targ, REWARD_HEAL, (LEVEL (spl)+LEVEL(targ)));
 		    }
+		  
+		  
 		      
 		      
 		  /* Now the second pass. If any of the spell_from_vnum's are
@@ -1230,16 +1233,22 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
 		    }
 		  if (IS_SET (spell_bits, SPELL_HEALS))
 		    {
-		      if (targ->hp < targ->max_hp)
-			society_give_reward (targ, th, damg);
-		      targ->hp += damg;
+		      if (targ->hp < targ->max_hp &&
+			  find_society_in (targ) &&
+			  !DIFF_ALIGN (targ->align, th->align))
+			add_society_reward (th, targ, REWARD_HEAL, damg);
+		      
+			  targ->hp += damg;
 		      if (targ->hp > targ->max_hp)
 			targ->hp = targ->max_hp;
 		    }
 		  if (IS_SET (spell_bits, SPELL_REFRESH))
-		    {
-		      if (targ->hp < targ->max_hp)
-			society_give_reward (targ, th, damg);
+		    {  
+		      if (targ->mv < targ->max_mv &&
+			  find_society_in (targ) &&
+			  !DIFF_ALIGN (targ->align, th->align))
+			add_society_reward (th, targ, REWARD_HEAL, damg);
+		      
 		      targ->mv += damg;
 		      if (targ->mv > targ->max_mv)
 			targ->mv = targ->max_mv;

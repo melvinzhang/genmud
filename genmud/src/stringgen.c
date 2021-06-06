@@ -132,6 +132,7 @@ find_gen_word (int area_vnum, char *typename, char *color)
   buf[0] = '\0';
   word[0] = '\0';
   
+
   if (!str_cmp (typename, "area_name"))
     {
       THING *area;
@@ -142,11 +143,11 @@ find_gen_word (int area_vnum, char *typename, char *color)
     }
   
   
-  if (!str_prefix ("organization_name", typename))
+  if (!str_cmp ("organization_name", typename))
     return find_random_society_name ('n', ORGANIZATION_SOCIGEN_VNUM);
-  if (!str_prefix ("ancient_race_name", typename))
+  if (!str_cmp ("ancient_race_name", typename))
     return find_random_society_name ('n', ANCIENT_RACE_SOCIGEN_VNUM);
-  else if (!str_prefix ("genned_society_name", typename))
+  else if (!str_cmp ("genned_society_name", typename))
     return find_random_society_name ('n', 1);
   else if (!str_cmp (typename, "list_ancient_race_names"))
     return list_ancient_race_names();
@@ -154,11 +155,11 @@ find_gen_word (int area_vnum, char *typename, char *color)
     return list_controller_deities();
   
   
-
+  
   if ((obj = find_gen_object (area_vnum, typename)) == NULL)
     return buf;
   
-
+  
   for (count = 0; count < 2; count++)
     {
       loc = obj->desc;     
@@ -223,10 +224,11 @@ find_gen_object (int area_vnum, char *typename)
       !IS_AREA (area) || !typename || !*typename)
     return NULL;
   
+  
   /* Find the object with the correct name. */
   for (obj = area->cont; obj; obj = obj->next_cont)
     {
-      if (named_in_full_word (obj->name, typename))
+      if (!str_cmp (obj->name, typename))
 	break;
     }
   

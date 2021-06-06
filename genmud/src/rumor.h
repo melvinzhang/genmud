@@ -107,10 +107,14 @@ void add_rumor_to_society (SOCIETY *, int vnum);
 
 void clear_rumor_history (void);
 
+/* This checks for a society overlord rumor. */
+
+bool send_overlord_message (THING *th, THING *mob);
 
 
+/* This gives a player a "delivery" quest. */
 
-
+bool get_delivery_quest (THING *th);
 
 
 

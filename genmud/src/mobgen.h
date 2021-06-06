@@ -39,9 +39,14 @@ void generate_randpop_mobs (THING *);
 /* This generates a single randpop mob for an area based on the names
    given. */
 
-THING *generate_randpop_mob (THING *area, THING *proto, char *name, char *sname, char *lname, int curr_vnum);
+THING *generate_randpop_mob (THING *area, THING *proto, int curr_vnum);
 
 
 /* This sets up the mob randpop item. */
 
 void setup_mob_randpop_item (int start_vnum, int tier_size);
+
+
+/* This tells if an area has a free mobject vnum in it or not. */
+
+int find_free_mobject_vnum (THING *area);

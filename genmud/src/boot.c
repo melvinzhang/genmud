@@ -889,15 +889,23 @@ void*
 seg_handler (void)
 {
   char errbuf[STD_LEN];
+  int count = 0;
   if (++seg_count > 4)
     exit(11);
   sprintf (errbuf, "Ack! Segmentation fault number %d! Attempting to save everything!\n", seg_count);
   log_it (errbuf);
   log_it (prev_command);
-  sprintf (errbuf, "Line: %d File: %s\n", __LINE__, __FILE__);
-  log_it (errbuf);
+  if (IS_SET (server_flags, SERVER_SAVING_WORLD))
+    log_it ("Saving world.");
+  if (IS_SET (server_flags, SERVER_SAVING_AREAS))
+    log_it ("Saving areas.");
   shutdown_server ();
-  sleep(2);
+  /* Wait for world state save. */
+  do
+    sleep (1);
+  while (IS_SET (server_flags, SERVER_SAVING_WORLD | SERVER_SAVING_AREAS) &&
+	 ++count < 20);
+  
   kill (getpid(), SIGSEGV);
   exit(13);
 }

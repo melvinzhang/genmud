@@ -429,7 +429,7 @@ do_who (THING *th, char *arg)
 	      (name && str_prefix (arg, NAME (vict))))
 	    continue;
 	  if (LEVEL (th) == MAX_LEVEL)
-	    sprintf (alignbuf, "\x1b[1;31m%2d %d", vict->pc->remorts, vict->align);
+	    sprintf (alignbuf, "\x1b[1;31m%2d %d %d", vict->pc->remorts, vict->align, vict->pc->race);
 	  else
 	    alignbuf[0] = '\0';
 	  sprintf (buf, "\x1b[1;34m[\x1b[1;36m%-3d %s\x1b[1;34m]\x1b[0;37m %s %s\n\r", 

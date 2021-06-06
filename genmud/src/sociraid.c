@@ -64,7 +64,7 @@ update_raiding (SOCIETY *soc, int raid_target)
 	return;
       
       /* Small chance to raid an align homeland. */
-      if (nr (1,51) == 43 && relic_raid_start (soc))
+      if (nr (1,651) == 43 && relic_raid_start (soc))
 	return;
       
       /* Make sure we have enough members to raid. */
@@ -727,7 +727,7 @@ relic_raid_start (SOCIETY *soc)
   add_rumor (RUMOR_RELIC_RAID, soc->vnum, align->vnum, 0, 0);
   sprintf (buf, "battle nosent home end raid vnum %d %d  attr v:society:3 %d attr v:society:4 %d", align->relic_ascend_room, 
 	   align->relic_ascend_room, WARRIOR_HUNTER, raid->vnum);
-  society_do_activity (soc, 100, buf);
+  society_do_activity (soc, 10, buf);
   soc->relic_raid_hours = SOCIETY_RAID_HOURS;
   soc->relic_raid_gather_point = 0;
   soc->relic_raid_target = 0;

@@ -184,7 +184,7 @@ show_money (THING *th, THING *target, bool inside_person)
       if (cointypes_used > 0 && cointypes_used < cointypes - 1)
 	strcat (buf, ", ");
       else if (cointypes > 1 && cointypes_used == cointypes - 1)
-	strcat (buf, ", and ");
+	strcat (buf, " and ");
       else
 	strcat (buf, " ");
       

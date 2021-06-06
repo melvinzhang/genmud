@@ -8,6 +8,7 @@
 #include "worldgen.h"
 #include "objectgen.h"
 #include "mobgen.h"
+#include "detailgen.h"
 
 /* We assume the area has a certain level, if not, set it to the
    area size/5 and go with it. */
@@ -405,21 +406,18 @@ clear_base_randpop_mobs (THING *th)
 void
 generate_randpop_mobs (THING *th)
 {
-  THING *area, *proto_area, *proto, *mob;
+  THING *area, *proto_area, *proto, *mob, *mob2;
 
   int start_vnum, curr_vnum, end_vnum;
   int weak_mobs = 0, strong_mobs = 0;
-  int randmobs_from_this_proto;
+  int randmobs_from_this_proto, num_prefix_names, real_num_names = 0;
   char buf[STD_LEN];
-  
+  int i, name_tries;
+  EDESC *edesc;
   /* 2 passes: LEVEL < STRONG_RANDPOP_MOB_MINLEVEL are "lower" mobs, 
      >= STRONG_RANDPOP_MOB_MINLEVEL  are "higher" mobs. */
-  int pass, num_long_names, num_short_names, total_num_names; 
-  
-  /* Args for the long short and name of the mob proto. */
-  char lname[STD_LEN], *larg;
-  char sname[STD_LEN], *sarg;
-  char name[STD_LEN], *narg;
+  int pass; 
+  bool found_same_name;
   
   if (th && (LEVEL (th) < MAX_LEVEL || !IS_PC (th)))
     {
@@ -479,98 +477,75 @@ generate_randpop_mobs (THING *th)
 	   
 	   /* Make sure the names exist (Even if they're blank.) */
 	   
-	   if (!proto->long_desc || !proto->short_desc || !proto->name ||
-	       !*proto->name)
-	     continue;
 	   
 	   /* Find the number of long names and short names since we
 	      only want a few kinds of mobs with each name. */
-
-	   larg = proto->long_desc;
-	   num_long_names = 1;	   
-	   while (*larg)
-	     {
-	       larg = f_word (larg, lname);
-	       num_long_names++;
-	     }
-	   sarg = proto->short_desc;
-	   num_short_names = 1;
-	   while (*sarg)
-	     {
-	       sarg = f_word (sarg, sname);
-	       num_short_names++;
-	     }
-	  
-	   total_num_names = num_long_names*num_short_names;
-	  
-
+	   
+	   num_prefix_names = 1;
+	   if ((edesc = find_edesc_thing (proto, "klong", TRUE)) != NULL)
+	     num_prefix_names *= MAX(1, find_num_words (edesc->desc));
+	   if ((edesc = find_edesc_thing (proto, "kshort", TRUE)) != NULL)
+	     num_prefix_names *= MAX(1, find_num_words (edesc->desc));
+	   if ((edesc = find_edesc_thing (proto, "kname", TRUE)) != NULL)
+	     real_num_names = MAX(1, find_num_words (edesc->desc));
+	   
+	   
+	   if (num_prefix_names > 15)
+	     num_prefix_names = 15;
+	   
 	   /* The number of mobs you gen for this proto is the max of
 	      15, total_num_names/5. This is APPROXIMATE since what
 	      really happens is nr (1, total_num_names) is checked vs
 	      mobs_genned_this_proto... to have more randomness. */
 	   
-	   randmobs_from_this_proto = MAX (15, total_num_names/5);
-
+	   randmobs_from_this_proto = num_prefix_names*real_num_names;
+	   
 	   /* Cycle through the names. */
 	   
+	   for (i = 0; i < randmobs_from_this_proto; i++)
+	     {
+	       /* Make sure the vnum is ok before continuing. */
 	   
-	   narg = proto->name;
-	   do
-	     { 
-	       narg = f_word (narg, name);
-	       *name = LC(*name);
-	       if (!*name)
+	       if (curr_vnum < start_vnum || curr_vnum > end_vnum)
+		 break;
+	       
+	       /* Set up the mob. */
+	       
+	       if ((mob = generate_randpop_mob (area, proto, curr_vnum)) == NULL)
 		 continue;
-	       sarg = proto->short_desc;
-
-	       do
+	       
+	       /* Check to see if this mob shares a name with another.
+		  Take up to 10 tries to try to fix this problem. 
+		  This is expensive, but worth it to avoid mobs
+		  with the same exact names...*/
+	       found_same_name = TRUE;
+	       for (name_tries = 0; name_tries < 10 &&
+		      found_same_name; name_tries++)
 		 {
-		   sarg = f_word (sarg, sname);	       
-		   *sname = LC (*sname);
-		   larg = proto->long_desc;
-
-		   do
+		   found_same_name = FALSE;
+		   for (mob2 = area->cont; mob2; mob2 = mob2->next_cont)
 		     {
-		       larg = f_word (larg, lname);	   
-		       *lname = LC(*lname);
-		       
-		       
-		       if (nr (1, total_num_names) >= 
-			   randmobs_from_this_proto)
+		       if (mob2 == mob ||
+			   !mob2->name || !*mob2->name ||
+			   str_cmp (mob2->name, mob->name))
 			 continue;
-		       /* Make sure the vnum is ok before continuing. */
-		     
-		       if (curr_vnum < start_vnum || curr_vnum > end_vnum)
-			 break;
-		       /* At this point we have the three names, so set up
-			  the base name. */
-
-		       if ((mob = generate_randpop_mob (area, proto, name, sname, lname, curr_vnum)) == NULL)
-			 continue;
-		       if (pass == 0)
-			 weak_mobs++;
-		       else
-			 strong_mobs++;	 
-		       curr_vnum++; 
-		       if (curr_vnum - 1 > top_vnum)
-			 top_vnum = curr_vnum;	       		       
+		       
+		       found_same_name = TRUE;
+		       break;
 		     }
-		   
-
-		   
-		   /* These whiles are different since I want to
-		      require a name, I stop when there are no 
-		      more names queued up, but the shortname and
-		      longname can be blank, so I just allow them 
-		      to have one pass where they're blank. */
-		   
-		   while (*lname);
+		   if (found_same_name)
+		     generate_detail_name (proto, mob);
 		 }
-	       while (*sname);
+	       
+	       if (pass == 0)
+		 weak_mobs++;
+	       else
+		 strong_mobs++;	 
+	       curr_vnum++; 
+	       if (curr_vnum - 1 > top_vnum)
+		 top_vnum = curr_vnum;	       		       
 	     }
-	   while (*narg);
 	 }
-       
        if (pass == 0)
 	 {
 	   curr_vnum += 100;
@@ -637,33 +612,16 @@ setup_mob_randpop_item (int start_vnum, int size)
 /* This generates a randpop mob based on a proto and the three names. */
 
 THING *
-generate_randpop_mob (THING *area, THING *proto, char *name, char *sname, char *lname, int curr_vnum)
+generate_randpop_mob (THING *area, THING *proto, int curr_vnum)
 {
-  char basename[STD_LEN];
-  char fullname[STD_LEN];
-  char longfullname[STD_LEN];
-  char word[STD_LEN];
   THING *mob;
   int prot_flags = 0, i;
-  bool use_notice = FALSE;
 
-  if (!area || !proto || !name || !sname || !lname || !curr_vnum)
+  if (!area || !proto || !curr_vnum)
     return NULL;
 
-   basename[0] = '\0';
    
-   if (*lname)
-     {
-       strcat (basename, lname);
-       strcat (basename, " ");
-     }
-   if (*sname)
-     {
-       strcat (basename, sname);
-       strcat (basename, " ");
-     }
-   strcat (basename, name);
-   
+  
    /* Now create the mob and set its base stats. */
 
    mob = new_thing();
@@ -675,98 +633,16 @@ generate_randpop_mob (THING *area, THING *proto, char *name, char *sname, char *
    thing_to (mob, area);
    add_thing_to_list (mob);
    
-   /* Now set up the names. */
-   
-   free_str (mob->name);
-   mob->name = new_str (basename);
-   
-   free_str (mob->short_desc);
-   sprintf (fullname, "%s %s", a_an (basename), basename);
-   mob->short_desc = new_str (fullname);
-   
-   /* Make the long desc a bit more complicated. */
-   free_str (mob->long_desc);
-
-   longfullname[0] = '\0';
-   /* You notice */
-   
-   if (nr (1,5) == 4)
-     {
-       strcpy (word, find_gen_word (MOBGEN_DESC_AREA_VNUM, "mob_notice", NULL));
-       if (*word)
-	 {
-	   strcat (longfullname, word);
-	   strcat (longfullname, " ");
-	   use_notice = TRUE;
-	 }
-     }
-   
-   /* Mob name */
-   strcat (longfullname, fullname);
-   strcat (longfullname, " ");
-   /* Must have is if no "you see" or "there is" or sometimes else. */
-   if (!use_notice)
-     strcat (longfullname, "is ");
-   
-
-
-   /* Is doing something */
-   
-   if (nr (1,3) != 2)
-     {
-       
-       if (!IS_AFF (proto, AFF_FLYING))
-	   strcpy (word, find_gen_word (MOBGEN_DESC_AREA_VNUM, "mob_action", NULL));
-       else
-	    strcpy (word, find_gen_word (MOBGEN_DESC_AREA_VNUM, "mob_flying", NULL));
-       if (*word)
-	 {
-	   strcat (longfullname, word);
-	   strcat (longfullname, " ");
-	 }
-     }
-   
-   /* Here */
-   if (nr (1,7) != 3)
-     strcat (longfullname, "here");
-   else
-     strcat (longfullname, "around here");
-   
-   /* Searching */
-   if (nr (1,3) != 2)
-     {
-       /* Searching action */
-       strcpy (word, find_gen_word (MOBGEN_DESC_AREA_VNUM, "mob_searching", NULL));
-       
-       if (*word)
-	 {
-	   strcat (longfullname, " ");
-	   strcat (longfullname, word);
-	   
-	   /* Searching for */
-	   if (!IS_AFF (proto, AFF_FLYING) || nr (1,10) != 3)
-	   strcpy (word, find_gen_word (MOBGEN_DESC_AREA_VNUM, "mob_searchfor", NULL));
-       else
-	 strcpy (word, find_gen_word (MOBGEN_DESC_AREA_VNUM, "mob_searchrest", NULL));
-	   if (*word)
-	     {
-	       strcat (longfullname, " ");
-	       strcat (longfullname, word);
-	     }
-	 }
-     }
-   strcat (longfullname, ".");
-   *longfullname = UC(*longfullname);
-   mob->long_desc = new_str (longfullname);
+   generate_detail_name (proto, mob);
    
    /* Fix the room flags for "Arctic" creatures. */
    
    if (proto->level < STRONG_RANDPOP_MOB_MINLEVEL &&
-       (strstr (basename, "arctic") ||
-	strstr (basename, "ice") ||
-	strstr (basename, "snow") ||
-	strstr (basename, "white") ||
-	strstr (basename, "polar")))
+       (strstr (mob->name, "arctic") ||
+	strstr (mob->name, "ice") ||
+	strstr (mob->name, "snow") ||
+	strstr (mob->name, "white") ||
+	strstr (mob->name, "polar")))
      {
        remove_flagval (mob, FLAG_ROOM1,
 		       (flagbits (mob->flags, FLAG_ROOM1) &
@@ -779,31 +655,31 @@ generate_randpop_mob (THING *area, THING *proto, char *name, char *sname, char *
    
    /* First modify on size. */
    
-   if (strstr (basename, "small") ||
-       strstr (basename, "little") ||
-       strstr (basename, "tiny"))
+   if (strstr (mob->name, "small") ||
+       strstr (mob->name, "little") ||
+       strstr (mob->name, "tiny"))
      {
-       mob->level /= 2;
-       mob->height /= 2;
-       mob->weight /= 2;
+       mob->level = mob->level *3/4;
+       mob->height = mob->height *3/4;
+       mob->weight = mob->weight * 3/4;
      }
-   else if (strstr (basename, "large"))
+   else if (strstr (mob->name, "large"))
      {
-       mob->level = mob->level *3/2;
-       mob->height = mob->level *3/2;
-       mob->weight = mob->level *3/2;
+       mob->level = mob->level *5/4;
+       mob->height = mob->height *5/4;
+       mob->weight = mob->weight *5/4;
      }
-   else if (strstr (basename, "giant"))
+   else if (strstr (mob->name, "giant"))
+     {
+       mob->level = mob->level*3/2;
+       mob->height=  mob->height*3/2;
+       mob->weight = mob->height*3/2; 
+     }
+   else if (strstr (mob->name, "huge"))
      {
        mob->level *= 2;
        mob->height *= 2;
        mob->weight *= 2;
-     }
-   else if (strstr (basename, "huge"))
-     {
-       mob->level *= 3;
-       mob->height *= 3;
-       mob->weight *= 3;
      }
    
    /* Then modify on general principles. */
@@ -871,3 +747,23 @@ generate_randpop_mob (THING *area, THING *proto, char *name, char *sname, char *
    return mob;
 }
 
+
+
+/* This tells if an area has a free mobject vnum in it or not. */
+
+int
+find_free_mobject_vnum (THING *area)
+{
+  int vnum;
+  THING *mobject;
+  
+  if (!area || !IS_AREA (area))
+    return 0;
+
+  for (vnum = area->vnum + area->mv + 1; vnum < area->vnum + area->max_mv; vnum++)
+    {
+      if ((mobject = find_thing_num (vnum)) == NULL)
+	return vnum;
+    }
+  return 0;
+}

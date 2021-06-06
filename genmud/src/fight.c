@@ -83,7 +83,7 @@ update_combat (THING *th)
 	   nr (1,3) == 2 &&
 	   (th->fgt->hunting_type != HUNT_KILL ||
 	    nr (1,100) <= LEVEL (th) ||
-	    nr (1,3) != 1 ||
+	    nr (1,3) == 1 ||
 	    IS_ACT1_SET (th, ACT_FASTHUNT)))
     {
       hunt_thing (th, 0);
@@ -617,7 +617,9 @@ one_hit (THING *th, THING *vict, THING *weapon, int special)
       /* You always get a 50/50 chance of hitting, just to keep it from being
 	 dozens of rounds of misses. */
       
-      if (nr (1, 150) > hit && nr(1,2) != 2 && !RAVAGE)
+      if (nr (1, 150) > hit && 
+	  (nr(1,3) == 2 || !IS_PC (th))
+	  && !RAVAGE)
 	{
 	  act ("@1n miss@s @3n.", th, NULL, vict, NULL, TO_ALL + TO_SPAM);
 	  return FALSE;
@@ -1040,7 +1042,7 @@ damage (THING *th, THING *vict, int dam, char *word)
   DAMAGE *damg = NULL;
   THING *obj;
   RACE *align;
-  SOCIETY *society;
+  SOCIETY *society, *tsoc, *vsoc;
   int reduced = 0;
   int flags;
   int th_hurt, vict_hurt; /* Hurt flags for th and vict. */
@@ -1077,7 +1079,7 @@ damage (THING *th, THING *vict, int dam, char *word)
       if (IS_SET (soc->val[2], BATTLE_CASTES) &&
 	  soc->val[4] > 0)
 	dam += dam/3;
-
+      
       /* When defending a homeland, you get an attack bonus. */
       if ((build = FNV (th->in, VAL_BUILD)) != NULL &&
 	  (society = find_society_num (build->val[0])) != NULL &&
@@ -1085,6 +1087,12 @@ damage (THING *th, THING *vict, int dam, char *word)
 	    ((soc = FNV (th, VAL_SOCIETY)) != NULL &&
 	     soc->val[0] == build->val[0]))))
 	dam += (dam*2*build->val[1])/100;
+
+      if ((tsoc = find_society_num (soc->val[0])) != NULL)
+	dam += dam*tsoc->morale/(2*MAX_MORALE);
+
+      if (IS_SET (tsoc->society_flags, SOCIETY_OVERLORD))
+	dam += dam/5;
     }
   
   if (IS_PC (vict))
@@ -1099,12 +1107,19 @@ damage (THING *th, THING *vict, int dam, char *word)
     }
   
   /* Defensive bonus for built up cities. */
-  if ((build = FNV (vict->in, VAL_BUILD)) != NULL &&
-      (society = find_society_num (build->val[0])) != NULL &&
-      (((vict->align > 0 && !DIFF_ALIGN (vict->align, society->align)) ||
-	((soc = FNV (vict, VAL_SOCIETY)) != NULL &&
-	soc->val[0] == build->val[0]))))
-    dam -= (dam*3*build->val[1])/100;
+
+  if ((soc = FNV (vict, VAL_SOCIETY)) != NULL)
+    {      
+      if ((build = FNV (vict->in, VAL_BUILD)) != NULL &&
+	  (society = find_society_num (build->val[0])) != NULL &&
+	  (((vict->align > 0 && !DIFF_ALIGN (vict->align, society->align)) ||
+	    (soc->val[0] == build->val[0]))))
+	dam -= (dam*3*build->val[1])/100;
+      if ((vsoc = find_society_num (soc->val[0])) != NULL)
+	dam -= dam*vsoc->morale/(2*MAX_MORALE);
+      if (IS_SET (vsoc->society_flags, SOCIETY_OVERLORD))
+	dam -= dam/6;
+    }
   
   
   
@@ -1510,14 +1525,15 @@ check_if_in_melee (THING *att, THING *vict)
   int attacker_count = 0, attacker_max = 4;
   THING *thg;
   
-  if (!att || !vict || !vict->fgt || !att->fgt ||
+  if (!att || !vict || !vict->fgt || !att->fgt || !vict->in ||
       FIGHTING (att) != vict)
     return FALSE;
   
   for (thg = vict->in->cont; thg; thg = thg->next_cont)
     {
-      if (thg == att || nr (1,10) == 3 ||
-	  (FIGHTING(thg) == vict && ++attacker_count >= attacker_max))
+      if (thg == att ||
+	  (FIGHTING(thg) == vict && ++attacker_count >= attacker_max) || 
+	  nr (1,10) == 3)
 	break;
     }
   
@@ -1853,8 +1869,9 @@ get_killed (THING *vict, THING *killer)
 	  if (FIGHTING (mob) == vict)
 	    mob->fgt->fighting = NULL;
 	  
-	  if (is_hunting (mob) && mob->fgt->hunt_victim == vict)
-	    stop_hunting (mob, FALSE);
+	  if (mob->fgt->hunt_victim == vict ||
+	      !str_cmp (mob->fgt->hunting, NAME(vict)))
+	    stop_hunting (mob, TRUE);
 	}
       
 
@@ -2323,6 +2340,9 @@ do_flurry (THING *th, char *arg)
   
   multi_hit (th, vict);
   
+  if (FIGHTING(th) == vict && nr (1,3) != 2)
+    multi_hit (th, vict);
+  
   if (FIGHTING (th) == vict && check_spell (th, NULL, 554 /* Flurry */))
     multi_hit (th, vict);
   
@@ -2460,11 +2480,14 @@ do_backstab (THING *th, char *arg)
             (fighting_now && !check_spell (th, NULL, 558 /* Circle */)))
 	    {
 	      act ("@1n miss@s with @1s backstab!", th, NULL, vict, NULL, TO_ALL);
-	      continue;
 	    }	  
-	  act ("$9@1n$9 place@s @2n$9 into @3p$9 back!$7", th, obj, vict, NULL, TO_ALL);
-	  if (one_hit (th, vict, obj, SP_ATT_BACKSTAB))
-	    break;
+	  else
+	    {
+	      act ("$9@1n$9 place@s @2n$9 into @3p$9 back!$7", th, obj, vict, NULL, TO_ALL);
+	      if (one_hit (th, vict, obj, SP_ATT_BACKSTAB))
+		break;
+	    }
+	  
 	  start_fighting (th, vict);
 	  if (vict->fgt && vict->fgt->fighting != th)
 	    vict->fgt->fighting = th;
