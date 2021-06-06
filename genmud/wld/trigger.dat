@@ -1,22 +1,2 @@
-TRIGGER
-Name foo3`
-Gen 32768 0 0 200
-Pct 100
-Keywords 20`
-Code foo3`
-END_TRIGGER
-TRIGGER
-Name foo1`
-Gen 512 0 2 1032
-Pct 100
-Code foo1`
-END_TRIGGER
-TRIGGER
-Name foo2`
-Gen 512 0 0 1032
-Pct 100
-Keywords 601`
-Code foo2`
-END_TRIGGER
 
 END_OF_TRIGGERS

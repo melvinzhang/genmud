@@ -3,11 +3,11 @@ Name start.are`
 HpMv 0 1 109 998
 HWT 0 0
 Cost 100
-Timer 7
+Timer 12
 Short the start area`
 Long A cold wind blows by...`
 type Lonath`
-ThFl 672137216
+ThFl 537919488
 Flag Area 0 0 28
 END_THING
 
@@ -239,7 +239,7 @@ Color 8
 Short The Evil Recall Room`
 MIW 1
 Symbol -`
-ThFl 134742507
+ThFl 524779
 Flag Room 0 0 1
 Reset 251 100 1 1
 END_THING
@@ -254,7 +254,7 @@ Desc The Recall Room
 Short The Good Recall Room`
 MIW 1
 Symbol -`
-ThFl 134742507
+ThFl 524779
 Flag Room 0 0 1
 Reset 252 100 1 1
 END_THING
@@ -1472,7 +1472,7 @@ HWT 0 0
 Short the mob randpop`
 Long The mob randpop is here.`
 ThFl 100934
-Val randpop 101100 1274 2 1000 0 0 0 0 `
+Val randpop 101100 1284 2 1000 0 0 0 0 `
 END_THING
 
 THING 279
@@ -1481,7 +1481,7 @@ HWT 0 0
 Short The provision pop`
 Long The provision po pis here.`
 ThFl 101063
-Val randpop 125006 249 1 0 0 0 0 0 `
+Val randpop 125006 224 1 0 0 0 0 0 `
 END_THING
 
 THING 300
@@ -1567,8 +1567,8 @@ Short a knife`
 Wear wield`
 Long A knife is here.`
 ThFl 100934
-Val tool 6 0 0 0 0 0 0 0 `
 Val weapon 1 2 0 0 0 0 0 0 `
+Val tool 6 0 0 0 0 0 0 0 `
 END_THING
 
 THING 356

@@ -2852,7 +2852,6 @@ edit_flags (THING *th, FLAG**pflags, char *arg)
 
   if (flagtype < NUM_FLAGTYPES)
     {
-
       /* Search through the list of names. */
       for (fld = flaglist[flagtype].whichflag; fld->flagval != 0; fld++)
 	{

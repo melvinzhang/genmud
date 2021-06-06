@@ -77,8 +77,7 @@ society_activity (THING *th)
     {
       /* If the warrior type hasn't been set yet, then do it. */
       if ((soc->val[3] <= WARRIOR_NONE || soc->val[3] >= WARRIOR_MAX) &&
-	  rsoc && !is_hunting(th) &&
-	  nr(1,5) == 3)
+	  rsoc && !is_hunting(th) && nr(1,8) == 3)
 	{
 	  
 	  /* Go through all "guard post" rooms the society has. */
@@ -107,7 +106,7 @@ society_activity (THING *th)
 	  if (!is_hunting (th) && soc->val[3] != WARRIOR_HUNTER)
 	    soc->val[3] = WARRIOR_GUARD;
 	}
-      else if (!is_hunting (th) && nr (1,20) == 2)
+      else if (!is_hunting (th) && nr (1,80) == 2)
 	find_new_patrol_location (th);
       if (!IS_SET (flags, CASTE_WIZARD | CASTE_HEALER))
 	return;
@@ -385,7 +384,8 @@ society_give_reward (THING *giver, THING *receiver, int reward)
   if (!giver || !receiver || !IS_PC (receiver) ||
       (find_society_in (giver) == NULL) ||
       DIFF_ALIGN (giver->align, receiver->align) || 
-      giver->position <= POSITION_SLEEPING)
+      giver->position <= POSITION_SLEEPING || 
+      IS_ACT1_SET (giver, ACT_PRISONER))
     return;
   
   sprintf (buf, "Thank you %s.", NAME (receiver));
@@ -474,7 +474,7 @@ find_gather_location (THING *th)
 	{
 	  if (num_room_choices < RAW_GATHER_ROOM_CHOICES &&
 	      ((flags && IS_ROOM_SET (room, flags)) ||
-	       (!flags && nr (1,4) == 2)))
+	       (!flags && nr (1,2) == 2)))
 	    {
 	      room_choices[num_room_choices] = room;
 	      bfs_choices[num_room_choices] = bfs_curr;
@@ -486,7 +486,7 @@ find_gather_location (THING *th)
 	  
 	  if (bfs_curr->depth > RAW_GATHER_DEPTH ||
 	      num_room_choices >= RAW_GATHER_ROOM_CHOICES ||
-	      (bfs_curr->depth >= RAW_GATHER_DEPTH/5 &&
+	      (bfs_curr->depth >= RAW_GATHER_DEPTH/10 &&
 	       num_room_choices > 0))
 	    break;
 	  
@@ -1564,7 +1564,7 @@ find_society_member_nearby (THING *th, int caste_flags, int max_depth)
     return NULL;
   
   if (max_depth < 1 || max_depth >= MAX_SHORT_HUNT_DEPTH)
-    max_depth = MAX_SHORT_HUNT_DEPTH/2;
+    max_depth = MAX_SHORT_HUNT_DEPTH;
   th_move_flags = th->move_flags;
   
   
@@ -1574,7 +1574,7 @@ find_society_member_nearby (THING *th, int caste_flags, int max_depth)
  
   while (bfs_curr && (room = bfs_curr->room) != NULL)
     {      
-      for (vict = bfs_curr->room->cont; vict; vict = vict->next_cont)
+      for (vict = room->cont; vict; vict = vict->next_cont)
 	{
 	  if ((soc2 = FNV (vict, VAL_SOCIETY)) != NULL &&
 	      soc2->val[0] == soc->val[0] &&
@@ -2204,11 +2204,11 @@ settle_new_society (SOCIETY *soc)
      The society must also be large enough, and it cannot have settled
      within the recent past. */
   
-
+  
   if (!IS_SET (soc->society_flags, SOCIETY_SETTLER) ||
-    soc->population < nr (soc->population_cap/3, 
+    soc->population < nr (soc->population_cap/2, 
 			  soc->population_cap) || 
-      soc->settle_hours > 0 || nr (1,7) != 3)
+      soc->settle_hours > 0 || nr (1,13) != 2)
     return;
   
   if ((oldarea = find_area_in (soc->room_start)) == NULL)
@@ -2348,6 +2348,7 @@ settle_new_society (SOCIETY *soc)
 	   room->vnum, room->vnum);
   
   society_do_activity (soc, 33, buf);
+  soc->settle_hours = 30;
   /* Send 1/3 of the mobs out settling. */
   
   return;
@@ -2400,6 +2401,7 @@ society_can_settle_in_area (SOCIETY *soc, THING *ar)
 	  /* If a society of the same align is in the area in
 	     question, make a note of it to keep things from 
 	     getting too complicated. */
+	  soc_in_area++;
 	  if (soc2->align == soc->align)
 	    {
 	      soc_in_area++;
@@ -2410,7 +2412,7 @@ society_can_settle_in_area (SOCIETY *soc, THING *ar)
 	}
     }
   
-  if (soc_in_area > 4)
+  if (soc_in_area > 3)
     return FALSE;
   return TRUE;
 }
@@ -2429,8 +2431,8 @@ update_patrols (SOCIETY *soc)
   int total_warriors;
   char buf[STD_LEN];
   
-  if (!soc || nr (1,75) != 16 ||
-      (total_warriors = find_num_members (soc, BATTLE_CASTES)) < 60 ||
+  if (!soc || nr (1,375) != 47 ||
+      (total_warriors = find_num_members (soc, BATTLE_CASTES)) < soc->population_cap/3 ||
       (oldarea = find_area_in (soc->room_start)) == NULL)
     return;
   
@@ -2446,7 +2448,7 @@ update_patrols (SOCIETY *soc)
   /* Find a battle mob in our society zone not doing anything,
      and see if it can get to the desired room. */
   
-  sprintf (buf, "home battle one nosent nohunt end patrol vnum %d %d attr v:society:3 %d",
+  sprintf (buf, "home battle one nosent nohunt end far_patrol vnum %d %d attr v:society:3 %d",
 	   room->vnum, room->vnum, WARRIOR_PATROL);
   
   if ((mob = society_do_activity (soc, 100, buf)) == NULL)
@@ -2464,7 +2466,7 @@ update_patrols (SOCIETY *soc)
   add_rumor (RUMOR_PATROL, soc->vnum, area->vnum, 0, 0);
 
   
-  sprintf (buf, "home battle nosent nohunt end patrol vnum %d %d attr v:society:3 %d",
+  sprintf (buf, "home battle nosent nohunt end far_patrol vnum %d %d attr v:society:3 %d",
 	   room->vnum, room->vnum, WARRIOR_PATROL);
   society_do_activity (soc, 5, buf);
   return;
@@ -2718,7 +2720,8 @@ reinforce_other_societies(SOCIETY *soc)
   
 
 
-
+/* This is where a society member that's actually settling
+   founds a new society wheni t gets to its proper location. */
 
 
 void
@@ -3155,14 +3158,23 @@ society_do_activity (SOCIETY *soc, int percent, char *arg)
 		  target_end_vnum > 0)
 		{
 		  target_room = NULL;
-		  for (room_trial = 0; room_trial < 6 && !target_room; room_trial++)
+		  for (room_trial = 0; room_trial < 40 && !target_room; room_trial++)
 		    {
-		      target_room = find_thing_num (nr (target_start_vnum, target_end_vnum));
-		      if (target_room && IS_ROOM (target_room))
-			{
-			  stop_hunting (th, TRUE);
-			  start_hunting_room (th, target_room->vnum, end_hunting_type);
-			}
+		     
+		      int target_room_bits = 0;
+		      if ((target_room = find_thing_num (nr (target_start_vnum, target_end_vnum))) == NULL ||
+			  !IS_ROOM (target_room))
+			continue;
+		      /* The target room must not have badroom bits or
+			 the society must have those same badroom bits. */
+		      if((target_room_bits = 
+			  (flagbits (target_room->flags, FLAG_ROOM1) & BADROOM_BITS)) != 0 &&
+			 IS_SET (~target_room_bits, flagbits (soc->flags, FLAG_ROOM1)))
+			continue;
+		      
+		      stop_hunting (th, TRUE);
+		      start_hunting_room (th, target_room->vnum, end_hunting_type);
+		      break;
 		    }
 		}
 	      else if (victim_name[0])
@@ -3360,7 +3372,9 @@ update_prisoner_status (THING *th)
 		       other_soc->pname, NAME(other_area), th_soc->pname, NAME(th_area));
 	      do_say (th, buf);
 	    }
-	  else
+	  else if (!FOLLOWING (th) ||
+		   is_enemy (th, FOLLOWING (th)))
+	    
 	    do_say (th, "Please help me. I'm being held prisoner!");
 	}
       return TRUE;

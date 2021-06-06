@@ -322,6 +322,11 @@ plural_form (char *txt)
     strcat (txt, "oes");
   else if (c == 'f')
     strcat (txt, "ves");
+  else if (c == 'n' && LC(*(t-1)) == 'a' && LC (*(t-2)) == 'm')
+    {
+      *t = 'n';
+      *(t-1) = 'e';
+    }
   else
     {
       *t = c;

@@ -17,10 +17,10 @@
 
 #define NUM_GUARD_POSTS       10       /* Max num of posts a society has. */
 
-#define RAW_GATHER_DEPTH      30     /* Things only gather up to N
+#define RAW_GATHER_DEPTH      40     /* Things only gather up to N
 					 spaces from present location. */
 
-#define RAW_GATHER_ROOM_CHOICES  5     /* Pick up to 10 rooms to use to look
+#define RAW_GATHER_ROOM_CHOICES 10     /* Pick up to N rooms to use to look
 					for raw materials. */
 
 #define GUARD_POST_CHOICES    100     /* Maximum number of rooms that are
@@ -28,7 +28,7 @@
 					 to see which ones should be made
 					 into guard posts. */
 
-#define POP_BEFORE_SETTLE     400   /* Soc needs N members before it
+#define POP_BEFORE_SETTLE     300   /* Soc needs N members before it
 					attempts to make a new society. */
 
 #define POP_LEVEL_MULTIPLIER  10    /* Max pop for a society is based on
@@ -45,6 +45,7 @@
 /* Min and max percents of warriors that a society or align tries
    to have. */
 
+
 #define WARRIOR_PERCENT_MIN   30 
 #define WARRIOR_PERCENT_MAX   70
 
@@ -56,9 +57,9 @@
 
 # define RAID_SETUP_HOURS    10    /* Hours for raiders to make it to setup room. */
 
-#define RAID_HOURS           60    /* Raiders have close to hours to raid, then
+#define RAID_HOURS          100    /* Raiders have close to hours to raid, then
 				      they must return home. */
-#define SOCIETY_RAID_HOURS  100    /* Society must wait this long between
+#define SOCIETY_RAID_HOURS  250    /* Society must wait this long between
 				      raids. */
 
 #define SOCIETY_RAID_CHANCE  50    /* 1 out of this chance of raiding each

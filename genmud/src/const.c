@@ -880,7 +880,7 @@ be changing that often anyway.
 
 const struct gather_raw_data gather_data[] = 
 { 
-  { "", "", 0, 0,
+  { "", "", "", 0, 0,
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     { "", "", "", ""},
@@ -888,7 +888,7 @@ const struct gather_raw_data gather_data[] =
     0, FALSE, FALSE, 0,
     0, 0, {0,0}, {0,0}},
 
-  { "mine", "mineral", 20, 30,  /* Minerals  1 */
+  { "mine", "mineral", "minerals", 20, 30,  /* Minerals  1 */
     {190, 0, 0, 0},
     {0, 0, 0, 0}, 
     {"", "", "", ""},
@@ -896,7 +896,7 @@ const struct gather_raw_data gather_data[] =
     0, TRUE, TRUE, ROOM_UNDERGROUND | ROOM_ROUGH | ROOM_MOUNTAIN, 
       FORGED_EQ_AREA_VNUM+10, MAX_MINERAL, {2,1}, {2, 1}},
 
-  { "hew", "stone", 30, 40,  /* Stone  2 */
+  { "hew", "stone", "stone", 30, 40,  /* Stone  2 */
     {192, 0, 0, 0},
     {0, 0, 0, 0},
     {"", "", "", ""},
@@ -904,7 +904,7 @@ const struct gather_raw_data gather_data[] =
     0, FALSE, FALSE, ROOM_MOUNTAIN | ROOM_UNDERGROUND,
     900, 4, {3,1}, {2,1}},
 
-  { "chop", "wood", 25, 40,  /* Wood  3 */
+  { "chop", "wood", "wood", 25, 40,  /* Wood  3 */
     {0, 0, 0, 0},
     {VAL_WEAPON, 0, 0, 0},
     {"axe", "", "", ""},
@@ -912,7 +912,7 @@ const struct gather_raw_data gather_data[] =
     0, TRUE, TRUE, ROOM_FOREST,
     820, 6, {2, 1}, {2, 1}},
   
-  { "collect", "flower", 30, 35,         /* Flowers 4 */
+  { "collect", "flower", "flowers", 30, 35,         /* Flowers 4 */
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     { "", "", "", ""},
@@ -920,7 +920,7 @@ const struct gather_raw_data gather_data[] =
     0, FALSE, FALSE, ROOM_FIELD,
     800, 4, {2,1}, {3,1}},
 
-  { "harvest", "food", 30, 40,  /* Food 5 */
+  { "harvest", "food", "food", 30, 40,  /* Food 5 */
     {191, 0, 0, 0},
     {0, 0, 0, 0},
     {"", "", "", ""},
@@ -928,7 +928,7 @@ const struct gather_raw_data gather_data[] =
     0, FALSE, FALSE, ROOM_FIELD,
     920, 3, {2,1}, {2,1}}, 
 
-  { "gather", "herb", 35, 60,  /* Herbs 6 */
+  { "gather", "herb", "herbs", 35, 60,  /* Herbs 6 */
     {773, 0, 0, 0},
     {VAL_WEAPON, 0, 0, 0},
     {"sickle", 0, 0, 0},
@@ -936,7 +936,7 @@ const struct gather_raw_data gather_data[] =
     774, TRUE, TRUE, ROOM_FOREST,
     850, 7, {5, 4}, {2, 1}},
   
-  { "extrude", "ichor", 50, 30, /* Ichor 7 */
+  { "extrude", "ichor", "ichor", 50, 30, /* Ichor 7 */
     { 0, 0, 0, 0 },
     { 0, 0, 0, 0 },
     { "", "", "", "" },
@@ -945,7 +945,7 @@ const struct gather_raw_data gather_data[] =
     950, 12, {0,0}, {4,1}},
   
   
-  { "max", "",0, 0,          /* Max 8 */
+  { "max", "", "", 0, 0,          /* Max 8 */
     {0, 0, 0, 0},
     {0, 0, 0, 0},
     { "", "", "", ""},

@@ -265,7 +265,8 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 #define MAP_MAXY               60    /* How tall maps can be */
 #define SMAP_MAXX              13   /* Small map size */
 #define SMAP_MAXY              11   /* Small map size */
-#define CARNIVORE_HUNT_DEPTH   6   /* Max depth a carnivore hunts on avg..*/
+#define CARNIVORE_HUNT_DEPTH   4   /* Max depth a carnivore hunts on 
+avg..*/
 #define REMORT_ROOM            26   /* Room where you can remort. */
 #define MAX_REMORTS            10    /* Max number of remorts. */
 #define STATS_PER_REMORT       4     /* Stats per remort... */
@@ -299,8 +300,6 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 #define NUMERIC_STATS_SEEN     20      /* Level you see numeric stats. */
 #define BIGBUF                 150000  /* Size of big buffer. */
 #define CASTE_MAX              10      /* Max number of castes */
-#define MAX_HUNT_DEPTH         3000    /* Max depth hunting works... */
-#define MAX_SHORT_HUNT_DEPTH   50      /* Max depth you go on "short" hunts. */
 #define HUNT_STRING_LEN        30      /* Max len of "hunting" strings. */
 #define MAX_GROUP_POINTS       16      /* Max power of a group */
 #define MAX_SCRIPT_DEPTH       5       /* Max depth of scripts. */
@@ -2193,6 +2192,7 @@ struct gather_raw_data
 {
   char *command;            /* Command name...also spell name lookup */
   char *raw_name;           /* What kind of raw material this gathers. */
+  char *raw_pname;          /* Plural name of the raw material. */
   short level;              /* Level to use. */
   short time;               /* Ticks needed to gather it. */
   int equip[GATHER_EQUIP];  /* Equip needed to gather stuff. specific #'s */

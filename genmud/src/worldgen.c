@@ -2215,7 +2215,7 @@ worldgen_generate_demons (int curr_vnum, int area_size)
       soc->room_end = below_area->vnum + below_area->mv;
       /* Make this area pop a LOT of randpop mobs. Help those
 	 demons grow by giving them something to kill. :) */
-      add_reset (below_area, MOB_RANDPOP_VNUM, 100, 400, 1);
+      add_reset (below_area, MOB_RANDPOP_VNUM, 50, 200, 1);
     }
   return;
 }

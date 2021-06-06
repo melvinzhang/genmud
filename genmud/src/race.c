@@ -1849,7 +1849,8 @@ help_societies_under_siege(void)
   for (align_num = 1; align_num < ALIGN_MAX; align_num++)
     {
      
-      if ((align = align_info[align_num]) == NULL)
+      if ((align = align_info[align_num]) == NULL ||
+	  align->warriors < 2000 || nr (1,200) != 37)
 	continue;
       
       /* Number of hurt and ok societies. */
@@ -2021,7 +2022,8 @@ update_alignment_goals (void)
       /* Once in a while, have an all-out attack on the best alignment
 	 if it's on the other side. */
 
-      if (align->vnum != best_align_vnum && nr (1,150) == 35)
+      if (align->vnum != best_align_vnum && nr (1,250) == 35 &&
+	  align->warriors >= 2000)
 	{
 	  for (soc = society_list; soc; soc = soc->next)
 	    {

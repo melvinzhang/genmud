@@ -504,7 +504,7 @@ update_raids (void)
 		  free_raid (raid);
 		  continue;
 		}
-	      sprintf (buf, "raid %d all vnum %d %d end healing attr v:society:4 0 attr v:society:3 %d",		       
+	      sprintf (buf, "raid %d all vnum %d %d end kill attr v:society:4 0 attr v:society:3 %d",		       
 		       raid->vnum,
 		       society->room_start,
 		       society->room_end,
@@ -716,7 +716,7 @@ relic_raid_start (SOCIETY *soc)
   add_raid_to_list(raid);
   raid->raider_society = soc->vnum;
   raid->victim_society = 0;
-  raid->hours = nr (50, 60);
+  raid->hours = nr (SOCIETY_RAID_HOURS/2, SOCIETY_RAID_HOURS*3/4);
   raid->victim_start_power = 0;
   raid->raider_power_lost = 0;
   raid->victim_power_lost = 0;
@@ -728,7 +728,7 @@ relic_raid_start (SOCIETY *soc)
   sprintf (buf, "battle nosent home end raid vnum %d %d  attr v:society:3 %d attr v:society:4 %d", align->relic_ascend_room, 
 	   align->relic_ascend_room, WARRIOR_HUNTER, raid->vnum);
   society_do_activity (soc, 100, buf);
-  soc->relic_raid_hours = 100;
+  soc->relic_raid_hours = SOCIETY_RAID_HOURS;
   soc->relic_raid_gather_point = 0;
   soc->relic_raid_target = 0;
   return TRUE;

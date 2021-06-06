@@ -193,7 +193,10 @@ replace_one_value (SCRIPT_EVENT *script_event, char *arg, THING *thg, bool setti
 	if (!str_prefix ("f:", arg))
 	  {
 	    if (setting)
-	      edit_flags (NULL, &th->flags, buf);
+	      {
+		sprintf (buf, "%s %s", arg + 2, reparg);
+		edit_flags (NULL, &th->flags, buf);
+	      }
 	    else
 	      {	
 		int ftype;		

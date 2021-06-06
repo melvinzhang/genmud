@@ -403,7 +403,7 @@ do_society (THING *th, char *arg)
   if (!str_cmp (arg1, "update"))
     {
       if (is_number (arg2))
-	num_times = MID (1, atoi (arg2), 100);
+	num_times = MID (1, atoi (arg2), 1000);
       else
 	num_times = 1;
 
@@ -1730,12 +1730,37 @@ society_get_disease (void)
 {
   SOCIETY *soc;
   int caste, tier, vnum;
+  int count, num_choices = 0, num_chose = 0;
   THING *mob;
   VALUE *socval;
   FLAG *flg;
-  if ((soc = find_random_society (TRUE)) == NULL)
-    return;
   
+  /* Choose a society with a big population. */
+
+  for (count = 0; count < 2; count++)
+    {
+      for (soc = society_list; soc; soc = soc->next)
+	{
+	  if (soc->population < soc->population_cap*4/5 ||
+	      !soc->generated_from)
+	    continue;
+	  
+	  if (count == 0)
+	    num_choices++;
+	  else if (--num_chose < 1)
+	    break;
+	}
+      if (count == 0)
+	{
+	  if (num_choices < 1)
+	    return;
+	  num_chose = nr (1, num_choices);
+	}
+    }
+  
+  if (!soc)
+    return;
+
   for (caste = 0; caste < CASTE_MAX; caste++)
     {
       for (tier = 0; tier < soc->max_tier[caste]; tier++)
@@ -1756,5 +1781,6 @@ society_get_disease (void)
 	    }
 	}
     }
+  add_rumor (RUMOR_PLAGUE, soc->vnum, 0, 0, 0);
   return;
 }

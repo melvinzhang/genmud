@@ -18,7 +18,8 @@
 #define RUMOR_RELIC_RAID 7  /* A society tries to raid a relic room of
 			       a different alignment. */
 #define RUMOR_ABANDON    8  /* Run away and settle in a new location. */
-#define RUMOR_TYPE_MAX   9
+#define RUMOR_PLAGUE     9  /* This society got the plague. */
+#define RUMOR_TYPE_MAX   10
 
 #define RUMOR_HOURS_UNTIL_DELETE 300 /* How many hours rumors stay in
 				    existence before they start

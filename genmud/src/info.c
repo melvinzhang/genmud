@@ -94,8 +94,8 @@ weather_names[weat] : "sunny"));
 		   (UPD_PER_SECOND*(current_time-boot_time)));
 	  stt (buf, th);
 	}
-      sprintf (buf, "Averge track size: %d\n\r", bfs_tracks_count/MAX(1, bfs_times_count));
-      stt (buf, th);
+          sprintf (buf, "Average track size: %d\n\r", bfs_tracks_count/MAX(1, bfs_times_count));
+	      stt (buf, th); 
     }
   
   

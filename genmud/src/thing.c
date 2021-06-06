@@ -1996,9 +1996,17 @@ add_thing_to_list (THING *th)
     return;
   
   
+  /* This is important. All things that are in areas ( like rooms and
+     prototypes) must be put at the FRONT of the thing_hash lists.
+     If you don't do this, find_thing_num will not work properly and
+     you will be hating life. */
   
+  /* If the list head is empty or it's not in an area, we put this
+     item here first. */
   if(!thing_hash[num] || 
-     !thing_hash[num]->in  || !IS_AREA (thing_hash[num]->in))
+     !thing_hash[num]->in  || 
+     !IS_AREA (thing_hash[num]->in) ||
+     (th->in && IS_AREA (th->in)))
     {
       th->prev = NULL;
       th->next = thing_hash[num];
@@ -2006,6 +2014,9 @@ add_thing_to_list (THING *th)
 	thing_hash[num]->prev = th;
       thing_hash[num] = th; 
     }
+  /* Down here, the first item is in an area and this item isn't
+     so it gets put into the list after the stuff that's inside of
+     areas. */
   else
     {
       for (prev = thing_hash[num]; prev != NULL; prev = prev->next)
@@ -2104,28 +2115,26 @@ THING *
 find_thing_num (int num)
 {
   THING *thg;
-  if ((thg = thing_hash[num % HASH_SIZE]) == NULL || num < 1)
-    return NULL;
-  if (thg->vnum == num && thg->in && IS_AREA (thg->in))
-    return thg;
-  
-  if (!thg->next)
+  if (num < 1) 
     return NULL;
   
-  if (thg->next->vnum == num && thg->next->in &&
-      IS_AREA (thg->next->in))
-    return thg->next;
-  
-  if ((thg = thg->next->next) == NULL)
+  if ((thg = thing_hash[num % HASH_SIZE]) == NULL)
     return NULL;
   
-  for (; thg; thg = thg->next)
+  do
     {
-      if (!thg->in || !IS_AREA (thg->in))
-	break;
       if (thg->vnum == num)
 	return thg;
+      thg = thg->next;
     }
+  /* This makes a BIG assumption. I assume that the things that are 
+     protos are at the start of the thing hash lists and if not
+     we are scrood...this will then travel down the entire list and
+     start finding random things. */
+  while (thg && thg->in);
+  
+  
+  
 #ifdef USE_WILDERNESS
   if (num >= WILDERNESS_MIN_VNUM)
     return make_wilderness_room (num);

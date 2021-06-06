@@ -35,6 +35,8 @@ const char *hunting_type_names[HUNT_MAX] =
     "healing",
     "sleep",
     "raid",
+    "need",
+    "far_patrol",
   };
 TRACK *
 new_track (void)
@@ -331,14 +333,14 @@ clear_bfs_list (void)
 	  if (bfs->room)
 	    RBIT (bfs->room->thing_flags, TH_MARKED);
 	  bfs->next = bfs_free; 
-	  bfs_free = bfs;	
+	  bfs_free = bfs;
 	  bfs_tracks_count++;
 	}
     }
   bfs_curr = NULL;
   bfs_list = NULL;
   bfs_last = NULL;
-  if (bfs_times_count >= 100000)
+  if (bfs_times_count > 100000)
     {
       bfs_times_count /= 10;
       bfs_tracks_count /= 10;
@@ -412,7 +414,7 @@ hunt_thing (THING *th, int max_depth)
   
  
   if (!th || !th->in || IS_PC (th) || !is_hunting (th) ||
-      !IS_ROOM (th->in) || FIGHTING (th))
+      !IS_ROOM (th->in) || FIGHTING (th) || th->position <= POSITION_SLEEPING)
     {
       if (!FIGHTING (th) && !IS_PC (th))
 	stop_hunting (th, TRUE);
@@ -460,26 +462,29 @@ hunt_thing (THING *th, int max_depth)
   if (max_depth >= MAX_SHORT_HUNT_DEPTH &&
       th->fgt->hunting_type != HUNT_RAID &&
       th->fgt->hunting_type != HUNT_SETTLE &&
-      th->fgt->hunting_type != HUNT_KILL)
-    max_depth = MAX_SHORT_HUNT_DEPTH;
+      th->fgt->hunting_type != HUNT_KILL &&
+      th->fgt->hunting_type != HUNT_FAR_PATROL)
+    {
+      max_depth = MAX_SHORT_HUNT_DEPTH;
+      if (nr (1,20) == 3)
+	max_depth *= 2;
+    }
   
   /* Most of the time cap the max hunt depth at MAX_HUNT_DEPTH. */
-  if (max_depth > MAX_HUNT_DEPTH &&
-      nr (1,15) != 3)
-    max_depth = MAX_HUNT_DEPTH;
-  
+ 
   if ((soc = FNV (th, VAL_SOCIETY)) != NULL)
     {
       if (!str_cmp (th->fgt->hunting, "diff_society"))
 	{
 	  if (!soc ||
-	      (society = find_society_in (th)) == NULL)
+	      (society = find_society_num (soc->val[0])) == NULL)
 	    {
 	      stop_hunting (th, FALSE);
 	      return FALSE; 
 	    }       
 	  closest_diff_society_vict = NULL;
 	  society_hunt = TRUE;
+	  max_depth = SOCIETY_HUNT_DEPTH;
 	}
       else
 	{
@@ -536,6 +541,18 @@ hunt_thing (THING *th, int max_depth)
 	      clear_bfs_list ();
 	      return FALSE;
 	    }
+
+	  /* Check if we can even get to this room. If it's a badroom,
+	     then don't go there. If the target room has badroom bits
+	     that aren't covered by the goodroom bits, then don't go 
+	     there. */
+	  
+	  if (IS_ROOM_SET (target_room, BADROOM_BITS &~goodroom_bits)) 
+	    {
+	      stop_hunting (th, FALSE);
+	      return FALSE;
+	    }
+	    
 	  th->fgt->hunt_victim = target_room;	
 	  while (bfs_curr && !vict)
 	    {
@@ -571,19 +588,23 @@ hunt_thing (THING *th, int max_depth)
 			    }	
 			}
 		    }
+		 
 		}
-	      
 	      if (!vict && bfs_curr->depth < max_depth)
 		{
 		  for (exit = room->values; exit; exit = exit->next)
 		    {
-		      if (exit->type <= REALDIR_MAX &&
-			  (nroom = FTR (room, exit->type-1, goodroom_bits)) != NULL)	    
+		      if (exit->type <= REALDIR_MAX &&  
+			  !IS_SET (exit->val[1], EX_WALL) &&
+			  (nroom = find_thing_num (exit->val[0])) != NULL &&
+			  is_track_room (nroom, goodroom_bits))
 			add_bfs (bfs_curr, nroom, exit->type - 1);
 		    }
 		}
 	      else 
-		break;	      
+		{
+		  break;	      
+		}
 	      bfs_curr = bfs_curr->next;
 	    }
 	  if (vict)
@@ -636,14 +657,13 @@ hunt_thing (THING *th, int max_depth)
 		    {
 		      for (exit = room->values; exit; exit = exit->next)
 			{
-			  if (exit->type >= 1 && exit->type <= REALDIR_MAX &&
-			  !IS_SET (exit->val[1], EX_WALL) &&
-			      (nroom = find_thing_num (exit->val[0])) != NULL &&
-			      is_track_room (nroom, goodroom_bits))
-			    add_bfs (bfs_curr, nroom, exit->type - 1);
+			 if (exit->type <= REALDIR_MAX &&  
+			     !IS_SET (exit->val[1], EX_WALL) &&
+			     (nroom = find_thing_num (exit->val[0])) != NULL &&
+			     is_track_room (nroom, goodroom_bits))
+			   add_bfs (bfs_curr, nroom, exit->type - 1);
 			}
 		    }
-		  
 		  /* If we found no ally to help within the allotted
 		     radius, attack the closest enemy. */
 		  else if (closest_diff_society_vict)
@@ -651,7 +671,7 @@ hunt_thing (THING *th, int max_depth)
 		      vict = closest_diff_society_vict;
 		      stop_hunting (th, TRUE);
 		      start_hunting (th, KEY(vict), HUNT_KILL);
-			  th->fgt->hunt_victim = vict;
+		      th->fgt->hunt_victim = vict;
 		    }
 		}
 	      
@@ -751,7 +771,7 @@ hunt_thing (THING *th, int max_depth)
 		    { 
 		      for (exit = room->values; exit; exit = exit->next)
 			{
-			  if (exit->type >= 1 && exit->type <= REALDIR_MAX &&
+			  if (exit->type <= REALDIR_MAX &&  
 			      !IS_SET (exit->val[1], EX_WALL) &&
 			      (nroom = find_thing_num (exit->val[0])) != NULL &&
 			      is_track_room (nroom, goodroom_bits))
@@ -929,6 +949,7 @@ hunt_thing (THING *th, int max_depth)
       stop_hunting (th, FALSE);
       switch (hunting_type)
 	{
+	  case HUNT_FAR_PATROL:
 	  case HUNT_PATROL: /* This thing patrols based on what it is...
 			       society mob? align mob? whatever it is. */
 	    /* Wait most of the time at the new loc. Unless it's a
@@ -1129,16 +1150,6 @@ find_track_room (THING *croom, int dir, int goodroom_bits)
   return NULL;
 }
 
-/* This tells if a certain room is usable as a track room or not. */
-
-bool
-is_track_room (THING *room, int goodroom_bits)
-{
-  if (room && IS_ROOM(room) && !IS_MARKED (room) &&
-      !IS_SET (room->move_flags, ((BADROOM_BITS & ~goodroom_bits))))
-    return TRUE;
-  return FALSE;
-}
 
 
 
@@ -1490,7 +1501,7 @@ mark_track_room (THING *room, THING *area, int goodroom_bits)
   
   for (dir = 0; dir < REALDIR_MAX; dir++)
     {
-      if ((nroom = find_track_room (room, dir, goodroom_bits)) != NULL)
+      if ((nroom = FTR (room, dir, goodroom_bits)) != NULL)
 	mark_track_room (nroom, area, goodroom_bits);
     }
   return;

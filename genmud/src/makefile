@@ -22,7 +22,7 @@ OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 
 mud: $(OBJS)
 	rm -f mud
-	gcc -lpthread -lcrypt -o mud $(OBJS)
+	gcc -lpthread  -lcrypt -o mud $(OBJS)
 
 clean:
 	\rm -rf *.o mud

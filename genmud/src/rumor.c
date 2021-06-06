@@ -27,6 +27,7 @@ const char *rumor_names[RUMOR_TYPE_MAX] =
     "reinforce",
     "relic raid",
     "abandon",
+    "plague",
   };
 
 
@@ -154,6 +155,12 @@ add_rumor (int type, int from, int to, int hours, int vnum)
   
   if (!BOOTING_UP)
     add_to_rumor_history (show_rumor (rumor, TRUE));
+  
+  /* Plague rumors should go to the same align societies, so set the
+     align to the society alignment. Note that if the soc align is 0,
+     then this still does nothing since those are all separate. */
+  if (type == RUMOR_PLAGUE)
+    align = find_align (NULL, soc->align);
   
   if (soc)
     add_rumor_to_society (soc, rumor->vnum);
@@ -526,7 +533,7 @@ send_mortal_rumor (THING *th)
     {
       sprintf (buf, "The %s could really use your help. The %s of %s have been attacking us a lot lately and we need your help to stop them!\n\r",
 	       align->name, soc2->pname, NAME(area));
-      stt (buf, th);
+      do_say (mob, buf);
       return;
     }
   
@@ -581,8 +588,7 @@ show_rumor (RUMOR *rumor, bool is_admin)
       return buf;
     }
 
-  
-  if ((soc = find_society_num (rumor->who)) == NULL ||
+  else if ((soc = find_society_num (rumor->who)) == NULL ||
       (oldarea = find_area_in (soc->room_start)) == NULL ||
       !IS_AREA (oldarea))
     {
@@ -595,8 +601,19 @@ show_rumor (RUMOR *rumor, bool is_admin)
       
     }
 
+  /* Plague rumors say a society was stricken with the plague. */
   
-  if (rumor->type == RUMOR_RAID || 
+  else if (rumor->type == RUMOR_PLAGUE)
+    {
+      sprintf (buf, "The %s%s%s of %s were stricken with the %s ",
+	       soc->adj, (*soc->adj ? " " : ""),
+	       soc->pname, NAME(oldarea), rumor_names[rumor->type]);
+    }
+  
+  /* Raid/reinforce has a from society and a to society. 
+     : society a raids/reinforces society b. */
+  
+  else if (rumor->type == RUMOR_RAID || 
       rumor->type == RUMOR_REINFORCE)
     {
       if ((soc2 = find_society_num (rumor->to)) == NULL ||
@@ -617,8 +634,8 @@ show_rumor (RUMOR *rumor, bool is_admin)
 		 soc2->adj, (*soc2->adj ? " " : ""),
 		 soc2->pname, NAME(to_area));
     }
-  
-  if (rumor->type == RUMOR_RELIC_RAID)
+  /* Relic raid is from a society to an alignment. */
+  else if (rumor->type == RUMOR_RELIC_RAID)
     {
       if ((soc = find_society_num (rumor->who)) == NULL ||
 	  (align = find_align (NULL, rumor->to)) == NULL ||
@@ -640,8 +657,8 @@ show_rumor (RUMOR *rumor, bool is_admin)
 		   NAME(to_area));
 	}
     }
-  
-  if (rumor->type == RUMOR_DEFEAT)
+  /* Defeat rumors just say someone got defeated. */
+  else if (rumor->type == RUMOR_DEFEAT)
     {
       sprintf (buf, "The %s%s%s of %s were %sed ",
 	       soc->adj, (*soc->adj ? " " : ""),
@@ -649,8 +666,8 @@ show_rumor (RUMOR *rumor, bool is_admin)
 	       NAME(oldarea),
 	       rumor_names[rumor->type]);
     }
-
-  if (rumor->type == RUMOR_ABANDON)
+  /* Abandon rumors just say they abandoned their homes. */
+  else if (rumor->type == RUMOR_ABANDON)
     {
       if ((area = find_thing_num (rumor->to)) == NULL)
 	{
@@ -667,8 +684,8 @@ show_rumor (RUMOR *rumor, bool is_admin)
 	       rumor_names[rumor->type],
 	       NAME (area));
     }
-  
-  if (rumor->type == RUMOR_SWITCH)
+  /* Switch rumors say they switched to an alignment. */
+  else if (rumor->type == RUMOR_SWITCH)
     {
       if ((align = find_align (NULL, rumor->to)) == NULL)
 	{
@@ -683,8 +700,10 @@ show_rumor (RUMOR *rumor, bool is_admin)
 	       soc->pname, NAME (oldarea), rumor_names[rumor->type],
 	       align->name);
     }
+  /* Settle/patrol rumors say they went to a different area and did
+     something. */
   
-  if (rumor->type == RUMOR_SETTLE || rumor->type == RUMOR_PATROL)
+  else if (rumor->type == RUMOR_SETTLE || rumor->type == RUMOR_PATROL)
     {
       if (((area = find_thing_num (rumor->to)) == NULL ||
 	   !IS_AREA (area) || area == the_world->cont))
@@ -1144,7 +1163,7 @@ show_raw_need_message (char *namebuf, int rawtype)
   else
     strcat (buf, "could use some ");
   
-  strcat (buf, gather_data[rawtype].raw_name);
+  strcat (buf, gather_data[rawtype].raw_pname);
   strcat (buf, ".\n\r");
   return buf;
 }

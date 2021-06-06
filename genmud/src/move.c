@@ -434,6 +434,8 @@ thing_to (THING *th, THING *to)
       is_in = is_in->in;
     }			 
   
+  
+  
   if (!IS_AREA (to))
     {
       if (!to->cont) /* If this contains nothing, th becomes the head. */
@@ -3557,7 +3559,7 @@ find_new_patrol_location (THING *th)
 	}
       else
 	{
-	  start_hunting_room (th, room->vnum, HUNT_HEALING);
+	  start_hunting_room (th, room->vnum, HUNT_KILL);
 	  socval->val[4] = 0;
 	  socval->val[3] = WARRIOR_GUARD;
 	}
@@ -3568,7 +3570,8 @@ find_new_patrol_location (THING *th)
   /* Don't interfere with hunting except for patrolling. */
   
   if (is_hunting (th) &&
-      th->fgt->hunting_type != HUNT_PATROL)
+      th->fgt->hunting_type != HUNT_PATROL &&
+      th->fgt->hunting_type != HUNT_FAR_PATROL)
     return;
   
   if (th->in && th->in->in && IS_AREA(th->in->in))
@@ -3599,7 +3602,7 @@ find_new_patrol_location (THING *th)
     return;
 
   start_hunting_room (th, room->vnum, HUNT_PATROL);
-  if (!hunt_thing (th, 40))
+  if (!hunt_thing (th, 50))
     stop_hunting (th, TRUE);
   
   return;

@@ -401,8 +401,6 @@ read_server (void)
   setup_timed_triggers ();
   make_forged_eq ();
   set_up_global_events();
-  update_societies(TRUE);
-  update_alignments();
   set_up_teachers();
   sanity_check_vars();
   worldgen_check_autogen();
@@ -496,13 +494,12 @@ read_area (char *filename)
   
   FILE_READ_LOOP
     {
-      bool found_newthing = FALSE;
-      THING *newthingcheck;
       newthing = NULL; 
       FKEY_START;
       FKEY ("THING")
 	{
-	  newthing = read_thing (f);
+	  if ((newthing = read_thing (f)) == NULL)
+	    continue;
 	  /* This thing_to must come before the add_thing_to_list
 	     because events are added in add_thing_to_list,
 	     and they check if a nonroom is inside of an area
@@ -510,21 +507,6 @@ read_area (char *filename)
 	     those things don't get events. */
 	  
 	  thing_to (newthing, new_area);
-	 
-	  found_newthing = FALSE;
-	  for (newthingcheck = new_area->cont;
-	       newthingcheck; newthingcheck = newthingcheck->next_cont)
-	    {
-	      if (newthingcheck->vnum == newthing->vnum)
-		{
-		  found_newthing =TRUE;
-		  break;
-		}
-	    }
-	  if (!found_newthing)
-	    {
-	      fprintf (stderr, "NT %d\n", newthing->vnum);
-	    }
 	  add_thing_to_list (newthing);
 	}
       FKEY ("END_OF_AREA")
@@ -923,6 +905,7 @@ void
 shutdown_server (void)
 {
   FILE_DESC *fd, *fd_next;
+  int count = 0;
   /* Save players */
   
   if (IS_SET (server_flags, SERVER_AUTO_WORLDGEN))
@@ -943,6 +926,9 @@ shutdown_server (void)
 	  fd->th = NULL;
 	  close_fd (fd);
 	}
+      while (IS_SET (server_flags, SERVER_SAVING_WORLD | SERVER_SAVING_AREAS) &&
+	     ++count < 50)
+	usleep (50000);
       init_write_thread();
       write_societies ();
       write_changed_areas(NULL);

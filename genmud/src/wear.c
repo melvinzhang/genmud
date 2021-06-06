@@ -651,7 +651,7 @@ find_eq_to_wear (THING *th)
   else if (nr (1,164) == 37)
     {
       do_wear (th, "all");
-      do_drop (th, "all");
+      do_drop (th, "all");      
       do_get (th, "all coins");
       return;
     }
@@ -663,6 +663,7 @@ find_eq_to_wear (THING *th)
   else if (nr (1,35) == 18)
     {
       do_get (th, "all");
+      do_drop (th, "all.corpse");
       return;
     }
   else if (nr (1,23) == 2)
@@ -699,9 +700,18 @@ find_eq_to_wear (THING *th)
 	{
 	  objn = obj->next_cont;
 	  
-	  if (pass == 0 && IS_WORN (obj))
-	    continue;
-	  
+	  if (pass == 0)
+	    {
+	      if (!is_worker && 
+		  (raw = FNV (obj, VAL_RAW)) != NULL)
+		{
+		  if (IS_WORN(obj))
+		    remove_thing (th, obj, TRUE);
+		  do_drop (th, NAME(obj));
+		}
+	      if (IS_WORN (obj))
+		continue;
+	    }
 	  if (obj->vnum == CORPSE_VNUM && nr (1,15) == 3 && !found_corpse)
 	    {
 	      found_corpse = TRUE;

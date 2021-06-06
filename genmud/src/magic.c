@@ -1071,7 +1071,7 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
 		      /* If we are removing permanent affects, we 
 			 can do it for any flag, so, we remove the
 			 affects from this flag since it matches the
-			 correct type...unlss it has a spell that it's
+			 correct type...unless it has a spell that it's
 			 from. */
 		      
 		      if (vflag->from > 0)
@@ -1085,20 +1085,28 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
 				}
 			    }			  
 			  /* Now we remove vflag from the target. */
-			  
+			  			 
 			  aff_from (vflag, targ); 
+			  
+			
 			}
 		      else if (IS_SET(spell_bits, SPELL_PERMA))
 			{
 			  /* Remove the spell bits from the flag. */
 			  RBIT (vflag->val, spell_flagbits[vflag->type]);
-			  if (vflag->val == 0)
+			  if (vflag->val == 0)			    
 			    aff_from (vflag, targ);
 			  continue;
-			}	       		      
+			}
+		      else
+			continue;
+		      
+		      /* Bonus for healing. */
+		      if (vflag->type == FLAG_HURT)
+			society_give_reward (targ, th, (LEVEL (th)+LEVEL(targ))/2);	       		      
 		    }
-		  
-		  
+		      
+		      
 		  /* Now the second pass. If any of the spell_from_vnum's are
 		     > 0, we look for other flags which are FROM the same 
 		     thing, and those are removed. */

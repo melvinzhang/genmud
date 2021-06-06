@@ -183,10 +183,11 @@ update_thing (THING *th)
     {
       if (IS_SET (hurt_by, AFF_DISEASE))
 	{
-	  hp_rate /= 5;
-	  mv_rate /= 5;
-	  th->hp--;
-	  th->mv--;
+	  hp_rate = 0;
+	  mv_rate = 0;
+	  if (damage (th, th, MAX (3, th->hp/20), "plague"))
+	    return;
+	  th->mv -= MAX (3, th->mv/20);
 	  if (nr (1,20) == 3)
 	    act ("@1n look@s very very ill...", th, NULL, NULL, NULL, TO_ALL);	    
 	  if (nr (1,90) == 35 && th->in)
@@ -195,7 +196,7 @@ update_thing (THING *th)
 	      for (other = th->in->cont; other; other = other = othern)
 		{
 		  othern = other->next_cont;
-		  if (nr (1,70) == 2 && CAN_MOVE (other) && 
+		  if (nr (1,35) == 2 && CAN_MOVE (other) && 
 		      !IS_PROT (other, AFF_DISEASE) &&
 		      other != th && !IS_HURT (other, AFF_DISEASE))
 		    {
@@ -357,7 +358,7 @@ update_thing (THING *th)
 	  else if (nr (1,3) == 2)
 	    attack_stuff (th);
 	}  
-      if (nr (1,7) == 2)
+      if (nr (1,70) == 2)
 	find_eq_to_wear (th);
     }
   if (th->hp < 1 && CAN_FIGHT (th))
@@ -1101,7 +1102,7 @@ find_something_to_eat (THING *th)
   int i, loops = 0;
   bool found_intelligent_here;
   int bonus_depth = 0;
-
+  
 
   /* They tend to only pick on stupid things, but if forced into it,
      they can go after intelligent things if really hungry. */
@@ -1115,7 +1116,7 @@ find_something_to_eat (THING *th)
   /* Once in a while, a carnivore moves out of its local hunting grounds
      and goes after something farther away. */
   if (nr (1,30) == 3)
-    bonus_depth = 20;
+    bonus_depth = 10;
   
   undo_marked(th->in);
   clear_bfs_list();

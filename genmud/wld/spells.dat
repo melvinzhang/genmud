@@ -655,7 +655,7 @@ Gen 0 1 30 8 43 24 35 6 0
 Damg 10+l/4`
 Duration l/2+3`
 Wear_Off The spell has worn off @1n.`
-Message @1n are@s surrounded by a $Cshell of might$7!`
+Message @1n get@s surrounded by a $CShell of Might$7!`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
 Pre_Name Major Guarding`
@@ -1790,8 +1790,8 @@ Pre_Name Healing`
 Guilds 0 0 4 0 0 0 0 0 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 27 0 0 0 
-Flag Hurt 0 0 179
 Flag Spell 0 0 14
+Flag Hurt 0 0 179
 END_SPELL
 
 SPELL
@@ -2126,8 +2126,8 @@ Pre_Name Purification`
 Guilds 0 0 5 0 0 0 0 0 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 30 0 0 0 
-Flag Hurt 0 0 32763
 Flag Spell 0 0 14
+Flag Hurt 0 0 32763
 END_SPELL
 
 SPELL

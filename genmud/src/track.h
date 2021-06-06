@@ -20,9 +20,14 @@
 #define HUNT_SLEEP          9    /* Looking for a place to sleep. */
 #define HUNT_RAID          10    /* Moving to raid a society. */
 #define HUNT_NEED          11    /* Hunt because you need something. */
-#define HUNT_MAX           12    /* Maximum kind of hunting. */
+#define HUNT_FAR_PATROL    12    /* Go to another area to patrol. */
+#define HUNT_MAX           13    /* Maximum kind of hunting. */
 
-
+#define MAX_HUNT_DEPTH         3000    /* Max depth hunting works... */
+#define MAX_SHORT_HUNT_DEPTH   50      /* Max depth you go on "short" 
+hunts. */
+#define SOCIETY_HUNT_DEPTH     6       /* Max depth society members hunt. 
+*/
 #define TRACK_TICKS     (2*UPD_PER_SECOND) /* Takes 2 seconds to track. */
 
 /* This macro encapsulates tracking so that you check the room's goodroom
@@ -32,10 +37,12 @@
    there are no badroom bits available and the dir is actually ok 
    and if the room is ok either. */
 
-#define FTR(r,d,b)  ((!(b) && !IS_SET((r)->goodroom_exits, (1 << (d)))) || \
-		      !IS_SET((r)->exits, (1 << (d))) ? \
-                      NULL : find_track_room((r),(d),(b)))
+#define FTR(r,d,b)  (!IS_SET ((r)->exits, (1 << (d)))? NULL:find_track_room((r),(d),(b)))
 
+
+
+#define is_track_room(a,b) ((!IS_MARKED(a)&&!IS_SET((a)->move_flags,~(b)))?TRUE:FALSE)
+			    
 
 /**********************************************************************/
 /* This struct represents a single track.                             */
@@ -112,10 +119,6 @@ bool place_one_track (THING *th, THING *croom, int dir_from);
    environments also. */
 
 THING *find_track_room (THING *, int dir, int flags);
-
-/* This tells if a certain thing is a track room or not. */
-
-bool is_track_room (THING *room, int goodroom_bits);
 
 
 /* Set this thing to hunt something. */

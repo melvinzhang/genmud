@@ -2,9 +2,9 @@ THING 107100
 Name areagen.are`
 HpMv 0 10 5 400
 HWT 0 0
-Timer 13
+Timer 9
 Short The Areagen Area`
-ThFl 135307259
+ThFl 1089531
 Flag Area 0 0 28
 END_THING
 
@@ -398,8 +398,21 @@ Rubble-Strewn
 Melted
 Volcanic
 Old
-Maze
 Jagged
+Mazelike
+Labyrinthine
+Winding
+Twisting
+Twisty
+Twisted
+Writhing
+Jagged
+Jagged
+Rocky
+Damp
+Cold
+Rubble-Filled
+Rock-Filled
 `
 END_THING
 

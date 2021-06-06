@@ -26,11 +26,8 @@ update_combat (THING *th)
       return;
     }
 
-  if (FIGHTING(th))
-    {
-      if ((FIGHTING(th)->in != th->in))
-	stop_fighting (th);
-    }
+  if (FIGHTING(th) && (FIGHTING(th)->in != th->in))
+    stop_fighting (th);
     
   /* Remove any residual following/riding etc... */
   
@@ -85,7 +82,7 @@ update_combat (THING *th)
 	   is_hunting (th) &&
 	   nr (1,3) != 2 &&
 	   (th->fgt->hunting_type == HUNT_KILL ||
-	    nr (1,2) == 1 ||
+	    nr (1,3) != 1 ||
 	    IS_ACT1_SET (th, ACT_FASTHUNT)))
     {
       hunt_thing (th, 0);
@@ -3312,6 +3309,7 @@ is_enemy (THING *th, THING *vict)
       
       if ((vsocval = FNV (vict, VAL_SOCIETY)) != NULL &&
 	  IS_ACT1_SET (vict, ACT_PRISONER) &&
+	  !FOLLOWING (vict) && /* If vict is following...all bets are off. */
 	  (esoc = find_society_num (vsocval->val[5])) != NULL &&
 	  (esoc == soc ||
 	   (soc->align > 0 && 
