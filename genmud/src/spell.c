@@ -51,7 +51,7 @@ prac_pct (THING *th, SPELL *spl)
       return buf;
     }
   if (pct == 0)
-    return "(WTF is this?)";
+    return "(Unlearned)";
   else if (pct < 14)
     return "(Beginner)";
   else if (pct < 28)

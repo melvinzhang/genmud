@@ -234,7 +234,6 @@ historygen_generate_races (void)
   char buf[STD_LEN];
   char *t;
   bool race_name_ok = FALSE;
-  
   /* If we have genned races and we aren't worldgenning then return. */
   
   if (!IS_SET (server_flags, SERVER_WORLDGEN))
@@ -320,6 +319,8 @@ historygen_generate_races (void)
 	}
     }
   free_thing (proto);
+  /* Now give them raw materials. */
+  
   return;
 }
 

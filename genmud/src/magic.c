@@ -1096,14 +1096,16 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
 			  RBIT (vflag->val, spell_flagbits[vflag->type]);
 			  if (vflag->val == 0)			    
 			    aff_from (vflag, targ);
+			  
+			 
 			  continue;
 			}
 		      else
-			continue;
-		      
+			continue; 
 		      /* Bonus for healing. */
 		      if (vflag->type == FLAG_HURT)
-			society_give_reward (targ, th, (LEVEL (th)+LEVEL(targ))/2);	       		      
+			society_give_reward (targ, th, (LEVEL (spl)+LEVEL(targ))/3);	       		 
+		      
 		    }
 		      
 		      

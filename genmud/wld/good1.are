@@ -4,7 +4,7 @@ HpMv 0 10 25 50
 HWT 0 0
 Align 2
 Cost 100
-Timer 17
+Timer 13
 Short The Good Outpost`
 Long The Good Outpost comes to life again.`
 type Lonath`
@@ -15,7 +15,7 @@ END_THING
 THING 1051
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc The good outpost serves as shelter from the dangers of the world. 
 `
 Short The Relic Room`
@@ -23,6 +23,7 @@ MIW 1
 Symbol |`
 ThFl 524779
 Val n_exit 1052 0 0 0 0 0 0 0 `
+Flag Room 0 0 769
 Reset 1090 100 1 1
 Reset 1081 10 5 1
 END_THING
@@ -30,7 +31,7 @@ END_THING
 THING 1052
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short The Sanctuary`
 MIW 1
@@ -38,13 +39,14 @@ Symbol |`
 ThFl 524779
 Val s_exit 1051 0 0 0 0 0 0 0 `
 Val n_exit 1053 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1081 10 5 1
 END_THING
 
 THING 1053
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short The Training Hall`
 MIW 1
@@ -56,19 +58,21 @@ Val w_exit 1055 0 0 0 0 0 0 0 `
 Val u_exit 1056 0 0 0 0 0 0 0 `
 Val d_exit 1057 0 0 0 0 0 0 0 `
 Val n_exit 1058 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1081 10 5 1
 END_THING
 
 THING 1054
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short A Training Alcove`
 MIW 1
 Symbol -`
 ThFl 524779
 Val w_exit 1053 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1087 100 1 1
 Reset 1081 10 5 1
 END_THING
@@ -76,13 +80,14 @@ END_THING
 THING 1055
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short A Training Alcove`
 MIW 1
 Symbol -`
 ThFl 524779
 Val e_exit 1053 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1086 100 1 1
 Reset 1081 10 5 1
 END_THING
@@ -90,13 +95,14 @@ END_THING
 THING 1056
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short A Training Alcove`
 MIW 1
 Symbol -`
 ThFl 524779
 Val d_exit 1053 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1088 100 1 1
 Reset 1081 10 5 1
 END_THING
@@ -104,7 +110,7 @@ END_THING
 THING 1057
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short A Training Alcove`
 MIW 1
@@ -112,6 +118,7 @@ Symbol -`
 ThFl 524779
 Val u_exit 1053 0 0 0 0 0 0 0 `
 Val d_exit 1069 3 3 50 50 0 0 0 trapdoor`
+Flag Room 0 0 1
 Reset 1089 100 1 1
 Reset 1081 10 5 1
 END_THING
@@ -119,7 +126,7 @@ END_THING
 THING 1058
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short Shopkeepers' Square`
 MIW 1
@@ -131,19 +138,21 @@ Val w_exit 1060 0 0 0 0 0 0 0 `
 Val u_exit 1061 0 0 0 0 0 0 0 `
 Val d_exit 1062 0 0 0 0 0 0 0 `
 Val n_exit 1063 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1081 10 5 1
 END_THING
 
 THING 1059
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short A Shop Alcove`
 MIW 1
 Symbol -`
 ThFl 524779
 Val w_exit 1058 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1083 100 1 1
 Reset 1081 10 5 1
 END_THING
@@ -151,13 +160,14 @@ END_THING
 THING 1060
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short A Shop Alcove`
 MIW 1
 Symbol -`
 ThFl 524779
 Val e_exit 1058 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1082 100 1 1
 Reset 1081 10 5 1
 END_THING
@@ -165,13 +175,14 @@ END_THING
 THING 1061
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short A Shop Alcove`
 MIW 1
 Symbol -`
 ThFl 524779
 Val d_exit 1058 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1084 100 1 1
 Reset 1081 10 5 1
 END_THING
@@ -179,20 +190,21 @@ END_THING
 THING 1062
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short A Shop Alcove`
 MIW 1
 Symbol -`
 ThFl 524779
 Val u_exit 1058 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1085 100 1 1
 Reset 1081 10 5 1
 END_THING
 
 THING 1063
 HWT 0 0
-Color 7
+Color 8
 Desc 1051`
 Short The Gatehouse`
 MIW 1
@@ -204,72 +216,78 @@ Val w_exit 1065 0 0 0 0 0 0 0 `
 Val u_exit 1066 0 0 0 0 0 0 0 `
 Val d_exit 1067 0 0 0 0 0 0 0 `
 Val n_exit 1068 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1081 30 10 1
 END_THING
 
 THING 1064
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short A Guard Post`
 MIW 1
 Symbol -`
 ThFl 524779
 Val w_exit 1063 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1081 10 5 1
 END_THING
 
 THING 1065
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short A Guard Post`
 MIW 1
 Symbol -`
 ThFl 524779
 Val e_exit 1063 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1081 10 5 1
 END_THING
 
 THING 1066
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short A Guard Post`
 MIW 1
 Symbol -`
 ThFl 524779
 Val d_exit 1063 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1081 10 5 1
 END_THING
 
 THING 1067
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short A Guard Post`
 MIW 1
 Symbol -`
 ThFl 524779
 Val u_exit 1063 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Reset 1081 10 5 1
 END_THING
 
 THING 1068
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short The Outpost Entrance`
 MIW 1
 Symbol |`
 ThFl 524779
 Val s_exit 1063 0 0 0 0 0 0 0 `
-Val n_exit 220258 0 0 0 0 0 0 0 `
+Val n_exit 212030 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 END_THING
 
 THING 1069
@@ -497,7 +515,7 @@ Short Axwa the trainer`
 Long Axwa the trainer is here.`
 Sex 2
 ThFl 2209
-Val teach2 591 59 89 0 0 0 0 0 `
+Val teach2 591 59 89 65 0 0 0 0 `
 Val teacher 50 85 51 58 72 7 66 0 `
 Flag Det 0 0 4
 Flag Act 0 0 256

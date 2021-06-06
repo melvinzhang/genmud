@@ -514,6 +514,8 @@ write_short_thing (FILE *f, THING *th, int nest)
 	}
     }
   
+  /* Write out tracks...only write room tracks. */
+  write_tracks (f, th->tracks);
   
   for (need = th->needs; need; need = need->next)
     write_need (f, need);
@@ -552,6 +554,7 @@ read_short_thing (FILE *f, THING *to, CLAN *cln)
   THING *th, *bt; /* base thing - prototype */
   int i, vnum, nest, hp_pct=  0;
   FLAG *newflag;
+  TRACK *newtrack;
   VALUE *pet;
   SOCIETY *soc;
   FILE_READ_SINGLE_SETUP;
@@ -654,6 +657,15 @@ read_short_thing (FILE *f, THING *to, CLAN *cln)
 	{
 	  free_str (th->type);
 	  th->type = new_str (read_string (f));
+	}
+      FKEY ("Track")
+	{
+	  newtrack = read_track (f);
+	  if (newtrack)
+	    {
+	      newtrack->next = th->tracks;
+	      th->tracks = newtrack;
+	    }
 	}
       FKEY("Hunting")
 	{

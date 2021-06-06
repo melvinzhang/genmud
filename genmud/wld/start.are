@@ -3,7 +3,7 @@ Name start.are`
 HpMv 0 1 109 998
 HWT 0 0
 Cost 100
-Timer 12
+Timer 7
 Short the start area`
 Long A cold wind blows by...`
 type Lonath`
@@ -1472,7 +1472,7 @@ HWT 0 0
 Short the mob randpop`
 Long The mob randpop is here.`
 ThFl 100934
-Val randpop 101100 1284 2 1000 0 0 0 0 `
+Val randpop 101100 1254 2 1000 0 0 0 0 `
 END_THING
 
 THING 279
@@ -1481,7 +1481,7 @@ HWT 0 0
 Short The provision pop`
 Long The provision po pis here.`
 ThFl 101063
-Val randpop 125006 224 1 0 0 0 0 0 `
+Val randpop 125006 245 1 0 0 0 0 0 `
 END_THING
 
 THING 300

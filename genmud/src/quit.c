@@ -292,6 +292,7 @@ advance_level (THING *th, int level)
       th->pc->practices += 1 + get_stat (th, STAT_WIS)/3;
       th->hp = th->max_hp;
       th->mv = th->max_mv;
+      th->pc->mana = th->pc->max_mana;
       sprintf (buf, "You raise a level! You are now level %d.\n\r", LEVEL (th));
       stt (buf, th);
       sprintf (buf, "%s is now level %d!", NAME (th), LEVEL (th));
@@ -432,8 +433,8 @@ kill_exp (THING *killer, THING *vict)
      have to learn to deal with horders themselves. */
   
   
-  exp = ((1 + LEVEL (vict)) * (1 + LEVEL (vict)) * (1 + LEVEL (vict)))/5;
-
+  exp = ((1 + LEVEL (vict)) * (2 + LEVEL (vict)) * (3 + LEVEL (vict)))/5;
+  
   /* Lots of exp for opp align pkill, none for same side pkill. */
 
   if (IS_PC (vict) && pkill)

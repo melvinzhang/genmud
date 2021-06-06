@@ -3,10 +3,10 @@ Name persongen.are`
 HpMv 0 10 5 200
 HWT 0 0
 Cost 100
-Timer 5
+Timer 6
 Short Person Generators`
 type Lonath`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 28
 END_THING
 
@@ -220,8 +220,8 @@ Name thief`
 Level 10
 HWT 0 0
 ThFl 2209
-Flag Aff 0 0 16
 Flag Act 0 0 1
+Flag Aff 0 0 16
 END_THING
 
 THING 105033
@@ -229,8 +229,8 @@ Name brigand`
 Level 10
 HWT 0 0
 ThFl 2209
-Flag Aff 0 0 16
 Flag Act 0 0 1
+Flag Aff 0 0 16
 END_THING
 
 THING 105034
@@ -238,8 +238,8 @@ Name bandit`
 Level 10
 HWT 0 0
 ThFl 2209
-Flag Aff 0 0 16
 Flag Act 0 0 1
+Flag Aff 0 0 16
 END_THING
 
 THING 105035

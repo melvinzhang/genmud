@@ -146,12 +146,11 @@ typedef void COMMAND_FUNCTION (THING *, char *);
    seconds between updates. See upd.c for more info. There is some
    load balancing, and certain updates are only for pc's */
 
-#define PULSE_FAST             (2*UPD_PER_SECOND) /* Every 3 seconds */
-#define PULSE_THING            (9*UPD_PER_SECOND) /* Every 10 seconds */
-#define PULSE_COMBAT           (2*UPD_PER_SECOND) /* Every 2 seconds */
-#define PULSE_HOUR             (80*UPD_PER_SECOND) /* Every 80 seconds */
-#define PULSE_AUCTION          (14*UPD_PER_SECOND) /* Every 14 seconds */
-#define PULSE_MOVE             (3*PULSE_PER_SECOND) /* Hunting speed. */
+#define PULSE_FAST             (2*UPD_PER_SECOND) /* Every N seconds */
+#define PULSE_THING            (9*UPD_PER_SECOND) /* Every N seconds */
+#define PULSE_COMBAT           (2*UPD_PER_SECOND) /* Every N seconds */
+#define PULSE_HOUR             (80*UPD_PER_SECOND) /* Every N seconds */
+#define PULSE_AUCTION          (14*UPD_PER_SECOND) /* Every N seconds */
 #define PULSE_SOCIETY          60                /* All societies get updated
 						    every minute. */
 

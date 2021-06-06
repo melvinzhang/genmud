@@ -215,6 +215,7 @@ worldgen (THING *th, char *arg)
       do_purge (th, "all");
       set_up_teachers();
       set_up_map(NULL);
+      remove_newbie_area_aggros ();
       reset_world();
       RBIT (server_flags, SERVER_WORLDGEN);
       end_memory = find_total_memory_used();
@@ -914,7 +915,8 @@ worldgen_generate_area_levels (void)
   if (max_y <= min_y)
     max_y = min_y + 2;;
   
-  jumpsize = 350/((max_x-min_x)+(max_y-min_y));
+  /* This is how big the levels jump from one room to the next. */
+  jumpsize = 250/((max_x-min_x)+(max_y-min_y));
 
   /* Now loop until all areas have levels. */
   
@@ -1402,10 +1404,7 @@ worldgen_society_seed (void)
       if ((society_flags = flagbits (soc->flags, FLAG_ROOM1)) != 0)
 	base_society_count++;
 
-      /* Set them up with some resources. */
       
-      for (i = 0; i < RAW_MAX; i++)
-	soc->raw_curr[i] = RAW_TAX_AMOUNT * 5;
     }
   
   if (base_society_count < 1)
@@ -1526,7 +1525,11 @@ worldgen_society_seed (void)
 		  area->vnum + area->mv*4/5;
 	    }
 	  SBIT (area->thing_flags, TH_MARKED);
-	}  
+	  
+	  /* Set them up with some resources. */
+	  for (i = 0; i < RAW_MAX; i++)
+	    soc->raw_curr[i] = RAW_TAX_AMOUNT * 5;
+	}
     }
   unmark_areas();
   return;
@@ -2216,6 +2219,43 @@ worldgen_generate_demons (int curr_vnum, int area_size)
       /* Make this area pop a LOT of randpop mobs. Help those
 	 demons grow by giving them something to kill. :) */
       add_reset (below_area, MOB_RANDPOP_VNUM, 50, 200, 1);
+    }
+  return;
+}
+
+
+/* This removes aggro monsters from lowlevel areas. */
+
+void
+remove_newbie_area_aggros (void)
+{
+  THING *area, *mob;
+  RESET *rst;
+
+  for (area = the_world->cont; area; area = area->next_cont)
+    {
+      if (area->vnum < WORLDGEN_START_VNUM ||
+	  area->vnum > WORLDGEN_END_VNUM ||
+	  LEVEL (area) >= 60)
+	continue;
+      
+      for (mob = area->cont; mob; mob = mob->next_cont)
+	{
+	  remove_flagval (mob, FLAG_ACT1, ACT_AGGRESSIVE | ACT_ANGRY);
+	}
+
+      /* Now add more "animal" resets to these areas so players have
+	 more stuff to kill. */
+
+      for (rst = area->resets; rst; rst = rst->next)
+	{
+	  if (rst->vnum == MOB_RANDPOP_VNUM)
+	    break;
+	}
+      if (!rst)
+	add_reset (area, MOB_RANDPOP_VNUM, 50, area->mv/2, 1);
+      else
+	rst->max_num *= 2;
     }
   return;
 }

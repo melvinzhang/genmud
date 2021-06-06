@@ -329,11 +329,15 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	strcpy (name[i], objectgen_find_typename (wear_loc, weapon_type));
     }
   
-  /* Choose metal or nonmetal. Most of the time choose metal name. */
+  /* Choose metal or nonmetal. Most of the time choose metal name.
+     Also, if the item is not a single body slot, choose metal. 
+     Metal is for jewelry and wpns. */
   
   if (*name[OBJECTGEN_NAME_METAL] && *name[OBJECTGEN_NAME_NONMETAL])
     {
-      if (nr (1,4) != 3)
+      if (nr (1,3) != 2 ||
+	  wear_loc <= ITEM_WEAR_NONE || wear_loc >= ITEM_WEAR_MAX ||
+	  wear_data[wear_loc].how_many_worn > 1)
 	rem_type = OBJECTGEN_NAME_NONMETAL;
       else
 	rem_type = OBJECTGEN_NAME_METAL;
@@ -396,7 +400,7 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	  strcpy (colorname[OBJECTGEN_NAME_A_AN], "The");
 	}
     } 
-      /* If there's a suffix, usually change the "A/An" into a "The" */
+  /* If there's a suffix, usually change the "A/An" into a "The" */
   else if (*name[OBJECTGEN_NAME_SUFFIX] && nr (1,5) == 3)
     {
       strcpy (name[OBJECTGEN_NAME_A_AN], "The");

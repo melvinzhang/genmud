@@ -80,8 +80,9 @@ update_combat (THING *th)
     }
   else if (th->fgt->bashlag == 0 && 
 	   is_hunting (th) &&
-	   nr (1,3) != 2 &&
-	   (th->fgt->hunting_type == HUNT_KILL ||
+	   nr (1,3) == 2 &&
+	   (th->fgt->hunting_type != HUNT_KILL ||
+	    nr (1,100) <= LEVEL (th) ||
 	    nr (1,3) != 1 ||
 	    IS_ACT1_SET (th, ACT_FASTHUNT)))
     {
@@ -970,7 +971,7 @@ one_hit (THING *th, THING *vict, THING *weapon, int special)
 	    }
 	}
       
-      if (weapon != th && nr (1,10) == 2 && dam > MIN (weapon->level, 20) &&
+      if (weapon != th && nr (1,35) == 2 && dam > MIN (weapon->level/5, 20) &&
 	  weapon->max_hp > 0)
 	{
 	  weapon->hp--;
@@ -1055,7 +1056,8 @@ damage (THING *th, THING *vict, int dam, char *word)
       act ("A wave of peaceful energy stop@s @1n from attacking @3n.", th, NULL, vict, NULL, TO_ALL);
       return FALSE;
     }
-  start_fighting (th, vict);
+  if (!CONSID)
+    start_fighting (th, vict);
   
   /* Deal with relics and permadeath for pc's */
   
@@ -1075,6 +1077,14 @@ damage (THING *th, THING *vict, int dam, char *word)
       if (IS_SET (soc->val[2], BATTLE_CASTES) &&
 	  soc->val[4] > 0)
 	dam += dam/3;
+
+      /* When defending a homeland, you get an attack bonus. */
+      if ((build = FNV (th->in, VAL_BUILD)) != NULL &&
+	  (society = find_society_num (build->val[0])) != NULL &&
+	  (((th->align > 0 && !DIFF_ALIGN (th->align, society->align)) ||
+	    ((soc = FNV (th, VAL_SOCIETY)) != NULL &&
+	     soc->val[0] == build->val[0]))))
+	dam += (dam*2*build->val[1])/100;
     }
   
   if (IS_PC (vict))
@@ -1088,21 +1098,13 @@ damage (THING *th, THING *vict, int dam, char *word)
 	dam += dam*(align->relic_amt+align->power_bonus)/100;
     }
   
-  /* People in a room of a society ally get combat bonuses. */
-  if ((build = FNV (th->in, VAL_BUILD)) != NULL &&
-      (society = find_society_num (build->val[0])) != NULL &&
-      (((th->align > 0 && !DIFF_ALIGN (th->align, society->align)) ||
-	((soc = FNV (th, VAL_SOCIETY)) != NULL &&
-	soc->val[0] == build->val[0]))))
-    dam += (dam*6*build->val[1])/100;
-  
   /* Defensive bonus for built up cities. */
   if ((build = FNV (vict->in, VAL_BUILD)) != NULL &&
       (society = find_society_num (build->val[0])) != NULL &&
       (((vict->align > 0 && !DIFF_ALIGN (vict->align, society->align)) ||
 	((soc = FNV (vict, VAL_SOCIETY)) != NULL &&
 	soc->val[0] == build->val[0]))))
-    dam -= (dam*5*build->val[1])/100;
+    dam -= (dam*3*build->val[1])/100;
   
   
   
@@ -1168,7 +1170,7 @@ damage (THING *th, THING *vict, int dam, char *word)
   
   /* Combat stops any timed commands the player is attempting. */
 
-  if (dam > (5 + LEVEL (vict)/10) && nr (1,5) == 2)
+  if (dam > (5 + LEVEL (vict)/10))
     {
       if (vict->position > POSITION_MEDITATING)
 	{
@@ -1258,6 +1260,7 @@ stop_fighting (THING *th)
                 {
 	          thg->fgt->fighting = NULL;
 	          thg->position = POSITION_STANDING;
+		      
 	        }
             }
 	}
@@ -1773,9 +1776,10 @@ void
 get_killed (THING *vict, THING *killer)
 {
   int i, pcflags, tmoney;
-  THING *corpse, *obj, *objn;
+  THING *corpse, *obj, *objn, *mob;
   char splitbuf[100];
   VALUE *feed, *pet;
+  
   if (!vict->in || IS_ROOM (vict) || IS_AREA (vict->in))
     return;
   act ("$9@1n just got killed!$7", vict, NULL, NULL, NULL, TO_ALL);
@@ -1839,6 +1843,21 @@ get_killed (THING *vict, THING *killer)
 	  return;
 	}      
       
+      /* Stop everyone except players from hunting/fighting this thing. */
+
+      for (mob = fight_list; mob; mob = mob->next_fight)	
+	{
+	  if (!mob->fgt)
+	    continue;
+	  
+	  if (FIGHTING (mob) == vict)
+	    mob->fgt->fighting = NULL;
+	  
+	  if (is_hunting (mob) && mob->fgt->hunt_victim == vict)
+	    stop_hunting (mob, FALSE);
+	}
+      
+
       if (IS_PC1_SET (vict, PC_PERMADEATH))
 	{
 	  char filename[200];

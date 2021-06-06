@@ -1898,7 +1898,8 @@ help_societies_under_siege(void)
 	      if (ok_society->align != align->vnum ||
 		  ok_society->population < 40 ||
 		  ok_society->alert >= ok_society->population/3 ||
-		  nr (1, num_hurt_society) != 1)
+		  nr (1, num_hurt_society) != 1 ||
+		  nr (1,5) != 2)
 		continue;
 	      
 	      update_raiding (ok_society, hurt_society->vnum);

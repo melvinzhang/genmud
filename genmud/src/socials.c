@@ -194,6 +194,8 @@ do_social_to (THING *th, THING *vict, char *arg)
   if (!th || !arg || !*arg)
     return FALSE;
   
+  if (!IS_PC (th) && th == vict)
+    return FALSE;
   
   arg = f_word (arg, socname);
   
@@ -204,8 +206,9 @@ do_social_to (THING *th, THING *vict, char *arg)
 	  if (!vict || (!CAN_FIGHT (vict) && !CAN_MOVE (vict)))
 	    { 
 	      /* No vict and no extra word in the social name means 
-		 do the no vict social. */
-	      if (!*arg)
+		 do the no vict social. Make sure the victim doesn't
+		 have the intitiator ignored! */
+	      if (!*arg && !ignore (vict, th))
 		act (soc->no_vict, th, NULL, NULL, NULL, TO_ALL);
 	      else /* Otherwise we wanted to find a victim but couldn't */
 		stt ("They aren't here.\n\r", th);

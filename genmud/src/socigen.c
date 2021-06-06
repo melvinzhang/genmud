@@ -112,7 +112,7 @@ generate_society (THING *proto)
   /* The base caste level for this caste. */
   int base_caste_level; 
   bool mobs_done_once = FALSE;
-  FLAG *oflg, *nflg;
+  FLAG *oflg, *nflg, *cflg;
   char buf[STD_LEN];
   /* Used for stripping off adjectives to make several societies. */
   char *adjarg, adjbuf[STD_LEN];
@@ -215,10 +215,22 @@ generate_society (THING *proto)
 	{
 	  if (oflg->type == FLAG_SOCIETY)
 	    continue;
-	  nflg = new_flag();
-	  copy_flag (oflg, nflg);
-	  nflg->next = soc->flags;
-	  soc->flags = nflg;
+	  for (cflg = soc->flags; cflg; cflg = cflg->next)
+	    {
+	      if (cflg->type == oflg->type &&
+		  cflg->type <= NUM_FLAGTYPES)
+		{
+		  cflg->val |= oflg->val;
+		  break;
+		}
+	    }
+	  if (!cflg)
+	    {
+	      nflg = new_flag();
+	      copy_flag (oflg, nflg);
+	      nflg->next = soc->flags;
+	      soc->flags = nflg;
+	    }
 	}
       if (!str_cmp (adjbuf, "sea"))
 	{

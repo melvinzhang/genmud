@@ -127,3 +127,7 @@ int worldgen_num_areas (void);
 /* This generates demons and demon areas. */
 
 void worldgen_generate_demons (int curr_underworld_vnum, int area_size);
+
+/* This removes aggros from newbie areas so players have a half a 
+   chance. */
+void remove_newbie_area_aggros (void);

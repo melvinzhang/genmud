@@ -257,6 +257,7 @@ questgen_generate (THING *start_area, THING *end_area, int quest_type)
 	      found_questmob_slot = TRUE;
 	      copy_thing (quest_mob, proto);
 	      proto->vnum = open_vnum;
+	      proto->max_mv = 1;
 	      proto->thing_flags = MOB_SETUP_FLAGS | TH_NO_TALK;
 	      proto->name = new_str (quest_mob->name);
 	      proto->short_desc = new_str (quest_mob->short_desc);
@@ -271,7 +272,7 @@ questgen_generate (THING *start_area, THING *end_area, int quest_type)
 	      thing_to (proto, start_area);
 	      add_thing_to_list (proto);
 	      add_reset (quest_room, proto->vnum, 100, 1, 1);
-	      add_reset (proto, quest_item->vnum, 100, 1, 1);
+	      add_reset (proto, quest_item->vnum, 10, 1, 1);
 	      break;
 	    }
 	}

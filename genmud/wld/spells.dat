@@ -61,7 +61,7 @@ Comp 0 0 0 0 0
 Repeat 0 0 0
 Pre_Name Magic Missile`
 Guilds 0 0 0 0 0 0 0 0 0 
-Teachers 0 0 0 0 0 0 0 0 0 0 
+Teachers 1039 1089 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 
 END_SPELL
 
@@ -1783,7 +1783,7 @@ Name Purification`
 Gen 0 1 75 2 25 58 44 5 0
 Damg r(55,105)`
 Wear_Off The spell has worn off @1n.`
-Message @1n get@s purified!`
+Message @3n get@s purified!`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
 Pre_Name Healing`

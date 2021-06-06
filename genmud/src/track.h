@@ -98,6 +98,10 @@ extern const char *hunting_type_names[HUNT_MAX];
 
 TRACK *new_track (void);
 void free_track (TRACK *);
+void write_tracks (FILE *, TRACK *);
+void write_track (FILE *, TRACK *);
+TRACK *read_track (FILE *);
+
 BFS *new_bfs (void);
 void add_bfs (BFS *from, THING *room, int dir);
 void clear_bfs_list (void); /* Frees the whole bfs list. */

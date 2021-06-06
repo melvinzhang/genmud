@@ -17,10 +17,10 @@
 
 #define NUM_GUARD_POSTS       10       /* Max num of posts a society has. */
 
-#define RAW_GATHER_DEPTH      40     /* Things only gather up to N
+#define RAW_GATHER_DEPTH     50     /* Things only gather up to N
 					 spaces from present location. */
 
-#define RAW_GATHER_ROOM_CHOICES 10     /* Pick up to N rooms to use to look
+#define RAW_GATHER_ROOM_CHOICES 5     /* Pick up to N rooms to use to look
 					for raw materials. */
 
 #define GUARD_POST_CHOICES    100     /* Maximum number of rooms that are
@@ -28,8 +28,11 @@
 					 to see which ones should be made
 					 into guard posts. */
 
-#define POP_BEFORE_SETTLE     300   /* Soc needs N members before it
+#define POP_BEFORE_SETTLE     400   /* Soc needs N members before it
 					attempts to make a new society. */
+
+#define SOCIETY_SETTLE_CHANCE 230   /* 1 out of N chance to settle
+				       per hour when population is big. */
 
 #define POP_LEVEL_MULTIPLIER  10    /* Max pop for a society is based on
 				       POP_BEFORE_SETTLE if it's creation

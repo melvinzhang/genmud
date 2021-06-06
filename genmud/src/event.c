@@ -385,9 +385,15 @@ exec_event (EVENT *event)
   else if (event->callback)
     {
       if (event->th)
-	(*event->callback) (event->th);
+	  (*event->callback) (event->th);
       else
 	(*event->callback) ();
+    }
+  /* If this was a thing event and the thing gets nuked...*/
+  if (event->th && !event->th->in)
+    {
+      RBIT (event->flags, EVENT_REPEAT);
+      event->times_left = 0;
     }
   return;
 }

@@ -4,7 +4,7 @@ HpMv 0 10 25 50
 HWT 0 0
 Align 1
 Cost 100
-Timer 13
+Timer 9
 Short The Evil Outpost`
 Long The Evil Outpost comes to life again!`
 type Lonath`
@@ -22,7 +22,7 @@ MIW 1
 Symbol |`
 ThFl 524779
 Val n_exit 1002 0 0 0 0 0 0 0 `
-Flag Room 0 0 1
+Flag Room 0 0 769
 Reset 1040 100 1 1
 Reset 1031 10 5 1
 END_THING
@@ -283,7 +283,7 @@ Short The Outpost Entrance`
 MIW 1
 Symbol |`
 ThFl 524779
-Val n_exit 261369 0 0 0 0 0 0 0 `
+Val n_exit 200801 0 0 0 0 0 0 0 `
 Val s_exit 1013 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 END_THING
@@ -421,7 +421,7 @@ Long Isbehxu the trainer is here.`
 Sex 2
 ThFl 2209
 Val teacher 50 89 85 51 58 72 7 0 `
-Val teach2 66 591 59 0 0 0 0 0 `
+Val teach2 66 591 59 65 0 0 0 0 `
 Flag Det 0 0 4
 Flag Act 0 0 256
 END_THING

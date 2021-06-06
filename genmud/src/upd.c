@@ -248,7 +248,7 @@ update_thing (THING *th)
 	mana_rate ++;
       else if (th->position == POSITION_MEDITATING)
 	{
-	  mana_rate += nr (1, 3);
+	  mana_rate += 3;
 	  mana_rate *= 2;
 	}
       
@@ -575,7 +575,7 @@ update_thing_hour (THING *th)
 	    {
 	      trkn = trk->next;
 	      if (--trk->timer < 1 || !trk->who || !trk->who->in ||
-		  (!IS_PC (trk->who) && !trk->who->proto))
+		  (!IS_PC (trk->who) && !trk->who->proto && !IS_ROOM (trk->who)))
 		{
 		  if (!prev)
 		    th->tracks = trk->next;
@@ -847,7 +847,7 @@ clean_up_tracks (void)
 		{
 		  trkn = trk->next;
 		  if (--trk->timer < 1 || !trk->who || !trk->who->in ||
-		      (!IS_PC (trk->who) && !trk->who->proto))
+		      (!IS_PC (trk->who) && !trk->who->proto && !IS_ROOM(trk->who)))
 		    {
 		      if (!prev)
 			room->tracks = trk->next;

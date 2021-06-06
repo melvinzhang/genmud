@@ -38,6 +38,7 @@ const char *hunting_type_names[HUNT_MAX] =
     "need",
     "far_patrol",
   };
+
 TRACK *
 new_track (void)
 {
@@ -73,6 +74,62 @@ free_track (TRACK *trk)
   track_free = trk;
   return;
 }
+
+/* These read and write tracks. */
+
+void
+write_tracks (FILE *f, TRACK *trk_start)
+{
+  TRACK *trk;
+  
+  if (!f || !trk_start)
+    return;
+  
+  for (trk = trk_start; trk; trk = trk->next)
+    write_track (f, trk);
+  return;
+}
+
+/* Only writes tracks to rooms. */
+
+void
+write_track (FILE *f, TRACK *trk)
+{
+  if (!f || !trk)
+    return;
+
+  if (!trk->who || !IS_ROOM (trk->who))
+    return;
+  
+  fprintf (f, "Track %d %d %d %d %d\n",
+	   trk->who->vnum, trk->dir_from, trk->dir_to, trk->timer, trk->move_set);
+  return;
+}
+
+/* Must be done in read_short_thing so that the rooms all exist first! */
+
+TRACK *
+read_track (FILE *f)
+{
+  TRACK *trk;
+  THING *room;
+  int roomnum;
+  if (!f)
+    return NULL;
+  
+  roomnum = read_number (f);
+  if ((room = find_thing_num (roomnum)) == NULL ||
+      !IS_ROOM (room))
+    return NULL;
+  trk = new_track ();
+  trk->who = room;
+  trk->dir_from = read_number (f);
+  trk->dir_to = read_number (f);
+  trk->timer = read_number (f);
+  trk->move_set = read_number (f);
+  return trk;
+}
+
 
 
 /* Dir from = 00-60 on direction, dir to = 0-REALDIR_MAX on dir. */
@@ -133,7 +190,8 @@ place_track (THING *who, THING *where, int dir_from, int dir_to, bool move_set)
     trk->timer = 2;
   else
 #endif
-    trk->timer = 4;
+    if (trk->timer < 4)
+      trk->timer = 4;
   
   
    return trk;
@@ -156,6 +214,9 @@ show_tracks (THING *th, THING *room)
 	       trk->dir_to < DIR_MAX ? dir_name[trk->dir_to] : "nowhere",
 	       trk->dir_from < DIR_MAX ? dir_name[trk->dir_from] : "nowhere",
 	       trk->timer);
+      if (LEVEL (th) >= BLD_LEVEL && trk->who)
+	sprintf (buf + strlen (buf)-2, "(\x1b[1;34m%d\x1b[0;37m)\n\r", trk->who->vnum);
+	  
       stt (buf, th);
     }
   return;
@@ -407,10 +468,10 @@ hunt_thing (THING *th, int max_depth)
   char *nme;
   int actbits;
   VALUE *feed, *exit, *ranged, *ammo, *soc;
-  TRACK *trk;
+  TRACK *trk = NULL;
   SOCIETY *society;
   int goodroom_bits;  /* A list of room flags where this thing can go. */
-  int track_hours = 0; /* Number of hours we make newly added tracks. */
+  int track_hours = 4; /* Number of hours we make newly added tracks. */
   
  
   if (!th || !th->in || IS_PC (th) || !is_hunting (th) ||
@@ -576,7 +637,7 @@ hunt_thing (THING *th, int max_depth)
 		{
 		  for (trk = room->tracks; trk; trk = trk->next)
 		    {	
-		      if (trk->who == target_room && trk->who != th)
+		      if (trk->who == target_room)
 			{
 			  if (trk->dir_to == RDIR (bfs_curr->dir))
 			    tracks_ok = FALSE;
@@ -588,7 +649,7 @@ hunt_thing (THING *th, int max_depth)
 			    }	
 			}
 		    }
-		 
+		  
 		}
 	      if (!vict && bfs_curr->depth < max_depth)
 		{
@@ -608,7 +669,11 @@ hunt_thing (THING *th, int max_depth)
 	      bfs_curr = bfs_curr->next;
 	    }
 	  if (vict)
-	    place_backtracks (vict, track_hours);
+	    {
+	      if (!trk)
+		track_hours += bfs_curr->depth/20;
+	      place_backtracks (vict, track_hours);
+	    }
 	} /* End of track a room. */
       
       else if (society_hunt) /* Start of hunt society victims. */
@@ -678,7 +743,7 @@ hunt_thing (THING *th, int max_depth)
 	      if (vict) /* Cannot be else since the vict may get set just above at
 			   max depth if no allies needed help nearby. */
 		{	
-		  place_backtracks (vict, track_hours);
+		  place_backtracks (vict, 4);
 		  break;
 		}	      
 	      bfs_curr = bfs_curr->next;
@@ -782,6 +847,8 @@ hunt_thing (THING *th, int max_depth)
 	      else if (tracks_ok || vict == bfs_curr->room ||
 		       vict->in == bfs_curr->room)
 		{	
+		  if (!trk)
+		    track_hours += bfs_curr->depth/20;
 		  place_backtracks (vict, track_hours);
 		  break;
 		}	    
@@ -1288,12 +1355,14 @@ place_backtracks (THING *vict, int track_hours)
   if (!vict || !bfs_curr)
     return;
   
+  if (track_hours < 1)
+    track_hours = 3;
   dir_from = bfs_curr->dir;
   prev_bfs = bfs_curr->from;
   while (prev_bfs)
     {
       trk = place_track (vict, prev_bfs->room,  DIR_MAX, dir_from, FALSE);
-      if (trk && track_hours)
+      if (trk && track_hours && trk->timer < track_hours)
 	trk->timer = track_hours;
       dir_from = prev_bfs->dir;
       prev_bfs = prev_bfs->from;
@@ -1402,6 +1471,7 @@ attack_stuff (THING *th)
   
   if (vict)
     {
+      act ("@1n being attacked.", vict, NULL, NULL, NULL, TO_ALL);
       /* See if the victim has been captured. */
       if ((vsocval = FNV (vict, VAL_SOCIETY)) != NULL)
 	esociety = find_society_num (vsocval->val[5]);

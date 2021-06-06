@@ -894,6 +894,8 @@ seg_handler (void)
   sprintf (errbuf, "Ack! Segmentation fault number %d! Attempting to save everything!\n", seg_count);
   log_it (errbuf);
   log_it (prev_command);
+  sprintf (errbuf, "Line: %d File: %s\n", __LINE__, __FILE__);
+  log_it (errbuf);
   shutdown_server ();
   sleep(2);
   kill (getpid(), SIGSEGV);

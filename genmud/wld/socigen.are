@@ -3,10 +3,10 @@ Name socigen.are`
 HpMv 0 10 5 1000
 HWT 0 0
 Cost 100
-Timer 9
+Timer 5
 Short Society Generators`
 type Lonath`
-ThFl 135307259
+ThFl 1089531
 Flag Area 0 0 28
 END_THING
 
@@ -19,7 +19,7 @@ Desc See help societygen or help society_gen for help on how to use this area.
 Short The Society Generator Area`
 MIW 1
 Symbol -`
-ThFl 134742507
+ThFl 524779
 END_THING
 
 THING 106010

@@ -415,7 +415,7 @@ void
 find_gather_location (THING *th)
 {
   THING *room, *nroom;
-  VALUE *socval = NULL;
+  VALUE *socval = NULL, *build;
   int flags;
   SOCIETY *soc = NULL;
   int choice = 0, i;
@@ -474,7 +474,8 @@ find_gather_location (THING *th)
 	{
 	  if (num_room_choices < RAW_GATHER_ROOM_CHOICES &&
 	      ((flags && IS_ROOM_SET (room, flags)) ||
-	       (!flags && nr (1,2) == 2)))
+	       (!flags && nr (1,2) == 2)) &&
+	      (build = FNV (room, VAL_BUILD)) == NULL)
 	    {
 	      room_choices[num_room_choices] = room;
 	      bfs_choices[num_room_choices] = bfs_curr;
@@ -512,7 +513,7 @@ find_gather_location (THING *th)
   if (choice >= 0 && choice < RAW_GATHER_ROOM_CHOICES)
     {
       bfs_curr = bfs_choices[choice];
-      place_backtracks (room_choices[choice], 0);
+      place_backtracks (room_choices[choice], 3);
       start_hunting_room (th, room_choices[choice]->vnum, HUNT_GATHER);
     }
   /* Now find the number of "acceptable rooms" First check those 
@@ -2208,7 +2209,7 @@ settle_new_society (SOCIETY *soc)
   if (!IS_SET (soc->society_flags, SOCIETY_SETTLER) ||
     soc->population < nr (soc->population_cap/2, 
 			  soc->population_cap) || 
-      soc->settle_hours > 0 || nr (1,13) != 2)
+      soc->settle_hours > 0 || nr (1,SOCIETY_SETTLE_CHANCE) != SOCIETY_SETTLE_CHANCE/2)
     return;
   
   if ((oldarea = find_area_in (soc->room_start)) == NULL)
@@ -2406,8 +2407,12 @@ society_can_settle_in_area (SOCIETY *soc, THING *ar)
 	    {
 	      soc_in_area++;
 	      /* Diff copies of the same society on the same align */
-	      if (soc->start[0] == soc2->start[0])
-		soc_in_area+= 10;
+	      if (soc->start[0] == soc2->start[0] )
+		{
+		  soc_in_area++;
+		  if (!str_cmp (soc->adj, soc2->adj))
+		    soc_in_area += 10;
+		}
 	    }
 	}
     }
@@ -2656,7 +2661,7 @@ reinforce_other_societies(SOCIETY *soc)
      be neutral. */
 
   if (!soc || soc->population < soc->population_cap/2 ||
-      soc->align == 0 || nr (1,110) != 35)
+      soc->align == 0 || nr (1,250) != 35)
     return;
   
   for (pass = 0; pass < 2; pass++)
@@ -2671,7 +2676,8 @@ reinforce_other_societies(SOCIETY *soc)
 	      soc2->population > soc2->population_cap/10 ||
 	      soc2->start[0] != soc->start[0] ||
 	      soc2->chance[0] == 0 || soc2->base_chance[0] == 0 ||
-	      soc2->population < 3)
+	      soc2->population < 10 || 
+	      str_cmp (soc2->adj, soc->adj))
 	    continue;
 	  
 	  if (pass == 0)
@@ -2697,16 +2703,16 @@ reinforce_other_societies(SOCIETY *soc)
     return;
 
   if ((room = find_thing_num (soc2->room_start)) == NULL ||
-      !IS_ROOM (room))
+      !IS_ROOM (room) || IS_ROOM_SET (room, BADROOM_BITS))
     return;
 
  
   
   add_rumor (RUMOR_REINFORCE, soc->vnum, soc2->vnum, 0, 0);
   
-  sprintf (buf, "battle nosent end healing vnum %d %d v:soceity:0 %d",
+  sprintf (buf, "home all nosent end kill vnum %d %d v:society:0 %d",
 	   room->vnum, room->vnum, soc2->vnum);
-  society_do_activity (soc, 50, buf);
+  society_do_activity (soc, 15, buf);
   
 
   /* Update populations */
@@ -2796,7 +2802,7 @@ settle_new_society_now (THING *th)
   /* Now make all mobs which were in the old society, but
      are hunting to settle get put in the new society. */
   
-  sprintf (buf, "all start settle vnum %d %d end healing attr v:society:0 %d",
+  sprintf (buf, "all start settle vnum %d %d end healing attr v:society:0 %d v:society:6 0",
 	   newsoc->room_start, newsoc->room_end, newsoc->vnum);
   society_do_activity (oldsoc, 100, buf);
   update_society_population (oldsoc);

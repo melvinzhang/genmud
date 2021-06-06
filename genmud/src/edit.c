@@ -2975,7 +2975,10 @@ calculate_randpop_vnum (VALUE *rnd, int level)
   
   for (rcount = 0; rcount < rnd->val[2] - 1; rcount++)
     {
-      if ((rnd->val[3] > 0 && nr(1,rnd->val[3]) < level) ||
+      /* Minimum 10 percent chance to increase tier based on level. */
+      if ((rnd->val[3] > 0 && 
+	   level >= rnd->val[3]/10 &&
+	   nr(1,rnd->val[3]) < level) ||
 	  (rnd->val[4] > 0 &&
 	   rnd->val[5] > 0 &&
 	   nr(1,rnd->val[4]) <= rnd->val[5]))
