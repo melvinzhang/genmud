@@ -1,0 +1,473 @@
+THING 105200
+Name mobgen.are`
+HpMv 0 10 5 700
+HWT 0 0
+Timer 4
+Short Mob Generators`
+type Lonath`
+ThFl 135307259
+Flag Area 0 0 28
+END_THING
+
+THING 105201
+HWT 0 0
+Color 7
+Desc You use these mobs to generate lots of randpop mobs. The way it works is the same way as the detailgen mobs, you
+make a name like a long_desc short_desc name is here.
+ 
+The room_flags you set get set onto the mob also to restrict where
+it can pop. The level is variable and using some keywords may
+change the mob stats.
+ 
+If you have the words white arctic snow in a desc, it assumes
+you want a snow mob and will change the room flags accordingly.
+Area 101000 must be empty except for possibly a couple of rooms for
+these things to be generated. They can only be generated if the
+worldgen code is being invoked (Although you can change this
+if you want). And invoking worldgen_clear will clear these mobs. 
+`
+Short Base Mob Generators`
+MIW 1
+Symbol -`
+ThFl 524779
+END_THING
+
+THING 105210
+Name ant termite`
+Level 10
+HWT 8 30
+Short red fire black brown gray`
+Long Giant small large`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 921600
+END_THING
+
+THING 105211
+Name bat`
+Level 10
+HWT 5 40
+Short black brown red tan white`
+Long Furry fuzzy small giant`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 2035712
+Flag Aff 0 0 524288
+END_THING
+
+THING 105212
+Name chipmunk squirrel`
+Level 10
+HWT 5 40
+Short brown black gray white`
+Long Fuzzy furry chittering`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 458752
+END_THING
+
+THING 105213
+Name hare rabbit jackrabbit`
+Level 10
+HWT 5 40
+Short white brown black gray mottled`
+Long Small large furry fuzzy sniffing playful bushy-tailed`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 2031616
+END_THING
+
+THING 105214
+Name jackal fox coyote wolverine hyena`
+Level 15
+HWT 10 100
+Short red brown white gray black arctic mottled spotted`
+Long Bushy-tailed furry sniffing`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 983040
+END_THING
+
+THING 105215
+Name groundhog hedgehog opossum badger mole raccoon`
+Level 15
+HWT 12 100
+Short brown white gray`
+Long Big fat waddling large smelly`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 462848
+END_THING
+
+THING 105216
+Name elk moose deer buck reindeer antelope caribou`
+Level 35
+HWT 50 3000
+Short brown white`
+Long Proud strutting eating observant`
+Sex 2
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 458752
+END_THING
+
+THING 105217
+Name doe`
+Level 20
+HWT 50 3000
+Short white brown `
+Long Proud strutting eating observant`
+Sex 1
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 458752
+END_THING
+
+THING 105218
+Name hawk eagle falcon raven`
+Level 25
+HWT 15 50
+Short white brown golden black gray`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 peck`
+Flag Aff 0 0 524288
+Flag Room 0 0 2031616
+END_THING
+
+THING 105219
+Name crow`
+Level 10
+HWT 6 30
+Short black`
+Long Sleek`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 458752
+END_THING
+
+THING 105220
+Name frog bullfrog toad`
+Level 10
+HWT 5 40
+Short green brown gray mottled spotted cave`
+Long Skinny fat large small croaking`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 1445888
+END_THING
+
+THING 105221
+Name salamander`
+Level 20
+HWT 15 50
+Short red green yellow white black gray mottled orange `
+Long Spotted speckled slithering scaly large small`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 1966080
+END_THING
+
+THING 105222
+Name lizard `
+Level 25
+HWT 10 70
+Short red green yellow brown black gray mottlled orange`
+Long Spotted speckled scaly giant large small`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 1572864
+END_THING
+
+THING 105223
+Name bee bumblebee wasp hornet`
+Level 10
+HWT 5 40
+Short yellow black brown`
+Long Angry swarming buzzing humming`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 sting`
+Flag Room 0 0 2035712
+Flag Aff 0 0 524288
+END_THING
+
+THING 105224
+Name wolf warg`
+Level 30
+HWT 25 1200
+Short gray black brown white arctic mottled `
+Long Sniffing alert curious growling`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 2031616
+END_THING
+
+THING 105225
+Name boar pig`
+Level 35
+HWT 30 1200
+Short red brown arctic mottled gray`
+Long Snorting growling sniffing scraping tusked  large`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 claw claw bite`
+Flag Room 0 0 1507328
+Flag Act 0 0 512
+END_THING
+
+THING 105226
+Name horror`
+Level 90
+HWT 0 0
+Short hooked helmed clawed scaly`
+Long Slobbering shambling moaning staggering`
+ThFl 2209
+Val weapon 0 0 0 0 0 0 0 0 claw bite`
+Flag Act 0 0 1
+Flag Mob 0 0 4
+Flag Room 0 0 4096
+END_THING
+
+THING 105227
+Name hummingbird bird sparrow woodpecker wren owl`
+Level 10
+HWT 5 40
+Short red brown white gray blue`
+Long Fluffy small cute tiny fuzzy downy`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 peck`
+Flag Room 0 0 2031616
+Flag Aff 0 0 524288
+END_THING
+
+THING 105228
+Name spider beetle bug insect centipede roach maggot`
+Level 10
+HWT 5 40
+Short brown green black yellow blue gray trapper hunter borer`
+Long Poisonous stinging large small giant`
+ThFl 65536
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 2035712
+END_THING
+
+THING 105229
+Name skunk`
+Level 15
+HWT 10 50
+Short black`
+Long White-striped smelly`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 1507328
+END_THING
+
+THING 105230
+Name sheep goat 'mountain goat' 'billy goat' ram`
+Level 30
+HWT 60 5000
+Short white gray brown`
+Long Small proud braying loud large`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 196608
+END_THING
+
+THING 105231
+Name puma bobcat panther jaguar 'mountain lion' cougar`
+Level 50
+HWT 40 300
+Short gray mottled brown black white`
+Long Crouching angry wary curious tense`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 136253440
+Flag Act 0 0 512
+END_THING
+
+THING 105232
+Name snake boa mamba asp`
+Level 40
+HWT 20 2000
+Short green brown spotted yellow water rock striped tree moss black`
+Long Large giant small slithering still`
+ThFl 67745
+Val weapon 1 5 0 0 0 0 0 0 bite`
+Flag Room 0 0 1970176
+END_THING
+
+THING 105233
+Name fly mosquito serpentfly dragonfly`
+Level 10
+HWT 5 40
+Short black blue brown`
+Long Buzzing annoying`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 1970176
+Flag Aff 0 0 524288
+END_THING
+
+THING 105234
+Name dog`
+Level 25
+HWT 35 1800
+Short brown white black mottled spotted mixed-breed`
+Long Feral wild snapping growling angry`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 2035712
+Flag Act 0 0 512
+END_THING
+
+THING 105235
+Name crocodile alligator`
+Level 55
+HWT 30 7000
+Short green brown`
+Long Large small growling`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 1048576
+Flag Act 0 0 512
+END_THING
+
+THING 105236
+Name leech`
+Level 10
+HWT 5 40
+Long Small large`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 1048576
+END_THING
+
+THING 105237
+Name bear`
+Level 65
+HWT 80 10000
+Short brown black gray grizzly polar`
+Long Large small furry growling`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 462848
+Flag Act 0 0 512
+END_THING
+
+THING 105238
+Name butterfly`
+Level 10
+HWT 5 40
+Short red blue green yellow multi-hued spotted orange magenta`
+Long Flying flitting resting soaring`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Act 0 0 16384
+Flag Room 0 0 1441792
+END_THING
+
+THING 105239
+Name sloth`
+Level 30
+HWT 40 1200
+Short 'three-toed' 'two-toed'`
+Long Lethargic large small sleepy giant`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 1179648
+END_THING
+
+THING 105240
+Name scorpion`
+Level 10
+HWT 5 40
+Short black yellow brown gray hunter`
+Long Large small poisonous `
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 sting`
+Flag Room 0 0 524288
+END_THING
+
+THING 105241
+Name mephit imp`
+Level 15
+HWT 5 20
+Short ice air fire earth`
+Long Small medium large spotted`
+ThFl 67745
+Val money 50 0 0 0 0 0 0 0 `
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Det 0 0 4
+Flag Aff 0 0 524288
+Flag Mob 0 0 2
+END_THING
+
+THING 105400
+Name gargoyle`
+Level 71
+HWT 50 10000
+Short stone iron rock`
+Long Large small`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 203296768
+Flag Act 0 0 512
+Flag Aff 0 0 524288
+END_THING
+
+THING 105401
+Name unicorn`
+Level 75
+HWT 90 5000
+Short war battle`
+Long Large small proud`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Aff 0 0 65536
+Flag Room 0 0 136253440
+END_THING
+
+THING 105402
+Name pegasus`
+Level 80
+HWT 60 5000
+Short silver `
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Aff 0 0 524288
+Flag Room 0 0 136253440
+END_THING
+
+THING 105403
+Name hulk beast creature dread`
+Level 85
+HWT 80 9000
+Short black white brown green gray mottled striped spotted`
+Long Large small shiny`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 bite`
+Flag Room 0 0 136253440
+Flag Act 0 0 512
+END_THING
+
+THING 105404
+Name elemental`
+Level 71
+HWT 50 1000
+Short fire earth air water`
+Long Small medium large giant huge`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 drain`
+Flag Aff 0 0 1572864
+END_THING
+
+THING 105405
+Name golem automaton`
+Level 100
+HWT 70 10000
+Short bronze stone gold iron steel diamond bone clay mist`
+Long Small large old creaking`
+ThFl 67745
+Val weapon 0 0 0 0 0 0 0 0 crush slap smack`
+END_THING
+
+END_OF_AREA
+

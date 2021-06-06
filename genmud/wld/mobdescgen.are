@@ -1,0 +1,124 @@
+THING 105900
+Name mobdescgen.are`
+HpMv 0 10 5 100
+HWT 0 0
+Timer 5
+Short Mobgen Desc Generators`
+ThFl 1089531
+Flag Area 0 0 28
+END_THING
+
+THING 105901
+HWT 0 0
+Color 7
+Desc This area contains some simple strings used to make mob long descs so
+that they aren't so boring. They are used in mobgen.c when the
+random mobs are created.
+`
+Short Mob Long Description Generators`
+MIW 1
+Symbol -`
+ThFl 524779
+END_THING
+
+THING 105906
+Name mob_action`
+HWT 0 0
+Desc standing
+walking
+moving
+motionless
+'standing still'
+'sniffing the ground'
+'sniffing the air'
+'snuffing the ground'
+''
+''
+''
+''
+''
+''
+`
+END_THING
+
+THING 105907
+Name mob_searching`
+HWT 0 0
+Desc 'searching for'
+'looking for'
+'trying to find'
+'on the lookout for'
+'on the hunt for'
+'hunting for'
+`
+END_THING
+
+THING 105908
+Name mob_searchfor`
+HWT 0 0
+Desc food
+'something to eat'
+'a meal'
+something
+'some food'
+'a resting place'
+'a place to rest'
+`
+END_THING
+
+THING 105909
+Name mob_notice`
+HWT 0 0
+Desc ''
+''
+''
+'You notice'
+'You notice that'
+'You see'
+'There is'
+'It looks like'
+'There appears to be'
+"There's"
+''
+''
+''
+'There is'
+'There is'
+'There is'
+'There is'
+"There's"
+"There's"
+''
+''
+''
+''
+`
+END_THING
+
+THING 105910
+Name mob_flying`
+HWT 0 0
+Desc flying
+flitting
+floating
+fluttering
+gliding
+soaring
+`
+END_THING
+
+THING 105911
+Name mob_searchrest`
+HWT 0 0
+Desc 'somewhere to rest'
+'somewhere to land'
+'someplace to rest'
+'someplace to land'
+'a place to land'
+'a place to rest'
+'a landing spot'
+`
+END_THING
+
+END_OF_AREA
+

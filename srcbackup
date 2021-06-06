@@ -1,0 +1,3 @@
+tar cvf - ./genmud/src/*.c ./genmud/src/*.h ./genmud/src/makefile > currmudsrc.tar
+gzip currmudsrc.tar
+echo Ok, source backed up. 

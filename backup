@@ -1,0 +1,22 @@
+cd genmud
+mkdir wldbak
+mkdir plrbak
+mkdir www
+cd wld
+cp * ../wldbak
+cd ../plr
+cp * ../plrbak
+\rm *
+cd ../log
+\rm *
+cd ../..
+\rm ./genmud/www/currmud.tar.gz
+\rm currmud.tar.gz
+tar cvf - ./genmud/wld/*.are ./genmud/wld/*.dat ./genmud/doc/*.tex ./genmud/src/LICENSE.TXT ./genmud/src/*.c ./genmud/src/*.h ./genmud/src/makefile ./genmud/src/scs ./genmud/log ./genmud/plr ./genmud/README ./genmud/SOCIETY.README ./backup ./smallbackup ./srcbackup > currmud.tar 
+gzip currmud.tar
+cp currmud.tar.gz ./genmud/www
+cd genmud
+cd wld
+cd ../plrbak
+cp * ../plr
+echo Ok, backup all done.

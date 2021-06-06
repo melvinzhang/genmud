@@ -1,0 +1,48 @@
+ALIGN
+Name Neutral`
+Stats 0 0 0 0 0 0 
+Spell 0 0 0 0 0 
+RegenBonus 0 0 0
+NatSpells 0 0 0 0 
+AscendFrom 0
+HatedSociety 0
+Goals 50
+Relic 0 0 0
+Parts 0 0 0 0 
+HWT 0 0 0 0
+RawCurr 0 0 0 0 0 0 0 0 
+RawWant 0 0 0 0 0 0 0 0 
+END_ALIGN
+ALIGN
+Name Darkie`
+Flag Det 0 0 4
+Stats 1 0 1 0 0 0 
+Spell 0 1 0 0 0 
+RegenBonus 0 0 0
+NatSpells 0 0 0 0 
+AscendFrom 0
+HatedSociety 0
+Goals 50
+Relic 1001 0 1018
+Parts 0 0 0 0 
+HWT 0 0 0 0
+RawCurr 0 0 0 0 0 0 0 0 
+RawWant 0 0 0 0 0 0 0 0 
+END_ALIGN
+ALIGN
+Name Whitie`
+Stats 0 1 0 1 0 0 
+Spell 2 0 0 0 0 
+RegenBonus 0 0 0
+NatSpells 0 0 0 0 
+AscendFrom 0
+HatedSociety 0
+Goals 50
+Relic 1051 0 1068
+Parts 0 0 0 0 
+HWT 0 0 0 0
+RawCurr 0 0 0 0 0 0 0 0 
+RawWant 0 0 0 0 0 0 0 0 
+END_ALIGN
+
+END_OF_ALIGNS

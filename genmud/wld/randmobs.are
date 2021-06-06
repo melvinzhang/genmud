@@ -1,0 +1,29 @@
+THING 101000
+Name randmobs.are`
+HpMv 0 10 5 3000
+HWT 0 0
+Cost 100
+Timer 12
+Short Random Animals/Mobs`
+type Lonath`
+ThFl 135307259
+Flag Area 0 0 28
+END_THING
+
+THING 101001
+HWT 0 0
+Color 7
+Desc These are random animals and creatures that get reset
+using reset 278 (currently). Each area gets one of these
+resets put into it so that the world can be filled with 
+a lot of different background creatures without too much
+effort.
+`
+Short Randmobs area room`
+MIW 1
+Symbol -`
+ThFl 524779
+END_THING
+
+END_OF_AREA
+

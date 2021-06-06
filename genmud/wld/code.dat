@@ -1,0 +1,32 @@
+CODE ba`
+ `
+0
+
+CODE foo1`
+ do say Foo1
+wait 5
+@sqf:bob:0:23 
+do say The flag is @sqf:bob:0:23.
+wait 5
+@sqf:bob:0:23 
+do say The flag is @sqf:bob:0:23.
+`
+0
+
+CODE foo2`
+ do say Foo2
+`
+0
+
+CODE foo3`
+ do say Thanks for the moola!
+wait 5
+@sqf:bob:0:23 = 1
+do say The flag is @sqf:bob:0:23.
+wait 5
+do say The flag is @sqf:bob:0:23.
+`
+0
+
+
+END_OF_CODES

@@ -1,0 +1,413 @@
+THING 104000
+Name areadetails.are`
+HpMv 0 10 400 1000
+HWT 0 0
+Timer 14
+Short Area Details Area`
+type Lonath`
+ThFl 1089531
+Flag Area 0 0 28
+END_THING
+
+THING 104001
+HWT 0 0
+Color 7
+Desc This area has details for areas. Numbers 1-200 are the
+base types of resets. 201-400 are extra room details.
+401-999 are mobjects to be put into areas. You set
+resets on things to have more stuff pop on it, and
+the code can be found in detailgen.c. The main thing
+is that you get pretty randomized names out of this.
+ 
+The height is the size of the area to be made if there
+is an area to be made within the type of detail and
+the weight is the number of tries that the code invokes to
+try to add that detail (50%) after first try) so that you can have multiple
+instances of one thing in a single area if you want. 
+ 
+You can also set certain details to not show up in lower level 
+areas. The level of the room where the detail starts must
+be <= the level of the area the detail is going to or
+else it won't choose this detail.
+ 
+`
+Short Area Details Room`
+MIW 1
+Symbol -`
+ThFl 524779
+Reset 104414 50 10 1
+END_THING
+
+THING 104002
+Name outpost camp encampment lair hideout`
+Level 40
+HWT 3 0
+Color 2
+Short bandit brigand highwayman outlaw`
+MIW 1
+Long Hidden secret `
+Symbol *`
+ThFl 524288
+Flag Room 0 0 16977920
+Reset 104200 100 1 1
+Reset 104401 50 8 1
+END_THING
+
+THING 104003
+Name farm field`
+HWT 4 0
+Color 10
+Short corn wheat barley oat`
+MIW 1
+Long Old large small tiny medium fenced open well-kept run-down well-maintained`
+Symbol ,`
+ThFl 524779
+Flag Room 0 0 262144
+Reset 104403 100 1 1
+Reset 104201 100 1 1
+Reset 104202 100 1 1
+Reset 104404 50 8 1
+END_THING
+
+THING 104004
+Name lair den nest`
+Level 20
+HWT 2 3
+Color 7
+Short clean dirty littered `
+MIW 1
+Long Large small tiny`
+Symbol -`
+ThFl 524779
+Reset 278 100 1 1
+END_THING
+
+THING 104005
+Name inn tavern bar hotel waystation pub `
+Level 10
+HWT 3 0
+Color 8
+Short weatherbeaten dirty clean crowded smelly comfortable great-smelling dingy brick stone wood well-lit`
+MIW 1
+Long Old small tiny large`
+Symbol -`
+ThFl 524779
+Flag Room 0 0 1
+Reset 104407 100 10 1
+Reset 104203 100 1 1
+END_THING
+
+THING 104006
+Name temple shrine circle`
+Level 45
+HWT 3 0
+Color 7
+Short stone bloody sacrificial ceremonial society_name `
+MIW 1
+Long Old ancient overgrown forgotten ruined`
+Symbol -`
+ThFl 524779
+END_THING
+
+THING 104007
+Name monument statue pillar megalith monolith`
+Level 25
+HWT 1 0
+Color 7
+Short fallen forgotten old toppled ancient overgrown mossy silent`
+MIW 1
+Symbol -`
+ThFl 524779
+Reset 104408 100 1 1
+END_THING
+
+THING 104008
+Name hut shack cabin house lean-to hovel`
+Level 50
+HWT 1 0
+Color 7
+Short stick wooden mudbrick brick stone `
+MIW 1
+Long Old run-down hidden small tiny overgrown ramshackle sad forlorn`
+Symbol -`
+ThFl 524779
+Reset 104409 100 1 1
+END_THING
+
+THING 104009
+Name camp encampment`
+Level 15
+HWT 2 0
+Color 7
+Short refugee`
+MIW 1
+Long Society_name`
+Symbol -`
+ThFl 524779
+Reset 104410 50 10 1
+END_THING
+
+THING 104010
+Name caravan `
+HWT 1 0
+Color 7
+Short society_name`
+MIW 1
+Symbol -`
+ThFl 524779
+Reset 104411 100 1 1
+Reset 104412 100 1 1
+Reset 104413 50 3 1
+END_THING
+
+THING 104011
+Name city town village`
+Level 70
+HWT 5 0
+Color 7
+Short abandoned overgrown forgotten forbidden forsaken society_name forbidding burned blackened destroyed devastated`
+MIW 1
+Long Old creepy spooky haunted cold sinister evil ancient lost silent dead decaying `
+Symbol -`
+ThFl 524779
+Reset 104413 100 15 1
+Reset 104204 75 10 1
+END_THING
+
+THING 104012
+Name campfire sanctuary fire place 'resting place'`
+Level 90
+HWT 1 0
+Color 7
+Short warm glowing magical `
+MIW 1
+Long Small tiny hidden secluded `
+Symbol -`
+ThFl 524779
+Flag Room 0 0 768
+END_THING
+
+THING 104013
+Name same_name`
+HWT 20 10
+Color 2
+MIW 1
+Symbol *`
+ThFl 524779
+Flag Room 0 0 18812928
+Reset 104414 75 1 1
+END_THING
+
+THING 104200
+Name campfire fire`
+HWT 0 0
+Color 7
+Short warm glowing`
+MIW 1
+Symbol -`
+ThFl 524779
+Reset 104402 100 1 1
+END_THING
+
+THING 104201
+Name farmhouse house `
+HWT 2 0
+Color 8
+Short white tall short small large`
+MIW 1
+Long Old clean dirty run-down well-maintained`
+Symbol -`
+ThFl 524779
+Flag Room 0 0 1
+END_THING
+
+THING 104202
+Name barn stable outhouse`
+HWT 1 0
+Color 7
+Short worn-out unsafe weathered`
+MIW 1
+Long Old rickety `
+Symbol -`
+ThFl 524779
+END_THING
+
+THING 104203
+Name bar counter `
+HWT 0 0
+Color 7
+Short wooden tall long short stone sticky smelly stinky clean dirty 'really dirty'`
+MIW 1
+Symbol -`
+ThFl 524779
+Reset 104406 100 1 1
+END_THING
+
+THING 104204
+Name house building shop home well marketplace barracks hall manor tower 'pile of rubble' store `
+HWT 1 0
+Color 7
+Short burned burnt-out ruined 'rubble-strewn' broken-down overgrown infested melted devastated destroyed fallen toppled shattered smashed crushed`
+MIW 1
+Long Old tall short skinny wide big small tiny`
+Symbol -`
+ThFl 524779
+END_THING
+
+THING 104400
+Name LAST ROOM`
+HWT 0 0
+Color 7
+Short the LAST ROOM`
+MIW 1
+Symbol -`
+ThFl 524779
+END_THING
+
+THING 104401
+Name brigand bandit highwayman robber thief outlaw`
+Level 50
+HWT 70 2500
+Short society_name`
+Long Rough tough dirty smelly hardened nasty ugly`
+Sex 2
+ThFl 2209
+Flag Det 0 0 4
+Flag Act 0 0 1
+Reset 108000 50 4 1
+Reset 270 50 2 1
+Reset 271 50 4 1
+END_THING
+
+THING 104402
+Name campfire`
+HWT 0 0
+Short warm glowing`
+ThFl 100934
+END_THING
+
+THING 104403
+Name farmer`
+Level 20
+HWT 65 2000
+Short society_name`
+Long Retired young energetic hard-working old`
+ThFl 2209
+Reset 104405 100 1 1
+END_THING
+
+THING 104404
+Name pig cow sheep mouse dog chicken rooster`
+Level 40
+HWT 40 2000
+ThFl 67745
+END_THING
+
+THING 104405
+Name pitchfork hoe shovel axe `
+HWT 30 100
+Cost 50
+Short old rusty worn-out used`
+Wear wield`
+ThFl 100934
+END_THING
+
+THING 104406
+Name barkeep bartender innkeeper owner proprietor shopkeeper `
+Level 30
+HWT 0 0
+Short society_name`
+Long Wizened old gruff plain-spoken nice friendly kind generous decent honest hard-working`
+Sex 2
+ThFl 2209
+Flag Act 0 0 256
+Reset 270 50 2 1
+Reset 271 50 5 1
+END_THING
+
+THING 104407
+Name patron customer regular `
+Level 20
+HWT 0 0
+Short bar inn tavern pub `
+Long Society_name`
+ThFl 2209
+Flag Act 0 0 258
+Reset 270 50 2 1
+Reset 271 50 5 1
+Reset 108000 50 1 1
+END_THING
+
+THING 104408
+Name proper_name`
+HWT 200 20000
+Short proper_name`
+Long 'monument to' 'monument commemorating' 'plaque for' 'plaque commemorating' 'plaque remembering'`
+ThFl 101063
+END_THING
+
+THING 104409
+Name hermit wizened old ancient ugly`
+Level 30
+HWT 0 0
+Short proper_name`
+Long Proper_name`
+ThFl 2209
+Val cast 59 67 84 0 0 0 0 `
+Flag Act 0 0 256
+Reset 277 10 1 1
+Reset 108000 50 3 1
+END_THING
+
+THING 104410
+Name refugee child mother refugee woman man elder 'old man' 'old woman' father`
+Level 20
+HWT 0 0
+Short society_name`
+Long Tired hungry weak dejected moaning sad forlorn`
+ThFl 2209
+END_THING
+
+THING 104411
+Name cart carriage wagon`
+HWT 0 0
+Short creaky worn gray`
+Long Old `
+ThFl 100934
+END_THING
+
+THING 104412
+Name 'caravan master' 'caravan leader' leader master`
+Level 50
+HWT 0 0
+Short society_name`
+Long Proper_name`
+ThFl 2209
+Reset 108000 50 2 1
+Reset 270 50 2 1
+Reset 271 50 5 1
+END_THING
+
+THING 104413
+Name skeleton 'skeleton warrior' reaver zombie ghast wight wraith ghoul ghast lich vampire`
+Level 60
+HWT 80 3000
+Short society_name`
+Long Rotting shambling rotten putrid awful giant glowing evil partial wobbly`
+ThFl 2209
+Flag Det 0 0 15
+Flag Act 0 0 1
+Flag Mob 0 0 4
+Reset 108000 20 1 1
+END_THING
+
+THING 104414
+Name rock stone mound boulder slab`
+HWT 0 0
+Short moss-covered chipped cracked pockmarked granite mossy worn rough`
+Long Large small round`
+ThFl 101063
+END_THING
+
+END_OF_AREA
+

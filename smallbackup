@@ -1,0 +1,34 @@
+cd genmud
+mkdir wldbak
+mkdir plrbak
+mkdir www
+cd wld
+mv rumor_history.dat rumor_history.moo
+mv worldinfo.dat worldinfo.moo
+mv wilderness.dat wilderness.moo
+mv population.dat population.moo
+mv sector_resources.dat sector_resources.moo
+mv pbase.dat pbase.moo
+cp * ../wldbak
+cd ../plr
+cp * ../plrbak
+\rm *
+cd ../log
+\rm *
+cd ../..
+\rm ./genmud/www/currmud.tar.gz
+\rm currmud.tar.gz
+tar cvf - ./genmud/wld/*.are ./genmud/wld/*.dat ./genmud/doc/*.tex ./genmud/src/LICENSE.TXT ./genmud/src/*.c ./genmud/src/*.h ./genmud/src/makefile ./genmud/src/scs ./genmud/log ./genmud/plr ./genmud/README ./genmud/SOCIETY.README ./backup ./smallbackup ./srcbackup > currmud.tar 
+gzip currmud.tar
+cp currmud.tar.gz ./genmud/www
+cd genmud		
+cd wld
+mv rumor_history.moo rumor_history.dat
+mv worldinfo.moo worldinfo.dat
+mv wilderness.moo wilderness.dat
+mv population.moo population.dat
+mv sector_resources.moo sector_resources.dat
+mv pbase.moo pbase.dat
+cd ../plrbak
+cp * ../plr
+echo Ok, backup all done.

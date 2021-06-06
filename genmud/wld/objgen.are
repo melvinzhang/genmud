@@ -1,0 +1,721 @@
+THING 108000
+Name objgen.are`
+HpMv 0 10 5 1000
+HWT 0 0
+Timer 15
+Short The Object Gen Area`
+type Lonath`
+ThFl 1089531
+Flag Area 0 0 28
+END_THING
+
+THING 108001
+HWT 0 0
+Color 7
+Short Object Generator Area`
+MIW 1
+Symbol -`
+ThFl 524779
+END_THING
+
+THING 108006
+Name prefix`
+HWT 0 0
+Color 7
+Desc Shimmering Shining Dark Light Spiked Dull Rough Tarnished Old New Cracked
+Damaged Superb Superior Inferior Ethereal Buzzing Glowing Humming Gossamer
+Eternal Barbed Demonic Smooth Pockmarked Elite Damned Blessed Cursed
+Accursed Twisted Carved Runed Thin Thick Soft Hard Blackened Cold Warm
+Freezing Hot Pure Holy Unholy Corrupted Emblazoned Heraldric Sparkling
+Sparking Coruscating Translucent Shadowy Glistening Abyssal Ornate Amazing
+Enchanted Etched Focused Crafted Harmonious Discordant Fine Great
+Glimmering Polished Howling Exquisite Tempered Elemental Primal Righteous
+Peerless Worked Dusty Frosted Faded Worn Pitted Magnificent 
+Twilight
+Eldritch
+Icy
+Frigid
+Soft
+Frost
+Ragged
+Braided
+Wizards
+Gleaming
+Glinting
+Decorated
+Dirty
+Bloodstained
+Bloody
+Screaming
+Furious
+`
+Short Descriptive name.`
+MIW 1
+Symbol -`
+ThFl 524288
+END_THING
+
+THING 108007
+Name color`
+HWT 0 0
+Desc Red & $9Red$7
+Green & $AGreen$7
+Yellow & $BYellow$7
+Blue & $CBlue$7
+Purple & $DPurple$7
+'Sky Blue' & '$ESky Blue$7'
+White & $FWhite$7
+'Dark Red' & '$1Dark Red$7'
+'Dark Green' & '$2Dark Green$7'
+Brown & $3Brown$7
+'Dark Blue' & '$4Dark Blue$7'
+Violet & $5Violet$7
+Cyan & $6Cyan$7
+Gray
+Grey
+'Dark Gray' & '$8Dark Gray$7'
+'Dark Grey' & '$8Dark Grey$7'
+Black & $8Black$7
+Ebony & $8Ebony$7
+Magenta & $DMagenta$7
+Azure & $CAzure$7
+Crimson & $1Crimson$7
+Rainbow & $AR$Ea$Ci$Fn$9b$Bo$Dw$7
+`
+Short Descriptive name.`
+END_THING
+
+THING 108008
+Name gem`
+HWT 0 0
+Desc Diamond & $FDiamond$7
+Emerald & $2Emerald$7
+Sapphire & $CSapphire$7
+Ruby & $1Ruby$7
+Amethyst & $5Amethyst$7
+Beryl & $BBeryl$7
+Corundum & $9Corundum$7
+Spinel & $DSpinel$7
+Topaz & $ETopaz$7
+Topaz & $BTopaz$7
+Opal & $9Opal$7
+Jade & $AJade$7
+Aquamarine & $CAqua$Amarine$7
+Turquoise & $FTur$Equoise$7
+'Lapis Lazuli' & '$2Lapis $4Lazuli$7'
+Quartz & $FQuartz$7
+Pearl & $FPearl$7
+Garnet & $5Garnet$7
+Amber & $BAmber$7
+Zircon & $FZircon$7
+Iolite & $EIolite$7
+Citrine & $ACitrine$7
+`
+Short Descriptive name.`
+END_THING
+
+THING 108009
+Name metal`
+HWT 0 0
+Desc Metal
+Brass & $BBrass$7
+Copper & $9Copper$7
+Iron & $8Iron$7
+Steel & $FSteel$7
+Silver & $FSilver$7
+Gold & $BGold$7
+Platinum & $FPlatinum$7
+Obsidian & $8Obsidian$7
+Onyx & $8Onyx$7
+Mithril & $EMithril$7
+Adamantium & $DAdamantium$7
+Bronze & $3Bronze$7
+Electrum & $6Electrum$7
+Crystal & $ECrystal$7
+Dragonhide & $1Dragonhide$7
+Dragonhide & $4Dragonhide$7
+Demonhide & $1Demonhide$7
+Dragonscale & $1Dragonscale$7
+Dragonscale & $4Dragonscale$7
+Dragonhide & $FDragonhide$7
+Dragonscale & $FDragonscale$7
+Demonscale & $1Demonscale$7
+Darkstone & $8Darkstone$7
+Whitestone & $FWhitestone$7
+Bone & $FBone$7
+Banded
+Scale
+Forged
+Drakescale & $2Drakescale$7
+Titanium & $FTitanium$7
+Coral & $FCoral$7
+Shell & $FShell$7
+Carapice & $8Carapice$7
+Carapice & $9Carapice$7
+Oakwood & $3Oakwood$7
+Rosewood & $3Rosewood$7
+Ironwood & $3Ironwood$7
+`
+Short Descriptive name.`
+END_THING
+
+THING 108010
+Name suffix`
+HWT 0 0
+Desc 'the Void'
+Valor
+Might
+Defense
+Fury
+'the Elders'
+'the Ancients'
+Tranquility
+Stability
+Vindication
+Devotion
+Madness
+'the Risen'
+'the Sun'
+'the Moon'
+Pain
+Focus
+Power
+'the Savage'
+'the Destroyer'
+Domination
+'the General'
+Superiority
+Lamentation
+Destruction
+Defiance
+'the Titan'
+'the Elements'
+'the Defiler'
+'the Guardian'
+Eradication
+Dawn
+Insight
+'the Righteous'
+'the Storm'
+'the Dead'
+'the Sea'
+'the Ocean'
+Slaying
+Protection
+'the Protector'
+'the Master'
+'the Fall'
+'the Summer'
+'the Spring'
+'the Winter'
+Ferocity
+Interpretation
+Serenity
+Warding
+Warfare
+Vigor
+Confusion
+Benevolence
+'the Fearsome'
+Control
+Peace
+Darkness
+Light
+Magnificence
+Empowerment
+Oblivion
+Blending
+Nirvana
+'the Vortex'
+Bewilderment
+Delight
+Woe
+Weal
+Sorcery
+Magic
+'the Magus'
+Lies
+Time
+Wrath
+Compassion
+Harmony
+Brilliance
+'the Jester'
+Bedazzlement
+Kings
+Karma
+Nothingness
+Blackness
+Nature
+Striding
+Bone
+'the Forest'
+'the Desert'
+'the Mountains'
+'the Swamp'
+Fury
+`
+Short Descriptive name.`
+END_THING
+
+THING 108011
+Name floating`
+HWT 0 0
+Desc aura
+stone
+gem
+shield
+orb
+'floating orb'
+'floating aura'
+sphere
+'floating sphere'
+'floating stone'
+disk
+disc
+'floating disk'
+'floating disc'
+cube
+'floating cube'
+halo
+ball
+'floating ball'
+'spinning orb'
+'spinning stone'
+'spinning ball'
+'spinning cube'
+'spinning disk'
+'spinning disc'
+'spinning sphere'
+essence
+`
+END_THING
+
+THING 108012
+Name head`
+HWT 0 0
+Desc helm
+helmet
+'war helmet'
+cap
+skullcap
+headgear
+helm
+helmet
+'great helm'
+coif
+crown
+circlet
+headdress
+`
+END_THING
+
+THING 108013
+Name eyes`
+HWT 0 0
+Desc visor
+'slitted visor'
+eyepiece
+visor
+monocle
+eyepatch
+patch
+lens
+visor
+`
+END_THING
+
+THING 108014
+Name ears`
+HWT 0 0
+Desc earring
+ring
+'ear ring'
+hoop
+'hoop earring'
+`
+END_THING
+
+THING 108015
+Name face`
+HWT 0 0
+Desc mask
+mask
+mask
+muzzle
+veil
+jawbone
+faceguard
+facemask
+nose-ring
+warmask
+`
+END_THING
+
+THING 108016
+Name neck`
+HWT 0 0
+Desc necklace
+pendant
+talisman
+torque
+circlet
+amulet
+chain
+choker
+neckclasp
+symbol
+trinket
+medallion
+collar
+necklace
+necklace
+necklace
+necklace
+amulet
+amulet
+charm
+neckguard
+locket
+`
+END_THING
+
+THING 108017
+Name body`
+HWT 0 0
+Desc plate
+chestplate
+platemail
+'plate mail'
+shirt
+cuirass
+breastplate
+'breast plate'
+hauberk
+vest
+jerkin
+`
+END_THING
+
+THING 108018
+Name chest`
+HWT 0 0
+Desc medal
+pin
+brooch
+seal
+trinket
+symbol
+charm
+`
+END_THING
+
+THING 108019
+Name about`
+HWT 0 0
+Desc robe
+cloak
+'hooded cloak'
+'hooded robe'
+doublet
+shroud
+coat
+tunic
+cape
+frock
+mantle
+`
+END_THING
+
+THING 108020
+Name shoulder`
+HWT 0 0
+Desc 'shoulder plate'
+'shoulder pad'
+pauldron
+'shoulder guard'
+shoulderguard
+shoulderpad
+epaulet
+spaulder
+`
+END_THING
+
+THING 108021
+Name arms`
+HWT 0 0
+Desc armplates
+'arm plates'
+vambraces
+sleeves
+armbands
+'arm bands'
+armguards
+'arm guards'
+`
+END_THING
+
+THING 108022
+Name wrist`
+HWT 0 0
+Desc bracer
+bracelet
+wristguard
+'wrist guard'
+band
+armguard
+armband
+bracelet
+bracelet
+bracelet
+`
+END_THING
+
+THING 108023
+Name hands`
+HWT 0 0
+Desc gloves
+gauntlets
+cestus
+mitts
+gloves
+gloves
+gloves
+gloves
+gloves
+gauntlets
+gauntlets
+gauntlets
+gauntlets
+gauntlets
+gauntlets
+gloves
+gloves
+gauntlets
+gauntlets
+gauntlets
+`
+END_THING
+
+THING 108024
+Name finger`
+HWT 0 0
+Desc ring 
+circlet
+band
+ring
+ring
+ring
+`
+END_THING
+
+THING 108025
+Name shield`
+HWT 0 0
+Desc shield
+'tower shield'
+'tall shield'
+'kite shield'
+buckler
+`
+END_THING
+
+THING 108026
+Name piercing`
+HWT 0 0
+Desc dagger
+'short dagger'
+'long dagger'
+fang
+dagger
+knife
+'wavy-bladed dagger'
+'double-pronged dagger'
+'long knife'
+tooth
+poker
+dirk
+'main gauche'
+quill
+pincer
+spike
+tanto
+stinger
+shard
+`
+END_THING
+
+THING 108027
+Name slashing`
+HWT 0 0
+Desc sword
+'long sword'
+'broad sword'
+'two-handed sword'
+scythe
+'short sword'
+'bastard sword'
+greatsword
+axe
+'war axe'
+'double axe'
+'lochaber axe'
+'war sword'
+cleaver
+claw
+scimitar
+rapier
+cutlass
+falchion
+katana
+katar
+claymore
+battlesword
+`
+END_THING
+
+THING 108028
+Name concussion`
+HWT 0 0
+Desc club
+mace
+hammer
+maul
+staff
+'short staff'
+'long staff'
+'gnarled staff'
+rod
+scepter
+sceptre
+mace
+mace
+club
+club
+hammer
+hammer
+staff
+'walking staff'
+'battle hammer'
+mallet
+sledgehammer
+shillelagh
+cudgel
+Truncheon
+`
+END_THING
+
+THING 108029
+Name whipping`
+HWT 0 0
+Desc whip
+'cat-o-nine tails'
+'morning star'
+flail
+'great flail'
+bullwhip
+tail
+'battle flail'
+'war flail'
+`
+END_THING
+
+THING 108030
+Name waist`
+HWT 0 0
+Desc belt
+cord
+'plated belt'
+sash
+chain
+girdle
+belt
+belt
+belt
+`
+END_THING
+
+THING 108031
+Name legs`
+HWT 0 0
+Desc greaves
+legplates
+'leg plates'
+pants
+'leg guards'
+'war greaves'
+'battle greaves'
+leggings
+`
+END_THING
+
+THING 108032
+Name ankle`
+HWT 0 0
+Desc anklet
+'ankle guard'
+'ankle ring'
+trinket
+anklet
+anklet
+anklet
+anklet
+'shin guard'
+shinguard
+'shin plate'
+`
+END_THING
+
+THING 108033
+Name feet`
+HWT 0 0
+Desc boots
+'high boots'
+'low boots'
+boots
+boots
+boots
+'riding boots'
+'war boots'
+'battle boots'
+`
+END_THING
+
+THING 108034
+Name metal_weaves`
+HWT 0 0
+Desc -laced
+-woven
+-weave
+weave
+-plated
+-inlaid
+-threaded
+-stitched
+`
+END_THING
+
+THING 108035
+Name polearms`
+HWT 0 0
+Desc Bardiche
+Spear
+Halberd
+Voulge
+Glaive
+Poleaxe
+Scythe
+Trident
+Pike
+Brandistock
+Spetum
+'Lochaber Axe'
+Bill
+Partizan
+Bec-De-Corbin
+Lance
+`
+END_THING
+
+END_OF_AREA
+

@@ -1,0 +1,2309 @@
+
+
+#include<stdio.h>
+#include<ctype.h>
+#include<string.h>
+#include<stdlib.h>
+#include "serv.h"
+#include "mapgen.h"
+#include "society.h"
+#include "areagen.h"
+#include "track.h"
+#include "objectgen.h"
+#include "roomdescgen.h"
+#include "detailgen.h"
+#include "mobgen.h"
+
+
+/* These are the kinds of patches you can use to make areas. */
+
+const int sector_patchtypes[SECTOR_PATCHTYPE_MAX] =
+  {
+    ROOM_ROUGH,
+    ROOM_FOREST,
+    ROOM_FIELD,
+    ROOM_SWAMP,
+    ROOM_DESERT,
+    ROOM_SNOW,
+    ROOM_WATERY,
+    ROOM_UNDERGROUND,
+  };
+
+/* This file deals with autogenerating areas. */
+
+void
+do_areagen (THING *th, char *arg)
+{
+  if (!th || LEVEL (th) < MAX_LEVEL)
+    return;
+
+  areagen (th, arg);
+  
+  return;
+}
+
+
+void
+areagen (THING *th, char *arg)
+{
+  char arg1[STD_LEN];
+  int size = 0;   /* Size of area. */
+  int start = 0;  /* Start vnum of area. */
+  int type = 0;   /* Type...the base room sector flag type of the area. */
+  int map_times = 0, name_times = 0; /* Counters to only try making
+					the map and name a limited
+					number of times. */
+  int dx, dy, count;
+  THING *area, *room;  /* The area and the rooms that will be put into
+			  the area. */
+  THING *ar2; /* Used to find if the area name is valid. */
+  int vnum;
+  MAPGEN *map, *map_part[AREAGEN_MAP_PART_MAX];
+  char buf[STD_LEN];
+  char namebuf[STD_LEN], *t;   /* The name of the area. */
+  char filenamebuf[STD_LEN]; /* Name of the file. */
+  char realnamebuf[STD_LEN]; /* The real full name the area used in the
+				game. */
+  char filetypebuf[STD_LEN];
+  bool name_ok = FALSE;
+  int arealevel;
+  int length; /* sqrt of size -- length of the area generated. */
+  int num_map_parts = 1;
+  /* Curr length and width of the map. */
+  int curr_length, curr_width;
+  /* These are the max and min number of rooms in the area allowed. 
+     They aren't close to area->mv so that there are lots of rooms
+     left over for trees and catwalks and special locations. */
+  int min_num_rooms, max_num_rooms;
+  
+  /* First get the start the size and the type of area. */
+  
+  arg = f_word (arg, arg1);
+  start = atoi (arg1);
+  
+  arg = f_word (arg, arg1);
+  size = atoi (arg1);
+  
+  /* Type can be a word or a flag. */
+  arg = f_word (arg, arg1);
+  if ((type = atoi (arg1)) == 0)
+    type = find_bit_from_name (FLAG_ROOM1, arg1);
+  
+  /* Add the type of area this is. */
+  
+  sprintf (filetypebuf, arg1);
+  filetypebuf[3] = '\0';
+ 
+   /* We can also specify a level. Othewise the level is size/10. */
+  
+
+  if (atoi(arg) >= 0)
+    arealevel = atoi (arg);
+  else
+    arealevel = size/10;
+  
+  
+  /* Sanity checks. */
+  
+  if (size < 100 || size > 2000)
+    {
+      stt ("areagen <start> <size> <type> [<level>]\n\r", th);
+      stt ("The area must be from 100-2000 vnums big.\n\r", th);
+      return;
+    }
+  
+  /* Calc length of area for later on. */
+
+  for (length = 10; length < 50; length++)
+    if (length*length >= size)
+      break;
+  
+  length = length*1;
+  
+  if ((area = find_thing_num (start)) != NULL &&
+      area->cont)
+    area = NULL;
+      
+  if (!check_area_vnums (area, start, start + size - 1))
+    {
+      stt ("areagen <start> <size> <type> [<level>]\n\r", th);
+      stt ("These vnums are already part of another area!\n\r", th);
+      return;
+    }
+  
+  /* Only allow certain kinds of sector flags to be used. */
+  
+  if (type == 0 || !IS_SET (type, ROOM_SECTOR_FLAGS) ||
+      !IS_SET (type, AREAGEN_SECTOR_FLAGS))
+    {
+      stt ("areagen <start> <size> <type> [<level>]\n\r", th);
+      stt ("The type must be a room sector flag!\n\r", th);
+      return;
+    }
+  
+  /* Create the area and set it up. */
+  
+  if ((area = new_thing ()) == NULL)
+    return;
+  
+  area->vnum = start;
+  top_vnum = MAX (top_vnum, start);
+  add_thing_to_list (area);
+  set_up_new_area(area, size);
+  area->mv = size*4/5;
+  min_num_rooms = area->mv*2/5;
+  max_num_rooms = area->mv*3/5;    
+  area->max_mv = size;
+  area->level = arealevel;
+  add_flagval (area, FLAG_ROOM1, type);
+  if (IS_SET (type, BADROOM_BITS))
+    add_flagval (area, FLAG_AREA, AREA_NOSETTLE);
+  /* Generate a name. The name is 4-8 chars no ' no - z q x */
+  
+  while (!name_ok && name_times < 100)
+    {
+      name_ok = TRUE;
+      strcpy (namebuf, create_society_name (NULL));
+      if (strlen (namebuf) < 4)
+	name_ok = FALSE;
+      else
+	{
+	  for (t = namebuf; *t; t++)
+	    {
+	      if (*t == '-' ||
+		  *t == '\'' ||
+		  LC (*t) == 'q' ||
+		  LC(*t) == 'z' ||
+		  LC (*t) == 'x')
+		{
+		  name_ok = FALSE;
+		  break;
+		}
+	    }
+	}
+    }
+  
+  namebuf[6] = '\0';
+  if (!name_ok)
+    return;
+  
+  sprintf (filenamebuf, "%s%sqz.are",
+	   namebuf, filetypebuf);
+  
+  
+  
+  /* Check if it matches another area (unlikely but possible). */
+  
+  for (ar2 = the_world->cont; ar2 != NULL; ar2 =ar2->next_cont)
+    {
+      if (ar2 != area &&
+	  !str_cmp (ar2->name, arg))
+	{	  
+	  break;
+	}
+    }
+  
+  if (ar2)
+    {
+      stt ("Area name already in use. Bailing out.\n\r", th);
+      return;
+    }
+  
+  
+  
+  free_str (area->name);
+  filenamebuf[0] = LC (filenamebuf[0]);
+  area->name = new_str (filenamebuf);
+  
+  /* This creates an area name based on the kind of area. It's used
+     to name the rooms. */
+  
+  strcpy (realnamebuf, generate_area_name (namebuf, type));
+  free_str (area->short_desc);
+  area->short_desc = new_str (realnamebuf);
+  
+  free_str (area->long_desc);
+  area->long_desc = new_str ("Something moves close by.");
+  
+  free_str (area->type);
+  area->type = new_str ("Lonath");
+  
+  
+  /* Now generate the map. The map consists of 1-4 map parts that
+     get overlaid to try to make more random maps. */
+
+  num_map_parts = nr (2,AREAGEN_MAP_PART_MAX);
+
+  
+
+  
+  for (map_times = 0; map_times < 100; map_times++)
+    {      
+      map = NULL;
+      
+      for (count = 0; count < AREAGEN_MAP_PART_MAX; count++)
+	map_part[count] = NULL;
+      
+      for (count = 0; count < num_map_parts; count++)
+	{	
+	  dx = count % 2;
+	  dy = (count+1) %2;
+	  
+	  curr_length = nr (length*5/4, length*3/2)/(num_map_parts);
+	  if (curr_length < 1)
+	    curr_length = 1;
+	  curr_width = size/(nr (curr_length, curr_length*3/2)*(num_map_parts));
+	  sprintf (buf, "%d %d %d %d %d %d %d %d",
+		   dx, 
+		   dy, 
+		   curr_length,
+		   curr_width,
+		   nr (1,2),
+		   /* Making the number below this higher (like 9+) makes
+		      the areas "thinner" and therefore it's cheaper
+		      to do tracking and it will cut down on CPU quite
+		      a bit. */
+		   nr (8,9) ,
+		   nr (5,15),
+		   nr(0,size/300));
+	  map_part[count] = mapgen_generate (buf);
+	}
+      
+      map = map_part[0];
+      map_part[0] = NULL;
+      for (count = 0; count < num_map_parts; count++)
+	{	    
+	  if ((map = mapgen_combine 
+	       (map, map_part[count], 
+		nr (-length/2, length/2),
+		nr (-length/2, length/2))) == NULL)
+	    {
+	      int count2;
+	      free_mapgen (map);
+	      map = NULL;
+	      
+	      for (count2 = count+1; count2 < num_map_parts; count2++)
+		{
+		  free_mapgen (map_part[count2]);
+		  map_part[count2] = NULL;
+		}
+	      break;
+	    }  
+	  map_part[count] = NULL;
+	}
+      if (map)
+	{
+	  if (map->num_rooms < min_num_rooms ||
+	      map->num_rooms > max_num_rooms)
+	    {
+	      sprintf (buf, "Mapgen parts: %d size: %d need %d-%d\n",
+		       num_map_parts,
+		       map->num_rooms, min_num_rooms, max_num_rooms);
+	      /* echo (buf); */
+	      free_mapgen (map);
+	      map = NULL;
+	    }
+	  if (map)
+	    break;      
+	}
+    }
+  
+  
+  if (!map)
+    {
+      
+      sprintf (buf, "Failed to make area of size %d at %d\n", size, start);
+      log_it (buf);
+      return;
+    }
+  
+  /* Otherwise make the map. */
+  
+  stt (mapgen_create (map, start + 1), th);
+  free_mapgen (map);
+  
+  /* Now set all of the rooms to have the name of the area and
+     the correct room flags. */
+
+  for (vnum = start + 1; vnum < start + size; vnum++)
+    {
+      if ((room = find_thing_num (vnum)) != NULL &&
+	  IS_ROOM (room))
+	{
+	  free_str (room->short_desc);
+	  room->short_desc = new_str (realnamebuf);
+	  add_flagval (room, FLAG_ROOM1, type);
+	}
+    }
+  
+  /* Now mark the edge rooms with dir_edge as their name. This
+     must be done before you try to do any road linking or anything 
+     or else you won't be able to find rooms on area edges. */
+
+  mark_area_edges (area);
+
+  
+  
+  /* Now add the "roads" into the area. */
+  
+  if (type != ROOM_WATERY)
+    {
+      /* Now add the "roads" into the area. */
+ 
+      add_roads (area);
+      /* Add water to the area. */
+      
+      add_water (area);
+
+    }
+  
+  /* This adds details like fields/caverns etc...to the area. 
+     The type is sent so we don't add details of that type. */
+  add_sector_details (area);
+
+  add_room_descriptions (area);
+  /* This tries to reconnect any sections that were disconnected by
+     water. First pass -- no bad bridges, 2nd pass -- yes bad bridges. */
+  
+  if (type != ROOM_WATERY)
+    fix_disconnected_sections (area);
+ 
+
+  /* Now add trees to the area. This is after details so that
+     you don't add details to the trees.*/
+  add_trees (area);
+  /* Add catwalks between trees in the area. This must be done before
+     you add the elevations or the game won't be able to figure out
+     where the tree bottoms are relative to each other on the map. 
+     This also has to be done before you add underpasses or that
+     might mess things up, too. */
+  add_catwalks (area);
+  
+  
+  /* AFTER THIS POINT YOU CANNOT GENERATE AN AREA GRID AND EXPECT IT TO 
+     WORK BECAUSE THE AREA IS NO LONGER FLAT! ALSO, IF YOU DO GENERATE
+     AN AREA GRID, START WITH area->vnum + 1 BECAUSE THERE ARE TREES
+     AND THOSE TREES WILL MESS THINGS UP IF YOU ATTEMPT TO GENERATE A GRID
+     STARTING AT ANY OLD POINT! */
+ 
+  detailgen (area);
+  
+  
+  
+  
+  /*  These can be added whenever now that the area extremes are 
+      premarked. */
+  
+  add_underpasses (area);
+  
+  add_elevations (area);
+  
+    
+  /* This adds some secret doors to the area. */
+  
+  add_secret_doors (area);
+
+
+  set_up_map(area);
+
+  /* Now start adding some people mobs that will pop eq. */
+  
+  areagen_generate_persons (area);
+  
+ 
+  reset_thing (area, 0);
+  return;
+}
+
+/* This creates a road name. */
+
+
+char *
+generate_road_name (int sector_types)
+{
+  static char buf[STD_LEN];
+  char prefixbuf[STD_LEN];
+  char namebuf[STD_LEN];
+  char undergroundbuf[STD_LEN];
+  char tempbuf[STD_LEN];
+  
+  strcpy (namebuf, find_gen_word (AREAGEN_AREA_VNUM, "road_names", NULL));
+  strcpy (prefixbuf, find_gen_word (AREAGEN_AREA_VNUM, "road_prefixes", NULL));
+  if (IS_SET (sector_types, ROOM_UNDERGROUND))
+    strcpy (undergroundbuf, find_gen_word (AREAGEN_AREA_VNUM, "underground_places", NULL));
+  else
+    undergroundbuf[0] = '\0';
+  if (*prefixbuf)
+    strcat (prefixbuf, " ");
+  
+  if (nr (1,10) == 3)
+    *prefixbuf = '\0';
+  
+  
+  if (*undergroundbuf)
+    strcat (undergroundbuf, " ");
+  
+  sprintf (tempbuf, "%s%s%s", prefixbuf, undergroundbuf, namebuf);
+  
+  sprintf (buf, "%s %s", a_an(tempbuf), tempbuf);
+  *buf = UC(*buf);
+  return buf;
+}
+
+/* This generates an area name based on the type of area and the
+   name that the area has been given. The type is the sector flag 
+   for the majority of the rooms in the area. */
+
+char *
+generate_area_name (char *name, int type)
+{
+  static char retbuf[STD_LEN];
+  int room_flag_num; /* What the room flag number is for this type. */
+  char typename[STD_LEN]; /* Typename woods forest.. */
+  char prefixname[STD_LEN]; /* Dark light etc... */
+  char keyword[STD_LEN];
+  char suffixname[STD_LEN];
+  char *t;
+  SOCIETY *soc = NULL;
+  
+  retbuf[0] = '\0'; 
+  if (!name || !*name || strlen(name) > 100 ||
+      type == 0 || !IS_SET (type, ROOM_SECTOR_FLAGS))
+    return retbuf;
+  
+  /* Find which row in the room_flag array we want to use. */
+  
+  for (room_flag_num = 0; room1_flags[room_flag_num].flagval != 0; 
+       room_flag_num++)
+    {
+      if (room1_flags[room_flag_num].flagval == type)
+	break;
+    }
+  
+  if (room1_flags[room_flag_num].flagval == 0)
+    return retbuf;
+  
+  /* So the name and type are ok, so generate the area typename. */
+  
+  /* The keyword is sector_names */
+  
+  sprintf (keyword, "%s_names", room1_flags[room_flag_num].name);
+  strcpy (typename, find_gen_word (AREAGEN_AREA_VNUM, keyword , NULL));
+  
+  if (!*typename)
+    strcpy (typename, "Lands");
+  /* Now try for a prefix. May not exist. */
+
+  sprintf (keyword, "%s_prefixes", room1_flags[room_flag_num].name);
+  strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, keyword , NULL));
+  if (!*prefixname || nr (1,5) == 3)
+    strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, "sector_prefixes", NULL));
+  
+  if (*prefixname)
+    strcat (prefixname, " ");
+  
+  
+  
+
+  strcpy (suffixname, find_gen_word (AREAGEN_AREA_VNUM, "sector_suffixes", NULL));
+  suffixname[0] = UC (suffixname[0]);
+  /* Use suffixes. Don't use proper name. */
+  
+  /* Have society names put in there with small probability. */
+
+  if ((soc = find_random_society (TRUE)) != NULL &&
+      IS_ROOM_SET (soc, type) && soc->name && *soc->name)
+    {
+      if (nr (1,3) == 3) /* Prefix name isn't set...name is set. */
+	{
+	  name[0] = '\0';
+	  if (soc->adj)
+	    sprintf (name, "%s", soc->adj);	  
+	  if (*name)
+	    strcat (name, " ");	  
+	  if (soc->aname && *soc->aname && nr (1,2) == 2)
+	    strcat (name, soc->aname);
+	  else
+	    strcat (name, soc->name);
+	}
+      if (nr (1,3) == 3)
+	{
+	  sprintf (suffixname, "the ");
+	  if (soc->adj)
+	    sprintf (suffixname + strlen(suffixname), "%s ", soc->adj);
+	  if (soc->aname && *soc->aname && nr (1,2) == 2)
+	    strcat (suffixname, soc->aname);
+	  else
+	    strcat (suffixname, soc->name);
+	}
+    }
+  
+  if (nr (1,4) == 2 && *suffixname && *typename)
+    {
+      sprintf (retbuf, "%s%s of %s", 
+	       (nr (1,7) != 3 ? "The " : ""), typename, suffixname);
+    }  
+  else
+    {
+      if (nr (1,2) == 2)
+	{
+	  sprintf (retbuf, "%s%s%s",    
+		   (nr (1,5) != 3 ? "The " : ""),
+		   prefixname, typename);
+	  if (nr (1,3) == 2)
+	    {
+	      strcat (retbuf, " of ");
+	      strcat (retbuf, name);
+	    }
+	}
+      else if (nr (1,3) == 1)
+	sprintf (retbuf, "The %s%s %s", prefixname, name, typename);
+      else if (type == ROOM_UNDERGROUND && nr (1,3) == 2)
+	sprintf (retbuf, "Some %s%s", prefixname, typename);
+      else
+	sprintf (retbuf, "%s %s", name, typename);
+    }
+  
+  retbuf[0] = UC(retbuf[0]);
+  if (!*retbuf)
+    return retbuf;
+  for (t = retbuf + 1; *t; t++)
+    {
+      if (*(t-1) == ' ')
+	*t = UC (*t);
+    }
+  return retbuf;
+}
+
+
+/* This adds roads to an area. */
+
+void
+add_roads (THING *area)
+{
+  int num_roads = 2, dir;
+  THING *room, *nroom;
+  VALUE *exit;
+  int i;
+  int sector_type;
+  char roadname[STD_LEN];
+  BFS *bfs;
+  bool half_road = FALSE;
+  /* The road starting and ending points. */
+  THING *road_start_room, *road_end_room, *temp_room;
+
+  /* This is the number of full roads that fully cross the area. */
+  
+  int ns_roads = 0, ew_roads = 0;
+  int num_full_roads = 0;
+  int road_loop;
+  bool ew_road, ns_road;
+  
+  if (!area || !IS_AREA (area))
+    return;
+  
+  if ((sector_type = flagbits (area->flags, FLAG_ROOM1)) == 0)
+    return;
+  
+  /* Number of roads is proportional to the size of the area. */
+
+  for (i = 0; i < area->mv/DETAIL_DENSITY; i++)
+    num_roads += nr (0,1);
+  
+  /* Some of the roads are full roads that go edge to edge...some are
+     half roads that stop as soon as they're adjacent to another road. */
+  num_full_roads = nr (num_roads/5, num_roads*2/3);
+    
+  if (num_roads < 1)
+    return;
+  
+  
+  for (road_loop = 0; road_loop < num_roads; road_loop++)
+    {
+      if (road_loop > num_full_roads)
+	half_road = TRUE;
+      else
+	half_road = FALSE;
+      
+      ew_road = FALSE;
+      ns_road = FALSE;
+      
+      /* Pick ns or ew roads. If you have an ns_road and no
+	 ew_road, then the next one has to be ew. */
+      
+      if (ew_roads == 0 && ns_roads > 0) 
+	ew_road = TRUE;
+      else if (ns_roads == 0 && ew_roads > 0)
+	ns_road = TRUE;
+      else if (nr (1,2) == 1)
+	ew_road = TRUE;
+      else
+	ns_road = TRUE;
+      
+      if (ew_road)
+	{
+	  road_start_room = find_room_on_area_edge (area, DIR_WEST, 0);
+	  road_end_room = find_room_on_area_edge (area, DIR_EAST, 0);
+	  ew_roads++;	
+	}
+      else
+	{
+	  road_start_room = find_room_on_area_edge (area, DIR_NORTH, 0);
+	  road_end_room = find_room_on_area_edge (area, DIR_SOUTH, 0);
+	  ns_roads++;
+	}
+      
+      
+      if (!road_start_room || !road_end_room)
+	{ 
+	  char errbuf[STD_LEN];
+	  sprintf (errbuf, "Areagen failed to find edge rooms to make %s road.\n", (ew_road ? "ew" : "ns"));
+	  log_it (errbuf);
+	  continue;
+	}
+      
+      /* If it's a full road, we go from start to end. If it's a 
+	 half road, we go from start to until we find another road.
+	 It also stands to reason that if we don't find a road, then
+	 we still go from start to end. Since we want to have some
+	 half roads starting in news sides, we must switch start 
+	 and end so they can start from all 4 sides. */
+      
+      if (half_road && nr (0,1) == 1)
+	{
+	  temp_room = road_start_room;
+	  road_start_room = road_end_room;
+	  road_end_room = temp_room;
+	}
+      
+      clear_bfs_list();
+      undo_marked(road_start_room);      
+      add_bfs (NULL, road_start_room, REALDIR_MAX);
+      
+      while (bfs_curr)
+	{
+	  if ((room = bfs_curr->room) != NULL && IS_ROOM(room))
+	    { /* Go until the end room is found or a road is found
+		 with a half room. */
+	      if (room == road_end_room ||		  
+		  (half_road && IS_ROOM_SET (room, ROOM_EASYMOVE)))
+		break;
+	      
+	      
+	      /* Otherwise add more rooms. */
+	      
+	      for (dir = 0; dir < REALDIR_MAX; dir++)
+		{
+		  if ((exit = FNV (room, dir + 1)) != NULL &&
+		      (nroom = find_thing_num (exit->val[0])) != NULL &&
+		      IS_ROOM (nroom) &&
+		      !IS_MARKED(nroom))
+		    {
+		      add_bfs (bfs_curr, nroom, dir);
+		    }
+		}
+	    }
+	  bfs_curr = bfs_curr->next;
+	}
+      
+      /* If the list looks ok from start to end, alter the rooms 
+	 along this road. */
+      
+      strcpy (roadname, generate_road_name(sector_type));
+      
+      
+      /* Now if the endpoints exist, overwrite the rooms. */
+      
+      if (bfs_list &&
+	  bfs_list->room &&
+	  bfs_list->room == road_start_room &&
+	  bfs_curr &&
+	  bfs_curr->room &&
+	  (bfs_curr->room == road_end_room ||
+	   (half_road && 
+	    IS_ROOM_SET (bfs_curr->room, ROOM_EASYMOVE))))
+	{
+	  
+	  for (bfs = bfs_curr; bfs; bfs = bfs->from)
+	    {
+	      /* Don't overwrite current roads. */
+	      if ((room = bfs->room) != NULL &&
+		  !IS_ROOM_SET (room, ROOM_EASYMOVE))
+		{
+		  free_str (room->short_desc);
+		  room->short_desc = new_str (roadname);
+		  add_flagval (room, FLAG_ROOM1, ROOM_EASYMOVE);
+		  if (sector_type != ROOM_UNDERGROUND)
+		    remove_flagval (room, FLAG_ROOM1, sector_type);
+		
+		}
+	    }
+	}
+      clear_bfs_list();
+    }
+
+  add_road_turns (area);
+  return;
+}
+   
+
+/* This adds turns into the roads in the area. */
+
+void
+add_road_turns (THING *area)
+{
+  THING *room, *nroom;
+  int adjacent_with_same_name = 0;
+  int dir;
+  int dirs_with_same_name;
+  char buf[STD_LEN];
+  char oldname[STD_LEN];
+  char prefixname[STD_LEN];
+  char roadname[STD_LEN];
+  for (room = area->cont; room; room = room->next_cont)
+    {
+      if (!IS_ROOM (room) || !IS_ROOM_SET (room, ROOM_EASYMOVE))
+	continue;
+      adjacent_with_same_name = 0;
+      dirs_with_same_name = 0;
+      for (dir = 0; dir < 4; dir++)
+	{
+	  if ((nroom = find_track_room (room, dir, 0)) != NULL &&
+	      IS_ROOM_SET (nroom, ROOM_EASYMOVE) &&
+	      !str_cmp (NAME(room), NAME(nroom)) &&
+	      nroom != room)
+	    {
+	      adjacent_with_same_name++;
+	      dirs_with_same_name |= (1 << dir);
+	    }
+	}
+      /* Need exactly 2 adjacent with same name and NOT opp dirs. */
+
+      dir = 0;
+      if (adjacent_with_same_name == 2)
+	{
+	  for (dir = 0; dir < REALDIR_MAX; dir++)
+	    {
+	      if (IS_SET (dirs_with_same_name, (1 << dir)) &&
+		  IS_SET (dirs_with_same_name, (1 << RDIR(dir))))
+		  break;
+	    }
+	}
+      if (dir != REALDIR_MAX || nr (1,7) != 3)
+	continue;
+      /* We now have 2 rooms adjacent with same name and not opp
+	 dirs from each other. */
+      strcpy (roadname, find_gen_word (AREAGEN_AREA_VNUM, "road_turns", NULL));
+      strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, "road_turn_prefixes", NULL));
+      if (*prefixname)
+	{
+	  strcat (prefixname, " ");
+	}
+      strcpy (oldname, NAME(room));
+      oldname[0] = LC(oldname[0]);
+      sprintf (buf, "%s %s%s in %s",
+	       (*prefixname ? a_an (prefixname) : a_an (roadname)),
+	       prefixname, roadname, oldname);
+      free_str (room->short_desc);
+      buf[0] = UC(buf[0]);
+      room->short_desc = new_str (buf);
+    }
+  return;
+}
+
+/* This adds water to an area in the form of pools and little streams. */
+
+/* We assume that the area has been built and the base type of room
+   sector is sector_type. We also assume that the roads have been built. */
+
+void
+add_water (THING *area)
+{
+  int sector_type;
+  
+  if (!area || !IS_AREA (area))
+    return;
+
+  sector_type = flagbits (area->flags, FLAG_ROOM1);
+  if (!sector_type)
+    return;
+
+  /* First figure out where the lakes will go. */
+     
+  /* For a desert only place simple oases. They are single water rooms
+     with field/forest rooms adjacent to them. */
+  
+  add_lakes (area);
+  add_streams (area);
+  
+}
+
+
+/* This creates a grid of room vnums inside of grid[][] that tell 
+   how those vnums are related to each other so that it's
+   possible to find the extreme points in an area. */
+
+void
+generate_room_grid (THING *room, int grid[AREAGEN_MAX][AREAGEN_MAX], int extremes[REALDIR_MAX], int x, int y)
+{
+  THING *nroom;
+  VALUE *exit;
+  int dir;
+
+  if (!room || !IS_ROOM (room) || x < 0 || x >= AREAGEN_MAX ||
+      y < 0 || y >= AREAGEN_MAX || IS_MARKED(room) ||
+      grid[x][y] != 0)
+    return;
+  
+  SBIT (room->thing_flags, TH_MARKED);
+  grid[x][y] = room->vnum;
+  
+  
+  /* Update the extreme rooms. */
+  if (x > extremes[DIR_EAST])
+    extremes[DIR_EAST] = x;
+  if (x < extremes[DIR_WEST])
+    extremes[DIR_WEST] = x;
+  if (y > extremes[DIR_NORTH])
+    extremes[DIR_NORTH] = y;
+  if (y < extremes[DIR_SOUTH])
+    extremes[DIR_SOUTH] = y;
+  
+  /* Now check the other exits. */
+  
+  for (dir = 0; dir < 4; dir++)
+    {
+      if ((exit = FNV (room, dir + 1)) != NULL &&
+	  (nroom = find_thing_num (exit->val[0])) != NULL &&
+	  nroom->in == room->in && nroom != room)
+	{	  
+	  generate_room_grid (nroom, grid, extremes,
+			      (dir < 2 ? x : 
+			       dir == 2 ? x + 1 : x - 1),
+			      (dir == 0 ? y + 1 :
+			       dir == 1 ? y - 1 : y));
+	}
+    }
+  return;
+}
+
+/* This finds a room on the (geographic) edge of an area. To use this
+   you need to have called mark_area_edges() already so that the
+   appropriate edge rooms are marked. */
+
+THING *
+find_room_on_area_edge (THING *area, int dir, int room_flags_wanted)
+{
+  int count = 0, num_choices = 0, num_chose = 0, num_with_room_flags = 0;
+  THING *room;
+  char name[STD_LEN];
+  bool got_room_flags = FALSE;
+  
+  /* The area must exist and the dir must be from 0 to 3 (no u-d edges). */
+  if (!area || !IS_AREA (area) || dir < 0 || dir >= 4)
+    return NULL;
+  
+  /* First get the name we want to find. */
+
+  sprintf (name, "%s_edge", dir_name[dir]);
+
+  
+  for (count = 0; count < 2; count++)
+    {
+      for (room = area->cont; room; room = room->next_cont)
+	{
+	  if (!IS_ROOM (room) || !is_named (room, name))
+	    continue;
+	  
+	  if (count == 0)
+	    {
+	      num_choices++;
+	      if (!room_flags_wanted || 
+		  IS_ROOM_SET (room, room_flags_wanted))
+		num_with_room_flags++;	      
+	    }
+	  else
+	    {
+	      if (got_room_flags)
+		{
+		  if (IS_ROOM_SET (room, room_flags_wanted) &&
+		      --num_chose < 1)
+		    break;
+		}
+	      else if (--num_chose < 1)
+		break;
+	    }	
+	}
+      
+      if (count == 0)
+	{
+	  if (num_choices < 1)
+	    break;
+	  
+	  if (room_flags_wanted &&
+	      num_with_room_flags > 0)
+	    {
+	      got_room_flags = TRUE;
+	      num_chose = nr (1, num_with_room_flags);
+	    }
+	  else
+	    {
+	      num_chose = nr (1, num_choices);
+	      got_room_flags = FALSE;
+	    }
+	}	          
+    }      
+  return room;
+}   
+
+/* This adds some lakes to an area. */
+
+void
+add_lakes (THING *area)
+{
+  int i, count;
+  int room_choices, room_chose = 0;
+  int room_flags;
+  int lake_size;
+  int num_lakes = 0;
+  int sector_type;
+  THING *room;
+  char prefixname[STD_LEN];
+  char name[STD_LEN];  
+  char typename[STD_LEN];
+  char undergroundname[STD_LEN];
+  char fullname[STD_LEN];
+  if (!area || !IS_AREA (area))
+    return;
+  
+  sector_type = flagbits (area->flags, FLAG_ROOM1);
+  
+  if (!sector_type)
+    return;
+  
+  num_lakes = nr (1, 1+area->mv/DETAIL_DENSITY);
+  
+  if (IS_SET (sector_type, ROOM_DESERT))
+    num_lakes = (num_lakes+1)/2;
+  else if (IS_SET (sector_type, ROOM_SWAMP))
+    num_lakes = num_lakes*3/2;
+  
+  for (i = 0; i < num_lakes; i++)
+    {
+      room_choices = 0;
+      for (count = 0; count < 2; count++)
+	{
+	  for (room = area->cont; room; room = room->next_cont)
+	    {
+	      if (IS_ROOM (room) &&
+		  (room_flags = flagbits (room->flags, FLAG_ROOM1)) == 
+		  sector_type)
+		{
+		  if (count == 0)
+		    room_choices++;
+		  else if (--room_chose < 1)
+		    break;
+		}
+	    }
+	  if (count == 0)
+	    {		  
+	      if (room_choices < 1)
+		break;
+	      room_chose = nr (1, room_choices);
+	    }	      
+	}
+      
+      /* If no more open rooms, bail out. */
+      if (!room)
+	break;
+      
+      
+      if (sector_type == ROOM_DESERT)
+	{	  	  
+	  
+	  strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, "watery_prefixes", NULL));
+	  strcpy (typename, find_gen_word (AREAGEN_AREA_VNUM, "oasis_names", NULL));
+	  sprintf (name, "%s %s%s",
+		   (*prefixname ? a_an(prefixname) : a_an (typename)),
+		   prefixname, typename);
+	  name[0] = UC(name[0]);
+	  strcpy (fullname, name);
+	}      
+      else
+	{ 
+	  strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, "watery_prefixes", NULL));
+	  strcpy (typename, find_gen_word (AREAGEN_AREA_VNUM, "lake_names", NULL));
+	  if (IS_SET (sector_type, ROOM_UNDERGROUND))	    
+	    strcpy (undergroundname, find_gen_word (AREAGEN_AREA_VNUM, "underground_placenames", NULL));
+	  else
+	    undergroundname[0] = '\0';
+	  if (*prefixname)
+	    strcat (prefixname, " ");
+	  if (*undergroundname)
+	    strcat (undergroundname, " ");
+	  
+	  if (nr (1,4) != 3)
+	    {
+	      sprintf (name, "%s%s%s", prefixname, undergroundname, typename);
+	      sprintf (fullname, "%s %s", a_an (name), name);
+	    }
+	  /* Named lakes. */
+	  else if (nr (1,3) == 2)
+	    {
+	      if (nr (1,2) == 1)
+		sprintf (name, "%s Lake", create_society_name(NULL));
+	      else
+		sprintf (name, "Lake %s", create_society_name(NULL));
+	    }
+	  else
+	    {
+	      sprintf (name, "%s %s %s",
+		       (*prefixname ? a_an (prefixname) : a_an(typename)),
+		       prefixname,
+		       typename);
+	    }
+	  name[0] = UC (name[0]);
+	  strcpy (fullname, name);
+	}
+      if (sector_type == ROOM_DESERT)
+	lake_size = 1;
+      else if (sector_type == ROOM_SWAMP)
+	lake_size = nr (2,5);
+      else 
+	lake_size = nr (2, 3);
+      
+      /* This recursively adds a lake to the area. */
+      
+      undo_marked(room);
+      add_lake (room, name, sector_type, 1, lake_size);
+      undo_marked(room);
+
+      /* This adds forest and field rooms next to the oasis. */
+      if (sector_type == ROOM_DESERT)
+	add_adjacent_oasis_rooms (room, sector_type);
+    }
+  return;
+}
+/* This adds a lake to an area. It gets passed a current room, a 
+   name for the room, an original sector type, and a current depth
+   and a max depth to know when to stop. */
+
+void
+add_lake (THING *room, char *name, int sector_type, int curr_depth,
+	  int max_depth)
+{
+  int room_flags, dir;
+  THING *nroom;
+  VALUE *exit;
+  
+  if (!room || !name || !*name || !IS_ROOM (room) ||
+      (room_flags = flagbits (room->flags, FLAG_ROOM1)) != sector_type ||
+      curr_depth > max_depth || IS_MARKED(room))
+    return;
+  
+  free_str (room->short_desc);
+  room->short_desc = new_str (name);
+  add_flagval (room, FLAG_ROOM1, ROOM_WATERY);
+  if (sector_type != ROOM_UNDERGROUND)
+    remove_flagval (room, FLAG_ROOM1, sector_type);
+  SBIT (room->thing_flags, TH_MARKED);
+  
+  if (curr_depth == max_depth)
+    return;
+  
+  for (dir = 0; dir < REALDIR_MAX; dir++)
+    {
+      if ((exit = FNV (room, dir + 1)) != NULL &&
+	  (nroom = find_thing_num (exit->val[0])) != NULL &&
+	  nroom->in == room->in)
+	add_lake (nroom, name, sector_type, curr_depth + 1, max_depth);
+    }
+  return;
+}
+/* These add field and forest rooms adjacent to an oasis. */
+
+void
+add_adjacent_oasis_rooms (THING *room, int sector_type)
+{
+  THING *nroom;
+  VALUE *exit;
+  int dir;
+  int room_flags;
+  char name[STD_LEN];
+  char fieldprefix[STD_LEN];
+  if (!room || !IS_ROOM (room))
+    return;
+  
+  for (dir = 0; dir < REALDIR_MAX; dir++)
+    {
+      if ((exit = FNV (room, dir + 1)) != NULL &&
+	  (nroom = find_thing_num (exit->val[0])) != NULL &&
+	  IS_ROOM (nroom) &&
+	  (room_flags = flagbits(nroom->flags, FLAG_ROOM1)) == 
+	  sector_type)
+	{
+	  /* Decide on field or forest. */
+	  
+	  if (nr (1,2) == 1)
+	    {
+	      sprintf (name, "A %s %sTrees",
+		       (nr (1,3) == 2 ? "Copse of" :
+			(nr (1,2) == 1 ? "Stand of" : "Few")),
+		       (nr (1,4) == 3 ? "Palm " : ""));
+	      free_str (nroom->short_desc);
+	      nroom->short_desc = new_str (name);
+	      add_flagval (nroom, FLAG_ROOM1, ROOM_FIELD);
+	      remove_flagval (nroom, FLAG_ROOM1, ROOM_DESERT);
+	    }
+	  else
+	    {
+	      strcpy (fieldprefix, find_gen_word (AREAGEN_AREA_VNUM, "field_prefixes", NULL));
+	      sprintf (name, "A %s%s",
+		       fieldprefix,
+		       (nr (1,2) == 2 ? "Patch of Grass" : "Field"));
+	      free_str (nroom->short_desc);
+	      nroom->short_desc = new_str (name);
+	      add_flagval (nroom, FLAG_ROOM1, ROOM_FOREST);
+	      remove_flagval (nroom, FLAG_ROOM1, ROOM_DESERT);
+	    }
+	}
+    }
+  return;
+}
+
+/* This generates a stream name. It's a separate function so that
+   splits in streams can be handled easier. */
+char *
+generate_stream_name (int sector_flags)
+{
+  static char buf[STD_LEN];
+  char name[STD_LEN], *t;
+  char prefixname[STD_LEN];
+  char typename[STD_LEN];
+  char undergroundname[STD_LEN];
+  
+  strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, "watery_prefixes", NULL));
+  if (*prefixname)
+    strcat (prefixname, " ");
+  
+  strcpy (typename, find_gen_word (AREAGEN_AREA_VNUM, "stream_names", NULL));
+  
+  if (IS_SET (sector_flags, ROOM_UNDERGROUND))    
+    strcpy (undergroundname, find_gen_word (AREAGEN_AREA_VNUM, "underground_placenames", NULL));
+  else
+    undergroundname[0] = '\0';
+  if (*undergroundname)
+    strcat (undergroundname, " ");
+  
+
+  if (nr (1,3) != 2)
+    {
+      sprintf (name, "%s%s%s", prefixname, undergroundname, typename);
+      sprintf (buf, "%s %s", a_an (name), name);
+      
+      buf[0] = UC(buf[0]);
+      return buf;
+    }
+  /* Otherwise make a "named" stream. */
+
+  strcpy (name, create_society_name(NULL));
+  
+  for (t = name; *t; t++);
+  t--;
+  
+  /* Possessive name Bob's Stream vs The Bob Stream. */
+  if (nr (1,2) == 2)
+    {
+      sprintf (buf, "%s%s %s", name,  (*t == 's' ? "\'" : "\'s"), typename);
+    }
+  else
+    {
+      sprintf (buf, "The %s %s", name, typename);
+    }
+  
+  buf[0] = UC(buf[0]);
+  return buf;
+}
+
+
+/* This adds streams to an area. They start in random places and 
+   go until they can't go anymore, or until they hit a patch of water. */
+
+void
+add_streams (THING *area)
+{
+  int i, count;
+  int room_choices, room_chose = 0;
+  int room_flags;
+  int num_streams;
+  int sector_type;
+  THING *room;
+  char name[STD_LEN];  
+  
+  if (!area || !IS_AREA (area))
+    return;  
+  sector_type = flagbits (area->flags, FLAG_ROOM1);
+  
+  if (IS_SET (sector_type, ROOM_DESERT) ||
+      !sector_type)
+    return;
+  
+  
+  num_streams = nr (1, 1+area->mv/DETAIL_DENSITY);
+  if (IS_SET (sector_type, ROOM_SWAMP))
+    num_streams += nr (0, num_streams/2);
+  else if (IS_SET (sector_type, ROOM_DESERT))
+    num_streams /= 2;
+  
+  for (i = 0; i < num_streams; i++)
+    {
+      room_choices = 0;
+      for (count = 0; count < 2; count++)
+	{
+	  for (room = area->cont; room; room = room->next_cont)
+	    {
+	      if (IS_ROOM (room) &&
+		  (room_flags = flagbits (room->flags, FLAG_ROOM1)) == 
+		  sector_type)
+		{
+		  if (count == 0)
+		    room_choices++;
+		  else if (--room_chose < 1)
+		    break;
+		}
+	    }
+	  if (count == 0)
+	    {		  
+	      if (room_choices < 1)
+		break;
+	      room_chose = nr (1, room_choices);
+	    }	      
+	}
+      
+      /* If no more open rooms, bail out. */
+      if (!room)
+	break;
+      
+      /* This recursively adds a lake to the area. */
+      
+      strcpy (name, generate_stream_name (sector_type));
+      add_stream (room, name, sector_type, 0, REALDIR_MAX);
+    }
+  return;
+}
+
+/* This adds a stream to an area. It is a random walk that tends to
+   stay in the direction it's going, and it goes under roads and
+   it stops when it hits more water. It also has a really small
+   chance of spawning another stream. */
+
+void
+add_stream (THING *room, char *name, int sector_type, int depth, int dir)
+{
+  THING *nroom, *nroom2;
+  VALUE *exit, *exit2;
+  int room_flags, nroom_flags;
+  THING *area;
+  bool other_water_nearby = FALSE;
+  int num_area_rooms;
+  char name2[STD_LEN];
+  int i, j;
+  int rand_turn;
+  bool done_once = FALSE; /*IF this stream has no dir from, we try
+			    to make it go in 2 dirs. */
+  bool looping_back; /* Is this stream looping back on itself? */
+  /* This is used to try to make the stream turn once in a while but
+     generally go straight. */
+  if (nr (1,7) == 3)
+    rand_turn = nr (0,3);
+  else
+    rand_turn = 0;
+  
+  /* First do some sanity checking. */
+  
+  /* Don't make this a stream room if the room or name don't exist
+     or if the sector is bad or if the room is not in an area or if
+     the stream is too long relative to the area size or the 
+     room is already a road or water room. */
+  if (!room  || !name || !*name || sector_type == 0 ||
+      sector_type == ROOM_DESERT || (area = room->in) == NULL ||
+      (num_area_rooms = area->mv) < 20 ||
+      depth > nr (5, 5 + num_area_rooms/30) ||
+      IS_SET ((room_flags = flagbits (room->flags, FLAG_ROOM1)),
+	      ROOM_WATERY) ||
+      !IS_SET (room_flags, sector_type))
+    return;
+  
+  /* Check if there are other named streams nearby. */
+
+  for (i = 0; i < REALDIR_MAX; i++)
+    {
+      if ((exit = FNV (room, i + 1)) != NULL &&
+	  (nroom = find_thing_num (exit->val[0])) != NULL &&
+	  IS_ROOM_SET (nroom, ROOM_WATERY) &&
+	  str_cmp (NAME(nroom), name))
+	other_water_nearby = TRUE;
+    }
+  
+  
+  
+  /* If this is a road room, then try to move "under" it. */
+  
+  if (IS_ROOM_SET (room, ROOM_EASYMOVE))
+    {
+      if (dir < 0 || dir >= REALDIR_MAX)
+	return;
+      
+      /* Try to move past the road. Search for an exit from the
+	 road that isn't a stream room. */
+      
+      for (i = 0; i < REALDIR_MAX; i++)
+	{
+	  if ((exit = FNV (room, ((i + dir) % REALDIR_MAX) + 1)) != NULL &&
+	      (nroom = find_thing_num (exit->val[0])) != NULL &&
+	      IS_ROOM (nroom) && 
+	      (nroom_flags = flagbits (nroom->flags, FLAG_ROOM1)) == sector_type)
+	    {
+	      add_stream (nroom, name, sector_type, depth + 2, (i + dir)%REALDIR_MAX);
+	      break;
+	    }
+	}
+      
+      
+      return;
+    }
+       
+  free_str (room->short_desc);
+  room->short_desc = new_str (name);
+  add_flagval (room, FLAG_ROOM1, ROOM_WATERY);
+  if (sector_type != ROOM_UNDERGROUND)
+    remove_flagval (room, FLAG_ROOM1, sector_type);
+  
+  /* Do not continue if there's other water nearby. */
+
+  if (other_water_nearby)
+    return;
+
+
+  /* Now add more rooms to the stream. */
+      
+      
+  for (i = 0; i < REALDIR_MAX; i++)
+    {
+      if ((exit = FNV (room, (i + dir + rand_turn) % REALDIR_MAX)) != NULL &&
+	  (nroom = find_thing_num (exit->val[0])) != NULL &&
+	  IS_ROOM (nroom) &&
+	  IS_ROOM_SET (nroom, sector_type) &&
+	  !IS_ROOM_SET (nroom, ROOM_WATERY) &&
+	  (!IS_ROOM_SET(nroom, ROOM_EASYMOVE) ||
+	   nr (1,2) == 2))
+	{
+	  
+	  /* Do not add a stream to this dir if the room is adjacent
+	     to another room with the same stream name (loopback) */
+	  looping_back = FALSE;
+	  for (j = 0; j < REALDIR_MAX; j++)
+	    {
+	      if (j == RDIR((i + dir + rand_turn) % REALDIR_MAX))
+		continue;
+	      if ((exit2 = FNV (nroom, j + 1)) != NULL &&
+		  (nroom2 = find_thing_num (exit2->val[0])) != NULL &&
+		  !str_cmp (NAME(nroom2), name) &&
+		  nroom2 != room)
+		looping_back = TRUE;
+	    }
+	  if (!looping_back)
+	    {
+	      add_stream (nroom, name, sector_type, depth + 1, 
+			  (i + dir + rand_turn)%REALDIR_MAX);
+	    }
+	  if (dir !=  REALDIR_MAX || done_once)
+	    break;
+	  done_once = TRUE;
+	} 
+    }
+
+  /* Add a small chance for a new stream. */
+
+  if (nr (1,45) == 17 && depth > 5)
+    {
+      for (i = 0; i < REALDIR_MAX; i++)
+	{
+	  if ((exit = FNV (room, (i % REALDIR_MAX))) != NULL &&
+	      (nroom = find_thing_num (exit->val[0])) != NULL &&
+	      IS_ROOM (nroom) &&
+	      IS_ROOM_SET (nroom, sector_type) &&
+	      !IS_ROOM_SET (nroom, ROOM_WATERY))
+	    {
+	      strcpy (name2, generate_stream_name(sector_type));
+	      add_stream (nroom, name2, sector_type, 0, i);
+	      break;
+	    }
+	}
+    }
+  return;
+}
+
+/* Will add some details to an area. It only messes with rooms 
+   that are of the same sector type as the base sector type. */
+
+void 
+add_sector_details (THING *area)
+{
+  /* Number of rooms of these types that we want to put into
+     this area. */
+  
+  int i, j;
+  int patch_count[SECTOR_PATCHTYPE_MAX];
+  int sector_type;
+  
+  if (!area || !IS_AREA (area))
+    return;
+  sector_type = flagbits (area->flags, FLAG_ROOM1);
+  
+  if (!sector_type)
+    return;
+
+
+  /* The number of patches to add of each type is given by 
+     a random number then modified somewhat */
+  
+  for (i = 0; i < SECTOR_PATCHTYPE_MAX; i++)
+    {	
+      patch_count[i] = nr (2, 2 + area->mv/DETAIL_DENSITY);
+      
+      if (sector_type == ROOM_WATERY)
+	patch_count[i] /= 2;
+
+      if (IS_SET (sector_patchtypes[i], ROOM_WATERY))
+	patch_count[i] = 0;
+      /* This can be made more efficient, since the three here
+	 desert swamp snow don't touch, but it's more clear to make
+	 it longer. */
+      
+      if (sector_type == ROOM_DESERT)
+	{
+	  if (IS_SET (sector_patchtypes[i],
+		      (ROOM_SNOW | ROOM_SWAMP)))
+	    patch_count[i] = 0;
+	}
+      if (sector_type == ROOM_SNOW)
+	{
+	  if (IS_SET (sector_patchtypes[i],
+		      (ROOM_DESERT | ROOM_SWAMP)))
+	    patch_count[i] = 0;
+	}
+      if (sector_type == ROOM_SWAMP)
+	{
+	  if (IS_SET (sector_patchtypes[i],
+		      (ROOM_DESERT | ROOM_SNOW)))
+	    patch_count[i] = 0;
+	}
+      if (sector_type == ROOM_UNDERGROUND &&
+	  !IS_SET (sector_patchtypes[i],
+		   (ROOM_FIELD | ROOM_FOREST)))
+	{
+	  patch_count[i] = 0;
+	}
+      
+	
+      if (sector_type != ROOM_ROUGH && sector_patchtypes[i] == ROOM_SNOW)
+	patch_count[i] = 0;
+      
+      
+    }
+  
+  for (i = 0; i < SECTOR_PATCHTYPE_MAX; i++)
+    {
+      for (j = 0; j < patch_count[i]; j++)
+	{
+	    start_sector_patch (area, sector_patchtypes[i]);
+	}
+    }
+  return;
+}
+
+
+
+/* This generates a name for a patch of ground based on the 
+   patch type. */
+
+char *
+generate_patch_name (int sector_type, int patch_type)
+{
+  static char retbuf[STD_LEN];
+  
+  char patchname[STD_LEN]; /* Typename woods forest.. */
+  char prefixname[STD_LEN]; /* Dark light open etc... */
+  char undergroundname[STD_LEN];
+  char ugfieldprefix[STD_LEN];
+  char keyword[STD_LEN];
+  char buf[STD_LEN];
+  int i;
+
+  patchname[0] = '\0';
+  prefixname[0] = '\0';
+  undergroundname[0] = '\0';
+  ugfieldprefix[0] = '\0';
+  retbuf[0] = '\0'; 
+  if (!patch_type)
+    return retbuf;
+  
+  for (i = 0; room1_flags[i].flagval != 0; i++)
+    {
+      if (patch_type == room1_flags[i].flagval &&
+	  *room1_flags[i].name)
+	break;
+    }
+  
+  if (!*room1_flags[i].name)
+    return retbuf;
+  
+  /* Get the patchname and the prefix. */
+  sprintf (keyword, "%s_patchnames", room1_flags[i].name);
+  strcpy (patchname, find_gen_word (AREAGEN_AREA_VNUM, keyword, NULL));
+  sprintf (keyword, "%s_prefixes", room1_flags[i].name);
+  strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, keyword, NULL));
+  
+  if (!* patchname)
+    strcpy (patchname, "Wilderness");
+  
+  /* Add the prefix. */
+  
+  
+  if (!*prefixname || nr (1,10) == 3)
+    strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, "patch_prefixes", NULL));
+
+  if (sector_type == ROOM_UNDERGROUND)
+    {
+      strcpy (undergroundname, find_gen_word (AREAGEN_AREA_VNUM, "underground_places", NULL));
+      
+      if (IS_SET (patch_type, (ROOM_FOREST | ROOM_FIELD)))
+	strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, "underground_forest_field_prefixes", NULL));
+      
+    }
+  
+  if (*prefixname)
+    strcat (prefixname, " ");
+  if (*undergroundname)
+    strcat (undergroundname, " ");
+  
+  if (sector_type == ROOM_WATERY && patch_type != ROOM_WATERY &&
+      nr (1,4) == 2)
+    {
+      sprintf (retbuf, "%s Island", create_society_name (NULL));
+    }
+  else
+    {
+      sprintf (buf, "%s%s%s", undergroundname, prefixname, patchname);
+      sprintf (retbuf, "%s %s", a_an (buf), buf);
+    }
+  retbuf[0] = UC(retbuf[0]);  
+  return retbuf;
+}
+
+/* This adds a patch of a certain kind to an area. Note that the 
+   sector_type and the patch_type can be the same to add some
+   extra randomness in there. */
+
+void 
+start_sector_patch (THING *area, int patch_type)
+{
+  THING *room;
+  char name[STD_LEN];
+  int max_depth;
+  int sector_type;
+  int num_choices = 0, num_chose = 0, choice = 0, count;
+  
+  if (!area || !IS_AREA (area) ||
+      patch_type == 0)
+    return;
+
+  sector_type = flagbits(area->flags, FLAG_ROOM1);
+  
+  if (!sector_type)
+    return;
+  /* Find a room of the starting sector type to use to start the patch. */
+ 
+  for (count = 0; count < 2; count++)
+    {
+      for (room = area->cont; room; room = room->next_cont)
+	{
+	  if (IS_ROOM (room) && 
+	      IS_ROOM_SET (room, sector_type))
+	    {
+	      if (count == 0)
+		num_choices++;
+	      else if (++choice == num_chose)
+		break;
+	    }
+	}
+      
+      if (count == 0)
+	{
+	  if (num_choices < 1)
+	    break;
+	  num_chose = nr (1, num_choices);
+	}
+    }
+  
+  if (!room)
+    return;
+  
+  strcpy (name, generate_patch_name (sector_type, patch_type));
+  max_depth = nr (2,4);
+  if (sector_type == ROOM_WATERY && max_depth > 3)
+    max_depth = 3;
+  undo_marked(room);
+  add_sector_patch (room, name, sector_type, patch_type , 1, max_depth);
+  undo_marked(room);
+  return;
+}
+
+
+/* This actually adds a sector patch into the game. It expands out from
+   its central location and jumps over roads and water. */
+
+void
+add_sector_patch (THING *room, char *name, int sector_type, int patch_type,
+		  int curr_depth, int max_depth)
+{
+  THING *nroom;
+  int dir;
+  VALUE *exit;
+  int room_flags;
+  
+  if (!room || !name || !*name || sector_type == 0 || patch_type == 0 ||
+      curr_depth > max_depth || nr (1,12) == 3 ||
+       (curr_depth == max_depth && nr (1,3) == 1) || 
+       !IS_ROOM (room) || IS_MARKED(room))
+      return;
+      
+  SBIT (room->thing_flags, TH_MARKED);
+  room_flags = flagbits (room->flags, FLAG_ROOM1);
+  if (room_flags != sector_type)
+    {
+      /* Try to jump over water/roads. */
+      if (!IS_SET (room_flags, ROOM_WATERY | ROOM_EASYMOVE))
+	return;
+    }
+  /* If we want to change this room, do it. */
+  
+  if (!IS_SET (room_flags, ROOM_EASYMOVE) &&
+      (!IS_SET (room_flags, ROOM_WATERY) || sector_type == ROOM_WATERY))
+    {
+      free_str (room->short_desc);
+      room->short_desc = new_str(name);
+      if (sector_type != patch_type)
+	{
+	  add_flagval (room, FLAG_ROOM1, patch_type);
+	  if (sector_type != ROOM_UNDERGROUND)
+	    remove_flagval (room, FLAG_ROOM1, sector_type);
+	}
+    }
+  /* Now expand the patch outside this room. */
+  
+  for (dir = 0; dir < REALDIR_MAX; dir++)
+    {
+      if ((exit = FNV (room, dir + 1)) != NULL &&
+	  (nroom = find_thing_num (exit->val[0])) != NULL)
+	add_sector_patch (nroom, name, sector_type, patch_type,
+			  curr_depth+1, max_depth);
+    }
+  return;
+}
+
+/* This generates room descriptions for the rooms in the area. */
+
+void
+add_room_descriptions (THING *area)
+{
+  THING *room;
+
+  if (!area || !IS_AREA (area) || 
+      flagbits(area->flags, FLAG_ROOM1) == 0)
+    return;
+
+  /* I think that I want to dynamically generate these for now. */
+  return;
+
+  
+  for (room = area->cont; room; room = room->next_cont)
+    {
+      if (IS_ROOM (room))
+	{
+	  free_str (room->desc);
+	  room->desc = generate_room_description (room);
+	}
+    }
+  return;
+}
+
+
+/* This makes sure that the areas we generate are connected. Start with
+   a road room (if none exist then don't bother...something must
+   have gone really wrong anyway...) then search to find all rooms
+   that are connected to that room (without badroom bits)
+   and then check all rooms to see if they are marked or have badroom
+   bits. If some rooms are blocked, then fix them.  Bad bridges are
+   bridges that go from one disconnected area to another. They are
+   only allowed after all regular good bridges have been made. */
+
+void
+fix_disconnected_sections (THING *area)
+{
+  THING *room, *nroom, *start_room;
+  VALUE *exit;
+  int main_section_size = 0;
+  int dir;
+  int pass;
+  int depth;
+  bool found_path = FALSE;
+  if (!area)
+    return;
+  
+  /* Do this in several passes to try to get all areas connected. */
+  
+  for (pass = 0; pass < 4; pass++)
+    {
+      for (start_room = area->cont; start_room; start_room = start_room->next_cont)
+	{
+	  if (IS_ROOM (start_room) &&
+	  IS_ROOM_SET (start_room, ROOM_EASYMOVE))
+	    break;
+	}
+      
+      /* Boggle, no roads? Shouldn't happen. */
+      
+      if (!start_room)
+	return;
+      
+      /* Find the number of rooms marked in the main section of the map. */
+      
+      for (room = area->cont; room; room = room->next_cont)
+	RBIT (room->thing_flags, TH_MARKED);
+      
+      main_section_size = find_connected_rooms_size (start_room);
+      
+      
+      /* For each length search through all rooms */
+
+      for (depth = 1; depth < 10; depth++)
+	{
+	  for (room = area->cont; room; room = room->next_cont)
+	    {
+	      /* Any room that's not connected and isn't a badroom bit
+		 gets checked. */
+	      if (IS_ROOM (room) &&
+		  !IS_MARKED (room) &&
+		  !IS_ROOM_SET (room, BADROOM_BITS))
+		{ 	      
+		  
+		  found_path = FALSE;
+		  /* See if there are any badrooms connected to this room. */
+		  for (dir = 0; dir < 4; dir++)
+		    {
+		      /* If we can make a path... */
+		      if ((exit = FNV (room, dir + 1)) != NULL &&
+			  (nroom = find_thing_num (exit->val[0])) != NULL &&
+			  found_path_through_badrooms (nroom, depth))
+			{
+			  
+			  found_path = TRUE;
+			  /* Mark everything we just connected. */
+			  find_connected_rooms_size (room);
+			  break;
+			}
+		    }
+		}
+	    }
+	}
+    }
+  
+ 
+
+  for (room = area->cont; room; room = room->next_cont)
+    RBIT (room->thing_flags, TH_MARKED);
+  
+ return;
+}
+
+
+/* This returns the number of rooms that are connected to this room in the
+   area that aren't blocked by badroom rooms. */
+
+int
+find_connected_rooms_size (THING *room)
+{
+  int size = 1;
+  int dir;
+  THING *nroom;
+  VALUE *exit;
+  if (!IS_ROOM (room) || IS_MARKED (room) ||
+      IS_ROOM_SET (room, BADROOM_BITS))
+    return 0;
+  
+  SBIT (room->thing_flags, TH_MARKED);
+  
+  for (dir = 0; dir < REALDIR_MAX; dir++)
+    {
+      if ((exit = FNV (room, dir + 1)) != NULL &&
+	  (nroom = find_thing_num (exit->val[0])) != NULL &&
+	  IS_ROOM (nroom) && !IS_ROOM_SET (room, BADROOM_BITS))
+	size += find_connected_rooms_size (nroom);
+    }
+  return size;
+}
+
+
+/* Now we try to find a path through the badrooms. It must be a
+   straight line. */
+
+bool
+found_path_through_badrooms (THING *start_room, int max_depth)
+{
+  THING *room, *nroom;
+  int dir, curr_dir;
+  int name_type = 0;
+  char buf[STD_LEN];
+  char bridgename[STD_LEN];
+  char prefixname[STD_LEN];
+  char locname[STD_LEN];
+  VALUE *exit;
+  bool found_end_room = FALSE;
+  BFS *bfs;
+
+  
+  clear_bfs_list();
+  
+  if (!start_room || !IS_ROOM (start_room) || !IS_ROOM_SET (start_room,
+							    BADROOM_BITS))
+    return FALSE;
+  
+  add_bfs (NULL, start_room, REALDIR_MAX);
+  
+  while (bfs_curr && !found_end_room)
+    {
+      /* If the room exists */
+      
+      if ((room = bfs_curr->room) != NULL && IS_ROOM (room))
+	{
+	  for (dir = 0; dir < 4 && !found_end_room; dir++)
+	    {
+	      /* If it's next to a good marked room, then break out
+		 and make the bridge. Otherwise, add more rooms. */
+	      curr_dir = (bfs_curr->dir + dir) % 4;
+	      if ((exit = FNV (room, curr_dir + 1)) != NULL &&
+		  (nroom = find_thing_num (exit->val[0])) != NULL)
+		{
+		  if (!IS_MARKED (nroom) && IS_BADROOM(nroom) &&
+		      bfs_curr->depth < max_depth)
+		    add_bfs (bfs_curr, nroom, curr_dir);
+		  else if (IS_MARKED (nroom) && !IS_BADROOM (nroom))
+		    {
+		      found_end_room = TRUE;
+		      break;
+		    }
+		}
+	    }
+	}
+      if (!found_end_room)
+	bfs_curr = bfs_curr->next;
+    }
+
+  if (!bfs_curr)
+    {
+      clear_bfs_list();
+      return FALSE;
+    }
+  
+  /* Get the overall name. */
+  
+  strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, "bridge_prefixes", NULL));
+  strcpy (bridgename, find_gen_word (AREAGEN_AREA_VNUM, "bridge_names", NULL));
+  strcpy (locname, find_gen_word (AREAGEN_AREA_VNUM, "bridge_locations", NULL));
+  if (*prefixname)
+    strcat (prefixname, " ");
+  
+  if (*locname)
+    strcat (locname, " ");
+
+  /* See if we add the "over roomname" to the name...on name_type = 1
+     we do add this part. */
+  if (nr (0,4) == 1)
+    name_type = 1;
+  else 
+    name_type = 0;
+  
+  for (bfs = bfs_curr; bfs; bfs = bfs->from)
+    {
+      if ((room = bfs->room) != NULL)
+	{
+	  sprintf (buf, "%s %s%s %s%s",		   
+		   (*prefixname ?
+		    a_an (prefixname) :
+		    a_an (bridgename)),
+		   prefixname, 
+		   bridgename,
+		   locname,
+		   (*locname ?
+		    NAME (room) : ""));
+	  
+	  *buf = UC(*buf);
+	  add_flagval (room, FLAG_ROOM1, ROOM_EASYMOVE);
+	  remove_flagval (room, FLAG_ROOM1, BADROOM_BITS);
+	  free_str (room->short_desc);
+	  room->short_desc = new_str (buf);
+	}
+    }
+  clear_bfs_list();
+  return TRUE;
+}
+
+/* This adds trees to an area randomizing the height and frequency
+   of branches and the size of the branches. */
+
+void 
+add_trees (THING *area)
+{
+  THING *room;
+  int num_times, i, j;
+  
+  if (!area || !IS_AREA (area) || 
+      IS_ROOM_SET (area, ROOM_UNDERGROUND | ROOM_DESERT))
+    return;
+  
+  /* Clear marked flags. */
+  for (room = area->cont; room; room = room->next_cont)
+    {
+      RBIT (room->thing_flags, TH_MARKED);
+    }
+  
+  num_times = nr (1, 1+area->mv/DETAIL_DENSITY);
+
+  
+  
+  /* Find a room and make sure that it's not marked. */
+ for (i = 0; i < num_times; i++)
+    { 
+      for (j = 0; j < 20; j++)
+	{
+	  if ((room = find_random_room (area, FALSE, ROOM_FOREST, 0)) != NULL 
+	      && (!room->name || !*room->name))
+	    {
+	      /* Mark all rooms within N spaces as marked so we don't 
+		 have trees too close together. */
+	      mark_rooms_nearby (room, 9);
+	      add_tree (room);
+	      break;
+	    }
+	}
+    }
+  
+  for (room = area->cont; room; room = room->next_cont)
+    undo_marked (room);
+  return;
+}
+
+
+/* This adds a tree to an area above a starting point. */
+
+void
+add_tree (THING *base_room)
+{
+  THING *room, *trunk_room, *new_room, *area;
+  int max_height, height, branch_length, dir, dir2;
+  int branches = 0, dist;
+  int i;
+  char color;
+  /* How far out we were when we added side branches. */
+  int side_branch_depth;
+  char treename[STD_LEN];
+  char prefixname[STD_LEN];
+  char fullname[STD_LEN];
+  char belowname[STD_LEN];
+  char currname[STD_LEN];
+  char branchprefix[STD_LEN];
+  char branchadj[STD_LEN];
+  /* First make sure were in an area and get the number of free rooms. */
+  
+  if (!base_room || !IS_ROOM (base_room) || 
+      (area = base_room->in) == NULL || !IS_AREA (area))
+    return;
+  
+  /* Now get the height of the tree. */
+
+  max_height = 3 + nr (0,2)+nr (0,2);
+  
+  /* Don't allow the trees to get too high. */
+  if (max_height > area->mv/60)
+    max_height = area->mv/60;
+  
+  /* Once in a while get a supertall tree. */
+  if (nr (1,12) == 2)
+    max_height += 3;
+  
+  /* Find out which heights of the tree will have branches. */
+  
+  for (i = 2; i <= max_height; i++)
+    {
+      if (IS_SET (branches, (1 << (i-1))) && nr (1,4) == 2)
+	SBIT (branches, (1 << i));
+      else if (nr (1,3) != 2)
+	SBIT (branches, (1 << i));      
+    }
+  
+  /* Make sure at least one branch. */
+  if (branches == 0)
+    {
+      SBIT (branches, 1 << (nr (1,max_height)));
+    }
+  
+  /* Find the tree name. */
+  
+  strcpy (prefixname, (find_gen_word (AREAGEN_AREA_VNUM,
+				      "tree_prefixes", &color)));
+  strcpy (treename, (find_gen_word (AREAGEN_AREA_VNUM, 
+				    "tree_names", &color)));
+  
+  if (!*prefixname || !*treename)
+    return;
+
+  
+  sprintf (fullname, "%s %s %s",
+	   a_an (prefixname), prefixname, treename);
+  /* Make the name of the room below the tree. */
+  
+
+  strcpy (belowname, find_gen_word (AREAGEN_AREA_VNUM,
+				    "below_tree_name", &color));
+  if (*belowname)
+    strcat (belowname, " ");
+  strcat (belowname, fullname);
+  
+  free_str (base_room->short_desc);
+  base_room->short_desc = new_str (belowname);
+  SBIT (base_room->thing_flags, TH_MARKED);
+  /* Used for making catwalks. */
+  
+  append_name (base_room, "tree_bottom");
+  
+  
+  
+  trunk_room = base_room;
+  for (height = 0; height < max_height; height++)
+    {
+      /* First move the tree up one level and add the trunk in. */
+      /* Describe the trunk */
+      
+      if (nr (1,2) == 2)
+	{
+	  switch (nr (1,4))
+	    {
+	      case 1:
+		sprintf (currname, "The trunk of %s", fullname);
+		break;
+	      case 2:
+		sprintf (currname, "%s", fullname);
+		break;
+	      case 3:
+		sprintf (currname, "%s Tree's Trunk", fullname);
+		break;
+	      case 4:
+		sprintf (currname, "%s's Trunk", fullname);
+		break;
+	    }
+	}
+      else /* Tell how high up we are in the tree. */
+	{
+	  if (height < max_height/3)
+	    sprintf (currname, "Up in %s%s",
+		     fullname, (nr(1,3) == 2 ? " Tree" : ""));
+	  else if (height < max_height*2/3)
+	    sprintf (currname, "High Up in %s%s",
+		     fullname, (nr(1,3) == 2 ? " Tree" : ""));
+	  else if (height < max_height - 1)
+	    sprintf (currname, "Very High Up in %s%s",
+		     fullname, (nr(1,3) == 2 ? " Tree" : ""));
+	  else
+	    sprintf (currname, "The top of %s%s",
+		     fullname, (nr(1,3) == 2 ? " Tree" : ""));
+	}
+      currname[0] = UC(currname[0]);
+      /* Added new trunk room. */
+      if ((trunk_room = make_room_dir (trunk_room, DIR_UP, currname, ROOM_FOREST)) == NULL)
+	break;
+      
+      SBIT (trunk_room->thing_flags, TH_MARKED);
+      
+      /* Only make branches if we already decided to. */
+      if (!IS_SET (branches, (1 << height)))
+	continue;
+      
+      
+      if (max_height < 7)
+	branch_length = 2-(2*height/max_height);
+      else
+	branch_length = 3-(3*height/max_height);
+      branch_length = MID(1,branch_length,3);
+      
+      for (dir = 0; dir < 4; dir++)
+	{	
+	  room = trunk_room;
+	  /* Set up the branch name. */
+	  /* The branch name is kind of complex...sorry. :P */
+	  if (nr (1,3) == 2)
+	    {
+	      switch (nr(1,4))
+		{
+		  case 1:
+		    sprintf (branchprefix, "Out on");
+		    break;
+		  case 2:
+		    sprintf (branchprefix, "On");
+		    break;
+		  case 3:
+		  case 4:
+		  default:
+		    branchprefix[0] = '\0';
+		    break;
+		}
+	    }
+	  else
+	    branchprefix[0] = '\0';
+	  /* Get the branch adjective. */
+	  
+	  if (nr (1,3) != 2)
+	    strcpy (branchadj, find_gen_word (AREAGEN_AREA_VNUM, "tree_prefixes", &color));
+	  else
+	    branchadj[0] = '\0';
+	  
+	  sprintf (currname, "%s%s", branchprefix, (*branchprefix ? " " : ""));
+	  if (*branchadj)
+	    {
+	      strcat (currname, a_an (branchadj));
+	      strcat (currname, " ");
+	      strcat (currname, branchadj);
+	      strcat (currname, " ");
+	    }
+	  else
+	    strcat (currname, "A ");
+	  if (nr (1,2) == 2)
+	    strcat (currname, "Branch");
+	  else
+	    strcat (currname, "Limb");
+	  
+	  if (nr (1,3) == 1)
+	    {
+	      if (nr (1,3) == 2)
+		{
+		  if (height < max_height/3)
+		    strcat (currname, " Up");
+		  else if (height < max_height*2/3)
+		    strcat (currname, " High Up");
+		  else
+		    strcat (currname, " Very High Up");
+		}
+	      strcat (currname, " in ");
+	      if (nr (1,3) == 2)
+		strcat (currname, "a Tree");
+	      else
+		{
+		  strcat (currname, fullname);
+		  if (nr (1,3) == 1)
+		    strcat (currname, " Tree");
+		}
+	    }
+	  
+	  side_branch_depth = 0;
+	  *currname = UC(*currname);
+	  for (dist = 0; dist < branch_length; dist++)
+	    {
+	      if ((room = make_room_dir (room, dir, currname, ROOM_FOREST)) == NULL)
+		break;
+	      SBIT (room->thing_flags, TH_MARKED);
+	      if (branch_length == 3 && dist > 0 &&
+		  ((side_branch_depth == 0 && nr (1,5) == 2) ||
+		  side_branch_depth == dist))
+		{
+		  side_branch_depth = dist;
+		  for (dir2 = 0; dir2 < 4; dir2++)
+		    {
+		      if ((new_room = make_room_dir (room, dir2, currname, ROOM_FOREST)) != NULL)
+			SBIT (new_room->thing_flags, TH_MARKED);
+		    }
+		}
+	    }
+	}
+    }
+  return;
+}
+
+
+/* This marks the rooms on the edges of an area with names like
+   dir_edge and so forth to make looking for them easier later on. */
+
+void
+mark_area_edges (THING *area)
+{
+  THING *room;
+  int grid[AREAGEN_MAX][AREAGEN_MAX]; 
+  int extremes[REALDIR_MAX];  
+  int x, y;
+  char name[STD_LEN];
+  
+  if (!area || !IS_AREA (area))
+    return;
+  
+  /* Clear grid. */
+
+  for (x = 0; x < AREAGEN_MAX; x++)
+    {
+      for (y = 0; y < AREAGEN_MAX; y++)
+	{
+	  grid[x][y] = 0;
+	}
+    }
+
+  /* Clear extremes. */
+
+  extremes[DIR_NORTH] = -1;
+  extremes[DIR_SOUTH] = AREAGEN_MAX;
+  extremes[DIR_WEST] = AREAGEN_MAX;
+  extremes[DIR_EAST] = -1;
+
+
+  if ((room = find_random_room (area, FALSE, 0, 0)) == NULL)
+    return;
+  
+  generate_room_grid (room, grid, extremes, AREAGEN_MAX/2, AREAGEN_MAX/2);
+  
+  for (x = 0; x < AREAGEN_MAX; x++)
+    {
+      for (y = 0; y < AREAGEN_MAX; y++)
+	{
+	  if (!grid[x][y] || 
+	      (room = find_thing_num (grid[x][y])) == NULL ||
+	      !IS_ROOM (room) || room->in != area)
+	    continue;
+	  
+	  sprintf (name, room->name);
+	  free_str (room->name);
+	  room->name = nonstr;
+	  
+	  if (x == extremes[DIR_WEST])
+	    append_name (room, "west_edge");
+	  if (x == extremes[DIR_EAST])
+	    append_name (room, "east_edge");
+	  if (y == extremes[DIR_NORTH]) 
+	    append_name (room, "north_edge");
+	  if (y == extremes[DIR_SOUTH]) 
+	    append_name (room, "south_edge");
+	  
+	}      
+    }
+  undo_marked (room);
+  return;
+}
+  
+  
