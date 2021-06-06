@@ -1891,9 +1891,9 @@ try_to_learn_spell (THING *th, SPELL *spl)
   
   tries = ++th->pc->learn_tries[learnspell->vnum];
   
-  if (nr (5,10) <= tries)
+  if (nr (5,10) >= tries)
     {
-      sprintf (buf, "\x1b[1;36mYou %s understand %s!\x1b[0;37m\n\r",
+      sprintf (buf, "\x1b[1;36m***** [You %s understand  %s!] *****\x1b[0;37m\n\r",
 	       (tries < 2 ? "barely" :
 		(tries < 3 ? "begin to" :
 		 (tries < 4 ? "sort of" :
@@ -1903,7 +1903,7 @@ try_to_learn_spell (THING *th, SPELL *spl)
     }
   else
     {
-      sprintf (buf, "\x1b[1;37mYou can now use %s!\x1b[0;37m\n\r", 
+      sprintf (buf, "\x1b[1;37m***** [You can now use %s!]  *****\x1b[0;37m\n\r", 
 	       learnspell->name);
       stt (buf, th);
       th->pc->learn_tries[learnspell->vnum] = 0;

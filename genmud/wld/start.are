@@ -3,11 +3,11 @@ Name start.are`
 HpMv 0 1 100 998
 HWT 0 0
 Cost 100
-Timer 4
+Timer 15
 Short the start area`
 Long A cold wind blows by...`
 type Lonath`
-ThFl 537919488
+ThFl 672137216
 Flag Area 0 0 28
 END_THING
 
@@ -381,6 +381,7 @@ Wear wield`
 Long A large, glittering diamond is on the ground.`
 ThFl 100934
 Val gem 1 120 120 55 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 114
@@ -429,6 +430,7 @@ Wear wield`
 Long A large emerald glows with an inner light.`
 ThFl 100934
 Val gem 2 120 120 55 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 118
@@ -477,6 +479,7 @@ Wear wield`
 Long A large sapphire reflects light off its many facets.`
 ThFl 100934
 Val gem 8 120 120 55 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 122
@@ -525,6 +528,7 @@ Wear wield`
 Long The twinkling of a large ruby catches your eye.`
 ThFl 100934
 Val gem 4 120 120 55 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 126
@@ -573,6 +577,7 @@ Wear wield`
 Long A large, pulsating amethyst lies on its side here.`
 ThFl 100934
 Val gem 16 120 120 55 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 130
@@ -621,6 +626,7 @@ Wear wield`
 Long A large beryl emits a dim glow.`
 ThFl 100934
 Val gem 9 105 105 49 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 134
@@ -669,6 +675,7 @@ Wear wield`
 Long A large corundum is lying here.`
 ThFl 100934
 Val gem 5 105 105 49 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 138
@@ -717,6 +724,7 @@ Wear wield`
 Long A spinel has been discarded here.`
 ThFl 100934
 Val gem 6 105 105 49 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 142
@@ -789,6 +797,7 @@ Wear wield`
 Long A small fire opal is underfoot.`
 ThFl 100934
 Val gem 12 55 55 23 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 148
@@ -813,6 +822,7 @@ Wear wield`
 Long For some reason, a large fire opal has been left here.`
 ThFl 100934
 Val gem 12 105 105 49 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 150
@@ -861,6 +871,7 @@ Wear wield`
 Long A large piece of jadeite was left here.`
 ThFl 100934
 Val gem 10 105 105 49 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 154
@@ -909,6 +920,7 @@ Wear wield`
 Long Someone left an aquamarine here.`
 ThFl 100934
 Val gem 11 90 90 43 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 158
@@ -957,6 +969,7 @@ Wear wield`
 Long A large turquoise is here.`
 ThFl 100934
 Val gem 14 90 90 43 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 162
@@ -1005,6 +1018,7 @@ Wear wield`
 Long A large rose quartz les on the ground, glowing.`
 ThFl 100934
 Val gem 7 90 90 43 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 166
@@ -1053,6 +1067,7 @@ Wear wield`
 Long There is a large lapis lazuli on the ground.`
 ThFl 100934
 Val gem 13 90 90 43 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 170
@@ -1089,6 +1104,7 @@ Wear wield`
 Long A zythracite is here.`
 ThFl 100934
 Val gem 15 60 60 28 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 173
@@ -1101,6 +1117,7 @@ Wear wield`
 Long A large zythracite is on the ground.`
 ThFl 100934
 Val gem 15 75 75 37 0 0 0 0 `
+Flag Obj 0 0 8192
 END_THING
 
 THING 189
@@ -1152,7 +1169,7 @@ MIW 1
 Long The warrior guildmaster is here.`
 Sex 2
 ThFl 16779425
-Val guild 1 5 2 0 0 0 0 0 `
+Val guild 1 1 5 0 0 0 0 0 `
 END_THING
 
 THING 201
@@ -1164,7 +1181,7 @@ MIW 1
 Long The wizard guildmaster is here.`
 Sex 2
 ThFl 2209
-Val guild 2 5 2 0 0 0 0 0 `
+Val guild 2 1 5 0 0 0 0 0 `
 END_THING
 
 THING 202
@@ -1176,7 +1193,7 @@ MIW 1
 Long The healer guildmaster is here.`
 Sex 2
 ThFl 2209
-Val guild 3 5 2 0 0 0 0 0 `
+Val guild 3 1 5 0 0 0 0 0 `
 END_THING
 
 THING 203
@@ -1188,7 +1205,7 @@ MIW 1
 Long The thief guildmaster is here.`
 Sex 2
 ThFl 2209
-Val guild 4 5 2 0 0 0 0 0 `
+Val guild 4 1 5 0 0 0 0 0 `
 END_THING
 
 THING 204
@@ -1200,7 +1217,7 @@ MIW 1
 Long The ranger guildmaster is here.`
 Sex 2
 ThFl 2209
-Val guild 5 5 2 0 0 0 0 0 `
+Val guild 5 1 5 0 0 0 0 0 `
 END_THING
 
 THING 205
@@ -1212,7 +1229,7 @@ MIW 1
 Long The tinker guildmaster is here.`
 Sex 2
 ThFl 2209
-Val guild 6 5 2 0 0 0 0 0 `
+Val guild 6 1 5 0 0 0 0 0 `
 END_THING
 
 THING 206
@@ -1224,7 +1241,7 @@ MIW 1
 Long The alchemist guildmaster is here.`
 Sex 2
 ThFl 2209
-Val guild 7 1 2 0 0 0 0 0 `
+Val guild 7 1 5 0 0 0 0 0 `
 END_THING
 
 THING 207
@@ -1236,18 +1253,18 @@ MIW 1
 Long The knight guildmaster is here.`
 Sex 2
 ThFl 2209
-Val guild 8 1 2 0 0 0 0 0 `
+Val guild 8 1 5 0 0 0 0 0 `
 END_THING
 
 THING 208
-Name mystic guildmaster`
+Name guildmaster mystic`
 Level 200
 HWT 65 1600
 Short the Mystic's guildmaster`
 MIW 1
 Long The mystic guildmaster is here.`
 ThFl 2209
-Val guild 8 1 2 0 0 0 0 0 `
+Val guild 8 1 5 0 0 0 0 0 `
 END_THING
 
 THING 216
@@ -1458,7 +1475,7 @@ HWT 0 0
 Short the mob randpop`
 Long The mob randpop is here.`
 ThFl 100934
-Val randpop 101100 955 2 1000 0 0 0 0 `
+Val randpop 101100 952 2 1000 0 0 0 0 `
 END_THING
 
 THING 300

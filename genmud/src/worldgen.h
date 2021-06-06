@@ -19,6 +19,7 @@
 #define WORLDGEN_END_VNUM (WORLDGEN_UNDERWORLD_START_VNUM+WORLDGEN_VNUM_SIZE)
 
 
+
 /* This generates a world. */
 void do_worldgen (THING *, char *);
 void worldgen (THING *, char *);
@@ -113,3 +114,12 @@ void worldgen_check_resets (THING *);
    the player can redo the quests. */
 
 void clear_player_worldgen_quests (THING *);
+
+/* This checks if the world will be auto worldgenned on reboot or not. */
+
+void worldgen_check_autogen (void);
+
+/* This gives the number of worldgen grid areas (TOP level so mult by 2 for
+   below level..*/
+
+int worldgen_num_areas (void);

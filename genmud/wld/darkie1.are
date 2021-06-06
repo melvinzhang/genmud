@@ -4,7 +4,7 @@ HpMv 0 10 25 50
 HWT 0 0
 Align 1
 Cost 100
-Timer 13
+Timer 10
 Short The Darkie Outpost`
 Long The Darkie Outpost comes to life again!`
 type Lonath`
@@ -284,7 +284,7 @@ MIW 1
 Symbol |`
 ThFl 524779
 Val s_exit 1013 0 0 0 0 0 0 0 `
-Val n_exit 220475 0 0 0 0 0 0 0 `
+Val n_exit 209338 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 END_THING
 
@@ -391,7 +391,7 @@ Short Gofem the trainer`
 Long Gofem the trainer is here.`
 Sex 2
 ThFl 2209
-Val teach2 551 561 573 302 303 0 0 0 `
+Val teach2 551 561 573 302 303 0 3 0 `
 Val teacher 582 579 576 581 552 550 571 0 `
 Flag Det 0 0 4
 Flag Act 0 0 256

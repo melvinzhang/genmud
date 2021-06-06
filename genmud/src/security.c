@@ -543,3 +543,27 @@ check_for_multiplaying (void)
     }
   return;
 }
+
+
+/* This gives the number of NOSTORE items within an object (including
+   itself). This is used in thing_from and thing_to when an item gets
+   removed or added to a pc so that we know how many good items are
+   being transferred between characters. */
+
+int
+num_nostore_items (THING *obj)
+{
+  int num_nostore = 0;
+  THING *cont;
+
+  if (!obj)
+    return 0;
+
+  if (IS_OBJ_SET (obj, OBJ_NOSTORE))
+    num_nostore++;
+  
+  for (cont = obj->cont; cont; cont = cont->next_cont)
+    num_nostore += num_nostore_items (cont);
+  
+  return num_nostore;
+}

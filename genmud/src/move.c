@@ -395,6 +395,12 @@ thing_from (THING *th)
   
   else
     remove_typed_events (th, EVENT_COMMAND);
+
+  /* Check for mules. */
+
+  if (IS_PC (in_now))
+    in_now->pc->login_item_xfer[in_now->pc->login_times % MAX_LOGIN] +=
+      num_nostore_items (th);
   return;
 }
 
@@ -558,7 +564,13 @@ thing_to (THING *th, THING *to)
       IS_ROOM (to) && !IS_SET(th->thing_flags, TH_NO_TAKE_BY_OTHER) &&
       !IS_OBJ_SET (th, OBJ_NOSTORE))
     th->timer = 20; /* storable objects get 100 ticks on the ground */
-  
+ 
+
+  /* Check for mules. */
+
+  if (IS_PC (to))
+    to->pc->login_item_xfer[to->pc->login_times % MAX_LOGIN] +=
+      num_nostore_items (th);
   
   return;
 }
@@ -2115,19 +2127,15 @@ do_goto (THING *th, char *arg)
       stt ("You can't go there.\n\r", th);    
       return;
     }
-  act ("@1n leave@s in a swirling mist of smoke.", th, NULL, NULL, NULL, TO_ALL);
-  thing_to (th, dest);
-  act ("@1n arrive@s with a loud band. :P", th, NULL, NULL, NULL, TO_ALL);
-  do_look (th, "");
   if (!IS_PC (th))
     return;
   for (vict = in_now->cont; vict; vict = victn)
     {
       victn = vict->next_cont;
       /* Lets followers goto also? Restrict to admins? */
-      if ((LEVEL(vict) >= BLD_LEVEL && FOLLOWING(vict) == th) 
-	  || vict == th)
-	{
+      if ((LEVEL(vict) >= BLD_LEVEL && FOLLOWING(vict) == th) ||
+      vict == th)
+	{		 
 	  act ("@1n leave@s in a swirling mist of smoke.", vict, NULL, NULL, NULL, TO_ALL);
 	  thing_to (vict, dest);
 	  act ("@1n arrive@s with a loud band. :P", vict, NULL, NULL, NULL, TO_ALL);

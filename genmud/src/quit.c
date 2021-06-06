@@ -101,7 +101,7 @@ do_quit (THING *th, char *arg)
   if (IS_PC2_SET (th, PC2_MAPPING))
     do_cls (th, "");
 
-  sprintf (buf, "%s logged out.", NAME (th));
+  sprintf (buf, "%s logs out.", NAME (th));
   log_it (buf);
 
   if (th->fd)
@@ -891,10 +891,9 @@ void
 do_remort (THING *th, char *arg)
 {
   int wps, money, lev, kps, i, j;
-  int bonus[NUM_REMORT_STATS];
+  int bonus[STATS_PER_REMORT];
   int totals[STAT_MAX];
   int guildstats[STAT_MAX];
-  THING *obj, *objn;
   char arg1[STD_LEN];
   char buf[STD_LEN];
   RACE *race, *align;
@@ -998,7 +997,7 @@ do_remort (THING *th, char *arg)
   /* Get bonuses */
 
   
-  for (i = 0; i < NUM_REMORT_STATS; i++)
+  for (i = 0; i < STATS_PER_REMORT; i++)
     {
       bonus[i] = STAT_MAX;
       arg = f_word (arg, arg1);
@@ -1021,9 +1020,9 @@ do_remort (THING *th, char *arg)
   
   if (th->pc->remorts < 2)
     {
-      for (i = 0; i < NUM_REMORT_STATS; i++)
+      for (i = 0; i < STATS_PER_REMORT; i++)
 	{
-	  for (j = i + 1; j < NUM_REMORT_STATS; j++)
+	  for (j = i + 1; j < STATS_PER_REMORT; j++)
 	    {
 	      if (bonus[i] != STAT_MAX && bonus[i] == bonus[j])
 		{
@@ -1044,7 +1043,7 @@ do_remort (THING *th, char *arg)
   
   /* Add up totals! */
   
-  for (i = 0; i < NUM_REMORT_STATS; i++)
+  for (i = 0; i < STATS_PER_REMORT; i++)
     totals[bonus[i]]++;
 
   /* Figure guild bonuses */
@@ -1094,8 +1093,27 @@ do_remort (THING *th, char *arg)
       if (th->pc->bank < 0)
 	th->pc->bank = 0;
     }
+  /* Increase remort times. */
+  th->pc->remorts++;
+  /* Add stat bonuses. */
+  for (i = 0; i < STAT_MAX; i++)
+    th->pc->stat[i] += totals[i];
+  
+  /* This clears the pc stats during the remorting process. */
+  remort_clear_stats (th);
+  
+  act ("@1n just remorted.", th, NULL, NULL, NULL, TO_ALL);
+  thing_to (th, find_thing_num (th->align + 100));
+}
 
-
+void
+remort_clear_stats (THING *th)
+{
+  int i;
+  THING *obj, *objn;
+  if (!th || !IS_PC (th))
+    return;
+  
   /* Clear spells */
   
   for (i = 0; i < MAX_SPELL; i++)
@@ -1111,17 +1129,12 @@ do_remort (THING *th, char *arg)
       if (IS_WORN(obj))
 	remove_thing (th, obj, TRUE);
     }
-
+  
   /* Remove affects */
   
-  remove_all_affects (th);
-  
-  /* Add stats */
+  remove_all_affects (th, FALSE);
   
   
-  for (i = 0; i < STAT_MAX; i++)
-    th->pc->stat[i] += totals[i];
-
   /* Clear worldgen quests for this player. */
 
   clear_player_worldgen_quests (th);
@@ -1129,11 +1142,10 @@ do_remort (THING *th, char *arg)
   /* Now set up the character anew */
 
   th->level = 1;
-  th->pc->remorts++;
   th->max_hp = 20 + 10 * th->pc->remorts;
-  th->hp = 20 + 10 * th->pc->remorts;
+  th->hp = th->max_hp;
   th->max_mv = 100;
-  th->mv = 100;
+  th->mv = th->max_mv;
   th->pc->exp = 0;
   th->pc->fight_exp = 0;
   if (th->pc->remorts >= 5)
@@ -1144,8 +1156,6 @@ do_remort (THING *th, char *arg)
     } 
   find_max_mana (th);
   fix_pc (th);
-  act ("@1n just remorted.", th, NULL, NULL, NULL, TO_ALL);
-  thing_to (th, find_thing_num (th->align + 100));
   return;
 }
 
@@ -1210,11 +1220,9 @@ do_ascend (THING *th, char *arg)
       return;
     }
   
-  {
-    char errbuf[STD_LEN];
-    sprintf (errbuf, "%s ASCENDS\n", NAME(th));
-    log_it (errbuf);
-  }
+  sprintf (buf, "%s ASCENDS\n", NAME(th));
+  log_it (buf);
+  
   if ((thg = new_thing()) == NULL ||
       (thg->pc = new_pc()) == NULL)
     {
@@ -1283,11 +1291,17 @@ do_ascend (THING *th, char *arg)
   /* Copy player set flags. */
   add_flagval (thg, FLAG_PC2, 
 	       (flagbits(th->flags, FLAG_PC2) & ~PC2_MAPPING));
+  sprintf (buf, "\x1b[1;31mWoot! %s just ascended!\x1b[0;37m\n\r", NAME(th));
   free_thing (th);
   thg->fd->connected = CON_GO_INTO_SERVER;
   write_playerfile (thg);
   thing_to (thg, find_thing_num (thg->align+100));
   connect_to_game (thg->fd, "");
+  echo (buf);
+  echo (buf);
+  echo (buf);
+  echo (buf);
+  echo (buf);
   return;
 }
 /* Finds the amount of exp needed for the next level. */

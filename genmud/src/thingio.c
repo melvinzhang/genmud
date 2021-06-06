@@ -44,7 +44,7 @@ write_thing (FILE *f, THING *th)
     fprintf (f, "Color %d\n", th->color);
   if (th->cost)
     fprintf (f, "Cost %d\n", th->cost);
-  if (th->timer)
+  if (!IS_PC (th) && th->timer)
     fprintf (f, "Timer %d\n", th->timer);
   if (th->desc && th->desc[0])
     write_string (f, "Desc", th->desc);
@@ -730,6 +730,10 @@ read_short_thing (FILE *f, THING *to, CLAN *cln)
 		  thing_nest[nest] = NULL;
 		}
 	    }
+	  else if (to)
+	    {
+	      thing_to (th, to);
+	    }
 	  else
 	    {
 	      for (i = nest - 1; i >= 0; i--)
@@ -746,6 +750,7 @@ read_short_thing (FILE *f, THING *to, CLAN *cln)
 		  thing_nest[nest] = NULL;
 		} 
 	    }
+	  
 	  badcount = 0;
 	  return;
 	}
@@ -934,336 +939,360 @@ read_pcdata (FILE *f, THING *th)
     {
       strcpy (word, read_word (f));
       found = FALSE;
-      switch (word[0])
+      switch (UC(word[0]))
 	{
 	  case 'A':
-	  if (!str_cmp (word, "AlignHate"))
-	    {
-	      for (i = 0; i < ALIGN_MAX; i++)
-		pc->align_hate[i] = read_number (f);
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "Alias"))
-	    {
-	      for (i = 0; i < MAX_ALIAS; i++)
-		{
-		  if (pc->aliasname[i] == nonstr &&
-		      pc->aliasexp[i] == nonstr)
-		    break;
-		}
-	      if (i == MAX_ALIAS)
-		{
-		  read_word (f);
+	    if (!str_cmp (word, "AlignHate"))
+	      {
+		for (i = 0; i < ALIGN_MAX; i++)
+		  pc->align_hate[i] = read_number (f);
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "Alias"))
+	      {
+		for (i = 0; i < MAX_ALIAS; i++)
+		  {
+		    if (pc->aliasname[i] == nonstr &&
+			pc->aliasexp[i] == nonstr)
+		      break;
+		  }
+		if (i == MAX_ALIAS)
+		  {
+		    read_word (f);
+		    read_string (f);
+		  }
+		else
+		  {
+		    pc->aliasname[i] = new_str (read_word (f));
+		    pc->aliasexp[i] = new_str(read_string (f));
+		  }
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "Aff"))
+	      {
+		for (i = 0; i < (AFF_MAX - AFF_START); i++)
+		  pc->aff[i] = read_number (f);
+		found = TRUE;
+	      }
+	    break;
+	  case 'B':
+	    if (!str_cmp (word, "Bank"))
+	      {
+		pc->bank = read_number (f);
+		found = TRUE;
+	      }
+	    break;
+	  case 'C':
+	    if (!str_cmp (word, "Cond"))
+	      {
+		for (i = 0; i < COND_MAX; i++)
+		  pc->cond[i] = read_number (f);
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "Clans"))
+	      {
+		for (i = 0; i < CLAN_MAX; i++)
+		  pc->clan_num[i] = read_number (f);
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "Channels"))
+	      {
+		for (i = 0; i < MAX_CHANNEL; i++)
+		  pc->channel_off[i] = read_number (f);
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "CurrNote"))
+	      {
+		pc->curr_note = read_number (f);
+		found = TRUE;
+	      }
+	    break;
+	  case 'D':
+	    if (!str_cmp (word, "Damage"))
+	      {
+		pc->damage_total = read_number (f);
+		pc->damage_rounds = read_number (f);
+		found = TRUE;
+	      }
+	    break;
+	  case 'E':
+	    if (!str_cmp (word, "Email"))
+	      {
+		pc->email = new_str (read_string (f));
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "Exp"))
+	      {
+		pc->exp = read_number (f);
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "END_PCDATA"))
+	      { 
+		/* These are updated here since they must be done
+		   after all items on the pc are loaded. */
+		pc->login_item_xfer[pc->login_times % MAX_LOGIN] = 0;
+		return;
+	      }
+	    break;
+	  case 'G': 
+	    if (!str_cmp (word, "Guilds"))
+	      {
+		for (i = 0; i < GUILD_MAX; i++)
+		  pc->guild[i] = read_number (f);
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "Gathered"))
+	      {
+		for (i = 0; i < RAW_MAX; i++)
+		  pc->gathered[i] = read_number (f);
+		found = TRUE;
+	      }
+	    break;
+	  case 'I':
+	    if (!str_cmp (word, "Implants"))
+	      {
+		for (i = 0; i < PARTS_MAX; i++)
+		  pc->implants[i] = read_number (f);
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "InVnum"))
+	      {
+		pc->in_vnum = read_number (f);
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "Ignore"))
+	      {
+		for (i = 0; i < MAX_IGNORE; i++)
+		  {
+		    if (!pc->ignore[i] || !*pc->ignore[i])
+		      {
+			pc->ignore[i] = new_str (read_string (f));
+			break;
+		      }
+		  }
+		if (i == MAX_IGNORE)
 		  read_string (f);
-		}
-	      else
-		{
-		  pc->aliasname[i] = new_str (read_word (f));
-		  pc->aliasexp[i] = new_str(read_string (f));
-		}
-              found = TRUE;
-	    }
-          if (!str_cmp (word, "Aff"))
-            {
-              for (i = 0; i < (AFF_MAX - AFF_START); i++)
-                pc->aff[i] = read_number (f);
-              found = TRUE;
-            }
-	  break;
-	case 'B':
-	  if (!str_cmp (word, "Bank"))
-	    {
-	      pc->bank = read_number (f);
-	      found = TRUE;
-	    }
-	  break;
-	case 'C':
-	  if (!str_cmp (word, "Cond"))
-	    {
-	      for (i = 0; i < COND_MAX; i++)
-		pc->cond[i] = read_number (f);
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "Clans"))
-	    {
-	      for (i = 0; i < CLAN_MAX; i++)
-		pc->clan_num[i] = read_number (f);
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "Channels"))
-	    {
-	      for (i = 0; i < MAX_CHANNEL; i++)
-		pc->channel_off[i] = read_number (f);
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "CurrNote"))
-	    {
-	      pc->curr_note = read_number (f);
-	      found = TRUE;
-	    }
-	  break;
-	    case 'D':
-	      if (!str_cmp (word, "Damage"))
-		{
-		  pc->damage_total = read_number (f);
-		  pc->damage_rounds = read_number (f);
-		  found = TRUE;
-		}
-	      break;
-	    case 'E':
-	  if (!str_cmp (word, "Email"))
-	    {
-	      pc->email = new_str (read_string (f));
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "Exp"))
-	    {
-	      pc->exp = read_number (f);
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "END_PCDATA"))
-	    { 
-	      return;
-	    }
-	  break;
-	case 'G': 
-	  if (!str_cmp (word, "Guilds"))
-	    {
-	      for (i = 0; i < GUILD_MAX; i++)
-		pc->guild[i] = read_number (f);
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "Gathered"))
-	    {
-	      for (i = 0; i < RAW_MAX; i++)
-		pc->gathered[i] = read_number (f);
-	      found = TRUE;
-	    }
-	  break;
-	case 'I':
-	  if (!str_cmp (word, "Implants"))
-	    {
-	      for (i = 0; i < PARTS_MAX; i++)
-		pc->implants[i] = read_number (f);
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "InVnum"))
-	    {
-	      pc->in_vnum = read_number (f);
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "Ignore"))
-	    {
-	      for (i = 0; i < MAX_IGNORE; i++)
-		{
-		  if (!pc->ignore[i] || !*pc->ignore[i])
-		    {
-		      pc->ignore[i] = new_str (read_string (f));
-		      break;
-		    }
-		}
-	      if (i == MAX_IGNORE)
-		read_string (f);
-	      found = TRUE;
-	    }
-	  
-	  break;
-	case 'M':
-	  if (!str_cmp (word, "Mana"))
-	    {
-	      pc->mana = read_number (f);
-	      pc->max_mana = read_number (f);
-	      found = TRUE;
-	    }
-	  break;
-        case 'O':
-          if (!str_cmp (word, "OffDef"))
-            {
-               pc->off_def = read_number (f);
-               if (pc->off_def > 100)
-                 pc->off_def = 50;
-               found = TRUE;
-             }
-          break;
-	case 'P':
-	  if (!str_cmp (word, "Parts"))
-	    {
-	      for (i = 0; i < PARTS_MAX; i++)
-		pc->parts[i] = read_number (f);
-	      found = TRUE;
-	    } 
-	  else if (!str_cmp (word, "PcArmor"))
-	    {
-	      for (i = 0; i < PARTS_MAX; i++)
-		pc->armor[i] = read_number (f);
-	      found = TRUE;
-	    }
-          else if (!str_cmp (word, "Pfile"))
-            {
-              pc->pfile_sent = read_number (f);
-              found = TRUE;
-            }
-	  else if (!str_cmp (word, "Password"))
-	    {
-	      pc->pwd = new_str (read_string (f));
-	      found = TRUE;
-	    }
-	  else if (!str_cmp (word, "Pagelen"))
-	    {
-	      pc->pagelen = read_number (f);
-	      found = TRUE;
-	    }
-	  else if (!str_cmp (word, "Practices"))
-	    {
-	      pc->practices = read_number (f);
-	      found = TRUE;
-	    }
-	  else if (!str_cmp (word, "Pkdata"))
-	    {
-	      for (i = 0; i < PK_MAX; i++)
-		pc->pk[i] = read_number (f);
-	      found = TRUE;
-	    }
-	  else if (!str_cmp (word, "Prompt"))
-	    {
-	      free_str (pc->prompt);
-	      pc->prompt = new_str (read_string (f));
-	      found = TRUE;
-	    }
-	  else if (!str_cmp (word, "PETTH"))
-	    {
-	      read_short_thing (f, th, NULL);
-	    }
-	      
-	  break;
-	case 'Q':
-	  if (!str_cmp (word, "QFVal"))
-	    {
-	      VALUE *nqf;
-	      nqf = read_value (f);
-	      nqf->next = pc->qf;
-	      pc->qf = nqf;
-	      found = TRUE;
-	    } 
-	  if (!str_cmp (word, "QuestPoints"))
-	    {
-	      pc->quest_points = read_number(f);
-	      found = TRUE;
-	    }
-	  break;
-	case 'R':
-	  if (!str_cmp (word, "Rumor"))
-	    {
-	      pc->last_rumor = read_number (f);
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "Race"))
-	    {
-	      pc->race = read_number (f);
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "Remorts"))
-	    {
-	      pc->remorts = read_number (f);
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "RoomIn"))
-	    {
-	      int nest = read_number (f);
-	      int room_num = 0;
-	      if (nest == 0)
-		room_num = 2;
-	    }
-	  break;
-	case 'S': 
-	  if (!str_cmp (word, "SPSK"))
-	    {
-	      strcpy (word, read_string (f));
-	      if ((spl = find_spell (word, 0)) != NULL &&
-		  spl->vnum < MAX_SPELL)
-		{
-		  pc->prac[spl->vnum] = read_number (f);
-		  pc->learn_tries[spl->vnum] = read_number (f);
-		  pc->nolearn[spl->vnum] = read_number (f);
-		}
-	      else
-		{
-		  read_number (f);
-		  read_number (f);
-		}	       
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "Stats"))
-	    {
-	      for (i = 0; i < STAT_MAX; i++)
-		pc->stat[i] = read_number (f);
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "STOTH"))
-	    {
-	      read_short_thing (f, th, NULL);
-	      found = TRUE;
-	    }
-	  break;
-	case 'T':
-	  if (!str_cmp (word, "TH"))
-	    {
-	      read_short_thing (f, th, NULL);
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "Title"))
-	    {
-	      free_str (pc->title);
-	      pc->title = new_str (read_string (f));
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "Time"))
-	    {
-	      pc->time = read_number (f);
-	      pc->last_login = read_number (f);
-	      pc->login = current_time;
-	      found = TRUE;
-	    }
-	  if (!str_cmp (word, "Trophy"))
-	    {
-	      int i;
-	      for (i = 0; i < MAX_TROPHY; i++)
-		{
-		  if (pc->trophy[i] && !pc->trophy[i]->name[0])
-		    {
-		      strcpy (pc->trophy[i]->name, read_word(f));
-		      pc->trophy[i]->level = read_number (f);
-		      pc->trophy[i]->remorts = read_number (f);
-		      pc->trophy[i]->times = read_number (f);
-		      pc->trophy[i]->align = read_number (f);
-		      pc->trophy[i]->race = read_number (f);
-		      break;
-		    }
-		}
-	      if (i == MAX_TROPHY)
-		{
-		  read_word (f);
-		  read_number (f);
-		  read_number (f);
-		  read_number (f);
-		  read_number (f);
-		  read_number (f);
-		}
-	      found = TRUE;
-	    }	 
-	  break;
-	case 'W':
-	  if (!str_cmp (word, "Warmth"))
-	    {
-	      pc->warmth = read_number (f);
-	      found = TRUE;
-	    }
-	  else if (!str_cmp (word, "Wimpy"))
-	    {
-	      pc->wimpy = read_number (f);
-	      found = TRUE;
-	    }
-	  break;
+		found = TRUE;
+	      }
+	    
+	    break;
+	  case 'L':
+	    /* Dependency: This part must come before the
+	       items in the player inventory or else the item tracking
+	       code won't work. It needs to be incremented so that it can be
+	       cleared after the player logs in with all of his/her items. */
+	    if (!str_cmp (word, "LoginXfer"))
+	      {
+		pc->login_times = read_number (f);
+		pc->login_times++;
+		for (i = 0; i < MAX_LOGIN; i++)
+		  pc->login_item_xfer[i] = read_number (f);
+		found = TRUE;
+		
+	      }
+	    else if (!str_cmp (word, "LoginLength"))
+	      {
+		for (i = 0; i < MAX_LOGIN; i++)
+		  pc->login_length[i] = read_number (f);
+		found = TRUE;
+	      }
+	    break;
+	  case 'M':
+	    if (!str_cmp (word, "Mana"))
+	      {
+		pc->mana = read_number (f);
+		pc->max_mana = read_number (f);
+		found = TRUE;
+	      }
+	    break;
+	  case 'O':
+	    if (!str_cmp (word, "OffDef"))
+	      {
+		pc->off_def = read_number (f);
+		if (pc->off_def > 100)
+		  pc->off_def = 50;
+		found = TRUE;
+	      }
+	    break;
+	  case 'P':
+	    if (!str_cmp (word, "Parts"))
+	      {
+		for (i = 0; i < PARTS_MAX; i++)
+		  pc->parts[i] = read_number (f);
+		found = TRUE;
+	      } 
+	    else if (!str_cmp (word, "PcArmor"))
+	      {
+		for (i = 0; i < PARTS_MAX; i++)
+		  pc->armor[i] = read_number (f);
+		found = TRUE;
+	      }
+	    else if (!str_cmp (word, "Pfile"))
+	      {
+		pc->pfile_sent = read_number (f);
+		found = TRUE;
+	      }
+	    else if (!str_cmp (word, "Password"))
+	      {
+		pc->pwd = new_str (read_string (f));
+		found = TRUE;
+	      }
+	    else if (!str_cmp (word, "Pagelen"))
+	      {
+		pc->pagelen = read_number (f);
+		found = TRUE;
+	      }
+	    else if (!str_cmp (word, "Practices"))
+	      {
+		pc->practices = read_number (f);
+		found = TRUE;
+	      }
+	    else if (!str_cmp (word, "Pkdata"))
+	      {
+		for (i = 0; i < PK_MAX; i++)
+		  pc->pk[i] = read_number (f);
+		found = TRUE;
+	      }
+	    else if (!str_cmp (word, "Prompt"))
+	      {
+		free_str (pc->prompt);
+		pc->prompt = new_str (read_string (f));
+		found = TRUE;
+	      }
+	    else if (!str_cmp (word, "PETTH"))
+	      {
+		read_short_thing (f, th, NULL);
+	      }
+	    
+	    break;
+	  case 'Q':
+	    if (!str_cmp (word, "QFVal"))
+	      {
+		VALUE *nqf;
+		nqf = read_value (f);
+		nqf->next = pc->qf;
+		pc->qf = nqf;
+		found = TRUE;
+	      } 
+	    if (!str_cmp (word, "QuestPoints"))
+	      {
+		pc->quest_points = read_number(f);
+		found = TRUE;
+	      }
+	    break;
+	  case 'R':
+	    if (!str_cmp (word, "Rumor"))
+	      {
+		pc->last_rumor = read_number (f);
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "Race"))
+	      {
+		pc->race = read_number (f);
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "Remorts"))
+	      {
+		pc->remorts = read_number (f);
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "RoomIn"))
+	      {
+		int nest = read_number (f);
+		int room_num = 0;
+		if (nest == 0)
+		  room_num = 2;
+	      }
+	    break;
+	  case 'S': 
+	    if (!str_cmp (word, "SPSK"))
+	      {
+		strcpy (word, read_string (f));
+		if ((spl = find_spell (word, 0)) != NULL &&
+		    spl->vnum < MAX_SPELL)
+		  {
+		    pc->prac[spl->vnum] = read_number (f);
+		    pc->learn_tries[spl->vnum] = read_number (f);
+		    pc->nolearn[spl->vnum] = read_number (f);
+		  }
+		else
+		  {
+		    read_number (f);
+		    read_number (f);
+		  }	       
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "Stats"))
+	      {
+		for (i = 0; i < STAT_MAX; i++)
+		  pc->stat[i] = read_number (f);
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "STOTH"))
+	      {
+		read_short_thing (f, th, NULL);
+		found = TRUE;
+	      }
+	    break;
+	  case 'T':
+	    if (!str_cmp (word, "TH"))
+	      {
+		read_short_thing (f, th, NULL);
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "Title"))
+	      {
+		free_str (pc->title);
+		pc->title = new_str (add_color(read_string (f)));
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "Time"))
+	      {
+		pc->time = read_number (f);
+		pc->last_login = read_number (f);
+		pc->login = current_time;
+		found = TRUE;
+	      }
+	    if (!str_cmp (word, "Trophy"))
+	      {
+		int i;
+		for (i = 0; i < MAX_TROPHY; i++)
+		  {
+		    if (pc->trophy[i] && !pc->trophy[i]->name[0])
+		      {
+			strcpy (pc->trophy[i]->name, read_word(f));
+			pc->trophy[i]->level = read_number (f);
+			pc->trophy[i]->remorts = read_number (f);
+			pc->trophy[i]->times = read_number (f);
+			pc->trophy[i]->align = read_number (f);
+			pc->trophy[i]->race = read_number (f);
+			break;
+		      }
+		  }
+		if (i == MAX_TROPHY)
+		  {
+		    read_word (f);
+		    read_number (f);
+		    read_number (f);
+		    read_number (f);
+		    read_number (f);
+		    read_number (f);
+		  }
+		found = TRUE;
+	      }	 
+	    break;
+	  case 'W':
+	    if (!str_cmp (word, "Warmth"))
+	      {
+		pc->warmth = read_number (f);
+		found = TRUE;
+	      }
+	    else if (!str_cmp (word, "Wimpy"))
+	      {
+		pc->wimpy = read_number (f);
+		found = TRUE;
+	      }
+	    break;
 	}
       if (!found)
 	{
@@ -1376,6 +1405,18 @@ write_pcdata (FILE *f, THING *th)
   for (i = 0; i < PARTS_MAX; i++)
     fprintf (f, "%d ", pc->parts[i]);
   fprintf (f, "\n");
+  fprintf (f, "LoginXfer %d", pc->login_times);
+  for (i = 0; i < MAX_LOGIN; i++)
+    fprintf (f, " %d", pc->login_item_xfer[i]);
+  fprintf (f, "\n"); 
+  /* Set the current login length based on how much time was spent
+     online... Since login_times only gets updated when the file is
+     read, it should only be updated once per login. */
+  pc->login_length[pc->login_times % MAX_LOGIN] = current_time - pc->login;
+  fprintf (f, "LoginLength");
+  for (i = 0; i < MAX_LOGIN; i++)
+    fprintf (f, " %d", pc->login_length[i]);
+  fprintf (f, "\n");  
   for (i = 0; i < MAX_IGNORE; i++)
     {
       if (pc->ignore[i] && *pc->ignore[i])
@@ -1412,7 +1453,7 @@ write_pcdata (FILE *f, THING *th)
 	  write_short_thing (f, pc->storage[i], 0);
 	}
     }
-  fprintf (f, "\n");
+  fprintf (f, "\n"); 
   for (i = 0; i < MAX_TROPHY; i++)
     {
       if (pc->trophy[i] && pc->trophy[i]->name[0])
@@ -1445,7 +1486,12 @@ write_pcdata (FILE *f, THING *th)
       write_value (f, qf);
       qf = qf->next;
     }
-		
+  
+  for (thg = th->cont; thg; thg = thg->next_cont)
+    {
+      write_short_thing (f, thg, 1);
+      RBIT (thg->thing_flags, TH_SAVED);
+    }	
 
   fprintf (f, "\nEND_PCDATA\n\n");
   return;

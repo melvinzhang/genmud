@@ -186,6 +186,8 @@ afftype_remove (THING *th, int from, int type, int val)
   return;
 }
 
+
+
 /* This lists the affects you have on you. It could use some cleaning up */
 
 void
@@ -198,19 +200,22 @@ do_affects (THING *th, char *arg)
   return;
 }
 
-/* Removes all affects except permanent ones */
+/* Removes all affects except permanent ones (unless specified) */
 
 void
-remove_all_affects (THING *th)
+remove_all_affects (THING *th, bool remove_perma)
 {
   FLAG *flg, *flgn;
   
   for (flg = th->flags; flg != NULL; flg = flgn)
     {
       flgn = flg->next;      
-      if (flg->timer == 0 && flg->from == 0)
-	continue;      
-      aff_from (flg, th);
+      if (flg->type == FLAG_PC1 || 
+	  flg->type == FLAG_PC2)
+	continue;
+      
+      if (flg->timer != 0 || flg->from != 0 || remove_perma)
+	aff_from (flg, th);
     }
   return;
 }

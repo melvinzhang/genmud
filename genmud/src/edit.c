@@ -359,7 +359,8 @@ show_edit (THING * th)
   char levbuf[STD_LEN];
   char hpbuf[STD_LEN];
   char mvbuf[STD_LEN];
-  int pad, i;
+  int pad, i, len;
+  char *t;
   char padbuf[STD_LEN];
   char huntbuf[STD_LEN];
   THING *thg;
@@ -459,8 +460,11 @@ thg->hp, thg->max_hp,  mvbuf, thg->max_mv, thg->mv, thg->size);
 	 a brief piece of the description. */
       for (eds = thg->edescs; eds; eds = eds->next)
 	{
+	  len = 0;
 	  sprintf (buf, "EDesc: \x1b[1;35m%s\x1b[0;37m: ", eds->name);
-	  strncat (buf, eds->desc, MAX(1,(89-strlen(buf))));
+	  for (t = eds->desc; *t && *t != '\n'; t++)
+	    len++;	  
+	  strncat (buf, eds->desc, MIN (len, 80-strlen(buf)));
 	  strcat (buf, "...\n\r");
 	  stt (buf, th);
 	}
@@ -866,7 +870,8 @@ edit (THING *th, char *arg)
       case 'E':
 	/* Extra descriptions...add auto on name and add descs after that. */
 	
-	if (named_in ("eds edesc extra extra_description exdesc", arg1))
+	if (named_in ("eds edesc extra extra_description exdesc", arg1) &&
+	    strlen (arg1) > 1)
 	  {
 	    EDESC *eds;
 	    char *eds_arg; /* Used for parsing new names. */
@@ -1095,8 +1100,23 @@ edit (THING *th, char *arg)
 	      stt ("That's not a valid name.\n\r", th);
 	      return;
 	    }
+	  if (IS_PC (thg))
+	    {
+	      PBASE *pb;
+	      for (pb = pbase_list; pb; pb = pb->next)
+		{
+		  if (!str_cmp (pb->name, thg->name))
+		    {
+		      free_str (pb->name);
+		      pb->name = new_str (arg);
+		    }
+		}
+	      free_str (thg->short_desc);
+	      thg->name = new_str (capitalize (arg));
+	    }
 	  free_str (thg->name);
 	  thg->name = new_str (arg);
+	  
 	  stt ("Name changed.\n\r", th);
 	  show_edit (th);
 	  return;
@@ -1330,11 +1350,25 @@ edit (THING *th, char *arg)
 	      stt ("That's not a valid name.\n\r", th);
 	      return;
 	    }
-	   free_str (thg->short_desc);
-	   thg->short_desc = new_str (add_color(arg));
-	   stt ("Short desc changed.\n\r", th);
-	   show_edit (th);
-	   return;
+	  if (IS_PC (thg))
+	    {
+	      PBASE *pb;
+	      for (pb = pbase_list; pb; pb = pb->next)
+		{
+		  if (!str_cmp (pb->name, thg->name))
+		    {
+		      free_str (pb->name);
+		      pb->name = new_str (arg);
+		    }
+		}
+	      free_str (thg->name);
+	      thg->name = new_str (arg);
+	    }
+	  free_str (thg->short_desc);
+	  thg->short_desc = new_str (capitalize (add_color(arg)));
+	  stt ("Short desc changed.\n\r", th);
+	  show_edit (th);
+	  return;
 	}
       if (!str_prefix ("sym", arg1))
 	{
@@ -2410,9 +2444,12 @@ do_tfind (THING *th, char *arg)
 	      (lvnum > 0 && uvnum > 0 && 
 	       (lvnum > vict->vnum || vict->vnum > uvnum)) ||
 	      (valnum != VAL_MAX &&
-	       (val = FNV (vict, valnum)) == NULL) ||
+	       ((val = FNV (vict, valnum)) == NULL ||
+	       (valnum == VAL_WEAPON && 
+		vict->wear_pos != ITEM_WEAR_WIELD))) ||
 	      (name[0] && !is_named (vict, name)))
 	    continue;
+	  
 	  found = TRUE;
 	  pad = 30 - strlen_color (NAME (vict));
 	  if (pad < 0)

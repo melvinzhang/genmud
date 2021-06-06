@@ -403,6 +403,7 @@ read_server (void)
   update_alignments();
   set_up_teachers();
   sanity_check_vars();
+  worldgen_check_autogen();
   RBIT (server_flags, SERVER_BOOTUP);
   return;
 }
@@ -904,6 +905,11 @@ shutdown_server (void)
   FILE_DESC *fd, *fd_next;
   /* Save players */
   
+  if (IS_SET (server_flags, SERVER_AUTO_WORLDGEN))
+    {
+      worldgen (NULL, "clear yes");
+      sleep(1);
+    }
   if (seg_count < 2)
     {
       log_it ("Shutdown\n");

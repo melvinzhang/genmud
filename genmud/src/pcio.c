@@ -491,7 +491,7 @@ connect_to_game(FILE_DESC *fd, char *arg)
 	    }
 	  fd->th->pc->using_kde = IS_SET (fd->flags, FD_USING_KDE);
 	  update_kde (fd->th, -1);
-	  sprintf (errbuf, "%s is entering the world\n", NAME (fd->th));    
+	  sprintf (errbuf, "%s enters the world\n", NAME (fd->th));    
 	  log_it (errbuf);
 	  add_thing_to_list (th);
 	  check_pbase (th);
@@ -592,14 +592,8 @@ set_stats (THING *th)
   for (i = 0; i < STAT_MAX; i++)
     {
       th->pc->stat[i] = 18;
-      if (race->max_stat[i] > 25)
-	th->pc->stat[i] += nr (0, race->max_stat[i] - 25);
-      else if (race->max_stat[i] < 25)
-	th->pc->stat[i] -= nr (0, 25 - race->max_stat[i]);
-      if (align->max_stat[i] > 0)
-	th->pc->stat[i] += nr (0, align->max_stat[i]);
-      else if (align->max_stat[i] < 0)
-	th->pc->stat[i] -= nr (0, -align->max_stat[i]);
+      th->pc->stat[i] +=
+       (race->max_stat[i]-25+ align->max_stat[i]);
     }
   
   do_attributes (th, "");
@@ -890,6 +884,7 @@ found_old_character (FILE_DESC *fd, char *arg)
     }										  
   fd->th->fd = fd;
   find_max_mana (fd->th);
+
   return TRUE;
   
 }
@@ -899,7 +894,6 @@ void
 write_playerfile (THING *th)
 {
   char filename[100];
-  THING *thg;
   FILE *f;
   if (!th->name || !th->name[0] || !IS_PC (th) || 
       (th->fd && (th->fd->connected > CON_ONLINE && 
@@ -915,15 +909,9 @@ write_playerfile (THING *th)
     }
   SBIT (server_flags, SERVER_WRITE_PFILE);
   strcpy (pfile_name, NAME (th));
-  write_thing (f, th);  
-  for (thg = th->cont; thg; thg = thg->next_cont)
-    {
-      write_short_thing (f, thg, 1);
-      RBIT (thg->thing_flags, TH_SAVED);
-    }
+  write_thing (f, th); 
   pfile_name[0] = '\0';  
-  RBIT (server_flags, SERVER_WRITE_PFILE);  
-  fprintf (f, "\nEND_OF_PLAYER\n\n");
+  RBIT (server_flags, SERVER_WRITE_PFILE); 
   fclose (f);  
   return;
 }
@@ -1141,31 +1129,31 @@ modify_from_flags (THING *th, FLAG *startflag, bool add_perm_affects)
       
       /* These are where affects are added like flying, invis, dinvis etc. */
       /* This only works from races and aligns atm. */
-        	
-	if (add_perm_affects &&
-	    flg->type >= FLAG_HURT && flg->type <= FLAG_DET)
-	{
-	  for (pcflag = th->flags; pcflag != NULL; pcflag = pcflag->next)
-	    {
-	      if (pcflag->timer == 0 && pcflag->type == flg->type)
-		{
-		  pcflag->val |= flg->val;
-		  break;
-		}
-	    } /* If we don't have a permanent flag of that kind, then
+      
+      if (add_perm_affects &&
+	  flg->type >= FLAG_HURT && flg->type <= FLAG_DET)
+	  {
+	    for (pcflag = th->flags; pcflag != NULL; pcflag = pcflag->next)
+	      {
+		if (pcflag->timer == 0 && pcflag->type == flg->type)
+		  {
+		    pcflag->val |= flg->val;
+		    break;
+		  }
+	      } /* If we don't have a permanent flag of that kind, then
 		 make one. */
-	  if (!pcflag)
-	    {
-	      pcflag = new_flag ();
-	      pcflag->next = th->flags;
-	      th->flags = pcflag;
-	      pcflag->type = flg->type;
-	      pcflag->val = flg->val;
-	      pcflag->timer = 0;
-	    }
-	}
-	/* When we add permanent flags from race/align stuff, we don't
-	   add hps/moves. */
+	    if (!pcflag)
+	      {
+		pcflag = new_flag ();
+		pcflag->next = th->flags;
+		th->flags = pcflag;
+		pcflag->type = flg->type;
+		pcflag->val = flg->val;
+		pcflag->timer = 0;
+	      }
+	  }
+      /* When we add permanent flags from race/align stuff, we don't
+	 add hps/moves. */
       if (flg->type >= AFF_START && flg->type < AFF_MAX &&
 	  (!add_perm_affects || 
 	   (flg->type != FLAG_AFF_HP &&
@@ -1195,7 +1183,7 @@ do_noaffect (THING *th, char *arg)
       return;
     }
   
-  remove_all_affects (vict);
+  remove_all_affects (vict, FALSE);
   return;
 }
   
@@ -1374,6 +1362,7 @@ read_playerfile (char *name)
   FILE_READ_SINGLE_SETUP;
   if (!name || !*name || !isalpha (name[0]))
     return NULL;
+  badcount = 0;
   sprintf (fname, "%s%s", PLR_DIR, name);
   strcpy (pfile_name, name);
   
@@ -1388,24 +1377,6 @@ read_playerfile (char *name)
   thg = read_thing (f);
   RBIT (server_flags, SERVER_READ_PFILE);
   
-  if (!thg)
-    {
-      fclose (f);
-      return NULL;
-    }
-  
-  /* Read in carried objects. */
-  
-  thing_nest[0] = thg;
-  FILE_READ_LOOP
-    {
-      FKEY_START;
-      FKEY("TH")
-	read_short_thing (f, NULL, NULL);
-      FKEY("END_OF_PLAYER")
-	break;
-      FILE_READ_ERRCHECK(name);
-    }
   fclose (f);
   return thg;
 }

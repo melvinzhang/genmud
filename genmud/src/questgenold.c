@@ -173,7 +173,6 @@ questgen_fedex_single_area (THING *area)
   if (!area || !IS_AREA (area) || area->vnum < WORLDGEN_START_VNUM ||
       area->vnum > WORLDGEN_END_VNUM)
     return;
-  
   for (mob = area->cont; mob; mob = mob->next_cont)
     {
       if (CAN_FIGHT(mob) && CAN_TALK(mob) && !IS_ROOM(mob) &&
@@ -238,7 +237,7 @@ questgen_generate (THING *start_area, THING *end_area, int quest_type)
   if (quest_type == QUEST_GET_ITEM_RANDMOB)
     {
       if ((quest_giver = find_quest_thing (start_area, NULL, QUEST_THING_PERSON)) == NULL ||
-	  (quest_mob = find_quest_thing (NULL, NULL, QUEST_THING_MOBGEN)) == NULL ||
+	  (quest_mob = find_quest_thing (NULL, start_area, QUEST_THING_MOBGEN)) == NULL ||
 	  (quest_room = find_quest_thing (end_area, NULL, QUEST_THING_ROOM)) == NULL ||
 	  (quest_item = find_quest_thing (end_area, quest_mob, QUEST_THING_ITEM)) == NULL)
 	return;
@@ -265,11 +264,9 @@ find_quest_thing (THING *in, THING *for_whom, int type)
     return NULL;
   if (in == NULL && type == QUEST_THING_MOBGEN)
     in = find_thing_num (MOBGEN_LOAD_AREA_VNUM);
-  
   if (!in || !IS_AREA (in))
     return NULL;
 
-  
   if (type == QUEST_THING_ITEM && for_whom)
     { 
       /* Find the last name for the for whom item which should

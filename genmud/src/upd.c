@@ -384,6 +384,16 @@ update_hour (void)
       wt_info->val[WVAL_WEATHER] = 0;
     }
   
+  /* Check if we're autogenning the world...if so, and if the game has
+     been up for a while, set the reboot ticks to reboot. */
+  
+  if (IS_SET (server_flags, SERVER_AUTO_WORLDGEN) &&
+      (times_through_loop/UPD_PER_SECOND) >= (3600 * nr (12,16)) &&
+      reboot_ticks == 0)
+    {
+      reboot_ticks = 15;
+    }
+  
   if (reboot_ticks > 0)
     {
       if (--reboot_ticks == 0)
@@ -394,6 +404,12 @@ update_hour (void)
 	}
       else
 	{
+	  if (IS_SET (server_flags, SERVER_AUTO_WORLDGEN))
+	    {
+	      echo ("\x1b[1;31mRebooting and rebuilding the world soon!\n\r");
+	      echo ("\x1b[1;31mRebooting and rebuilding the world soon!\n\r");
+	      echo ("\x1b[1;31mRebooting and rebuilding the world soon!\n\r");
+	    }
 	  sprintf (buf, "\x1b[1;36m<->\x1b[1;32m%d hour%s until mud save and reboot!\x1b[1;36m<->\x1b[0;37m\n\r", reboot_ticks, reboot_ticks > 1 ? "s" : "");
 	  echo (buf);
 	}
@@ -418,6 +434,7 @@ update_hour (void)
       write_area_list();
       write_changed_areas(NULL);
     }
+
   
   return;
 }

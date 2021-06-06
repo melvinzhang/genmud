@@ -219,7 +219,7 @@ update_time_weather (void)
 	}
       break;
     case WEATHER_FOGGY:
-      if (nr (1,7) == 2)
+      if (nr (1,7) != 2)
 	{
 	  new_weather = WEATHER_SUNNY;
 	  sprintf (buf, "The fog burns off, leaving the clear sky visible above.\n\r");

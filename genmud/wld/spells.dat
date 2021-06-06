@@ -66,6 +66,18 @@ Stats 0 0 0 0 0 0
 END_SPELL
 
 SPELL
+Name identify`
+Gen 0 4 3 16 3 5 2 6 0
+Wear_Off The spell has worn off @1n.`
+Comp 0 0 0 0 0 
+Repeat 0 0 0
+Guilds 0 0 0 0 0 0 0 0 0 
+Teachers 1037 1087 0 0 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 
+Flag Spell 0 0 40960
+END_SPELL
+
+SPELL
 Name Piercing Weapons`
 Gen 1 0 10 0 580 6 10 6 0
 Wear_Off The spell has worn off @1n.`
@@ -1171,18 +1183,6 @@ Stats 0 0 0 0 0 0
 END_SPELL
 
 SPELL
-Name identify`
-Gen 0 4 0 16 3 40 10 6 0
-Wear_Off The spell has worn off @1n.`
-Comp 0 0 0 0 0 
-Repeat 0 0 0
-Guilds 0 0 0 0 0 0 0 0 3 
-Teachers 230 0 0 0 0 0 0 0 0 0 
-Stats 0 0 0 0 0 0 
-Flag Spell 0 0 40960
-END_SPELL
-
-SPELL
 Name Circle`
 Gen 1 0 10 0 558 40 10 6 0
 Wear_Off The spell has worn off @1n.`
@@ -1790,8 +1790,8 @@ Pre_Name Healing`
 Guilds 0 0 4 0 0 0 0 0 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 27 0 0 0 
-Flag Hurt 0 0 179
 Flag Spell 0 0 14
+Flag Hurt 0 0 179
 END_SPELL
 
 SPELL
@@ -2126,8 +2126,8 @@ Pre_Name Purification`
 Guilds 0 0 5 0 0 0 0 0 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 30 0 0 0 
-Flag Hurt 0 0 32763
 Flag Spell 0 0 14
+Flag Hurt 0 0 32763
 END_SPELL
 
 SPELL
@@ -2383,8 +2383,8 @@ Pre_Name Hammer of Hell`
 Guilds 0 5 4 0 0 0 4 0 4 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 
-Flag Spell 0 0 131072
 Flag Hurt 0 0 16384
+Flag Spell 0 0 131072
 END_SPELL
 
 

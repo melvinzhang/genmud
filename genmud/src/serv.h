@@ -1,4 +1,29 @@
-/* Copyright 2001-2003 John R. Arras See LICENSE.TXT for the license info. */
+/* The MIT License
+	
+    Copyright (c) 2001-2003 John R. Arras.
+
+    Permission is hereby granted, free of charge, to any person 
+    obtaining a copy of this software and associated documentation 
+    files (the "Software"), to deal in the Software without restriction, 
+    including without limitation the rights to use, copy, modify,
+    merge, publish, distribute, sublicense, and/or sell copies of the 
+    Software, and to permit persons to whom the Software is furnished 
+    to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be 
+    included in all copies or substantial portions of the Software.
+    
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    
+*/
+
+
 #include <time.h>
 #include <sys/time.h>
 
@@ -231,7 +256,7 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 #define CARNIVORE_HUNT_DEPTH   15   /* Max depth a carnivore hunts on avg..*/
 #define REMORT_ROOM            26   /* Room where you can remort. */
 #define MAX_REMORTS            10    /* Max number of remorts. */
-#define NUM_REMORT_STATS       4     /* Stats per remort... */
+#define STATS_PER_REMORT       4     /* Stats per remort... */
 #define CONDITIONS             11    /* The number of condition ranks things
 					have. */
 #define NUM_NEWBIE_ITEMS       20    /* Max number of newbie items. */
@@ -243,7 +268,7 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 					 NUM_VALS SINCE WE USE VALUES TO
 					 KEEP TRACK OF MONEY!!!! */
 
-#define MAX_STAT_VAL           32      /* Maximum value a stat can have */
+#define MAX_STAT_VAL           40      /* Maximum value a stat can have */
 #define MIN_STAT_VAL           3       /* Minimum value a stat can have */
 
 #define WORLD_VNUM             220985383 /* Big random number for world. */
@@ -323,7 +348,7 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 #define SCROLL_SEED     725233   /* scroll rng seed */
 #define POTION_COLORS        16  /* Number of potion colors. */
 #define POTION_TYPES         14  /* Number of potion modifiers */
-
+#define MAX_LOGIN           100  /* Number of logins recorded. */
 
 #define TEACHER_VNUM         230 /* Vnum of the randomized trainers who
 				    get set up all over the world. */
@@ -517,6 +542,9 @@ grep 					    them all visible to each
 						  certain things need to be
 						  done after all areas are
 						  made and linked. */
+#define SERVER_AUTO_WORLDGEN      0x00400000   /* Does the server auto generate
+						  worlds once a day or so? */
+
 /**********************************************************************/
 /* These are flags for connections. You can add more if you want, but
    be careful before you remove them. */
@@ -1704,6 +1732,15 @@ struct pc_data
 				    on how many of that align that are
 				    in societies or can talk that you've
 				    helped to kill. */
+  /* These are to be used for !muling code where the length of logins and
+     the number of items xferred is checked to see if the player is being
+     used as a mule or not... */
+  int login_length[MAX_LOGIN];   /* How long they were logged in. */
+  int login_item_xfer[MAX_LOGIN]; /* How many good items were transferred
+				     to or from this thing during this
+				     login. */
+
+  int login_times;               /* How many times the player has logged in. */
 };
  /**********************************************************************/
 /* This has the information for a spell. */
@@ -2589,7 +2626,8 @@ void afftype_remove (THING *th, int from, int type, int val); /* Removes all fla
 
 void aff_to (FLAG *aff, THING *th);   /* Adds a flag to a thing */
 void aff_from (FLAG *aff, THING *th); /* Removes a flag from a thing */
-void remove_all_affects (THING *); /* Removes all nonpermanent affects */
+/* Removes all affects...perma or not as you choose. */
+void remove_all_affects (THING *, bool remove_perma); 
 void add_flagval (THING *, int, int); /* Adds perma flagval */
 void remove_flagval (THING *, int, int); /* Removes perma flagvals */
 void add_reset (THING *, int vnum, int pct, int max_num, int nest);
@@ -2869,6 +2907,11 @@ void check_for_multiplaying (void); /* This goes down the list of PC's
 				       the opposite alignment, but from
 				       the same site. If so, a note
 				       is made. */
+int num_nostore_items (THING *obj);  /* This gives the number of nostore
+					items in an object (including
+					itself) for use when players
+					give/receive nostore items to
+					try to keep track of mules. */
 
 /**********************************************************************/
 /* These functions deal with money and how it works.                  */
@@ -2885,6 +2928,7 @@ void show_money (THING *, THING *, bool inside_person);
 
 int total_guilds (THING *);
 int total_guild_points (THING *);
+bool guild_stat_increase (int tier); /* Do we increase stat this tier? */
 int guild_rank (THING *, int);
 int find_guild_name (char *); /* Given a string, what guild is it */
 
@@ -2892,6 +2936,9 @@ int find_guild_name (char *); /* Given a string, what guild is it */
 int total_implants (THING *);
 int total_implant_points (THING *);
 int implant_rank (THING *, int);
+
+/* This clears the players' stats during a remort (or race change). */
+void remort_clear_stats (THING *);
 
 /* These deal with grouping/following. */
 
@@ -3181,6 +3228,7 @@ void do_society (THING *, char *);
 void do_edit (THING *, char *); /* Thing editor */
 void do_zedit (THING *, char *);
 void do_race (THING *, char *);
+void do_racechange (THING *, char *);
 void do_align (THING *, char *);
 void do_password (THING *, char *);
 void do_validate (THING *, char *);

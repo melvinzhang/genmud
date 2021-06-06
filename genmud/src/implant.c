@@ -56,10 +56,10 @@ void
 do_implant (THING *th, char *arg)
 {
   char buf[STD_LEN];
-  
+  char arg1[STD_LEN];
   int i = 0, total = 0, curr_wps, curr_money, curr_points, th_wps, th_money,
     th_points, remorts, type = PARTS_MAX, new_tier;
-  if (th || !IS_PC (th) || !th->in)
+  if (!th || !IS_PC (th) || !th->in)
     return;
   
   total = total_implants (th);
@@ -112,18 +112,35 @@ do_implant (THING *th, char *arg)
       return;
     }
   
+  arg = f_word (arg, arg1);
+  
   for (type = 0; type < PARTS_MAX; type++)
     {
-      if (!str_cmp (arg, parts_names[type]))
+      if (!str_cmp (arg1, parts_names[type]))
 	break;
     }
-
+  
   if (type == PARTS_MAX)
     {
-      stt ("Implant <location>\n\r", th);
+      stt ("Implant <location> or implant <location> remove\n\r", th);
       return;
     }
   
+  /* Allow people to remove implant ranks. */
+  if (!str_cmp (arg, "remove"))
+    {
+      if (th->pc->implants[type] < 1)
+	{
+	  stt ("You don't have an implant of that type.\n\r", th);
+	  return;
+	}
+      
+      th->pc->implants[type]--;
+      stt ("Implant rank reduced.\n\r", th);
+      return;
+    }
+
+
   
 
   new_tier = th->pc->implants[type] + 1;

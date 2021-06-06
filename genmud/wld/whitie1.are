@@ -4,7 +4,7 @@ HpMv 0 10 25 50
 HWT 0 0
 Align 2
 Cost 100
-Timer 10
+Timer 19
 Short The Whitie Outpost`
 Long The Whitie Outpost comes to life again!`
 type Lonath`
@@ -36,8 +36,8 @@ Short The Sanctuary`
 MIW 1
 Symbol |`
 ThFl 524779
-Val s_exit 1051 0 0 0 0 0 0 0 `
 Val n_exit 1053 0 0 0 0 0 0 0 `
+Val s_exit 1051 0 0 0 0 0 0 0 `
 Reset 1081 10 5 1
 END_THING
 
@@ -50,12 +50,12 @@ Short The Training Hall`
 MIW 1
 Symbol +`
 ThFl 524779
-Val s_exit 1052 0 0 0 0 0 0 0 `
-Val e_exit 1054 0 0 0 0 0 0 0 `
-Val w_exit 1055 0 0 0 0 0 0 0 `
-Val u_exit 1056 0 0 0 0 0 0 0 `
-Val d_exit 1057 0 0 0 0 0 0 0 `
 Val n_exit 1058 0 0 0 0 0 0 0 `
+Val d_exit 1057 0 0 0 0 0 0 0 `
+Val u_exit 1056 0 0 0 0 0 0 0 `
+Val w_exit 1055 0 0 0 0 0 0 0 `
+Val e_exit 1054 0 0 0 0 0 0 0 `
+Val s_exit 1052 0 0 0 0 0 0 0 `
 Reset 1081 10 5 1
 END_THING
 
@@ -110,8 +110,8 @@ Short A Training Alcove`
 MIW 1
 Symbol -`
 ThFl 524779
-Val u_exit 1053 0 0 0 0 0 0 0 `
 Val d_exit 1069 3 3 50 50 0 0 0 trapdoor`
+Val u_exit 1053 0 0 0 0 0 0 0 `
 Reset 1089 100 1 1
 Reset 1081 10 5 1
 END_THING
@@ -125,12 +125,12 @@ Short Shopkeepers' Square`
 MIW 1
 Symbol +`
 ThFl 524779
-Val s_exit 1053 0 0 0 0 0 0 0 `
-Val e_exit 1059 0 0 0 0 0 0 0 `
-Val w_exit 1060 0 0 0 0 0 0 0 `
-Val u_exit 1061 0 0 0 0 0 0 0 `
-Val d_exit 1062 0 0 0 0 0 0 0 `
 Val n_exit 1063 0 0 0 0 0 0 0 `
+Val d_exit 1062 0 0 0 0 0 0 0 `
+Val u_exit 1061 0 0 0 0 0 0 0 `
+Val w_exit 1060 0 0 0 0 0 0 0 `
+Val e_exit 1059 0 0 0 0 0 0 0 `
+Val s_exit 1053 0 0 0 0 0 0 0 `
 Reset 1081 10 5 1
 END_THING
 
@@ -198,12 +198,12 @@ Short The Gatehouse`
 MIW 1
 Symbol +`
 ThFl 524779
-Val s_exit 1058 0 0 0 0 0 0 0 `
-Val e_exit 1064 0 0 0 0 0 0 0 `
-Val w_exit 1065 0 0 0 0 0 0 0 `
-Val u_exit 1066 0 0 0 0 0 0 0 `
-Val d_exit 1067 0 0 0 0 0 0 0 `
 Val n_exit 1068 0 0 0 0 0 0 0 `
+Val d_exit 1067 0 0 0 0 0 0 0 `
+Val u_exit 1066 0 0 0 0 0 0 0 `
+Val w_exit 1065 0 0 0 0 0 0 0 `
+Val e_exit 1064 0 0 0 0 0 0 0 `
+Val s_exit 1058 0 0 0 0 0 0 0 `
 Reset 1081 30 10 1
 END_THING
 
@@ -268,8 +268,8 @@ Short The Outpost Entrance`
 MIW 1
 Symbol |`
 ThFl 524779
+Val n_exit 200163 0 0 0 0 0 0 0 `
 Val s_exit 1063 0 0 0 0 0 0 0 `
-Val n_exit 216881 0 0 0 0 0 0 0 `
 END_THING
 
 THING 1069
@@ -281,10 +281,10 @@ Short The Training Hall`
 MIW 1
 Symbol }`
 ThFl 524779
-Val u_exit 1057 3 3 50 50 0 0 0 trapdoor`
-Val s_exit 1070 0 0 0 0 0 0 0 `
-Val n_exit 1074 0 0 0 0 0 0 0 `
 Val e_exit 1072 0 0 0 0 0 0 0 `
+Val n_exit 1074 0 0 0 0 0 0 0 `
+Val s_exit 1070 0 0 0 0 0 0 0 `
+Val u_exit 1057 3 3 50 50 0 0 0 trapdoor`
 Flag Room 0 0 1
 Reset 1091 50 5 1
 Reset 1092 50 5 1
@@ -298,8 +298,8 @@ Short The Training Hall`
 MIW 1
 Symbol \`
 ThFl 524779
-Val n_exit 1069 0 0 0 0 0 0 0 `
 Val e_exit 1071 0 0 0 0 0 0 0 `
+Val n_exit 1069 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1091 50 5 1
 Reset 1092 50 5 1
@@ -313,8 +313,8 @@ Short The Training Hall`
 MIW 1
 Symbol /`
 ThFl 524779
-Val w_exit 1070 0 0 0 0 0 0 0 `
 Val n_exit 1072 0 0 0 0 0 0 0 `
+Val w_exit 1070 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1091 50 5 1
 Reset 1092 50 5 1
@@ -328,9 +328,9 @@ Short The Training Hall`
 MIW 1
 Symbol {`
 ThFl 524779
-Val s_exit 1071 0 0 0 0 0 0 0 `
-Val n_exit 1073 0 0 0 0 0 0 0 `
 Val w_exit 1069 0 0 0 0 0 0 0 `
+Val n_exit 1073 0 0 0 0 0 0 0 `
+Val s_exit 1071 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1091 50 5 1
 Reset 1092 50 5 1
@@ -344,8 +344,8 @@ Short The Training Hall`
 MIW 1
 Symbol \`
 ThFl 524779
-Val s_exit 1072 0 0 0 0 0 0 0 `
 Val w_exit 1074 0 0 0 0 0 0 0 `
+Val s_exit 1072 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1091 50 5 1
 Reset 1092 50 5 1
@@ -359,8 +359,8 @@ Short The Training Hall`
 MIW 1
 Symbol /`
 ThFl 524779
-Val e_exit 1073 0 0 0 0 0 0 0 `
 Val s_exit 1069 0 0 0 0 0 0 0 `
+Val e_exit 1073 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1091 50 5 1
 Reset 1092 50 5 1
@@ -468,8 +468,8 @@ Short Hofto the trainer`
 Long Hofto the trainer is here.`
 Sex 2
 ThFl 2209
-Val teach2 551 561 573 302 303 0 0 0 `
 Val teacher 582 579 576 581 552 550 571 0 `
+Val teach2 551 561 573 302 303 0 3 0 `
 Flag Det 0 0 4
 Flag Act 0 0 256
 END_THING
@@ -497,8 +497,8 @@ Short Axwa the trainer`
 Long Axwa the trainer is here.`
 Sex 2
 ThFl 2209
-Val teach2 591 59 89 0 0 0 0 0 `
 Val teacher 50 85 51 58 72 7 66 0 `
+Val teach2 591 59 89 0 0 0 0 0 `
 Flag Det 0 0 4
 Flag Act 0 0 256
 END_THING

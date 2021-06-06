@@ -379,6 +379,9 @@ init_command_list (void)
   add_command ("bid", do_bid, 0, FALSE);
   add_command ("wimpy", do_wimpy, 0, FALSE);
   add_command ("sedit", do_sedit, MAX_LEVEL, TRUE);
+  /* Do race must come after do racechange so that do race is checked
+     first...or you'll never be able to use the race command again. */
+  add_command ("racechange", do_racechange, 0, FALSE);
   add_command ("race", do_race, 0, FALSE);
   add_command ("align", do_align, 0, FALSE);
   add_command ("close", do_close, 0, FALSE);

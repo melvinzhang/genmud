@@ -501,9 +501,9 @@ do_title (THING *th, char *arg)
   
   strcpy (buf, add_color (arg));
   
-  if (strlen (buf) > 400)
+  if (strlen (buf) > 200)
     {
-      stt ("Your title cannot be more than 400 characters long when the color codes are decompressed.\n\r", th);
+      stt ("Your title cannot be more than 200 characters long when the color codes are decompressed.\n\r", th);
       return;
     }
   

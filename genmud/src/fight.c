@@ -1839,7 +1839,7 @@ get_killed (THING *vict, THING *killer)
       
       /* Clean up the victim, and send it back home */
       
-      remove_all_affects (vict);
+      remove_all_affects (vict, FALSE);
       vict->pc->pk[PK_KILLED]++;
       vict->hp = 5;
       vict->position = POSITION_RESTING;

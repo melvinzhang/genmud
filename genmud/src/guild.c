@@ -5,6 +5,8 @@
 #include <time.h>
 #include "serv.h"
 
+
+/* Total of the guild points the player has used. */
 int
 total_guilds (THING *th)
 {
@@ -16,15 +18,26 @@ total_guilds (THING *th)
   return total;
 }
 
+/* How many guild points the player has to play with. */
+
 int 
 total_guild_points (THING *th)
 {
-  if (th || !IS_PC (th))
+  if (!th || !IS_PC (th))
     return 0;
   
   return (GUILD_POINTS_PER_REMORT + (IS_PC1_SET (th, PC_ASCENDED) ? 3 : 0))*(th->pc->remorts + 1);
 }
 
+/* Do we increase the guild stat value this tier? */
+
+bool
+guild_stat_increase (int tier)
+{
+  if (tier == 3 || tier == GUILD_TIER_MAX)
+    return TRUE;
+  return FALSE;
+}
 void
 do_guild (THING *th, char *arg)
 {
@@ -33,8 +46,8 @@ do_guild (THING *th, char *arg)
   VALUE *guild = NULL;
   int i, total = 0, curr_wps, curr_money, curr_points, th_wps, th_money,
     th_points, remorts, type = GUILD_MAX, new_tier;
-  bool found = FALSE;
-  if (th || !IS_PC (th) || !th->in)
+  bool found = FALSE, removed_spell = FALSE;
+  if (!th || !IS_PC (th) || !th->in)
     return;
   
   total = total_guilds (th);
@@ -42,6 +55,8 @@ do_guild (THING *th, char *arg)
   th_points = total_guild_points (th) - total;
   th_money = total_money (th);
   th_wps = th->pc->pk[PK_WPS];
+  
+  
 
   if (!*arg || !str_cmp (arg, "list") || !str_cmp (arg, "info"))
     {      
@@ -101,12 +116,83 @@ do_guild (THING *th, char *arg)
       return;
     }
   
+  /* Remove a guild tier....no wps/gold returned and all skills are
+     checked to make sure you can still use them with new lower guild
+     tier. Since guild points are dynamic, they are "returned" so
+     you can choose different guilds. */
+  
+  if (!str_cmp (arg, "remove"))
+    {
+      SPELL *spl;
+      echo ("Moo\n\r");
+      if (th->pc->guild[type] < 1)
+	{
+	  stt ("You aren't in this guild!\n\r", th);
+	  return;
+	}
+      /* Remove the guild bonus stat...*/
+      
+      if (guild_info[type].flagval >= 0 &&
+	  guild_info[type].flagval < STAT_MAX &&
+	  guild_stat_increase (th->pc->guild[type]))
+	th->pc->stat[guild_info[type].flagval]--;
+
+      /* Remove the guild tier. */
+      th->pc->guild[type]--;
+      stt ("Guild tier removed.\n\r", th);
+      /* Update spells... loop through and check to see if you need
+	 to unlearn spells due to losing the guild tier. */
+      
+      do
+	{
+	  removed_spell = FALSE;
+	  for (spl = spell_list; spl; spl = spl->next)
+	    {
+	      if (spl->vnum < 0 || spl->vnum >= MAX_SPELL)
+		continue;
+	      
+	      /* If the guild tier for the spell is higher than the
+		 pc guild tier, remove the spell. */
+	      
+	      if (spl->guild[type] > th->pc->guild[type] &&
+		  th->pc->prac[spl->vnum] > 0)
+		{
+		  th->pc->prac[spl->vnum] = 0;
+		  removed_spell = TRUE;
+		}
+	      
+	      /* Now check all prereqs. Loop through prereqs and if
+		 the spell is missing some prereqs then this spell is
+		 zeroed out also. This is needed because a spell may
+		 be removed due to guilds and it may be a prereq for
+		 another spell that doesn't have a guild tier that
+		 high. It's a check against funky spell creation. */
+	      
+	      if (th->pc->prac[spl->vnum] > 0)
+		{
+		  for (i = 0; i < NUM_PRE; i++)
+		    {
+		      if (spl->prereq[i] && 
+			  spl->prereq[i]->vnum >= 0 &&
+			  spl->prereq[i]->vnum < MAX_SPELL &&
+			  th->pc->prac[spl->prereq[i]->vnum] == 0)
+			{
+			  th->pc->prac[spl->vnum] = 0;
+			  removed_spell = TRUE;
+			}
+		    }
+		}
+	    }
+	}
+      while (removed_spell);
+      return;
+    }
   if (str_cmp (arg, "advance"))
     {
       stt ("Guild info, costs, advance.\n\r", th);
       return;
     }
-
+  
   new_tier = th->pc->guild[type] + 1;
 
   /* If you split up guildmasters by tier.... */
@@ -153,7 +239,7 @@ do_guild (THING *th, char *arg)
 
   if (guild_info[type].flagval >= 0 && 
       guild_info[type].flagval < STAT_MAX &&
-      (new_tier == 3 || new_tier == GUILD_TIER_MAX))
+      guild_stat_increase (new_tier))
     th->pc->stat[guild_info[type].flagval]++;
   act ("Congratulations @3n, just advanced a tier in the @t!", gm, NULL, th, guild_info[type].app, TO_ALL);
   update_kde (th, KDE_UPDATE_GUILD | KDE_UPDATE_STAT | KDE_UPDATE_COMBAT);

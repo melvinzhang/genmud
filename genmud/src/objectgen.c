@@ -681,8 +681,8 @@ objectgen_setup_stats (THING *obj, int weapon_type)
       
       val->type = VAL_WEAPON;
       
-      val->val[0] = nr (lev_sqrt/2,lev_sqrt*2/3);
-      val->val[1] = nr(lev_sqrt,lev_sqrt*2);
+      val->val[0] = nr (lev_sqrt/3,lev_sqrt/2);
+      val->val[1] = nr(lev_sqrt*2/3,lev_sqrt*3/2);
       
       if (weapon_type < 0 || 
 	  weapon_type >= WPN_DAM_MAX)
@@ -945,20 +945,26 @@ generate_metal_names (void)
 	  name_ok = TRUE;
 	  strcpy (name, create_society_name (NULL));
 	  
+	  /* Crop the name. */
+	  name[nr(4,5)] = '\0';
+	  
 	  for (t = name; *t; t++)
 	    /* Make sure that everything is a letter and not a 
 	       weird letter. */
-	    if (!isalpha(*t) || 
-		LC (*t) == 'q' || LC (*t) == 'x' || LC (*t) == 'z')
+	    if (!isalpha(*t))
 	      name_ok = FALSE;
-	  /* Crop the name. */
-	  name[nr(4,6)] = '\0';
-	  /* Move back to a nonvowel. */
+	  
+	  /* Move back to a consonant with a vowel before it. */
+	 
 	  t--;
-	  while (isvowel (*t))
-	    t--;
-	  t++;
-	  *t = '\0';
+	  while (t > name)
+	    {
+	      if (!isvowel (*t) &&
+		  isvowel (*(t-1)))
+		break;
+	      t--;
+	    }
+	  *(t+1) = '\0';
 	  
 	  /* Make sure the name is long enough. */
 	  if (t < name + 2)
@@ -966,19 +972,27 @@ generate_metal_names (void)
 	}
       while (!name_ok);
       
-      if (nr (1,3) == 2)
-	strcat (name, "ite");
-      else if (nr (1,2) == 1)
-	strcat (name, "ate");
-      else
-	strcat (name, "ium");
+      switch (nr (1,4))
+	{
+	  case 1:
+	    strcat (name, "ite");
+	    break;
+	  case 2:
+	    strcat (name, "ate");
+	    break;
+	  case 3:
+	  case 4:
+	  default:
+	    strcat (name, "ium");
+	    break;
+	}
       
       name_length = strlen(name);
       if (nr (1,9) == 2)
 	num_colors = 0;
-      else if (nr (1,3) == 1)
+      else if (nr (1,2) == 1)
 	num_colors = 1;
-      else if (nr (1,4) != 2)
+      else if (nr (1,5) == 2)
 	num_colors = 2;
       else 
 	num_colors = 3;

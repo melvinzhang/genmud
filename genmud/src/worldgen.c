@@ -68,14 +68,34 @@ static int sector_adjacency[SECTOR_PATCHTYPE_MAX][SECTOR_PATCHTYPE_MAX] =
   };
     
 
+
 /* Simple worldgen command. */
 
 void
 do_worldgen (THING *th, char *arg)
 {
+  char buf[STD_LEN];
   if (LEVEL (th) < MAX_LEVEL || !IS_PC (th))
     return;
   
+  if (!str_cmp (arg, "autogen"))
+    {
+      server_flags ^= SERVER_AUTO_WORLDGEN;
+      if (IS_SET (server_flags, SERVER_AUTO_WORLDGEN))
+	{
+	  stt ("Worldgen autogenerate ON.\n\r", th);
+	  sprintf (buf, "touch %sautoworldgen", WLD_DIR);
+	  system (buf);
+	}
+      else
+	{
+	  stt ("Worldgen autogenerate OFF.\n\r", th);
+	  sprintf (buf, "\\rm %sautoworldgen", WLD_DIR);
+	  system (buf);
+	}
+      return;
+    }
+
   worldgen (th, arg);
 }
 
@@ -96,14 +116,14 @@ worldgen (THING *th, char *arg)
   int total_size;
   int curr_size;
   
-  if (th && IS_PC (th) && LEVEL(th) < MAX_LEVEL)
+  if (th && IS_PC (th) && LEVEL(th) != MAX_LEVEL)
     return;
   
   if (!str_cmp (arg, "fixed"))
     {
-      sprintf (buf, "touch %s.worldgen.fixed.dat", WLD_DIR);
+      sprintf (buf, "touch %s.worldgen_fixed.dat", WLD_DIR);
       system (buf);
-      stt ("Ok, worldgen has been fixed. To unlock it remove the .worldgen.fixed.dat file in the wld directory.\n\r", th);
+      stt ("Ok, worldgen has been fixed. To unlock it remove the .worldgen_fixed.dat file in the wld directory.\n\r", th);
       return;
     }
   
@@ -113,16 +133,16 @@ worldgen (THING *th, char *arg)
   if (!str_cmp (arg, "clear yes"))
     {
       FILE *f;
-      if ((f = wfopen (".worldgen.fixed.dat", "r")) != NULL)
+      if ((f = wfopen (".worldgen_fixed.dat", "r")) != NULL)
 	{
-	  stt ("The worldgen has been fixed! delete the file .worldgen.fixed.dat from your wld directory to delete the world!\n\r", th);
+	  stt ("The worldgen has been fixed! delete the file .worldgen_fixed.dat from your wld directory to delete the world!\n\r", th);
 	  fclose (f);
 	  return;
 	}
 
       stt ("The worldgen areas will be gone after the next reboot.\n\r", th);
       do_purge (th, "all");
-      do_society (th, "clearall");
+      society_clearall (th);
       clear_base_randpop_mobs (th);
       worldgen_clear_quests (th);
       worldgen_clear();
@@ -173,13 +193,16 @@ worldgen (THING *th, char *arg)
 	}
       SBIT (server_flags, SERVER_WORLDGEN);
       generate_metal_names();
-      do_society (th, "generate");      
+      generate_societies (th);  
       generate_randpop_mobs (th);
       worldgen_generate_areas(area_size);
       worldgen_link_areas();
       worldgen_add_catwalks_between_areas();
       worldgen_society_seed();
       worldgen_link_align_outposts();
+      if (th)
+	worldgen_show_sectors (th);
+      worldgen_show_sectors (NULL);
       worldgen_generate_quests();
       
       do_purge (th, "all");
@@ -356,6 +379,55 @@ worldgen (THING *th, char *arg)
   
   return;
 }
+
+/* This checks if we want to generate a world on reboot or not. */
+
+void
+worldgen_check_autogen (void)
+{
+  FILE *f;
+  int count;
+  int times = 0;
+  if ((f = wfopen ("autoworldgen", "r")) != NULL)
+    {
+      SBIT (server_flags, SERVER_AUTO_WORLDGEN);
+      fclose (f);
+      while ((count = worldgen_num_areas()) < 12 || count > 30)
+	{
+	  if (++times > 100)
+	    break;
+	  worldgen (NULL, "10 10");
+	}
+      if (count >= 10 && count <= 30)
+	worldgen (NULL, "generate 300");
+      else
+	{
+	  worldgen (NULL, "clear yes");
+	  SBIT (server_flags, SERVER_REBOOTING);
+	}
+    }
+  return;
+}
+
+/* This counts the number of worldgen areas in existence atm. Used mostly
+   for the autogen code so I know that the world is "big enough." */
+
+int
+worldgen_num_areas (void)
+{
+  int x, y;
+  int count = 0;
+  for (x = 0; x < WORLDGEN_MAX; x++)
+    {
+      for (y = 0; y < WORLDGEN_MAX; y++)
+	{
+	  if (worldgen_sectors[x][y])
+	    count++;
+	}
+    }
+  return count;
+}
+
 
 /* This checks if the worldgen vnums are ok or not. */
 
@@ -1166,52 +1238,112 @@ void
 worldgen_show_sectors (THING *th)
 {
   int x, y;
-
-  if (!th)
-    return;
-  
+  char buf[STD_LEN];
+  char worldmap[STD_LEN*20];
+  int al;
+  THING *align_area;
+  bool all_blank = TRUE;
+  sprintf (worldmap, "World Map:\n");
   for (y = WORLDGEN_MAX-1; y >= 0; y--)
     {
+      all_blank = TRUE;
       for (x = 0; x < WORLDGEN_MAX; x++)
 	{
-	  if (!worldgen_allowed[x][y] ||
+	  if (worldgen_areas[x][y] != 0 ||
+	      worldgen_sectors[x][y] != 0)
+	    all_blank = FALSE;
+	}
+      if (all_blank)
+	continue;
+      for (x = 0; x < WORLDGEN_MAX; x++)
+	{
+	  if (worldgen_areas[x][y] == 0 && 
 	      worldgen_sectors[x][y] == 0)
-	    stt (" ", th);
+	    sprintf (buf, " ");
 	  else
 	    {
 	      switch (worldgen_sectors[x][y])
 		{
 		  case ROOM_ROUGH:
-		    stt ("\x1b[0;35m^", th);
+		    sprintf (buf, "\x1b[0;35m^");
 		    break;
 		  case ROOM_FOREST:
-		    stt ("\x1b[0;32m*", th);
+		    sprintf (buf, "\x1b[0;32m*");
 		    break;
 		  case ROOM_FIELD:
-		    stt ("\x1b[1;32m,", th);
+		    sprintf (buf, "\x1b[1;32m,");
 		    break;
 		  case ROOM_DESERT:
-		    stt ("\x1b[1;33m,", th);
+		    sprintf (buf, "\x1b[1;33m,");
 		    break;
 		  case ROOM_SWAMP:
-		    stt ("\x1b[0;32m#", th);
+		    sprintf (buf, "\x1b[0;32m#");
 		    break;
 		  case ROOM_SNOW:
-		    stt ("\x1b[1;37m*", th);
+		    sprintf (buf, "\x1b[1;37m*");
 		    break;
 		  case ROOM_UNDERGROUND:
-		    stt ("\x1b[1;30m=", th);
+		    sprintf (buf, "\x1b[1;30m=");
 		    break;
 		  case ROOM_WATERY:
-		    stt ("\x1b[1;34m#", th);
+		    sprintf (buf, "\x1b[1;34m#");
 		    break;
 		  default:
-		    stt (" ", th);
+		    for (al = 0; al < ALIGN_MAX; al++)
+		      {
+			if (align_info[al] &&
+			    (align_area = find_area_in (align_info[al]->outpost_gate)) != NULL &&
+			    align_area->vnum == worldgen_areas[x][y])
+			  {
+			    sprintf (buf, "\x1b[1;3%dm@",
+				     MID(0, align_info[al]->vnum, 7));
+			    break;
+			  }
+		      }
+		    if (al == ALIGN_MAX)
+		      sprintf (buf, " ");
 		    break;
 		} 
-	    }
+	    }	  
+	  if (th)
+	    stt (buf, th);
+	  else
+	    strcat (worldmap, buf);
+	} 
+      sprintf (buf, "\x1b[0;37m\n");     
+      if (th)
+	{
+	  strcat (buf, "\r");
+	  stt (buf, th);
 	}
-      stt ("\x1b[0;37m\n\r", th);
+      else
+	strcat (worldmap, buf);
+    }
+  
+  if (!th)
+    {
+      HELP *hlp;
+      strcat (worldmap, "\n\n");
+      for (al = 0; al < ALIGN_MAX; al++)
+	{
+	  if (align_info[al] && align_info[al]->outpost_gate &&
+	      (align_area = find_area_in (align_info[al]->outpost_gate)) != NULL &&
+	      align_area->vnum >= 1000)
+	    {
+	      sprintf (buf, "%s outpost: \x1b[1;3%dm@\x1b[0;37m.   ",
+		       align_info[al]->name, 
+		       MID (0, align_info[al]->vnum, 7));
+	      strcat (worldmap, buf);
+	    }
+	  
+	}
+      strcat (worldmap, "\nAll outposts are entered from the area just north of them.\n");
+      if ((hlp = find_help_name (NULL, "WORLDMAP")) != NULL)
+	{
+	  free_str (hlp->text);
+	  hlp->text = new_str (worldmap);
+	  write_helps();
+	}
     }
   return;
 }
@@ -1473,11 +1605,11 @@ find_area_on_edge_of_world (int dir)
 void
 worldgen_link_align_outposts (void)
 {
-  THING *area;
+  THING *area, *outpost_area;
   THING *world_room = NULL, *room;
   RACE *align;
   VALUE *exit, *exit2;
-  int al;
+  int al, x, y;
   int num_choices, num_chose, count;
   unmark_areas();
   
@@ -1503,7 +1635,8 @@ worldgen_link_align_outposts (void)
 	continue;
       
       if ((room = find_thing_num (align->outpost_gate)) == NULL ||
-	  !IS_ROOM (room))
+	  !IS_ROOM (room) ||
+	  (outpost_area = find_area_in (room->vnum)) == NULL)
 	continue;
       
       num_choices = 0;
@@ -1535,10 +1668,16 @@ worldgen_link_align_outposts (void)
       if (!area)
 	continue;
       
+      count = 0;
+      
       if ((world_room = find_room_on_area_edge 
-	   (area, DIR_SOUTH, ROOM_EASYMOVE)) == NULL)
-	continue;
-
+	   (area, DIR_SOUTH, ROOM_EASYMOVE)) == NULL &&
+	  (world_room = find_room_on_area_edge 
+	   (area, DIR_SOUTH, 0)) == NULL)
+	{
+	  log_it ("Couldn't place align outpost.");
+	  continue;
+	}
       /* Now world room and outpost room exist, so link them. */
 
       if ((exit = FNV (room, DIR_NORTH+1)) == NULL)
@@ -1558,6 +1697,18 @@ worldgen_link_align_outposts (void)
       exit2->val[0] = room->vnum;
       free_str (area->type);
       area->type = nonstr;
+
+      for (x = 0; x < WORLDGEN_MAX; x++)
+	{
+	  for (y = 0; y < WORLDGEN_MAX; y++)
+	    {
+	      if (worldgen_areas[x][y] == area->vnum && y > 0)
+		{
+		  worldgen_areas[x][y-1] = outpost_area->vnum;	
+		}
+	    }
+	}
+      
     }
   
   unmark_areas();
@@ -1787,14 +1938,18 @@ void
 worldgen_remove_object (THING *th)
 {
   THING *thg, *thgn;
+  VALUE *gem, *power;
   if (!th || IS_ROOM (th) || IS_AREA (th))
     return;
 
-
+  
   /* Need to get rid of society eq somehow. */
   if ((th->vnum >= WORLDGEN_START_VNUM &&
        th->vnum <= WORLDGEN_END_VNUM) ||
-      th->vnum >= GENERATOR_NOCREATE_VNUM_MIN)
+      th->vnum >= GENERATOR_NOCREATE_VNUM_MIN ||
+      (gem = FNV (th, VAL_GEM)) != NULL ||
+      (power = FNV (th, VAL_POWERSHIELD)) != NULL ||
+      IS_OBJ_SET (th, OBJ_NOSTORE))
     {
       free_thing (th);
       return;
@@ -1869,6 +2024,4 @@ clear_player_worldgen_quests (THING *th)
     }
   return;
 }
-      
-
       

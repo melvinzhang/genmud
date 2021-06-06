@@ -1,18 +1,41 @@
-HELP 0
+HELP MORT
+Key WORLDMAP WORLD_MAP`
+Admin `
+Text World Map:
+              $A,                  $7
+            $A,$2#$A, $2*                $7
+            $2# $A,$2*$A,                $7
+            $5^$A,$9@ $2*                $7
+             $A, $2*$2*$2#$A,              $7
+             $A,$2*$A,  $A@              $7
+
+
+Evil outpost: $9@$7.   Good outpost: $A@$7.   
+All outposts are entered from the area just north of them.
+`
+SeeAlso `
+END_HELP
+
+HELP MORT
 Key HISTORY BACKSTORY`
+Admin `
 Text This is the history of the world.
 `
+SeeAlso `
 END_HELP
 
 HELP MAX
 Key PEDIT`
+Admin `
 Text There is no pedit command. To edit a player just do edit 
 <playername>.`
+SeeAlso `
 END_HELP
 
 HELP MAX
 Key SOCIETYGEN SOCIETY_GEN`
-Text  This area (106000-107000) has names of societies 
+Admin `
+Text This area (106000-107000) has names of societies 
 that will get automatically generated.
 
 Things in this area cannot be created. If you look at thing.c
@@ -45,10 +68,12 @@ you can generate the societies which then makes up the new societies.
 
 
 `
+SeeAlso `
 END_HELP
 
 HELP MAX
 Key WORLDGEN AREAGEN`
+Admin `
 Text Areagen makes an area. Syntax: Areagen <Start> <size> <sector_Type>
 Sector type must be rough, field, forest, snow, desrt, swamp, underground.
 
@@ -67,6 +92,12 @@ worldgen.h
 
 The areas are then linked together and they are linked to the
 underworld.
+
+Type
+
+worldgen autogen
+
+to toggle autogeneration of a new world every 12-16 hours.
 
 To clear the worldgen and delete all of the files in the worldgen
 range (Assuming you didn't mess with their names) type
@@ -88,9 +119,9 @@ because the areas don't line up too well so this will make it less likely
 that problems will arise when players are mapping.
 
 
-`	   
+`
+SeeAlso `
 END_HELP
-
 
 HELP MAX
 Key ECHO`
@@ -141,7 +172,6 @@ Text `
 SeeAlso `
 END_HELP
 
-
 HELP MORT
 Key GREETING`
 Admin `
@@ -159,6 +189,7 @@ Text This is what you see when you log into the game.
 `
 SeeAlso `
 END_HELP
+
 HELP 100
 Key ITEM_POWER OBJ_POWER OBJECT_POWER`
 Admin `
@@ -1895,7 +1926,7 @@ Admin `
 Text Building here consists of making areas for use within the game.
 
 First, I give away the MUD code and the areas to whoever wants them.
-You are free to download the MUD from jra.crodo.com/currmud.tar.gz
+You are free to download the MUD from www.sf.net/projects/genmud
 and make your own areas on your own server and keep them secret.
 If you make an area on this copy of the server, it will be given
 out to whoever wants it and people may use your areas to make
@@ -1935,7 +1966,7 @@ since it's different from other MUDs you may have built on before.
 If you still want to build, write a note to lonath saying you want
 to build, and you might get a builder position. Even if you don't
 get one here, if you are serious about wanting to build, download
-the MUD from jra.crodo.com/currmud.tar.gz and you can set up your
+the MUD from www.sf.net/projects/genmud and you can set up your
 own game.
 
 
@@ -2415,7 +2446,6 @@ is around somewhere being run by other people, and the code is still
 around somewhere.  `
 SeeAlso `
 END_HELP
-
 
 HELP MORT
 Key DEATH DYING PERMADEATH PVP PK PKILL PKILLING`
@@ -2961,16 +2991,17 @@ These can be combined somewhat, but generally not more than one from
 SeeAlso `
 END_HELP
 
-HELP 0
+HELP MORT
 Key NOLEARN`
+Admin `
 Text This command lets you specify that you will not try to learn
 certain skills and spells so you can pare the tree of skills
 you want to learn. This lets you decide how to more precisely make
 your character. It can also be useful to do this to get one
 specific skill after a skill you're currently working o first.
 `
+SeeAlso `
 END_HELP
-
 
 HELP MAX
 Key MATH_PARSE`
@@ -3109,7 +3140,7 @@ END_HELP
 
 HELP MORT
 Key RACE RACES ALIGN ALIGNS`
-Admin $9SEE HELP ASCEND
+Admin $9SEE HELP ASCEND$7
 
 There are some races that are "Ascend" races meaning that the way
 you get them is to max your character and start over. These races
@@ -4528,7 +4559,7 @@ Text These are the rules. Punishment usually means deletion, or a siteban.
 1. Admin decisions are final, and any aspect of the game can be changed
    at any time, and you don't have a right to be here.
 
-2. No player shall use or have access to more than one character,
+2. No player shall ever use or have access to more than one character,
    and no character shall ever be used or be able to be accessed
    by more than one player. This includes no selling/swapping/giving
    away of characters. 

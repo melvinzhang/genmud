@@ -2,7 +2,7 @@ THING 108000
 Name objgen.are`
 HpMv 0 10 5 1000
 HWT 0 0
-Timer 10
+Timer 6
 Short The Object Gen Area`
 type Lonath`
 ThFl 135307259
@@ -309,6 +309,13 @@ coif
 crown
 circlet
 headdress
+helm
+helmet
+hat
+cap
+cap
+helm
+helmet
 `
 END_THING
 
@@ -723,26 +730,21 @@ END_THING
 THING 108036
 Name metal_gen_names`
 HWT 0 0
-Desc Yewlium & $FYe$7wl$Fium$7
-Sufium
-Yawneite & $3Ya$6wne$3ite$7
-Iypahate & $3Iy$1pah$3ate$7
-Femium & $CFem$Fium$7
-Daufrite & $ADa$Fufr$Aite$7
-Umyucite
-Fatosite & $7Fato$3site$7
-Gaugite & $9Gau$3gite$7
-Iwfudium
-Mosliate & $6Mosl$5iate$7
-Oripate & $4Ori$Epate$7
-Mukepium & $6Mukepium$7
-Leglite
-Imcamate & $7Imca$2mate$7
-Ubite & $CUb$Fite$7
-Buyhotate & $BBuyh$1otate$7
-Biehium & $2Biehium$7
-Wusevate & $1Wusevate$7
-Jiusite & $DJiu$7site$7
+Desc Osudium
+Nupate & $BNupate$7
+Adpebate
+Ihosite & $DIh$Eos$Dite$7
+Duirate & $9Du$Dir$9ate$7
+Hihium & $DHi$3hi$Dum$7
+Wipite & $CWipite$7
+Didujate & $ADi$Eduj$Aate$7
+Buhitium & $BBuhitium$7
+Datium & $FDa$5ti$Fum$7
+Wuolium & $3Wu$Col$3ium$7
+Awisium & $3Aw$Eis$3ium$7
+Litate & $2Li$Bta$2te$7
+Nicite & $1Nicite$7
+Dealium & $EDe$Aal$Eium$7
 `
 END_THING
 

@@ -383,8 +383,7 @@ do_society (THING *th, char *arg)
   char arg3[STD_LEN];
   char buf[STD_LEN];
   SOCIETY *soc = NULL;
-  THING *area, *room, *mob;
-  if (!IS_PC (th) || LEVEL (th) < MAX_LEVEL || !th->fd)
+  if (!th || !IS_PC (th) || LEVEL (th) < MAX_LEVEL || !th->fd)
     {
       stt ("Huh?\n\r", th);
       return;
@@ -541,49 +540,57 @@ do_society (THING *th, char *arg)
 
   if (!str_cmp (arg1, "clearall"))
     {
-      SOCIETY *soc = NULL;
-      VALUE *build;
-      
-      for (area = the_world->cont; area; area = area->next_cont)
-	{
-	  for (room = area->cont; room; room = room->next_cont)
-	    {
-	      if ((build = FNV (room, VAL_BUILD)) != NULL)
-		{
-		  remove_value (room, build);
-		  area->thing_flags |= TH_CHANGED;
-		}
-	    }
-	}      
-      stt ("All cities for all societies cleared.\n\r", th);
-
-      for (soc = society_list; soc; soc = soc->next)
-	{
-	  if (soc->generated_from)
-	    soc->society_flags |= SOCIETY_NUKE;
-	}
-
-      if ((area = find_thing_num (SOCIETY_MOBGEN_AREA_VNUM)) != NULL &&
-	  IS_AREA (area))
-	{
-	  for (mob = area->cont; mob; mob = mob->next_cont)
-	    {
-	      if (IS_ROOM (mob))
-		continue;
-	      SBIT (mob->thing_flags, TH_NUKE);
-	    }
-	  area->thing_flags |= TH_CHANGED;
-	}
-
-      stt ("All generated societies will be cleared after next reboot.\n\r", th);    
+      society_clearall (th);
       return;
-    }
-  
-  
-  
+    } 
   stt ("Society update, list, show, edit <num>, create, copy clear <num>.\n\r", th);
   return;
 }
+
+void
+society_clearall (THING *th)
+{
+  SOCIETY *soc = NULL;
+  VALUE *build;
+  THING *area, *room, *mob;
+  
+  for (area = the_world->cont; area; area = area->next_cont)
+    {
+      for (room = area->cont; room; room = room->next_cont)
+	{
+	  if ((build = FNV (room, VAL_BUILD)) != NULL)
+	    {
+	      remove_value (room, build);
+	      area->thing_flags |= TH_CHANGED;
+	    }
+	}
+    }      
+  stt ("All cities for all societies cleared.\n\r", th);
+  
+  for (soc = society_list; soc; soc = soc->next)
+    {
+      if (soc->generated_from)
+	    soc->society_flags |= SOCIETY_NUKE;
+    }
+  
+  if ((area = find_thing_num (SOCIETY_MOBGEN_AREA_VNUM)) != NULL &&
+      IS_AREA (area))
+    {
+      for (mob = area->cont; mob; mob = mob->next_cont)
+	{
+	  if (IS_ROOM (mob))
+	    continue;
+	  SBIT (mob->thing_flags, TH_NUKE);
+	}
+      area->thing_flags |= TH_CHANGED;
+    }
+  
+  stt ("All generated societies will be cleared after next reboot.\n\r", th);    
+  return;
+}
+  
+  
+ 
 
 /* This creates a new society, gives it a vnum and adds it to the
    various lists. */
@@ -1432,7 +1439,7 @@ add_society_objects (THING *th)
   /* Get from 1-3 tries. More if you have less tiers in your caste. */
   
   num_tries = MID (2, 5-soc->max_tier[socval->val[1]], 4);
-
+  
   for (tries = 0; tries < num_tries; tries++)
     {
       vnum = nr (soc->object_start, soc->object_end);
@@ -1461,8 +1468,10 @@ add_society_objects (THING *th)
 	continue;
       
       /* Now see if the object even resets. */
-
-      reset_pct = MAX (2, 70-proto->level);
+      if (!IS_SET (server_flags, SERVER_AUTO_WORLDGEN))
+	reset_pct = MAX (2, 70-proto->level);
+      else
+	reset_pct = 50;
       if (nr (1,100) > reset_pct)
 	continue;
 

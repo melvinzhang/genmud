@@ -592,7 +592,10 @@ set_up_teachers (void)
 	teach->val[i] = 0;
       
       /* Get the number of spells to add onto this mob. */
-      spells_this_time = nr (NUM_VALS/2, NUM_VALS);
+      /* I put it at one for now but if you don't use that "auto practice"
+	 code that lets you learn skills automatically, you should use
+	 more spells per teacher. */
+      spells_this_time = 1 /*nr (NUM_VALS/2, NUM_VALS) */;
       if (spells_this_time > num_spells_left)
 	spells_this_time = num_spells_left;
       

@@ -901,6 +901,8 @@ void generate_societies (THING *);
 
 void generate_society (THING *);
 
+/* Clears all societies and nukes "generated" societies. */
+void society_clearall (THING *);
 
 /* This finds the tiernames available to a society in a certain caste. */
 

@@ -673,6 +673,8 @@ do_race (THING *th, char *arg)
   
   if (!th || !IS_PC (th))
     return;
+
+  
   
   if (arg[0] == '\0' || !str_cmp (arg, "list"))
     {
@@ -686,6 +688,14 @@ do_race (THING *th, char *arg)
       return;
     }
   arg = f_word (arg, arg1);
+
+  if (!str_cmp (arg1, "change"))
+    {
+      do_racechange (th, arg);
+      return;
+    }
+    
+
   if ((race = find_race (arg1, (isdigit (*arg1) ? atoi(arg1) : -1))) != NULL &&
       can_see_race (th, race))
     {
@@ -749,7 +759,151 @@ do_race (THING *th, char *arg)
 
 }
 
+/* This lets a player change race. The price is a remort, or if you're
+   a 0 remort character, then 0 remorts. You lose your highest stats
+   and you must have guild and implant levels low enough to accept
+   the loss in status. */
 
+void
+do_racechange (THING *th, char *arg)
+{
+  RACE *race, *oldrace;
+  int i, max_stat_val, max_stat_num, stat_points_left = STATS_PER_REMORT;
+  int stat_difference = 0;
+  char arg1[STD_LEN];
+  char buf[STD_LEN];
+  bool can_change_race = TRUE;
+  if (!th || !IS_PC (th))
+    return;
+
+  if (LEVEL (th) > MORT_LEVEL)
+    {
+      stt ("Uhh no.\n\r", th);
+      return;
+    }
+
+  arg = f_word (arg, arg1);
+  
+  if (!arg || !*arg)
+    {
+      stt ("Racechange yes <racename>\n\r", th);
+      return;
+    }
+  
+  if ((race = find_race (arg, (isdigit (*arg1) ? atoi (arg1) : -1))) == NULL)
+    {
+      stt ("Racechange yes <racename>\n\r", th);
+      return;
+    }
+
+  
+
+
+  if (race->vnum == th->pc->race)
+    {
+      stt ("You can't racechange to the same race.\n\r", th);
+      return;
+    }
+  
+  /* Check to make sure the race is "close enough"...i.e. no changing
+     from big burly troll to wimpy sprite in one go.. (Although
+     multiple changes are possible). */
+  
+  if ((oldrace = find_race (NULL, th->pc->race)) == NULL)
+    {
+      stt ("Your current race doesn't seem to exist.\n\r", th);
+      return;
+    }
+  
+  /* Even though this shouldn't really be possible...I want to make
+     sure that people don't racechange from a regular race to an
+     ascended race. Also, by the time someone ascends, they should
+     know what they want, so it isn't as much of a big deal to force
+     them to stay in their old race. */
+  if (is_ascended_race (race) || is_ascended_race (oldrace))
+    {
+      stt ("You can't racechange to or from an ascended race. It is assumed that by the time you get to ascended races, you know what kind of character you want.\n\r", th);
+      return;
+    }
+  for (i = 0; i < STAT_MAX; i++)
+    {
+      stat_difference += ABS(race->max_stat[i]-oldrace->max_stat[i]);
+    }
+  
+  if (stat_difference > 15)
+    {
+      sprintf (buf, "You can only racechange to a race where the stat differences between the races are no more than 15 apart. The %s and %s races are %d points apart.\n\r",
+	       race->name, oldrace->name, stat_difference);
+      stt (buf, th);
+      return;
+    }
+  
+  
+  /* Check to make sure that we can change based on our guilds and 
+     remorts. */
+  
+  if (th->pc->remorts > 0)
+    {
+      th->pc->remorts--;
+      if (total_guild_points (th) < total_guilds (th))
+	{
+	  sprintf (buf, "You have used up \x1b[1;31m%d\x1b[0;37m guild points and you can only have \x1b[1;32m%d\x1b[0;37m guild points with \x1b[1;37m%d\x1b[0;37m remorts. Drop some guilds before trying to change your race.\n\r", 
+		   total_guilds(th), total_guild_points (th), th->pc->remorts);
+	  can_change_race = FALSE;
+	  stt (buf, th);
+	}
+      if (total_implant_points (th) < total_implants (th))
+	{
+	  sprintf (buf, "You have used up \x1b[1;31m%d\x1b[0;37m implant points and you can only have \x1b[1;32m%d\x1b[0;37m implant points with \x1b[1;37m%d\x1b[0;37m remorts. Drop some implants before trying to change your race.\n\r", 
+		   total_implants(th), total_implant_points (th), th->pc->remorts);
+	  can_change_race = FALSE;
+	  stt (buf, th);
+	}
+      th->pc->remorts++;
+      if (!can_change_race)
+	return;
+    }
+  
+  /* Modify stats based on race...*/
+  for (i = 0; i < STAT_MAX; i++)
+    {
+      th->pc->stat[i] += (race->max_stat[i]-oldrace->max_stat[i]);
+    }
+  
+  /* Now remove the remort stats from the top stats that the
+     character has. */
+
+  if (th->pc->remorts > 0)
+    {
+      while (stat_points_left > 0)
+	{
+	  max_stat_val = 0;
+	  max_stat_num = -1;
+	  
+	  for (i = 0; i < STAT_MAX; i++)
+	    {
+	      if (th->pc->stat[i] > max_stat_val)
+		{
+		  max_stat_val = th->pc->stat[i];
+		  max_stat_num = i;
+		}
+	    }
+	  if (max_stat_num >= 0 && max_stat_num < STAT_MAX)
+	    {
+	      th->pc->stat[max_stat_num]--;
+	    }
+	  stat_points_left--;
+	}
+      th->pc->remorts--;  
+    }
+  
+  th->pc->race = race->vnum;
+  remove_all_affects (th, TRUE);
+  remort_clear_stats (th);
+  stt ("Ok, your race has been changed.\n\r", th);
+  fix_pc (th);
+  return;
+}
 
 void
 racedit (THING *th, char *arg)
