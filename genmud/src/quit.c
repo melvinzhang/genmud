@@ -166,7 +166,7 @@ do_levels (THING *th, char *arg)
   stt ("Really need the experience amounts listed below.\n\n\r", th);
   
   
-  num_lines = (end - start + 1)/4 + ((end - start + 1) % 4 ? 1 : 0);
+  num_lines = (end - start + 3)/4;
  
   for (i = 0; i < num_lines; i++)
     {

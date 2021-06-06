@@ -255,12 +255,13 @@ update_thing (THING *th)
 	{
 	  hp_rate /= 2;
 	  mv_rate /= 2;
-	  th->hp -= 8;
 	  th->mv--;
 	  if (nr (1,20) == 3)
 	    act ("$9@1n bleed@s profusely from wounds that will not close.$7", th, NULL, NULL, NULL, TO_ALL);	    
 	  if (th->in && IS_ROOM (th->in)) 
 	    th->in->hp |= BLOOD_POOL;
+	  if (damage (th, th, 8, "wound"))
+	    return;
 	}
     }
   
@@ -271,7 +272,7 @@ update_thing (THING *th)
   if (IS_PC (th)) /* Pc update mana etc... */
     {
       mana_rate = (get_stat (th, STAT_INT) + get_stat (th, STAT_WIS)) / 16  + 1;
-      
+      mana_rate = mana_rate*regen_pct/100;
       if (th->position == POSITION_SLEEPING)
 	mana_rate += 3;
       else if (th->position == POSITION_RESTING)
@@ -390,7 +391,7 @@ update_thing (THING *th)
 	      ((room = FTR (th->in, (dir = nr (0, REALDIR_MAX-1)), 
 					th->move_flags)) != NULL &&
 	       (th->proto->in == room->in || nr (1,15) == 3)))
-	    move_dir (th, dir);
+	    move_dir (th, dir, 0);
 	  else if (nr (1,3) == 2)
 	    attack_stuff (th);
 	}  
@@ -399,6 +400,7 @@ update_thing (THING *th)
     }
   if (th->hp < 1 && CAN_FIGHT (th))
     get_killed (th, NULL);
+  
   
   return;
 }
@@ -528,47 +530,55 @@ update_thing_hour (THING *th)
     } 
   /* Removed timed objects and stuff. */
   
-  if (th->timer > 0 && th->in &&
-      !IS_AREA (th->in) && 
-      (!IS_PC (th) || LEVEL (th) < MAX_LEVEL)
-      && --th->timer < 1)
+  if (th->timer > 0)
     {
-      /* Don't let fighting things just poof...*/
-      if (FIGHTING (th))
+      if (th->vnum == PACKAGE_VNUM)
+	attack_package_holder (th);
+      if (th->in &&
+	  !IS_AREA (th->in) && 
+	  (!IS_PC (th) || LEVEL (th) < MAX_LEVEL)
+	  && --th->timer < 1)
 	{
-	  th->timer = 2;
-	}
-      else if (IS_PC (th))
-	{
-	  write_playerfile (th);
-	  if (th->pc->no_quit < 1)
-	    free_thing (th);
-	}
-      else
-	{ /* Replaceby is a simple way to make an ecology by making
-	     things transform into other things when they time out. */
-	  THING *replacer;
-	  int replacer_vnum;
-	  VALUE *replace;
-	  if (th->vnum == CORPSE_VNUM && th->in)
+	  /* Don't let fighting things just poof...*/
+	  if (FIGHTING (th))
 	    {
-	      THING *obj, *objn;
-	      act ("@1n rot@s.", th, NULL, NULL, NULL, TO_ALL);
-	      for (obj = th->cont; obj; obj = objn)
-		{
-		  objn = obj->next_cont;
-		  thing_to (obj, th->in);
-		}
+	      th->timer = 2;
 	    }
-	  if ((replace = FNV (th, VAL_REPLACEBY)) != NULL &&
-	      (replacer_vnum = calculate_randpop_vnum (replace, LEVEL(th))) &&
-	      replacer_vnum != th->vnum &&
-	      (replacer = create_thing (replacer_vnum)) != NULL)
-	    replace_thing (th, replacer);
+	  else if (IS_PC (th))
+	    {
+	      write_playerfile (th);
+	      if (th->pc->no_quit < 1)
+		free_thing (th);
+	    }
 	  else
-	    free_thing (th);
+	    { /* Replaceby is a simple way to make an ecology by making
+		 things transform into other things when they time out. */
+	      THING *replacer;
+	      int replacer_vnum;
+	      VALUE *replace;
+	      
+	      if (th->vnum == CORPSE_VNUM && th->in)
+		{
+		  THING *obj, *objn;
+		  act ("@1n rot@s.", th, NULL, NULL, NULL, TO_ALL);
+#ifndef ARKANE
+		  for (obj = th->cont; obj; obj = objn)
+		    {
+		      objn = obj->next_cont;
+		      thing_to (obj, th->in);
+		    }
+#endif
+		}
+	      if ((replace = FNV (th, VAL_REPLACEBY)) != NULL &&
+		  (replacer_vnum = calculate_randpop_vnum (replace, LEVEL(th))) &&
+		  replacer_vnum != th->vnum &&
+		  (replacer = create_thing (replacer_vnum)) != NULL)
+		replace_thing (th, replacer);
+	      else
+		free_thing (th);
+	    }
+	  return;
 	}
-      return;
     }
   
   if (th->fgt && th->fgt->hunting_timer > 0 && !IS_PC (th))
@@ -933,11 +943,16 @@ update_fast (THING *th)
     return;
   roomflags = flagbits (room->flags, FLAG_ROOM1);
   
+  if (th->align < ALIGN_MAX &&
+      align_info[th->align] && IS_ROOM_SET (room->in, ROOM_ASTRAL))
+    regen_pct = MAX (0, 2*align_info[th->align]->power_pct-100);
   
   /* Update society rewards by rewarding the player. */
   if (nr (1,3) == 2)
     update_society_rewards (th, TRUE);
 
+
+  /* Charge powershields. */
   for (obj = th->cont; obj; obj = obj->next_cont)
     {
       if (obj->wear_loc != ITEM_WEAR_FLOAT)
@@ -947,15 +962,13 @@ update_fast (THING *th)
 	  if (power->val[1] < power->val[2])
 	    {
 	      charge = MIN (MIN (power->val[2] - power->val[1], power->val[2] / 15 + 2),  power->val[1]/10 + 2);
+	      charge = charge*regen_pct/100;
 	      power->val[1] += charge;
 	      if (nr (1,10) == 2 || power->val[1] == power->val[2])
 		charge_message (obj, power, th);
 	    }
 	}
     }
-  if (th->align < ALIGN_MAX &&
-      align_info[th->align] && IS_ROOM_SET (room->in, ROOM_ASTRAL))
-    regen_pct = MAX (0, 2*align_info[th->align]->power_pct-100);
   
   thflags = flagbits (th->flags, FLAG_AFF);
   if (IS_SET (thflags, AFF_REGENERATE))

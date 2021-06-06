@@ -157,6 +157,8 @@ const char *value_list[VAL_MAX] =
   "replaceby",
   "qflag",
   "package",
+  "dimension",
+  "craft",
 };
 
 
@@ -200,40 +202,6 @@ const struct flag_data affectlist[] =
   
   {"none", " None", 0, "None."},
 };
-
-const int aff_power_ranks[AFF_MAX-AFF_START] =
-  {
-    AFF_RANK_EXCELLENT, /* Start stats -- str */
-    AFF_RANK_EXCELLENT,
-    AFF_RANK_EXCELLENT,
-    AFF_RANK_EXCELLENT,
-    AFF_RANK_EXCELLENT,
-    AFF_RANK_EXCELLENT, /* End stats. -- luc */
-    AFF_RANK_EXCELLENT, /* Damroll */
-    AFF_RANK_GOOD, /* Hitroll */
-    AFF_RANK_POOR, /* hp */
-    AFF_RANK_POOR, /* mv */
-    AFF_RANK_GOOD, /* Sp att */
-    AFF_RANK_GOOD, /* Heal pct */
-    AFF_RANK_FAIR, /* Sp resist */
-    AFF_RANK_GOOD, /* Th att */
-    AFF_RANK_FAIR, /* Defense -- block/dodge etc... */
-    AFF_RANK_GOOD, /* Kickdam */
-    AFF_RANK_POOR, /* Armor */
-    AFF_RANK_EXCELLENT, /* Dam resist...-pcts off damage taken. Really good. */
-    AFF_RANK_FAIR, /* Groundfight attack. */
-    AFF_RANK_FAIR, /* Groundfight defense. */
-    AFF_RANK_GOOD, /* Elem power start */
-    AFF_RANK_GOOD,
-    AFF_RANK_GOOD,
-    AFF_RANK_GOOD,
-    AFF_RANK_GOOD,  /* Elem power end. */
-    AFF_RANK_EXCELLENT, /* Elem level start */
-    AFF_RANK_EXCELLENT,
-    AFF_RANK_EXCELLENT,
-    AFF_RANK_EXCELLENT,
-    AFF_RANK_EXCELLENT, /* Elem level end. */
-  };
 
 
 
@@ -933,7 +901,7 @@ const struct gather_raw_data gather_data[] =
     0, FALSE, FALSE, ROOM_FIELD,
     920, 3, 1, {2,1}, {2,1}}, 
 
-  { "gather", "herb", "herbs", 35, 60,  /* Herbs 6 */
+  { "find", "herb", "herbs", 35, 60,  /* Herbs 6 */
     {773, 0, 0, 0},
     {VAL_WEAPON, 0, 0, 0},
     {"sickle", 0, 0, 0},

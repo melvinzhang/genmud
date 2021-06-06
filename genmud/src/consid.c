@@ -16,6 +16,8 @@ do_consider (THING *th, char *arg)
   char buf[STD_LEN];
   
 
+  /* Set special consider flag so the server knows that this is
+     fake combat. */
   SBIT (server_flags, SERVER_CONSIDERING);
   if ((vict = find_thing_in_combat (th, arg, TRUE)) == NULL)
     {
@@ -24,12 +26,21 @@ do_consider (THING *th, char *arg)
     }
   
   cons_hp = th->hp;
+
+  /* Do 50 rounds of combat you vs vict to see who takes longer
+     to die. */
   for (vround = 0; vround < 50 && cons_hp > 0; vround++)
     multi_hit (vict, th);
   cons_hp = vict->hp;
   for (tround = 0; tround < 50 && cons_hp > 0; tround++)
     multi_hit (th, vict);
   RBIT (server_flags, SERVER_CONSIDERING);
+
+  /* Difference in time to kill, vict - you. If this is big,
+     then the vict took longer to kill you than you did to kill
+     it. If it's small, the victim killed you fast, and you killed
+     it slow. */
+  
   diff = (vround - tround)/2;
   
   if (diff < -9)

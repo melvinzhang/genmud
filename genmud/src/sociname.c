@@ -262,7 +262,6 @@ create_society_name (VALUE *socval)
       *(t+1) = 't';
       *(t+2) = '\0';
     }
-    
   return namebuf;
 }
 

@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 #include "serv.h"
+#include "areagen.h"
 #include "society.h"
 #include "script.h"
 #include "track.h"
@@ -488,7 +489,8 @@ check_area_vnums (THING *thg, int l, int u)
   int al, au;
   for (ar = the_world->cont; ar != NULL; ar = ar->next_cont)
     {
-      if (thg == ar)
+      if (thg == ar ||
+	  (ar->vnum >= l && ar->vnum <= u)) 
 	continue;
       al = ar->vnum;
       au = ar->vnum + ar->max_mv; 
@@ -1276,6 +1278,13 @@ edit (THING *th, char *arg)
 		}
 	    }
 	}
+      if (!str_cmp (arg1, "roomgen"))
+	{
+	  roomgen (th, thg, arg);
+	  show_edit (th);
+	  return;
+	}
+	
       break;
     case 'S':
       if (!str_cmp (arg1, "size"))
@@ -2292,16 +2301,25 @@ do_zedit (THING *th, char *arg)
   return;
 }
 
+/* This shows a list of areas to the player, and if the player is an
+   admin, it shows a few simple statistics. */
+
 void
 do_areas (THING *th, char *arg)
 {
   THING *ar, *thg;
   char buf[STD_LEN];
-  int count = 0, room_count, other_count, total_room_count = 0, total_other_count = 0;
+  bool count_only = FALSE;
+  int count = 0, room_count = 0, mob_count = 0, obj_count = 0, total_room_count = 0, total_mob_count = 0, total_obj_count = 0, total_area_count = 0;
   bigbuf[0] = '\0';
   
   if (LEVEL (th) >= BLD_LEVEL)
-    add_to_bigbuf ("Num      Vnums     Name                     Room M/O File          Builder\n\r");
+    {
+      if (!str_cmp (arg, "count"))
+	count_only = TRUE;
+      else
+	add_to_bigbuf ("Num      Vnums     Name                     Room Mob Obj File          Builder\n\r");
+    }
   else
     add_to_bigbuf ("Num     Name                         Builders\n\r");
   for (ar = the_world->cont; ar != NULL; ar = ar->next_cont)
@@ -2311,21 +2329,28 @@ do_areas (THING *th, char *arg)
       if (LEVEL (th) >= BLD_LEVEL)
 	{
 	  room_count = 0;
-	  other_count = 0;
+	  mob_count = 0;
+	  obj_count = 0;
+	  total_area_count++;
 	  for (thg = ar->cont; thg; thg = thg->next_cont)
 	    {
 	      if (IS_ROOM (thg))
 		room_count++;
+	      else if (CAN_MOVE (thg) || CAN_FIGHT (thg))
+		mob_count++;
 	      else
-		other_count++;
+		obj_count++;
 	    }
-	  sprintf (buf, "%3d: %6d-%-6d %-25s %3d %3d %-13s %s\n\r",
-		   ++count, ar->vnum, ar->vnum + ar->max_mv - 1,
-		   ar->short_desc, room_count, other_count, ar->name, ar->type);
+	  if (!count_only)
+	    sprintf (buf, "%3d: %6d-%-6d %-25s %3d %3d %3d %-13s %s\n\r",
+		     ++count, ar->vnum, ar->vnum + ar->max_mv - 1,
+		     ar->short_desc, room_count, mob_count, obj_count, 
+		     ar->name, ar->type);
 	  total_room_count += room_count;
-	  total_other_count += other_count;
+	  total_mob_count += mob_count;
+	  total_obj_count += obj_count;
 	}
-
+      
       /* Morts don't get as much info, and you can hide certain areas
 	 from them using nolist area flag. */
       else if (!IS_AREA_SET (ar, AREA_NOLIST))
@@ -2334,12 +2359,16 @@ do_areas (THING *th, char *arg)
 	}
       else
 	continue;
-      add_to_bigbuf (buf);
+      if (!count_only)
+	add_to_bigbuf (buf);
     }
   if (LEVEL (th) >= BLD_LEVEL)
     {
-      sprintf (buf, "\n\n\rTotal Rooms: %d Total Mobject: %d\n\r",
-	       total_room_count, total_other_count);
+      if (!count_only)
+	add_to_bigbuf ("\n\n\r");
+      sprintf (buf, "There are \x1b[1;37m%d\x1b[0;37m areas with \x1b[1;33m%d\x1b[0;37m rooms, \x1b[1;35m%d\x1b[0;37m mobiles, and \x1b[1;36m%d\x1b[0;37m objects.\n\r",
+	       total_area_count, total_room_count, 
+	       total_mob_count, total_obj_count);
       add_to_bigbuf (buf);
     }
   send_bigbuf (bigbuf, th);
@@ -2358,7 +2387,8 @@ do_tfind (THING *th, char *arg)
   char buf[STD_LEN];
   char name[STD_LEN];
   char padbuf[STD_LEN];
-  bool mob = FALSE, room = FALSE, obj = FALSE, found = FALSE, are = FALSE, nodesc = FALSE;
+  char first_name[STD_LEN];
+  bool mob = FALSE, room = FALSE, obj = FALSE, found = FALSE, are = FALSE, nodesc = FALSE, noval = FALSE;
   int lvnum = -1, uvnum = -1, i, valnum = VAL_MAX, pad;
   THING *ar, *vict, *area = NULL;
   VALUE *val;
@@ -2393,14 +2423,18 @@ do_tfind (THING *th, char *arg)
 	are = TRUE;
       else if (!str_cmp (arg1, "nodesc"))
 	nodesc = TRUE;
-     
-      else
+      else if (!str_cmp (arg1, "noval"))
+	{
+	  noval = TRUE;
+	  valnum = VAL_MAX;
+	}
+      else 
 	{
 	  /* See if we search for things with a certain value like
 	     tfind food tfind gem etc... */
 	  
 	  /* Only do this if we haven't found a value already. */
-	  if (valnum == VAL_MAX) 
+	  if (valnum == VAL_MAX && !noval)  
 	    {
 	      for (valnum = 1; valnum < VAL_MAX; valnum++)
 		{
@@ -2455,14 +2489,15 @@ do_tfind (THING *th, char *arg)
 	    continue;
 	  
 	  found = TRUE;
-	  pad = 30 - strlen_color (NAME (vict));
+	  pad = 50 - strlen_color (NAME (vict));
 	  if (pad < 0)
 	    pad = 0;
 	  for (i =0; i < pad; i++)
 	    padbuf[i] = ' ';
 	  padbuf[pad] = '\0';
+	  f_word (KEY(vict), first_name);
 	  sprintf (buf, "[%5d] (Lev %2d) %s%s %s\n\r", vict->vnum, 
-		   LEVEL(vict), NAME (vict), padbuf, KEY(vict));
+		   LEVEL(vict), NAME (vict), padbuf, first_name);
 	  add_to_bigbuf (buf);
 	}
     }

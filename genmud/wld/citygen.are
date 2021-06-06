@@ -1,0 +1,23 @@
+THING 101000
+Name citygen.are`
+HpMv 0 10 500 1000
+HWT 0 0
+Timer 11
+Short The City Generator Area`
+type Lonath`
+ThFl 135307259
+END_THING
+
+THING 101001
+HWT 0 0
+Color 7
+Desc This works like the detailgen area. Except the base templates for the cities will be
+generated differently.
+`
+Short City Generator Area`
+Symbol -`
+ThFl 524779
+END_THING
+
+END_OF_AREA
+

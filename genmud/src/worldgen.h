@@ -18,7 +18,14 @@
 #define WORLDGEN_UNDERWORLD_START_VNUM  (WORLDGEN_START_VNUM+WORLDGEN_VNUM_SIZE)
 #define WORLDGEN_END_VNUM (WORLDGEN_UNDERWORLD_START_VNUM+WORLDGEN_VNUM_SIZE)
 
+/* All areas below this level get all aggros removed from them, and they're
+   nosettle so societies don't go there as much. Should make it easier
+   on newbies. */
+#define WORLDGEN_AGGRO_AREA_MIN_LEVEL  40
 
+/* Level of the areas outside of the outposts. */
+
+#define WORLDGEN_OUTPOST_GATE_AREA_LEVEL  10
 
 /* This generates a world. */
 void do_worldgen (THING *, char *);
@@ -31,7 +38,7 @@ bool worldgen_check_vnums (void);
 
 /* This removes an object if it's an object from a worldgen area. */
 
-void worldgen_remove_object (THING *obj);
+bool worldgen_remove_object (THING *obj);
 
 /* This removes all worldgen objects from all players online or on disk. */
 

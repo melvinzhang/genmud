@@ -83,9 +83,8 @@ do_buy (THING *th, char *arg)
 	    continue;
 	  
 	  /* Cost is 150pct of item cost. */
-	  item_cost = obj->cost * shop->val[2]*3/200;
-	  /* Charisma affects item cost. */
-	  item_cost += (STAT_MAX/2-get_stat(th, STAT_CHA))*item_cost/100;
+	  item_cost = find_item_cost (th, obj, keeper, SHOP_COST_BUY);
+	  
 	  if ((shop2 = FNV (keeper, VAL_SHOP2)) != NULL &&
 	      !str_cmp (shop2->word, th->name))
 	    {
@@ -196,8 +195,7 @@ do_sell (THING *th, char *arg)
       stt ("That isn't even worth anything!\n\r", th);
       return;
     }
-  item_cost = obj->cost * shop->val[2]/100;
-  item_cost += (get_stat (th, STAT_CHA)-STAT_MAX/2)*item_cost/100;
+  item_cost = find_item_cost (th, obj, keeper, SHOP_COST_SELL);
   if (total_money (keeper) < item_cost)
     {
       stt ("The shopkeeper does not have enough money to buy that!\n\r", th);
@@ -215,7 +213,7 @@ do_sell (THING *th, char *arg)
   sub_money (keeper, item_cost);
   
   act ("@1n sell@s @2n to @3n.", th, obj, keeper, NULL, TO_ALL);
-  sprintf (buf, "You get %d coins.\n\r", obj->cost*shop->val[2]/100);
+  sprintf (buf, "You receive %d coins.\n\r",  item_cost);
   stt (buf, th);
   return;
   
@@ -303,7 +301,7 @@ do_appraise (THING *th, char *arg)
       return;
     }
   
-  sprintf (buf, "Your %s appears to be worth about %d coins, %s.\n\r", NAME (item), item->cost * shop->val[2]/100, NAME (th));
+  sprintf (buf, "Your %s appears to be worth about %d coins, %s.\n\r", NAME (item), find_item_cost (th, item, keeper, SHOP_COST_SELL), NAME (th));
   stt (buf, th);
   return;
 
@@ -804,3 +802,33 @@ do_compare (THING *th, char *arg)
 }
 
 
+/* This retuns an item cost based on the thing asking for the item, the
+   item in question, and the shop in question. */
+
+int
+find_item_cost (THING *th, THING *item, THING *shopkeeper, int type)
+{
+  int cost;
+  VALUE *shop;
+  
+  if (!th || !item || !shopkeeper || 
+      (shop = FNV (shopkeeper, VAL_SHOP)) == NULL ||
+      (type != SHOP_COST_BUY && type != SHOP_COST_SELL))
+    return 0;
+  
+  /* Get the base cost. */
+  cost = item->cost*shop->val[2]/100;
+  /* If you're selling, make it worth less, and add some back for
+     charisma. */
+  if (type == SHOP_COST_SELL)
+    {
+      cost = cost * 2/3;
+      cost += cost * (get_stat(th, STAT_CHA)-STAT_MAX/2)/200;
+    }
+  /* When buying, charisma makes things cost less. */
+  else if (type == SHOP_COST_BUY)
+    {
+      cost -= cost * (get_stat (th, STAT_CHA)-STAT_MAX/2)/200;
+    }
+  return cost;
+}

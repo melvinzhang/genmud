@@ -616,7 +616,7 @@ generate_room_description (THING *room)
 		{
 		  sprintf (buf, "%s%s%s%s, %s continue%s. ",
 			   dir_dist[range], (*dir_dist[range] ? " " : ""),
-			   (dir < 4 ? "to " : ""),
+			   (dir < FLATDIR_MAX ? "to " : ""),
 			   dir_track[dir],
 			   nroomname,
 			   (*t == 's' ? "" : "s"));
@@ -629,7 +629,7 @@ generate_room_description (THING *room)
 			    (*t == 's' ? "continue" : "continues")),
 			 
 			   dir_dist[range], 
-			   (dir < 4 ? "to " : ""),
+			   (dir < FLATDIR_MAX ? "to " : ""),
 			   dir_track[dir]);
 		  
 		}
@@ -648,7 +648,7 @@ generate_room_description (THING *room)
 			     (nr (1,3) == 1 ? "can be seen" : 
 			      (nr (1,2) == 2 ? "is" : "appears to be")))),
 			   dir_dist[range],
-			   (dir < 4 ? "to " : ""),
+			   (dir < FLATDIR_MAX ? "to " : ""),
 			   dir_track[dir]);
 		}
 	    }
@@ -658,7 +658,7 @@ generate_room_description (THING *room)
 		{
 		  sprintf (buf, "%s%s%s%s, %s %s. ",
 			   dir_dist[range], (*dir_dist[range] ? " " : ""),
-			   dir < 4 ? "to " : "",
+			   dir < FLATDIR_MAX ? "to " : "",
 			   dir_track[dir],
 			   (nr (1,5) == 2 ? 
 			    (*t == 's' ? "there are" : "there is") :
@@ -677,7 +677,7 @@ generate_room_description (THING *room)
 			    nr (1,2) == 1 ? "you see" : "you notice"),
 			   nroomname,
 			   dir_dist[range],
-			   (dir < 4 ? "to " : ""),
+			   (dir < FLATDIR_MAX ? "to " : ""),
 			   dir_track[dir]);
 		}
 	    }

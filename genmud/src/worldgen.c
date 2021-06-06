@@ -16,6 +16,7 @@
 #include "objectgen.h"
 #include "historygen.h"
 #include "rumor.h"
+#include "craft.h"
 
 /* Are we allowed to have areas in these places? */
 static int worldgen_allowed[WORLDGEN_MAX][WORLDGEN_MAX];
@@ -148,6 +149,7 @@ worldgen (THING *th, char *arg)
       clear_base_randpop_mobs (th);
       worldgen_clear_quests (th);
       historygen_clear();
+      clear_craft_items (th);
       clear_provisions (th);
       worldgen_clear();
       worldgen_clear_player_items();
@@ -200,6 +202,7 @@ worldgen (THING *th, char *arg)
       generate_metal_names();
       generate_societies (th);  
       generate_randpop_mobs (th);
+      generate_craft_items (th);
       worldgen_generate_areas(area_size);
       worldgen_link_areas();
       generate_provisions (th);
@@ -547,7 +550,7 @@ worldgen_add_sector (int x, int y)
   if (curr_exits == 4)
     return; 
   */
-  for (dir = 0; dir < 4; dir++)
+  for (dir = 0; dir < FLATDIR_MAX; dir++)
     {
       new_x = x;
       new_y = y;
@@ -580,7 +583,7 @@ worldgen_add_sector (int x, int y)
       
       /* Start by adding up all weights from what adjacent areas want. */
       
-      for (i = 0; i < 4; i++)
+      for (i = 0; i < FLATDIR_MAX; i++)
 	{
 	  if (i < 2)
 	    {
@@ -672,6 +675,7 @@ worldgen_generate_areas (int area_size)
   int curr_size;
   /* This is a rough estimate of how far we are from the outposts. */
   int level_this_area = 0;
+  char dirbuf[STD_LEN]; /* Directions in which this area goes...*/
   if (area_size < 100 || area_size > 2000)
     area_size = WORLDGEN_AREA_SIZE;
   
@@ -704,17 +708,35 @@ worldgen_generate_areas (int area_size)
 		  /* Make sure that this area will still fit in the
 		     alloted space. */
 		  curr_size = nr (area_size*3/4, area_size*5/4);
+		  if (level_this_area == WORLDGEN_OUTPOST_GATE_AREA_LEVEL)
+		    curr_size += curr_size/2;
+		  else 
+		    level_this_area = nr (level_this_area*2/3,level_this_area*5/4);
 		  curr_size = (curr_size/55+1)*50;
+		  /* Now set up the "dirs" for this area...*/
+		  
+		  
+		  dirbuf[0] = '\0';
+		  if (y < WORLDGEN_MAX-1 && worldgen_sectors[x][y+1])
+		    strcat (dirbuf, "n");
+		  if (y > 0 && worldgen_sectors[x][y-1])
+		    strcat (dirbuf, "s");
+		  if (x < WORLDGEN_MAX-1 && worldgen_sectors[x+1][y])
+		    strcat (dirbuf, "e");
+		  if (x > 0 && worldgen_sectors[x-1][y])
+		    strcat (dirbuf, "w");
+		  if (strlen(dirbuf) == FLATDIR_MAX)
+		    dirbuf[0] = '\0';
+		  
 		  if (curr_top_vnum + area_size < 
 		      WORLDGEN_UNDERWORLD_START_VNUM)
 		    {
-		      sprintf (buf, "%d %d %s %d",
+		      sprintf (buf, "%d %d %s %d %s",
 			       curr_top_vnum,
 			       curr_size,
 			       room1_flags[i].name,
-			       
-			       nr (level_this_area*2/3,
-				   level_this_area*5/4));
+			       level_this_area,
+			       dirbuf);
 		      areagen (NULL, buf);
 		      if ((area = find_thing_num (curr_top_vnum)) != NULL &&
 			  IS_AREA (area))
@@ -726,7 +748,7 @@ worldgen_generate_areas (int area_size)
 				   area->vnum);
 			  echo (buf);
 			}
-		      if (area && worldgen_levels[x][y] == 10 &&
+		      if (area && worldgen_levels[x][y] == WORLDGEN_OUTPOST_GATE_AREA_LEVEL &&
 			  y > 0 &&
 			  !worldgen_sectors[x][y-1])
 			{
@@ -741,14 +763,27 @@ worldgen_generate_areas (int area_size)
 		     range. */
 		  curr_size = nr (area_size/2, area_size*2);
 		  curr_size = (curr_size/55+1)*50;
+		  dirbuf[0] = '\0';
+		  if (y < WORLDGEN_MAX-1 && worldgen_underworld[x][y+1])
+		    strcat (dirbuf, "n");
+		  if (y > 0 && worldgen_underworld[x][y-1])
+		    strcat (dirbuf, "s");
+		  if (x < WORLDGEN_MAX-1 && worldgen_underworld[x+1][y])
+		    strcat (dirbuf, "e");
+		  if (x > 0 && worldgen_underworld[x-1][y])
+		    strcat (dirbuf, "w");
+		   if (strlen(dirbuf) == FLATDIR_MAX)
+		    dirbuf[0] = '\0';
+		  
 		  if (((curr_underworld_vnum + area_size)-
 		       WORLDGEN_UNDERWORLD_START_VNUM) < WORLDGEN_VNUM_SIZE)
 		    {
-		      sprintf (buf, "%d %d underground %d",
+		      sprintf (buf, "%d %d underground %d %s",
 			       curr_underworld_vnum,
 			       curr_size,
 			       nr (level_this_area,
-				   level_this_area*3/2));
+				   level_this_area*3/2),
+			       dirbuf);
 		      areagen (NULL, buf);
 		      if ((area = find_thing_num (curr_underworld_vnum)) != NULL &&
 			  IS_AREA (area))
@@ -906,7 +941,7 @@ worldgen_generate_area_levels (void)
        if (my_x >= 0 && my_x < WORLDGEN_MAX &&
 	   my_y >= 0 && my_y < WORLDGEN_MAX)
 	 {
-	   worldgen_levels[my_x][my_y] = 10;
+	   worldgen_levels[my_x][my_y] = WORLDGEN_OUTPOST_GATE_AREA_LEVEL;
 	   gate_x[curr_align] = my_x;
 	   gate_y[curr_align] = my_y;
 	 }
@@ -1380,7 +1415,8 @@ worldgen_society_seed (void)
 
   for (area = the_world->cont; area; area = area->next_cont)
     {
-      if (!IS_AREA_SET (area, AREA_NOSETTLE))
+      if (!IS_AREA_SET (area, AREA_NOSETTLE) && 
+	  !IS_ROOM_SET (area, BADROOM_BITS))
 	area_count++;
     }
   
@@ -1443,7 +1479,8 @@ worldgen_society_seed (void)
 		      IS_ROOM_SET (area, society_flags) &&
 		      !IS_MARKED(area) && area->level >= 
 		      MID(20, soc->level/4,100) &&
-		      !IS_AREA_SET (area, AREA_NOSETTLE))
+		      !IS_AREA_SET (area, AREA_NOSETTLE) &&
+		      !IS_ROOM_SET (area, BADROOM_BITS))
 		    {
 		      if (count == 0)
 			num_choices++;
@@ -1890,7 +1927,9 @@ worldgen_add_catwalks_between_areas (void)
 		
 
 /* This clears all of the worldgen items from the players' inventories
-   and from their savefiles. */
+   and from their savefiles, and storage and auctions. It is assumed
+   that the world is purged when this is called, so the rest of the
+   objects are ignored. */
 
 void
 worldgen_clear_player_items(void)
@@ -1899,6 +1938,9 @@ worldgen_clear_player_items(void)
   struct dirent *currentry; /* Ptr to current entry. */
   THING *thg, *thgn, *player;
   char name[STD_LEN];
+  int i;
+  int ctype;
+  CLAN *cln;
   
   /* Now open the player directory and clean up all playerfiles. */
   
@@ -1923,6 +1965,7 @@ worldgen_clear_player_items(void)
 	{
 	  thing_to (player, find_thing_num (2));
 	  worldgen_remove_object (player);
+	 
 	  if (player->in)
 	    {
 	      thing_to (player, find_thing_num (player->align+100));
@@ -1939,24 +1982,45 @@ worldgen_clear_player_items(void)
   for (thg = thing_hash[PLAYER_VNUM % HASH_SIZE]; thg; thg = thgn)
     {
       thgn = thg->next;
-      worldgen_remove_object (thg);
+      worldgen_remove_object (thg); 
+      for (i = 0; i < MAX_STORE; i++)
+	{
+	  if (worldgen_remove_object (thg->pc->storage[i]))
+	    thg->pc->storage[i] = NULL;
+	}
+      
       if (thg->in)
 	write_playerfile (thg);
     }
-  
+
+
+  /* Now clear all clan stores. */
+
+  for (ctype = 0; ctype < CLAN_MAX; ctype++)
+    {
+      for (cln = clan_list[ctype]; cln; cln = cln->next)
+	{
+	  for (i = 0; i < MAX_CLAN_STORE; i++)
+	    {
+	      if (worldgen_remove_object (cln->storage[i]))
+		cln->storage[i] = NULL;
+	    }
+	}
+    }
+  write_clans();
   return;
 }
  
 
 /* This (recursively) removes all worldgen objects from a thing. */
 
-void
+bool
 worldgen_remove_object (THING *th)
 {
   THING *thg, *thgn;
   VALUE *gem, *power;
   if (!th || IS_ROOM (th) || IS_AREA (th))
-    return;
+    return FALSE;
 
   
   /* Need to get rid of society eq somehow. */
@@ -1968,7 +2032,7 @@ worldgen_remove_object (THING *th)
       IS_OBJ_SET (th, OBJ_NOSTORE))
     {
       free_thing (th);
-      return;
+      return TRUE;
     }
   
   for (thg = th->cont; thg; thg = thgn)
@@ -1976,7 +2040,7 @@ worldgen_remove_object (THING *th)
       thgn = thg->next_cont;
       worldgen_remove_object (thg);
     }
-  return;
+  return FALSE;
 }
   
   

@@ -3,7 +3,7 @@ Name persongen.are`
 HpMv 0 10 5 200
 HWT 0 0
 Cost 100
-Timer 6
+Timer 11
 Short Person Generators`
 type Lonath`
 ThFl 135307259
@@ -11,8 +11,8 @@ Flag Area 0 0 28
 END_THING
 
 THING 105001
-Name acolyte`
-Level 17
+Name pilferer`
+Level 14
 HWT 0 0
 Color 7
 Desc This is the area used to generate persons. The name of this room changes since it's used to generate
@@ -22,6 +22,7 @@ Short Person Generator Room`
 MIW 1
 Symbol -`
 ThFl 134742507
+Flag Aff 0 0 18
 END_THING
 
 THING 105002
@@ -29,6 +30,7 @@ Name paladin`
 Level 30
 HWT 0 0
 Color 7
+MIW 1
 Symbol -`
 ThFl 524779
 END_THING
@@ -38,6 +40,7 @@ Name cavalier`
 Level 20
 HWT 0 0
 Color 7
+MIW 1
 Symbol -`
 ThFl 524779
 END_THING
@@ -687,13 +690,6 @@ THING 105093
 Name freewoman`
 HWT 0 0
 Sex 1
-ThFl 2209
-END_THING
-
-THING 105094
-Name guard`
-Level 20
-HWT 0 0
 ThFl 2209
 END_THING
 

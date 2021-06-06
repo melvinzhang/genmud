@@ -1349,8 +1349,8 @@ do_leave (THING *th, char *arg)
   sprintf (buf, "%s leaves you.\n\r", name_seen_by (th->in, th));
   stt (buf, th->in);
   act ("@1n arrives from @2n.", th, start_in, NULL, NULL, TO_ROOM);
-  if (IS_PC (th))
-    do_look (th, "zzduhql");
+  if (IS_PC (th))    
+    do_look (th, "");
   place_track (th, th->in, DIR_MAX, DIR_MAX, TRUE);
   
  create_map (th, th->in, SMAP_MAXX, SMAP_MAXY);
@@ -1424,11 +1424,9 @@ do_run (THING *th, char *arg)
       stt ("You cannot start running unless you are standing!\n\r", th);
       return;
     }
-  SBIT (server_flags, SERVER_RUNNING);
   if (!done_once)
-  while (move_dir (th, dir) && count++ < 100)
+  while (move_dir (th, dir, MOVE_RUN) && count++ < 100)
     done_once = TRUE;
-  RBIT (server_flags, SERVER_RUNNING);
   if (!done_once)
     stt ("You can't run that way!\n\r", th);
   return;
@@ -1438,41 +1436,41 @@ do_run (THING *th, char *arg)
 void
 do_north (THING *th, char *arg)
 {
-  move_dir (th, DIR_NORTH);
+  move_dir (th, DIR_NORTH, 0);
   return;
 }
 
 void
 do_south (THING *th, char *arg)
 {
-  move_dir (th, DIR_SOUTH);
+  move_dir (th, DIR_SOUTH, 0);
   return;
 }
 
 void
 do_east (THING *th, char *arg)
 {
-  move_dir (th, DIR_EAST);
+  move_dir (th, DIR_EAST, 0);
   return;
 }
 
 void
 do_west (THING *th, char *arg)
 {
-  move_dir (th, DIR_WEST);
+  move_dir (th, DIR_WEST, 0);
   return;
 }
 
 void
 do_up (THING *th, char *arg)
 {
-  move_dir (th, DIR_UP);
+  move_dir (th, DIR_UP, 0);
   return;
 }
 void
 do_down (THING *th, char *arg)
 {
-  move_dir (th, DIR_DOWN);
+  move_dir (th, DIR_DOWN, 0);
   return;
 }
 
@@ -1613,7 +1611,7 @@ can_move_dir (THING *th, int dir)
   THING *room, *thg;
   VALUE *exit = NULL, *socval;
   int pcbits;
-
+  
   if (!th || dir < 0 || dir >= REALDIR_MAX || (room = th->in) == NULL)
     return FALSE;
 
@@ -1663,7 +1661,7 @@ can_move_dir (THING *th, int dir)
 
 
 bool 
-move_dir (THING *th, int dir)
+move_dir (THING *th, int dir, int flags)
 {
   VALUE *val = NULL;
   THING *to, *start_in, *foll, *folln, *scanner, *room, *croom, *viewer;
@@ -1687,7 +1685,7 @@ move_dir (THING *th, int dir)
   if (!IS_ROOM (th->in) && th->in->in &&
       IS_ROOM (th->in->in) && IS_OBJ_SET (th->in, OBJ_DRIVEABLE))
     {
-      if (move_dir (th->in, dir))
+      if (move_dir (th->in, dir, flags))
 	{
 	  do_look (th, "out");
 	  return TRUE;
@@ -1714,16 +1712,14 @@ move_dir (THING *th, int dir)
     }
   
   if (MOUNT(th))
-    return move_dir (MOUNT (th), dir);
+    return move_dir (MOUNT (th), dir, flags);
   
   
-  if (dir < 69 && FIGHTING(th))
+  if (!IS_SET (flags, MOVE_FLEE) && FIGHTING(th))
     {
       stt ("You cannot walk away while fighting!\n\r", th);
       return FALSE;
     }
-  else if (dir > 68)
-    dir -= 69;
   
   if (!can_move_dir (th, dir))
     return FALSE;
@@ -1834,9 +1830,9 @@ move_dir (THING *th, int dir)
 	     underground or (you suck at swimming and arent flying)). */
 	  
 	  if (!IS_SET (mover_aff_bits, AFF_WATER_BREATH) &&
-	      (IS_SET (to_room_bits, ROOM_UNDERWATER | ROOM_WATERY) ||
+	      (IS_SET (to_room_bits, ROOM_UNDERWATER) ||
 	       (!IS_SET (mover_aff_bits, AFF_FLYING) &&
-		!check_spell (th, NULL, 303 /* Swim */))))
+		!check_spell (th, NULL, 303 /* swim */))))
 	    {
 	      stt ("You can't seem to swim that way!\n\r", th);
 	      th->mv -= MIN (th->mv, 4);
@@ -1876,11 +1872,15 @@ move_dir (THING *th, int dir)
   
   th->mv -= moves;
   update_kde (th, KDE_UPDATE_HMV);
-  if (RIDER (th) && MOUNT(RIDER(th)) == th)
+  if (RIDER (th) && (IS_PC (RIDER (th)) || RIDER(th)->fd) && MOUNT(RIDER(th)) == th)
     {
       sprintf (buf, "You go %s riding %s.", dir_name[dir], NAME(MOUNT(RIDER(th))));
       stt (buf, RIDER (th));
-      do_look (RIDER (th), "zzduhql");
+      
+      if (IS_SET (flags, MOVE_RUN))
+	show_thing_to_thing (RIDER(th), RIDER(th)->in, LOOK_SHOW_SHORT | LOOK_SHOW_EXITS | LOOK_SHOW_CONTENTS);
+      else
+	do_look (RIDER (th), "zzduhql");
     }
   if (start_in->cont)
     {
@@ -1948,7 +1948,12 @@ move_dir (THING *th, int dir)
   /* Look around... */
   
   if (IS_PC (th) || th->fd)
-    do_look (th, "zzduhql");
+    {
+      if (IS_SET (flags, MOVE_RUN))
+	show_thing_to_thing (th, th->in, LOOK_SHOW_SHORT | LOOK_SHOW_EXITS | LOOK_SHOW_CONTENTS);
+      else
+	do_look (th, "zzduhql");
+    }
   
   /* Make followers move also. */
   
@@ -1958,7 +1963,7 @@ move_dir (THING *th, int dir)
       if (CAN_MOVE (foll) && 
 	  (FOLLOWING (foll) == th || 
 	   (RIDER(th) && FOLLOWING(foll) == RIDER(th))))
-	move_dir (foll, dir);
+	move_dir (foll, dir, flags);
     }
   
   

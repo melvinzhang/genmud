@@ -3,11 +3,11 @@ Name start.are`
 HpMv 0 1 109 998
 HWT 0 0
 Cost 100
-Timer 6
+Timer 17
 Short the start area`
 Long A cold wind blows by...`
 type Lonath`
-ThFl 537919488
+ThFl 672137216
 Flag Area 0 0 28
 END_THING
 
@@ -41,16 +41,16 @@ Name home`
 Level 20
 HpMult 0
 HWT 0 0
-Color 8
+Color 2
 Desc This is my room. :)
 It has a tapestry in it.
 `
 Short Lonath's Room`
 MIW 1
 Long Lonath's Room is Here.`
-Symbol -`
+Symbol #`
 ThFl 524779
-Flag Room 0 0 1
+Flag Room 0 0 17825792
 EDESC tapestry`
 This large wall-hanging depicts great battles between the forces of good and evil.
 `
@@ -66,7 +66,7 @@ Short The Remort Room`
 MIW 1
 Symbol -`
 ThFl 524779
-Val u_exit 1211451 0 0 0 0 0 0 0 `
+Val d_exit 1216229 0 0 0 0 0 0 0 `
 END_THING
 
 THING 27
@@ -78,7 +78,6 @@ Wear chest`
 MIW 1
 Symbol -`
 ThFl 524779
-Val u_exit 1231262 0 0 0 0 0 0 0 `
 END_THING
 
 THING 40
@@ -132,12 +131,12 @@ END_THING
 
 THING 45
 HWT 0 0
-Color 2
+Color 7
 Short A Forest`
 MIW 1
-Symbol *`
+Symbol -`
 ThFl 524779
-Flag Room 0 0 16908288
+Flag Det 0 0 16908288
 END_THING
 
 THING 46
@@ -521,7 +520,7 @@ Color 8
 Short The Evil Recall Room`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Flag Room 0 0 1
 Reset 251 100 1 1
 END_THING
@@ -536,7 +535,7 @@ Desc The Recall Room
 Short The Good Recall Room`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Flag Room 0 0 1
 Reset 252 100 1 1
 END_THING
@@ -1663,7 +1662,7 @@ HWT 0 0
 Short The provision pop`
 Long The provision po pis here.`
 ThFl 101063
-Val randpop 125006 262 1 0 0 0 0 0 `
+Val randpop 125006 247 1 0 0 0 0 0 `
 END_THING
 
 THING 280

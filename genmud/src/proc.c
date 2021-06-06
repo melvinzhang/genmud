@@ -823,17 +823,25 @@ capitalize (char *arg)
   if (!arg || !*arg)
     return ret;
   
-  strcpy (ret, arg);
+  strncpy (ret, arg, STD_LEN*20-1);
   for (t = ret; *t; t++)
-    {   
-      if (isalpha (*t))
-	{
-	  *t = UC (*t);
-	  break;
-	}   
+    {
       if (*t == '\x1b')
-	while (*t && *t != 'm')
-	  t++;
+	{
+	  while (!isalpha(*t))
+	    t++;
+	  continue;
+	}
+      else if (!isalpha (*t))
+	{
+	  while (!isalpha(*t))
+	    t++;
+	  if (t > ret)
+	    t--;
+	  continue;
+	}
+      *t = UC(*t);
+      break;
     }
   return ret;
 }

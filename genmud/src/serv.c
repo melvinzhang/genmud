@@ -29,6 +29,7 @@ static struct timeval curr_time;
 static struct sockaddr_in listen_address;
 static fd_set input_set;
 int times_through_loop = 0;
+static int number_of_pulses = 0;
 static pthread_mutex_t read_mut = PTHREAD_MUTEX_INITIALIZER;
 
 /* All this function does is 1.  Set up the socket on the correct port.
@@ -42,7 +43,7 @@ main (int argc, char **argv)
   gettimeofday (&curr_time, NULL);
   my_srand (curr_time.tv_usec + (curr_time.tv_sec >> 2));
   current_time = curr_time.tv_sec;
-  signal (SIGSEGV, (void *) seg_handler); 
+  signal (SIGSEGV, seg_handler); 
   signal (SIGPIPE, SIG_IGN);
   read_server ();
   init_socket ();
@@ -76,17 +77,20 @@ init_socket (void)
 void
 run_server (void)
 {
-  struct timeval before_time;
-  int update_timer = PULSE_PER_SECOND/UPD_PER_SECOND;
-  int wait_usec; /* How long to wait between pulses. */
+  struct timeval now_time;
+  int count;
+  int current_time_update_ticks = 0;
+
+
+  
   max_fd = listen_socket;
   boot_time = current_time;
+  
   /* Start the thread that reads data in from the sockets. */
   init_read_thread ();
+  init_pulse_thread ();
   while (!IS_SET (server_flags, SERVER_REBOOTING))
     {    
-      
-      gettimeofday (&before_time, NULL);
       
       /* Work with the data from the sockets. */
       
@@ -94,18 +98,9 @@ run_server (void)
       
       /* Update the regular event updates. */
       
-      if (--update_timer <= 0)
-	{
-	  update_events (); 
-	  update_timer = PULSE_PER_SECOND/UPD_PER_SECOND;
-	  
-      /* times_through_loop is VERY important. It is used to set up
-	 the timing for the events which drive the game. Make sure
-	 this variable is only changed here or the whole timing
-	 of the game will be off. */
-
-	  times_through_loop++;
-	}
+      update_events ();
+      
+      
       
       /* Update special script events. */
       check_script_event_list ();
@@ -113,37 +108,71 @@ run_server (void)
       /* Send output to the sockets. */
       process_output ();
       
-      /* Find out the time after all of the updating. current_time
-	 is used in the game a LOT. */
-      gettimeofday (&curr_time, NULL);
-      current_time = curr_time.tv_sec;
-
-     
-      
-      /* Now we calc how long usleep should sleep. */
-      
-      if (!IS_SET (server_flags, SERVER_SPEEDUP))
-	{      
-	  wait_usec = 
-	    MID (0, 
-		 (850000/PULSE_PER_SECOND - 
-		  (850000 * (curr_time.tv_sec - before_time.tv_sec) +
-		   curr_time.tv_usec - before_time.tv_usec)), 850000/PULSE_PER_SECOND);
-	  usleep (wait_usec); 	  
+      /* Update current time once a second. */
+      if (++current_time_update_ticks >= PULSE_PER_SECOND)
+	{
+	  current_time_update_ticks = 0;
+	  gettimeofday (&now_time, NULL);
+	  current_time = now_time.tv_sec;
 	}
-      else if (max_players > 2) /* Do not allow speedup with players. */
+      
+      /* Wait until the pulse catches up to real game loop times. */
+      
+      count = 0;
+      while (times_through_loop > number_of_pulses &&
+	     !IS_SET (server_flags, SERVER_SPEEDUP | SERVER_REBOOTING) &&
+	     ++count < 10)
+	usleep (5000);  
+      
+      /* Do not allow speedup with players. */
+      
+      if (max_players > 2)
 	RBIT (server_flags, SERVER_SPEEDUP);
       
+      /* times_through_loop is VERY important. It is used to set up
+	 the timing for the events which drive the game. Make sure
+	 this variable is only changed here or the whole timing
+	 of the game will be off. */
       
+      times_through_loop++;
     }
-
-  
   shutdown_server ();
+  count = 0;
   while (IS_SET (server_flags, SERVER_SAVING_WORLD |
-		 SERVER_SAVING_AREAS))
+		 SERVER_SAVING_AREAS) && ++count < 10)
     sleep(1);
   return;
 }
+/* This starts the thread that keeps the game pulse. */
+  
+  void
+init_pulse_thread (void)
+{
+  pthread_t pulse_thread;
+  pthread_create (&pulse_thread, NULL, update_pulse, NULL);
+  pthread_detach (pulse_thread);
+}
+ 
+ 
+void * 
+update_pulse (void *foo)
+{
+  while (!IS_SET (server_flags, SERVER_REBOOTING))
+    {
+      if (!IS_SET (server_flags, SERVER_SPEEDUP))
+	{
+	  number_of_pulses++;
+	  usleep (900000/PULSE_PER_SECOND);
+	}
+      else
+	{
+	  number_of_pulses = times_through_loop + 1;
+	  usleep (1000);
+	}
+    }
+  return NULL;
+} 
+     
 
 /* This starts the thread that reads data in from the sockets. */
 
@@ -154,7 +183,6 @@ init_read_thread (void)
   pthread_create (&read_thread, NULL, read_in_from_network, NULL);
   pthread_detach (read_thread);
 }
-
 
 void*
 read_in_from_network (void*pointer)

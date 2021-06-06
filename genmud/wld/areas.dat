@@ -2,11 +2,13 @@ start.are
 evil1.are
 good1.are
 forgedeq.are
+citygen.are
 areadetails.are
 persongen.are
 mobgen.are
 mobdescgen.are
 socigen.are
+craftgen.are
 castegen.are
 areagen.are
 provisiongen.are
@@ -19,5 +21,6 @@ socigenmob.are
 deities.are
 provisions.are
 mobgenload.are
+craftload.are
 
 END_AREA_LIST

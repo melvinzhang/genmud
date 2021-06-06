@@ -3,10 +3,10 @@ Name socigenmob.are`
 HpMv 0 10 5 5000
 HWT 0 0
 Cost 100
-Timer 5
+Timer 2
 Short Society Genned Mobs`
 type Lonath`
-ThFl 135307259
+ThFl 1089531
 Flag Area 0 0 28
 END_THING
 

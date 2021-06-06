@@ -12,13 +12,60 @@
    the one referenced by OBJECTGEN_AREA_VNUM in serv.h. */
 
 
+/* The first numbers are the ranks given to different afecst.
+   The second numbers are the chances that certain affects appear 
+   in genned objects. They are weighted so certain things are more 
+   likely, and certain things are less likely. Basically, within a 
+   single rank of affects, you add all the possible numbers up then 
+   pick a random affect from the weighted sum. Larger numbers mean 
+   it's more likely to show up in an object. */
+
+const int aff_power_ranks[AFF_MAX-AFF_START][AFF_POWER_TYPES] =
+  {
+    { AFF_RANK_EXCELLENT, 5 }, /* Start stats -- str */
+    { AFF_RANK_EXCELLENT, 2 }, /* int */
+    { AFF_RANK_EXCELLENT, 2 }, /* wis */
+    { AFF_RANK_EXCELLENT, 2 }, /* dex */
+    { AFF_RANK_EXCELLENT, 1 }, /* con */
+    { AFF_RANK_EXCELLENT, 1 }, /* luc */
+    { AFF_RANK_EXCELLENT, 3 }, /* End stats. -- cha */
+    { AFF_RANK_EXCELLENT, 10 }, /* Damroll */
+    { AFF_RANK_GOOD,  10 }, /* Hitroll */
+    { AFF_RANK_POOR,  10 }, /* hp */
+    { AFF_RANK_POOR,  5}, /* mv */
+    { AFF_RANK_GOOD,  2 }, /* Sp att */
+    { AFF_RANK_GOOD,  2 }, /* Heal pct */
+    { AFF_RANK_FAIR,  4 }, /* Sp resist */
+    { AFF_RANK_GOOD,  2 }, /* Th att */
+    { AFF_RANK_FAIR,  2 }, /* Defense -- block/dodge etc... */
+    { AFF_RANK_GOOD,  2 }, /* Kickdam */
+    { AFF_RANK_POOR,  5 }, /* Armor */
+    { AFF_RANK_EXCELLENT,  4}, /* Dam resist...-pcts off damage taken. Really good. */
+    { AFF_RANK_FAIR,  2 }, /* Groundfight attack. */
+    { AFF_RANK_FAIR,  2 }, /* Groundfight defense. */
+    { AFF_RANK_GOOD,  1 }, /* Elem power start air */
+    { AFF_RANK_GOOD,  1 }, /* Earth */
+    { AFF_RANK_GOOD,  1 }, /* Fire */
+    { AFF_RANK_GOOD,  1 }, /* Water */
+    { AFF_RANK_GOOD,  1 },  /* Elem power end. spirit */
+    { AFF_RANK_EXCELLENT,  2}, /* Elem level start */
+    { AFF_RANK_EXCELLENT,  2}, /* earth */
+    { AFF_RANK_EXCELLENT,  2}, /* fire */
+    { AFF_RANK_EXCELLENT,  2}, /* water */
+    { AFF_RANK_EXCELLENT,  2}, /* Elem level end. spirit */
+  };
+
+
+
+
+
 /* These are the levels you need to attain to get certain kinds of
    affects of certain ranks. The ranks are shown in const.c
    just below where the affects are defined. */
 
 static int aff_rank_levels[AFF_RANK_MAX] = 
   {
-    30,
+    30, 
     60,
     90,
     120,
@@ -47,7 +94,7 @@ static const char *objectgen_part_names[OBJECTGEN_NAME_MAX] =
 
 
 THING *
-objectgen (THING *area, int wear_loc, int level, int curr_vnum, char *society_name, char *owner_name)
+objectgen (THING *area, int wear_loc, int level, int curr_vnum, char *names)
 {
   THING *obj, *in_area;
   int weapon_type = -1;
@@ -96,8 +143,7 @@ objectgen (THING *area, int wear_loc, int level, int curr_vnum, char *society_na
     return NULL;
   /* Get the descriptions of the object. */
   
-  objectgen_generate_names (name, color, wear_loc, society_name, 
-			    owner_name, weapon_type, level);
+  objectgen_generate_names (name, color, wear_loc, weapon_type, level, names);
   
   
   if ((obj = new_thing()) == NULL)
@@ -152,7 +198,9 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
   char fullname[STD_LEN*2];
   char realfullname[STD_LEN * 2];
   char longname[STD_LEN*3];
+  char namebuf[STD_LEN];
   char *t;
+  bool put_prefix_at_end = FALSE; /* Do we put a prefix at the end? */
   if (!obj || !name || !colorname || obj->wear_pos <= ITEM_WEAR_NONE ||
       obj->wear_pos >= ITEM_WEAR_MAX || obj->wear_pos == ITEM_WEAR_BELT)
     return;
@@ -173,25 +221,52 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	  if (*t == '\'' || *t == '\"')
 	    *t = '\0';
 	}
-      strcat (fullname, name[i]);
+      t = name[i];
+      do
+	{
+	  t = f_word (t, namebuf);
+	  if (str_cmp (namebuf, "the") &&
+	      str_cmp (namebuf, "an") &&
+	      str_cmp (namebuf, "a"))
+	    {	      
+	      strcat (fullname, namebuf);
+	      if (t && *t)
+		strcat (fullname, " ");
+	    }
+	}
+      while (t && *t);
     }
   
   free_str (obj->name);
   obj->name = new_str (fullname);
   
-  
+  /* Let the thing move the prefix to the end part of the time. */
+  if (*name[OBJECTGEN_NAME_PREFIX] &&
+      *name[OBJECTGEN_NAME_SUFFIX] &&
+      nr (1,5) == 2)
+    {
+      put_prefix_at_end = TRUE;
+      if (str_cmp (name[OBJECTGEN_NAME_A_AN], "the"))
+	{
+	  for (i = OBJECTGEN_NAME_PREFIX+1; i <= OBJECTGEN_NAME_TYPE; i++)
+	    {
+	      if (*name[i])
+		{
+		  strcpy (name[OBJECTGEN_NAME_A_AN], a_an (name[i]));
+		  break;
+		}
+	    }
+	}
+    }
   /* Set up the short and long descs. */
   fullname[0] = '\0';
   for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
     {
-      if (!*name[i])
+      if (!*name[i] ||
+	  (i == OBJECTGEN_NAME_PREFIX && 
+	   put_prefix_at_end))
 	continue;
-      /*      for (t = name[i]; *t; t++)
-	{
-	  if (t == name[i] || *(t-1) == ' ')
-	    *t = UC(*t);
-	    } */
-      
+   
       if (i == OBJECTGEN_NAME_METAL && *name[OBJECTGEN_NAME_GEM])
 	{
 	  if (obj->wear_pos == ITEM_WEAR_WIELD)
@@ -216,14 +291,55 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	strcat (fullname, " ");
       
       
-      if (i == OBJECTGEN_NAME_MAX-1)
+      if (i == OBJECTGEN_NAME_MAX-2) /* Suffix -- of life etc... */
 	strcat (fullname, "of ");
       
-      if (*colorname[i])
-	strcat (fullname, colorname[i]);
+      if (i == OBJECTGEN_NAME_MAX -1) /* called 'soulstealer' */
+	{
+	  sprintf (fullname + strlen (fullname), "%s '%s'",
+		   (nr (1,2) == 1 ? "called" : "named"),
+		   (*colorname[i] ? colorname[i] : name[i])); 
+	}
       else
-	strcat (fullname, name[i]);
-      
+	{
+	  if (i == OBJECTGEN_NAME_SUFFIX &&
+	      put_prefix_at_end)
+	    { 
+	      char word[STD_LEN], *secondword;
+	      secondword = f_word (name[OBJECTGEN_NAME_SUFFIX], word);
+	      if (!str_cmp (word, "the"))
+		{
+		  strcat (fullname, "the ");
+		  if (*colorname[OBJECTGEN_NAME_PREFIX])
+		    strcat (fullname, colorname[OBJECTGEN_NAME_PREFIX]);
+		  else
+		    strcat (fullname, name[OBJECTGEN_NAME_PREFIX]);
+		  strcat (fullname, " ");
+		  
+		  strcat (fullname, secondword);
+		}
+	      else
+		{ 
+		  if (*colorname[OBJECTGEN_NAME_PREFIX])
+		    strcat (fullname, colorname[OBJECTGEN_NAME_PREFIX]);
+		  else
+		    strcat (fullname, name[OBJECTGEN_NAME_PREFIX]);
+		  strcat (fullname, " ");
+		  if (*colorname[OBJECTGEN_NAME_SUFFIX])
+		    strcat (fullname, colorname[OBJECTGEN_NAME_SUFFIX]);
+		  else
+		    strcat (fullname, name[OBJECTGEN_NAME_SUFFIX]);
+		  
+		}
+	    }
+	  else
+	    {
+	      if (*colorname[i])
+		strcat (fullname, colorname[i]);
+	      else
+		strcat (fullname, name[i]);
+	    }
+	}
       /* Cloaks/leather/cloth/hide armor are metal-woven armor,
 	 not metal armor. Also add the woven look to a small percentage
 	 of nonweapons. */
@@ -241,7 +357,44 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	}
     }
   
+  /* Now possibly set the overall name of the object to something
+     different than just gray. */
+  
   strcpy (realfullname, add_color (fullname));
+  if (nr (1,3) == 3)
+    {
+      char *t, c;
+      char tempname[STD_LEN];
+      int num = nr (1,15);
+      
+      c = int_to_hex_digit (num);
+      
+    
+      sprintf (tempname, "\x1b[%d;3%dm", num/8, num%8);
+      strcat (tempname, realfullname);
+      strcpy (realfullname, tempname);
+      for (t = realfullname; *t; t++)
+	{
+	  if (*t == '\x1b')
+	    {
+	      t += 2;
+	      if (*t == '0' &&
+		  *(t + 3) == '7' && 
+		  *(t + 5) != '\0')
+		{
+		  *t = num/8 + '0';
+		  *(t+3) = num % 8 + '0';
+		}
+	      t += 4;
+	    }
+	} 
+      strcat (realfullname, "\x1b[0;37m");
+      
+    }
+  
+		
+
+
   
   free_str (obj->short_desc);
   obj->short_desc = new_str (realfullname);
@@ -301,9 +454,9 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	strcat (longname, "has been abandoned here.");
 	break;
     }
-  
+  strcat (longname, "\x1b[0;37m");
   free_str (obj->long_desc);
-  longname[0] = UC(longname[0]);
+  strcpy (longname, capitalize (longname));
   obj->long_desc = new_str (longname);
   
   
@@ -311,18 +464,46 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
   return;
 }
 
-/* This generates the objectgen names. */
+/* This returns what kind of part name this word is...used for presetting
+   names on objects. */
+
+int 
+find_objectgen_part_name (char *nametype)
+{
+  int part;
+  if (!nametype || !*nametype)
+    return OBJECTGEN_NAME_MAX;
+  
+  for (part = 0; part < OBJECTGEN_NAME_MAX; part++)
+    {
+      if (!str_cmp (objectgen_part_names[part], nametype))
+	break;
+    }
+  return part;
+}
+
+
+/* This generates the objectgen names. It puts the names into the
+ name[][] array and the colornames (if any) into the colorname
+ array. The colornames are set up by putting a line like
+ name & colorname into whatever string is being used to generate
+ the names.  The names variable is a list of names used at the
+ end of generation to override/set names to certain preset things. */
 
 void
 objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN], 
 			  char colorname[OBJECTGEN_NAME_MAX][STD_LEN],
-			  int wear_loc, char *society_name, 
-			  char *owner_name, int weapon_type, int level)
+			  int wear_loc, int weapon_type, int level, 
+			  char *names)
 {
   int i;
   char *t;
-  int num_names = 1;
-  int names_used, names_left, num_names_used, choice, name_choices;
+  int names_used, names_left = 0, num_names_used;
+
+  /* Used for setting up user preset nametypes using the names variable. */
+  char arg1[STD_LEN], *arg;
+  int name_part = OBJECTGEN_NAME_MAX, 
+    name_parts_used = 0;
   
   
   if (!name || !colorname)
@@ -342,26 +523,135 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 		(OBJECTGEN_AREA_VNUM,
 		 "metal_gen_names", colorname[i]));
       else if (i == OBJECTGEN_NAME_ANIMAL)
-	strcpy (name[i], objectgen_animal_name (wear_loc, weapon_type));
-      else if (i != OBJECTGEN_NAME_TYPE)
+	strcpy (name[i], objectgen_animal_part_name (wear_loc, weapon_type)); 
+      else if (i == OBJECTGEN_NAME_SUFFIX &&
+	       nr (1,10) == 3)
+	{
+	  /* Give a chance to find an animal name. */
+	  if (nr (1,3) == 2)
+	    strcpy (name[i], objectgen_animal_suffix_name());
+	  else if (wear_loc > ITEM_WEAR_NONE && wear_loc < ITEM_WEAR_MAX &&
+		   wear_loc != ITEM_WEAR_BELT)
+	    {
+	      /* wpns -> bad godly sphereres, jewelry, either one,
+		 armor -> good spheres. */
+	      strcpy (name[i], find_gen_word 
+		      (HISTORYGEN_AREA_VNUM, 
+		       (wear_data[wear_loc].how_many_worn > 1 &&
+			(wear_loc == ITEM_WEAR_WIELD || nr (1,2) == 2) ? 
+			"godly_spheres_bad" :
+			"godly_spheres_good"),
+		       NULL));
+	    }
+	}
+      /* Add "profession's" prefix. */
+      else if (i == OBJECTGEN_NAME_PREFIX && nr (1,12) == 3)
+	
+	{
+	  strcpy (name[i], find_random_caste_name_and_flags (BATTLE_CASTES, NULL));
+	  possessive_form (name[i]);
+	}
+      else if (i == OBJECTGEN_NAME_TYPE)
+	strcpy (name[i], objectgen_find_typename (wear_loc, weapon_type)); 
+
+      /* Used for "a sword called 'foodancer'" or stuff like that. */
+      else if (i == OBJECTGEN_NAME_CALLED)
+	{
+	  char suffix_name[STD_LEN];
+	  /* used called_prefix then called_suffix here. */
+	  sprintf (name[i], "%s", find_gen_word (OBJECTGEN_AREA_VNUM, "called_prefix", NULL));
+	  *name[i] = UC(*name[i]);
+	  strcpy (suffix_name, find_gen_word (OBJECTGEN_AREA_VNUM, "called_suffix", NULL));
+	  
+	  
+	  /* Since words like fire and storm can be prefixes and suffixes,
+	     make sure you don't use the same word twice. :P */
+	  if (str_cmp (name[i], suffix_name))
+	    strcat (name[i], suffix_name);
+	  else
+	    name[i][0] = '\0';
+	}
+      else /* Generic name. */
 	strcpy (name[i], find_gen_word 
 		(OBJECTGEN_AREA_VNUM,
 		 (char *) objectgen_part_names[i], colorname[i]));
-      else
-	strcpy (name[i], objectgen_find_typename (wear_loc, weapon_type));
+     
     }
-  
+
+  /* Now get the preset part names (if any) */
+
+  if (names && *names)
+    {
+      arg = names;
+      
+      while (arg && *arg)
+	{
+	  arg = f_word (arg, arg1);
+	  /* Find a part name if possible. */
+	  if ((name_part = find_objectgen_part_name (arg1)) != OBJECTGEN_NAME_MAX)
+	    {
+	      arg = f_word (arg, arg1);
+	      /* If it exists, find the name associated with it. */
+	      if (*arg1)
+		{
+		  if (name_part == OBJECTGEN_NAME_OWNER)
+		    *arg1 = UC (*arg1);
+		  strcpy (name[name_part], arg1);
+		  
+		  /* Check if this name has colors associated with it. */
+		  if (*arg == '&' && isspace (*(arg+1)))
+		    {
+		      arg = f_word (arg, arg1);
+		      arg = f_word (arg, arg1);
+		      if (*arg1)
+			strcpy (colorname[name_part], arg1);
+		    }
+		  /* Set this as one of the name parts we 
+		     MUST use. */
+		  name_parts_used |= (1 << name_part);
+		}
+	    }
+	}
+    }
+
   /* Choose metal or nonmetal or animal genned. 
 
   Metal is for all. nonmetal is for armor, animal is for all. 
   
-  Breakdown: 70pct metal, 20pct animal, 10pct nonmetal. */
+  Breakdown: 70pct metal, 20pct animal, 10pct nonmetal. 
+  Overridden if you require certain name parts to be used. */
   
-  
-  if ((nr (1,10) <= 7 ||
-       (!*name[OBJECTGEN_NAME_NONMETAL] &&
-	!*name[OBJECTGEN_NAME_ANIMAL])) && 
-      *name[OBJECTGEN_NAME_METAL])
+  if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_METAL)))
+    {
+      *name[OBJECTGEN_NAME_NONMETAL] = '\0';
+      *name[OBJECTGEN_NAME_ANIMAL] = '\0'; 
+      *colorname[OBJECTGEN_NAME_NONMETAL] = '\0';
+      *colorname[OBJECTGEN_NAME_ANIMAL] = '\0';
+      RBIT (name_parts_used, (1 << OBJECTGEN_NAME_NONMETAL) |
+	    (1 << OBJECTGEN_NAME_ANIMAL));
+    }
+  else if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_NONMETAL)))
+    {
+      *name[OBJECTGEN_NAME_METAL] = '\0';
+      *name[OBJECTGEN_NAME_ANIMAL] = '\0';
+      *colorname[OBJECTGEN_NAME_METAL] = '\0';
+      *colorname[OBJECTGEN_NAME_ANIMAL] = '\0';
+      RBIT (name_parts_used, (1 << OBJECTGEN_NAME_METAL) |
+	    (1 << OBJECTGEN_NAME_ANIMAL));
+    }
+  else if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_ANIMAL)))
+    {
+      *name[OBJECTGEN_NAME_NONMETAL] = '\0';
+      *name[OBJECTGEN_NAME_METAL] = '\0'; 
+      *colorname[OBJECTGEN_NAME_NONMETAL] = '\0';
+      *colorname[OBJECTGEN_NAME_METAL] = '\0';
+      RBIT (name_parts_used, (1 << OBJECTGEN_NAME_NONMETAL) |
+	    (1 << OBJECTGEN_NAME_METAL));
+    }
+  else if ((nr (1,10) <= 7 ||
+	    (!*name[OBJECTGEN_NAME_NONMETAL] &&
+	     !*name[OBJECTGEN_NAME_ANIMAL])) && 
+	   *name[OBJECTGEN_NAME_METAL])
     {
       *name[OBJECTGEN_NAME_NONMETAL] = '\0';
       *name[OBJECTGEN_NAME_ANIMAL] = '\0'; 
@@ -387,23 +677,34 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
       *colorname[OBJECTGEN_NAME_METAL] = '\0';
       *colorname[OBJECTGEN_NAME_ANIMAL] = '\0';
     }
-      
   
-      
-  /* Add the society name, and if no society name exists, add the owner
-     name. */
+  if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_CALLED)))
+    {
+      *name[OBJECTGEN_NAME_SUFFIX] = '\0';
+      *colorname[OBJECTGEN_NAME_SUFFIX] = '\0';
+      RBIT (name_parts_used, (1 << OBJECTGEN_NAME_SUFFIX));
+    }
+  else if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_SUFFIX)))
+    {
+      *name[OBJECTGEN_NAME_CALLED] = '\0';
+      *colorname[OBJECTGEN_NAME_CALLED] = '\0';
+      RBIT (name_parts_used, (1 << OBJECTGEN_NAME_CALLED));
+    }
   
-  if (society_name && *society_name)
+  
+  /* Now deal with suffix and "called names". Can only have one. */
+
+  else if (nr (1, 25) == 3 && *name[OBJECTGEN_NAME_CALLED])
     {
-      strcpy (name[OBJECTGEN_NAME_SOCIETY], society_name);
-      num_names--;
+      *name[OBJECTGEN_NAME_SUFFIX] = '\0';
+      *colorname[OBJECTGEN_NAME_SUFFIX] = '\0';
     }
-  else if (owner_name && *owner_name)
+  else
     {
-      f_word (owner_name, name[OBJECTGEN_NAME_OWNER]);
-      capitalize_all_words (name[OBJECTGEN_NAME_OWNER]);
-      num_names--;
+      *name[OBJECTGEN_NAME_CALLED] = '\0';
+      *name[OBJECTGEN_NAME_CALLED] = '\0';
     }
+  
   
   /* The typename really has to exist... */
   
@@ -419,10 +720,9 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
   
   /* Set names_used to have bits set for all nonnull names that won't
      be fixed. */
-
-  names_used = ((1 << OBJECTGEN_NAME_TYPE) | (1 << OBJECTGEN_NAME_A_AN) |
-		(1 << OBJECTGEN_NAME_OWNER) | (1 << OBJECTGEN_NAME_SOCIETY));
   
+  names_used = ((1 << OBJECTGEN_NAME_TYPE) | (1 << OBJECTGEN_NAME_A_AN) |
+		name_parts_used);
   
   if (*name[OBJECTGEN_NAME_OWNER])
     {
@@ -450,9 +750,9 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
       strcpy (name[OBJECTGEN_NAME_A_AN], "The");
       strcpy (colorname[OBJECTGEN_NAME_A_AN], "The");
     }
-  num_names += nr (2, level/100+2);
-  if (num_names > 4)
-    num_names = 4;
+  names_left += nr (1, level/100+2);
+  if (names_left > 3)
+    names_left = 3;
   
   num_names_used = 0;
   for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
@@ -460,27 +760,39 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
       if (IS_SET (names_used, (1 << i)))
 	num_names_used++;
     }
-  names_left = num_names;
-  num_names += num_names_used;
   
-  /* Name choices is set to 6 since there are 6 things you can pick
-     from besides the type, the a_an and the society/owner name.
-
-     Those are: prefix color gem metal suffix. */
-  for (name_choices = OBJECTGEN_NAME_EXTRA; name_choices > 0; name_choices--)
+  
+  /* Choose from the remaining descriptive names. You only pick
+     from things that are not mutexed and which have names and which
+     haven't been picked yet. */
+  while (names_left > 0)
     {
-      choice = nr (1, name_choices);
-      
-      for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
+      int count, num_choices = 0, num_chose = 0, nm;
+      for (count = 0; count < 2; count++)
 	{
-	  if (!IS_SET (names_used, (1 << i)) && 
-	      *name[i] && --choice < 1)
-	    break;
+	  for (nm = 0; nm < OBJECTGEN_NAME_MAX; nm++)
+	    {
+	      if (*name[nm] && !IS_SET (names_used, (1 << nm)))
+		{
+		  if (count == 0)
+		    num_choices++;
+		  else if (--num_chose < 1)
+		    break;
+		}
+	    }
+	  if (count == 0)
+	    {
+	      if (num_choices < 1)
+		break;
+	      num_chose = nr (1,num_choices);
+	    }
 	}
-      SBIT (names_used, (1 << i));
-      if (--names_left < 1)
-	break;
+      if (*name[nm] && !IS_SET (names_used, (1 << nm)))
+	SBIT (names_used, (1 << nm));
+      names_left--;
     }
+	
+
   
   for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
     {
@@ -852,13 +1164,13 @@ objectgen_setup_stats (THING *obj, int weapon_type)
 		 level_sqrt number. */
 	      
 	      if (rank == AFF_RANK_POOR)		
-		flg->val = nr (1, lev_sqrt*3/2);
+		flg->val = nr (1, lev_sqrt*5/4);
 	      else if (rank == AFF_RANK_FAIR)
-		flg->val = nr (1, lev_sqrt*2/3);
-	      else if (rank == AFF_RANK_GOOD)
 		flg->val = nr (1, lev_sqrt/3);
+	      else if (rank == AFF_RANK_GOOD)
+		flg->val = nr (1, lev_sqrt/4);
 	      else 
-		flg->val = nr (1, lev_sqrt/10);
+		flg->val = nr (1, lev_sqrt/9);
 	      if (obj->wear_pos != ITEM_WEAR_WIELD &&
 		  wear_data[obj->wear_pos].how_many_worn > 1)
 		flg->val = flg->val*2/3;
@@ -1060,7 +1372,7 @@ generate_metal_names (void)
 
 
 char *
-objectgen_animal_name (int wear_loc, int weapon_type)
+objectgen_animal_part_name (int wear_loc, int weapon_type)
 {
   THING *proto, *area;
   
@@ -1199,4 +1511,102 @@ objectgen_animal_name (int wear_loc, int weapon_type)
     }
     
   return whole_name;
+}
+
+
+/* This generates a suffix for an item based on an animal name from
+   the mobgen area. The prototype must be level 40+ and it picks
+   randomly from all names. */
+
+char *
+objectgen_animal_suffix_name (void)
+{
+  int num_choices = 0, num_chose = 0, count;
+  
+  THING *area = NULL, *proto = NULL;
+  EDESC *edesc = NULL;
+  static char name[STD_LEN];
+  
+ if ((area = find_thing_num (MOBGEN_PROTO_AREA_VNUM)) == NULL)
+    return nonstr;
+ 
+  for (count = 0; count < 2; count++)
+    {
+      for (proto = area->cont; proto; proto = proto->next_cont)
+	{
+	  /* Check if it has the proper edesc and it's high enough level. */
+	  if ((edesc = find_edesc_thing (proto, "kname", TRUE)) == NULL ||
+	      LEVEL (proto) < OBJECTGEN_ANIMAL_SUFFIX_MINLEVEL)	    
+	    continue;
+	  
+	  if (count == 0)
+	    num_choices += find_num_words (edesc->desc);
+	  else 
+	    {
+	      num_chose -= find_num_words (edesc->desc);
+	      if (num_chose < 1)
+		break;
+	    }
+	}
+
+      if (count == 0)
+	{
+	  if (num_choices < 1)
+	    return nonstr;
+	  num_chose = nr (1, num_choices);
+	}
+    }
+
+  if (!proto || !edesc)
+    return nonstr;
+  
+  /* Now put the name into its proper place. */
+  
+  sprintf (name, "the %s", find_random_word (edesc->desc, NULL));
+  return name;
+}
+
+int
+find_aff_with_rank (int rank)
+{
+  int num_choices = 0, num_chose = 0, count, afftype;
+  
+  if (rank < AFF_RANK_POOR ||
+      rank >= AFF_RANK_MAX)
+    return 0;
+  
+  /* This is kind of a hack but I want more +damroll eq, so... */
+
+  if (rank == AFF_RANK_EXCELLENT && nr (1,4) == 2)
+    return FLAG_AFF_DAM;
+  
+  /* Find a random affect with the correct rank. */
+
+  for (count = 0; count < 2; count++)
+    {
+      for (afftype = 0; afftype < AFF_MAX-AFF_START; afftype++)
+	{
+	  if (aff_power_ranks[afftype][AFF_POWER_RANK] == rank)
+	    {
+	      if (count == 0)
+		num_choices += aff_power_ranks[afftype][AFF_POWER_CHANCE];
+	      else
+		{
+		  num_chose -= aff_power_ranks[afftype][AFF_POWER_CHANCE];
+		  if (num_chose < 1)
+		    break;
+		}
+	    }
+	}
+      
+      if (count == 0)
+	{
+	  if (num_choices < 1)
+	    return 0;
+	  num_chose = nr (1, num_choices);
+	}
+    }
+
+  afftype += AFF_START;
+  return (afftype);
 }

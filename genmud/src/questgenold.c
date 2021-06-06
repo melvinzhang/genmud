@@ -293,7 +293,7 @@ find_quest_thing (THING *in, THING *for_whom, int type)
 {
   THING *thg;
   int num_choices = 0, num_chose = 0, count;
-
+  VALUE *guild = NULL;
   if (type < 0 || type >= QUEST_THING_MAX)
     return NULL;
   if (in == NULL && type == QUEST_THING_MOBGEN)
@@ -306,7 +306,7 @@ find_quest_thing (THING *in, THING *for_whom, int type)
       /* Find the last name for the for whom item which should
 	 be the name of the owner. */
       
-      thg = objectgen (in, ITEM_WEAR_NONE, for_whom->level/4, 0, NULL, NULL);
+      thg = objectgen (in, ITEM_WEAR_NONE, for_whom->level/4, 0, NULL);
       if (thg)
 	thg->cost *=10;
       return thg;
@@ -327,7 +327,8 @@ find_quest_thing (THING *in, THING *for_whom, int type)
 	      
 	      /* A person or mob must be a mob and it can't be scripted */
 	      if (!CAN_MOVE (thg) || !CAN_FIGHT (thg) ||
-		  IS_SET (thg->thing_flags, TH_SCRIPT))
+		  IS_SET (thg->thing_flags, TH_SCRIPT) ||
+		  (guild = FNV (thg, VAL_GUILD)) != NULL)
 		continue;
 	      
 	      /* If the thing is for someone else, make sure it's

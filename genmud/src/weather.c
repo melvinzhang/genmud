@@ -118,7 +118,10 @@ update_time_weather (void)
 	  sprintf (buf, "The sky begins to darken as night approaches.\n\r");
 	  break;
 	case HOUR_NIGHT:
-	  sprintf (buf, "Night is here.\n\r");
+	  if (wt_info->val[WVAL_WEATHER] == WEATHER_STORMY)
+	    sprintf (buf, "It was a dark and stormy night.\n\r");
+	  else
+	    sprintf (buf, "Night is here.\n\r");
 	  break;
 	case 24: 
 	  sprintf (buf, "The darkness is total.\n\r");

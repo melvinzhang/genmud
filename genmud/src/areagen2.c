@@ -46,7 +46,7 @@ add_underpasses (THING *area)
 	  !IS_ROOM_SET (room, ROOM_EASYMOVE))
 	continue;
       rooms_missing = 0;
-      for (dir = 0; dir < 4; dir++)
+      for (dir = 0; dir < FLATDIR_MAX; dir++)
 	{
 	  rooms[dir] = NULL;
 	  roomflags[dir] = 0;
@@ -200,7 +200,7 @@ add_underpasses (THING *area)
       if ((belowroom = find_below_room (room)) == NULL)
 	continue;
       
-      for (dir = 0; dir < 4; dir++)
+      for (dir = 0; dir < FLATDIR_MAX; dir++)
 	{
 	  if ((exit = FNV (room, dir + 1)) != NULL &&
 	      (nroom = find_thing_num (exit->val[0])) != NULL &&
@@ -248,7 +248,7 @@ find_below_room (THING *room)
     return NULL;
 
 
-  for (dir = 0; dir < 4; dir++)
+  for (dir = 0; dir < FLATDIR_MAX; dir++)
     {
       if ((exit = FNV (room, dir + 1)) != NULL &&
 	  (nroom = find_thing_num (exit->val[0])) != NULL &&
@@ -266,230 +266,190 @@ find_below_room (THING *room)
 /* This adds some ridges to an area by picking some random rooms, then
    seeing if there are rooms in a row that have the following properties:
    
-   1. They don't have below rooms.
-   2. The distance from the center point is no more than 3 in
-   either direction. 
-   3. There aren't water rooms next to each other.
-   4. There are at least 3 rooms across. 
-
-   The way the room is picked is that a random room is picked in the
-   area and then it's checked to see if it's ok, then the exits are
-   generated in the proper directions. 
-
+   1. They don't have down exits in them and all of the things in their
+   "row" or "column" in the room grid don't have down exits. 
+   2. Everything in the adjacent row or column doesn't have up exits.
+ 
 */
 
 void
 add_elevations (THING *area)
 {
   THING *start_room, *room, *nroom;
-  VALUE *exit, *nexit;
-  int elevation_dir;   /* Which direction the elevation follows. */
+  VALUE *exit;
+  int ridge_dir;   /* Which direction the elevation follows. */
   int opp_dir; /* Which direction is side up. */
-  bool link_dir;  /* Do we link down or up from the rooms we have? */
   int times, num_times, room_tries;
-
-
-  /* Need to go out in both directions along the elevation line to see
-     how many rooms are there, and see if the rooms are all ok. */
-  
-  int count, num_rooms, depth, curr_dir;
-  /* Was the last room in this direction water? */
-  bool last_room_was_water;
+  int grid[AREAGEN_MAX][AREAGEN_MAX];
+  int extremes[REALDIR_MAX];
+  int start_x, start_y;
+  int x, y, new_x, new_y;
   
   /* Are the rooms ok so far? */
   bool rooms_ok;
-  
+  bool found_room;  /* Did we find the room in the grid? */
+
   if (!area || !IS_AREA (area))
     return;
-
-  num_times = nr (0, area->mv/DETAIL_DENSITY)/2;
   
- 
+  if (area->cont == NULL || !IS_ROOM(area->cont))
+    return;
+  
+  for (x = 0; x < AREAGEN_MAX; x++)
+    {
+      for (y = 0; y < AREAGEN_MAX; y++)
+	{
+	  grid[x][y] = 0;
+	}
+    }
+
+  generate_room_grid (area->cont, grid, extremes, AREAGEN_MAX/2, AREAGEN_MAX/2);
+  
+  num_times = nr (0, area->mv/DETAIL_DENSITY);
+  
   for (times = 0; times < num_times; times++)
     {
       start_room = NULL;
+      rooms_ok = TRUE;
       for (room_tries = 0; room_tries < 50 && !start_room; room_tries++)
 	{
-	  rooms_ok = TRUE;
-	 
-	  /* Get the elevation direction and the side up direction. */
-	  if (nr (0,1) == 0)
+	  if ((start_room = find_thing_num (nr(area->vnum + 1, area->vnum+area->mv))) == NULL)
+	    continue;
+	  found_room = FALSE;
+	  for (start_x = 0; start_x < AREAGEN_MAX && !found_room; start_x++)
 	    {
-	      elevation_dir = DIR_NORTH;
-	      if (nr (0,1) == 1)
-		opp_dir = DIR_EAST;
-	      else
-		opp_dir = DIR_WEST;
-	    }
-	  else
-	    { 
-	      elevation_dir = DIR_EAST;
-	      if (nr (0,1) == 1)
-		opp_dir = DIR_NORTH;
-	      else
-		opp_dir = DIR_SOUTH;
-	    }
-	  if (nr (0,1) == 1)
-	    link_dir = DIR_DOWN;
-	  else
-	    link_dir = DIR_UP;
-	  
-	  /* Start room must be ok and the room it will attach to
-	     must also be ok. */
-	  
-	  if ((start_room = find_random_room 
-	       (area, FALSE, 0, BADROOM_BITS)) == NULL ||
-	      !ok_elevation_room (start_room, link_dir) ||
-	      (exit = FNV (start_room, opp_dir + 1)) == NULL ||
-	      (nroom = find_thing_num (exit->val[0])) == NULL ||
-	      !ok_elevation_room (nroom, RDIR(link_dir)))
-	    {
-	      start_room = NULL;
-	      continue;
-	    }
-	  
-	  /* Check the rooms along the elevation line. */
-	  num_rooms = 1;
-	  for (count = 0; count < 2; count++)
-	    {
-	      room = start_room;
-	      last_room_was_water = FALSE;
-	      depth = 0;
-	      if (count == 0)
-		curr_dir = elevation_dir;
-	      else
-		curr_dir = RDIR (elevation_dir);
-	      
-	      while (depth < MAX_ELEVATION_RADIUS)
+	      for (start_y = 0; start_y < AREAGEN_MAX && !found_room ; start_y++)
 		{
-		  if ((exit = FNV (room, curr_dir + 1)) != NULL &&
-		      (room = find_thing_num (exit->val[0])) != NULL &&
-		      IS_ROOM (room) && ok_elevation_room (room, link_dir))
+		  if (grid[start_x][start_y] == start_room->vnum)
 		    {
-		      /* Check if it's a watery room next to a watery 
-			 room. */
-		      if (IS_ROOM_SET (room, ROOM_WATERY))
-			{
-			  if (last_room_was_water && nr (1,3) == 2)
-			    rooms_ok = FALSE;
-			  last_room_was_water = TRUE;
-			}
-		      else
-			last_room_was_water = FALSE;
-		      
-		      /* Now see if this room has an exit in the
-			 proper direction. If not, continue past it. */
-
-		      
-		      if ((exit = FNV (room, opp_dir + 1)) == NULL ||
-			  (nroom = find_thing_num (exit->val[0])) == NULL ||
-			  !ok_elevation_room (nroom, RDIR(link_dir)))
-			continue;
-		      
-		      
-		      
-		      depth++;
-		      num_rooms++;
-		    }		  
-		  else
-		    break;
+		      found_room = TRUE;
+		      break;
+		    }
 		}
-	  
-	      /* If the depth is too wide, then rooms ok is false. */
-
-	      if (depth >= MAX_ELEVATION_RADIUS)
-		rooms_ok = FALSE;
 	    }
 	  
-	  if (num_rooms < MIN_ELEVATION_ROOMS)
-	    rooms_ok = FALSE;
-
-	  /* If the rooms aren't ok or if the start room doesn't
-	     exist, then bail out. Otherwise continue on. */
-	  if (!rooms_ok || !start_room)
-	    start_room = NULL;
-	  else
-	    break;
+	  if (!found_room || start_x < 1 || start_y < 1 ||
+	      start_x >= AREAGEN_MAX-1 || start_y >= AREAGEN_MAX-1)
+	    continue;
 	  
-	}
-      
-      /* Now link up the rooms. Start with the middle room This room must
-	 have an exit in the proper direction. */
-      
-      if (!start_room || !ok_elevation_room (start_room, link_dir))
-	continue;
-      
-      /* Make sure that the start room exists and that it's
-	 linked to something other than itself. */
-      if ((exit = FNV (start_room, opp_dir + 1)) == NULL ||
-	  exit->val[0] == start_room->vnum ||
-	  (nroom = find_thing_num (exit->val[0])) == NULL ||
-	  (nexit = FNV (nroom, RDIR(opp_dir) + 1)) == NULL ||
-	  nexit->val[0] != start_room->vnum)
-	continue;
-      
-      /* Link the middle rooms. */
-      exit->type = link_dir + 1;
-      nexit->type = RDIR(link_dir) + 1;
+	  /* Now pick an elevation dir. */
 
-      /* Now link the rooms. Start moving out in both directions
-	 from the start room and start linking things up. */
-      
-      for (count = 0; count < 2; count++)
-	{
+	  ridge_dir = nr (0, FLATDIR_MAX);
 	  
-	  room = start_room;
-	  curr_dir = (count == 0 ? elevation_dir : RDIR(elevation_dir));
-	  while (1)
+	  /* Now find the opp dir where the elevation will go.
+	     This is fairly simple: Use the 
+	     elevation dir + 2 mod FLATDIR_MAX So it's in an opp dir
+	     and the dirs are random. */
+	  
+	   opp_dir = (ridge_dir + 2) % FLATDIR_MAX;
+	  
+	 
+	  /* Check N/S ridges. We always go UP from the room where
+	     we're starting and down from the */
+	  if (ridge_dir == DIR_NORTH  || ridge_dir == DIR_SOUTH)
 	    {
-	      /* Make sure the next room along the ridge exists. */
-	      if ((exit = FNV (room, curr_dir + 1)) == NULL ||
-		  (room = find_thing_num (exit->val[0])) == NULL)
-		break;
+	      if (opp_dir == DIR_EAST)
+		new_x = start_x + 1;
+	      else
+		new_x = start_x - 1;
 	      
-	      /* Make sure that this isn't a room with a below room
-		 and it isn't a room with an U or D exit. */
-
-	      if (!ok_elevation_room (room, link_dir))
-		break;
+	      for (y = 0; y < AREAGEN_MAX && rooms_ok; y++)
+		{
+		  /* If both rooms exist, they can't have U/D Exits. */
+		  if ((room = find_thing_num (grid[start_x][y])) != NULL &&
+		      (nroom = find_thing_num (grid[new_x][y])) != NULL &&
+		      ((exit = FNV (room, DIR_UP + 1)) != NULL ||
+		       (exit = FNV (room, DIR_DOWN + 1)) != NULL ||
+		       (exit = FNV (nroom, DIR_DOWN + 1)) != NULL ||
+		       (exit = FNV (nroom, DIR_UP + 1)) != NULL))
+		    rooms_ok = FALSE;
+		}
 	      
-		
-	      /* Make sure that the proper exit heading in the
-		 proper direction across the ridge exists. */
-	      
-	      if ((exit = FNV (room, opp_dir + 1)) == NULL)
-		break;
-	      
-	      /* See if the opposite room exists and that it's
-		 not this room. If not, we just continue on. */
-
-	      if ((nroom = find_thing_num (exit->val[0])) == NULL ||
-		  nroom == room)
+	      if (!rooms_ok)
 		continue;
-	      
-	      /* But if there is a room, it must be ok. */
 
-	      if (!ok_elevation_room (nroom, RDIR(link_dir)))
-		break;
+	      /* Add the ridge by going down the same list of rooms
+		 and adding up and down exits. */
 
-	      /* Make sure the back exit goes to the original room. */
-	      
-	      if ((nexit = FNV (nroom, RDIR(opp_dir) + 1)) == NULL ||
-		  nexit->val[0] != room->vnum)
-		continue;
-	      
-	      exit->type = link_dir;
-	      nexit->type = RDIR(link_dir);
+	      for (y = 0; y < AREAGEN_MAX; y++)
+		{
+		  if ((room = find_thing_num (grid[start_x][y])) != NULL &&
+		      (nroom = find_thing_num (grid[new_x][y])) != NULL)
+		    {
+		      /* Remove the old exits. */
 
-	      
+		      if ((exit = FNV (room, opp_dir + 1)) != NULL)
+			remove_value (room, exit);
+		      if ((exit = FNV (nroom, RDIR(opp_dir) + 1)) != NULL)
+			remove_value (nroom, exit);
+
+		      /* Add in the new exits. */
+
+		      exit = new_value();
+		      exit->val[0] = nroom->vnum;
+		      exit->type = DIR_UP + 1;
+		      add_value (room, exit);
+		      exit = new_value();
+		      exit->val[0] = room->vnum;
+		      exit->type = DIR_DOWN + 1;
+		      add_value (nroom, exit);		      
+		    }
+		}
 	    }
-	  
-	}
+	  else
+	    {
 	      
+	      if (opp_dir == DIR_NORTH)
+		new_y = start_y + 1;
+	      else
+		new_y = start_y - 1;
+	      
+	      for (x = 0; x < AREAGEN_MAX && rooms_ok; x++)
+		{
+		  /* If both rooms exist, they can't have U/D Exits. */
+		  if ((room = find_thing_num (grid[x][start_y])) != NULL &&
+		      (nroom = find_thing_num (grid[x][new_y])) != NULL &&
+		      ((exit = FNV (room, DIR_UP + 1)) != NULL ||
+		       (exit = FNV (nroom, DIR_DOWN + 1)) != NULL))
+		    rooms_ok = FALSE;
+		}
+	      /* If the rooms are ok, so add the ridge in. */
+	      
+	      if (!rooms_ok)
+		continue;
+	      
+	       for (x = 0; x < AREAGEN_MAX; x++)
+		 {
+		   if ((room = find_thing_num (grid[x][start_y])) != NULL &&
+		       (nroom = find_thing_num (grid[x][new_y])) != NULL)
+		     { 
+		       /* Remove the old exits. */
+
+		       if ((exit = FNV (room, opp_dir + 1)) != NULL)
+			remove_value (room, exit);
+		      if ((exit = FNV (nroom, RDIR(opp_dir) + 1)) != NULL)
+			remove_value (nroom, exit);
+
+		      /* Add in the new exits. */
+		      
+		       exit = new_value();
+		       exit->val[0] = nroom->vnum;
+		       exit->type = DIR_UP + 1;
+		       add_value (room, exit);
+		       exit = new_value();
+		       exit->val[0] = room->vnum;
+		       exit->type = DIR_DOWN + 1;
+		       add_value (nroom, exit);
+		     }
+		 }
+	    }
+	  if (rooms_ok)
+	    break;
+	}
     }
   return;
 }
-
+ 
 /* This tells if a room is ok to use in a elevation. */
 
 bool
@@ -681,7 +641,7 @@ add_catwalks (THING *area)
   /* Now set the tree names for the extreme trees. This will be used
      to link catwalks between areas in the worldgen code. */
 
-  for (i = 0; i < 4; i++)
+  for (i = 0; i < FLATDIR_MAX; i++)
     {
       if ((room = find_thing_num (extremetree[i])) != NULL &&
 	  IS_ROOM (room) &&
@@ -828,7 +788,7 @@ find_tree_area (THING *area, int dir)
     return NULL;
 
   /* Find a tree with a certain direction named in it. */
-  if (dir >= DIR_NORTH && dir < 4)
+  if (dir >= DIR_NORTH && dir < FLATDIR_MAX)
     {
       sprintf (name, "%s_tree", dir_name[dir]);
       for (room = area->cont; room; room = room->next_cont)
@@ -1476,3 +1436,79 @@ add_guarded_mob (THING *room)
   return;
 }
   
+/* This adds shoreline rooms to an area. The idea is to look for rooms
+   next to watery rooms that aren't designated as "shore" rooms and give
+   them watery names 1/N of the time. */
+
+void 
+add_shorelines (THING *area)
+{
+  THING *room, *nroom = NULL;
+  /* Used to decide which watery room to name. */
+  int count, num_choices, num_chose, dir;
+  VALUE *exit;
+  char name[STD_LEN], *t;
+  
+  if (!area || !IS_AREA (area))
+    return;
+
+  for (room = area->cont; room; room = room->next_cont)
+    {
+      /* Only do nonwater nonroad rooms that aren't shores. */
+      if (!IS_ROOM (room) || is_named (room, "sector_patch") ||
+	  is_named (room, "detail") || is_named (room, "shore") ||
+	  IS_ROOM_SET (room, ROOM_WATERY | ROOM_EASYMOVE) ||
+	  nr (1,4) != 2)
+	continue;
+	  
+      num_choices = 0;
+      num_chose = 0;
+      
+      for (count = 0; count < 2; count++)
+	{
+	  for (dir = 0; dir < FLATDIR_MAX; dir++)
+	    {
+	      if ((exit = FNV (room, dir + 1)) != NULL &&
+		  (nroom = find_thing_num (exit->val[0])) != NULL &&
+		  IS_ROOM_SET (nroom, ROOM_WATERY) &&
+		  !is_named (nroom, "shore") &&
+		  !is_named (nroom, "detail") &&
+		  !is_named (nroom, "sector_patch") &&
+		  nroom->short_desc && *nroom->short_desc)
+		{
+		  if (count == 0)
+		    num_choices++;
+		  else if (--num_chose < 1)
+		    break;
+		}
+	    }
+	  if (count == 0)
+	    {
+	      if (num_choices < 1)
+		break;
+	      num_chose = nr (1, num_choices);	      
+	    }
+	}
+      if (dir < FLATDIR_MAX &&
+	  nroom && IS_ROOM_SET (nroom, ROOM_WATERY))
+	{
+	  sprintf (name, string_gen ("close_by shoreline", AREAGEN_AREA_VNUM));
+	  capitalize_all_words (name);
+	  for (t = name; *t; t++)
+	    {
+	      if (*t == '\n' || *t == '\r')
+		{
+		  *t = '\0';
+		  break;
+		}
+	    }
+	  strcat (name, " ");
+	  strcat (name, nroom->short_desc);
+	  free_str (room->short_desc);
+	  room->short_desc = new_str (name);
+	  append_name (room, "shore");
+	}
+    }
+  return;
+}
+	  

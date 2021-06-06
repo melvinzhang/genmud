@@ -4,11 +4,15 @@
 
 /* Max number of details per area is N. */
 
+
+
 #define DETAIL_MAX 30
 
 
 /* Max depth you can go to when trying to add details is N. */
 #define DETAIL_MAX_DEPTH 10 
+
+
 
 /* This is the detail generator for an area. It works using the area's
    size and main sector type. */

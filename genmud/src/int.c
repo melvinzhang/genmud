@@ -7,6 +7,7 @@
 #include "serv.h"
 #include "script.h"
 #include "wildalife.h"
+#include "craft.h"
 
 /* This function takes a single string inputted by a person and
    attempts to process it as a command. */
@@ -115,6 +116,14 @@ interpret (THING *th, char *arg)
     }
   if (!found)
     {
+      if (check_craft_command (th, arg))
+	{
+	  found = TRUE;
+	  done = TRUE;
+	}
+    }
+  if (!found)
+    {
       if (!found_social (th, arg))
 	{
 	  if (nr(1,3) == 2)
@@ -173,7 +182,43 @@ log_it (char *txt)
   fprintf (stderr, buf);
   return;
 }
-  
+
+CMD *
+new_cmd (void)
+{
+  CMD *newcmd;
+  if (cmd_free)
+    {
+      newcmd= cmd_free;
+      cmd_free = cmd_free->next;
+    }
+  else
+    {
+      newcmd = (CMD *) mallok (sizeof (CMD));
+    }
+  bzero (newcmd, sizeof (CMD));
+  newcmd->called_function = NULL;
+  newcmd->next = NULL;
+  newcmd->name = nonstr;
+  newcmd->word = nonstr;
+  return newcmd;
+}
+
+void
+free_cmd (CMD *cmd)
+{
+  if (!cmd)
+    return;
+
+  cmd->called_function = NULL;
+  free_str (cmd->name);
+  cmd->name = nonstr;
+  free_str (cmd->word);
+  cmd->word = nonstr;
+  cmd->next = cmd_free;
+  cmd_free = cmd;
+}
+
 /* This function takes a single command and adds it to the linked lists. */
 
 
@@ -181,7 +226,7 @@ void
 add_command (char *name, COMMAND_FUNCTION *funct, int level, bool log)
 {
   CMD *newcmd;
-  newcmd = (CMD *) mallok (sizeof (*newcmd));
+  newcmd = (CMD *) new_cmd (); 
   cmd_count++;
   newcmd->called_function = funct;
   newcmd->level = level;
@@ -215,24 +260,23 @@ init_command_list (void)
   add_command ("rating", do_rating, 0, FALSE);
   add_command ("skim", do_skim, 0, FALSE);
   add_command ("manage", do_manage, 0, FALSE);
-  add_command ("mine", do_mine, 0, FALSE);
+ 
 #ifdef USE_WILDERNES
   add_command ("sectors", do_sectors, BLD_LEVEL, FALSE);
 #endif
   add_command ("inspire", do_inspire, 0, FALSE);
   add_command ("demoralize", do_demoralize, 0, FALSE);
   add_command ("channels", do_channels, 0, FALSE);
-  add_command ("chop", do_chop, 0, FALSE);
+ 
   add_command ("capture", do_capture, 0, FALSE);
-  add_command ("gather", do_gather, 0, FALSE);
-  add_command ("collect", do_collect, 0, FALSE);
+  add_command ("craft", do_craft, 0, FALSE);
   add_command ("echo", do_echo, 0, FALSE);
-  add_command ("extrude", do_extrude, 0, FALSE);
   add_command ("exlist", do_exlist, BLD_LEVEL, FALSE);
   add_command ("peace", do_peace, 0, FALSE);
   add_command ("pfile", do_pfile, 0, FALSE);
   add_command ("description", do_description, 0, FALSE);
   add_command ("password", do_password, 0, FALSE);
+  add_command ("citygen", do_citygen, MAX_LEVEL, FALSE);
   add_command ("areagen", do_areagen, MAX_LEVEL, FALSE);
   add_command ("play", do_play, 0, FALSE);
   add_command ("areas", do_areas, 0, FALSE);
@@ -254,7 +298,7 @@ init_command_list (void)
   add_command ("imbue", do_imbue, 0, FALSE);
   add_command ("graft", do_graft, 0, FALSE);
   add_command ("investigate", do_investigate, 0, FALSE);
-  add_command ("forge", do_forge, 0, FALSE);
+  /*  add_command ("forge", do_forge, 0, FALSE); */
   add_command ("metalgen", do_metalgen, MAX_LEVEL, FALSE);
   add_command ("update", do_update, MAX_LEVEL, FALSE);
   add_command ("enchant", do_enchant, 0, FALSE);
@@ -284,6 +328,7 @@ init_command_list (void)
   add_command ("dismount", do_dismount, 0, FALSE);
   add_command ("pbase", do_pbase, 0, FALSE);
   add_command ("buck", do_buck, 0, FALSE);
+  add_command ("examine", do_look, 0, FALSE);
   add_command ("exits", do_exits, 0, FALSE);
   add_command ("think", do_think, 0, FALSE);
   add_command ("sset", do_sset, MAX_LEVEL, FALSE);
@@ -314,7 +359,6 @@ init_command_list (void)
   add_command ("flee", do_flee, 0, FALSE);
   add_command ("bs", do_backstab, 0, FALSE);
   add_command ("fire", do_fire, 0, FALSE);
-  add_command ("examine", do_look, 0, FALSE);
   add_command ("aim", do_fire, 0, FALSE);
   add_command ("load", do_load, 0, FALSE);
   add_command ("unload", do_unload, 0, FALSE);
@@ -368,7 +412,7 @@ init_command_list (void)
   add_command ("restore", do_restore, MAX_LEVEL, FALSE);
   add_command ("rest", do_rest, 0, FALSE);
   add_command ("unlearn", do_unlearn, 0, FALSE);
-  add_command ("build", do_build, 0, FALSE);
+  add_command ("citybuild", do_citybuild, 0, FALSE);
   add_command ("meditate", do_meditate, 0, FALSE);
   add_command ("zedit", do_zedit, 0, FALSE);
   add_command ("unstore", do_unstore, 0, FALSE);

@@ -181,7 +181,7 @@ society_activity (THING *th)
 	 fairly useful outside of societies. */
       
       if (IS_SET (flags, CASTE_BUILDER))
-	do_build (th, "");
+	do_citybuild (th, "");
       
       /* Shopkeepers want to get items to sell. They know what
 	 they want since if people try to buy something and
@@ -267,7 +267,7 @@ society_gather (THING *th)
   /* So, at this point the mob can gather, it isn't too overloaded, the
      room is of the proper type..so we do teh gather command. */
   
-     
+  
   gather_raw (th, (char *) gather_data[soc->val[3]].command);	      
   return;
 }
@@ -2409,7 +2409,8 @@ society_can_settle_in_area (SOCIETY *soc, THING *ar)
 	      if (soc->start[0] == soc2->start[0] )
 		{
 		  soc_in_area++;
-		  if (!str_cmp (soc->adj, soc2->adj))
+		  if (!str_cmp (soc->adj, soc2->adj) ||
+		      (!*soc->adj && !*soc2->adj))
 		    soc_in_area += 10;
 		}
 	    }
@@ -2436,6 +2437,7 @@ update_patrols (SOCIETY *soc)
   char buf[STD_LEN];
   
   if (!soc || nr (1,120) != 47 ||
+      nr (1,15) != 3 ||
       (total_warriors = find_num_members (soc, BATTLE_CASTES)) < soc->population_cap/3 ||
       (oldarea = find_area_in (soc->room_start)) == NULL)
     return;
@@ -2446,7 +2448,8 @@ update_patrols (SOCIETY *soc)
   if ((area = find_random_area(0)) == NULL ||
       area == oldarea || ALIGN(area) > 0 ||
       (room = find_random_room (area, FALSE, 0, BADROOM_BITS)) == NULL ||
-      !IS_ROOM (room))
+      !IS_ROOM (room) ||
+      IS_AREA_SET (area, AREA_NOSETTLE | AREA_NOLIST | AREA_NOREPOP))
     return;
   
   /* Find a battle mob in our society zone not doing anything,

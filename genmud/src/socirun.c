@@ -35,9 +35,9 @@ society_run_away (SOCIETY *soc)
       return;
     }
   if (soc->alert < 10 ||
-      soc->recent_maxpop < 40 ||
+      soc->recent_maxpop > 40 ||
       soc->population > soc->recent_maxpop/3 ||
-      nr (1,300) != 75)
+      nr (1,60) != 50)
     return;
   
   

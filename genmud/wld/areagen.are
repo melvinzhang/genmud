@@ -5,7 +5,7 @@ HWT 0 0
 Timer 11
 Short The Areagen Area`
 type Lonath`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 28
 END_THING
 
@@ -417,6 +417,10 @@ Damp
 Cold
 Rubble-Filled
 Rock-Filled
+Dank
+Musty
+Dark
+Lightless
 `
 END_THING
 
@@ -957,6 +961,48 @@ Colorful
 Bright
 Dangerous
 Verdant
+`
+END_THING
+
+THING 107150
+Name close_by`
+HWT 0 0
+Desc near
+'near by'
+by
+along
+'close to'
+'close by'
+at
+alongside
+'next to'
+beside
+''
+''
+''
+''
+atop
+over
+on
+overlooking
+`
+END_THING
+
+THING 107151
+Name shoreline`
+HWT 0 0
+Desc 'the banks of'
+'the shore of'
+''
+''
+''
+''
+'the banks of'
+''
+''
+''
+'the side of'
+'the edge of'
 `
 END_THING
 

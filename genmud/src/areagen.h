@@ -20,7 +20,7 @@
 /* These are the min and max levels that areas can have when you're
    making mobs for them. */
 
-#define AREA_LEVEL_MIN 20
+#define AREA_LEVEL_MIN 10
 #define AREA_LEVEL_MAX 400
 
 
@@ -96,7 +96,12 @@ char *generate_road_name(int sector_type);
 
 /* This generates the roads in an area. */
 
-void add_roads (THING *area);
+void add_roads (THING *area, int go_dirs);
+
+/* This adds a road to an area. If the end_edge is REALDIR_MAX, it makes a
+   half road that stops at the first road it meets. */
+
+void add_road (THING *area, int start_edge, int end_edge);
 
 /* This adds some extra curve or turn names to roads in an area. */
 
@@ -243,3 +248,13 @@ void add_guarded_mob (THING *room);
    dir_edge. */
 
 void mark_area_edges (THING *area);
+
+
+/* This adds shoreline room names near water in areas. */
+
+void add_shorelines (THING *area);
+
+
+/* This lets you generate a new desc and sector type for a room. */
+
+void roomgen (THING *th, THING *room, char *arg);

@@ -261,7 +261,7 @@ read_code (FILE *f)
   code = new_code ();
   
   code->name = new_str (read_string (f));
-  code->code = new_str (read_string (f));
+  code->code = new_str (add_color(read_string (f)));
   code->flags = read_number (f);
   return code;
 }

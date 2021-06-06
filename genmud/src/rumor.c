@@ -1413,8 +1413,7 @@ get_delivery_quest (THING *th)
   while (obj->wear_pos == ITEM_WEAR_BELT);
   weapon_type = generate_weapon_type();
   objectgen_generate_names (name, color, obj->wear_pos,
-			    NULL, NULL,
-			    weapon_type, DEITY_LEVEL);
+			    weapon_type, DEITY_LEVEL, NULL);
   
   for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
     {
@@ -1437,6 +1436,11 @@ get_delivery_quest (THING *th)
   
   
   package->val[1] = 0;
+
+  
+  /* Maybe players will give resources to a society then take a package
+     from it to another to "double dip" in the rewards. =D */
+
   for (i = 0; i < RAW_MAX; i++)
     {
       package->val[1] += start_soc->raw_curr[i]/20;

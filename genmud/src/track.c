@@ -42,25 +42,18 @@ const char *hunting_type_names[HUNT_MAX] =
 TRACK *
 new_track (void)
 {
-  TRACK *trk;
-  
-  if (track_free)
-    {
-      trk = track_free;
-      track_free = track_free->next;
-    }
-  else
-    {
-      trk = (TRACK *) mallok (sizeof (*trk));
-      track_count++;
-    }
-  trk->dir_from = DIR_MAX;
-  trk->dir_to = DIR_MAX;
-  trk->move_set = FALSE;
-  trk->who = NULL;
-  trk->timer = 0;
-  trk->next = NULL;
-  return trk;
+  TRACK *newtrack;
+  if (!track_free)
+    ADD_TO_MEMORY_POOL(TRACK,track_free,track_count);
+  newtrack = track_free;
+  track_free = track_free->next;
+  newtrack->dir_from = DIR_MAX;
+  newtrack->dir_to = DIR_MAX;
+  newtrack->move_set = FALSE;
+  newtrack->who = NULL;
+  newtrack->timer = 0;
+  newtrack->next = NULL;
+  return newtrack;
 }
 
 
@@ -362,16 +355,11 @@ BFS *
 new_bfs (void)
 {
   BFS *newbfs;
-  if (bfs_free)
-    {
-      newbfs = bfs_free;
-      bfs_free = bfs_free->next;
-    }
-  else
-    {
-      newbfs = (BFS *) mallok (sizeof (*newbfs));
-      bfs_count++;
-    }
+  if (!bfs_free)
+    ADD_TO_MEMORY_POOL(BFS,bfs_free,bfs_count);
+  newbfs = bfs_free;
+  bfs_free = bfs_free->next;
+  
   /* This is dangerous not initializing here...so if you run into problems,
      this is where they originate. :P */
   /*  newbfs->next = NULL;
@@ -455,14 +443,14 @@ hunt_thing (THING *th, int max_depth)
 { 
   THING *nroom,  /* Next room for adding bfses to list. */
     *room,       /* Current room being searched. */
-    *vict,       /* The victim (if you find it). */
-    *obj,        /* An object you have on you (ranged) or obj in room. */
-    *objc,       /* Used for checking if an obj contains the vict. */
-    *croom,      /* Current room -- used for ranged. */
-    *your_vict,  /* If you already have a vict, use this. */
-    *targ,       /* Target for casting/shooting. */
     *target_room,  /* What room we're hunting. */
-    *closest_diff_society_vict; /* What thing we attack if we soci hunt. */
+    *vict,       /* The victim (if you find it). */
+    *your_vict,  /* If you already have a vict, use this. */
+    *croom,      /* Current room -- used for ranged. */
+    *targ,       /* Target for casting/shooting. */
+    *closest_diff_society_vict, /* What thing we attack if we soci hunt. */
+    *obj,        /* An object you have on you (ranged) or obj in room. */
+    *objc;       /* Used for checking if an obj contains the vict. */
   bool found_within_range, found, tracks_ok, society_hunt;
   int vnum, i, hunting_type, range, dist;
   char *nme;
@@ -925,7 +913,7 @@ hunt_thing (THING *th, int max_depth)
 			      (room = find_thing_num (exit->val[0])) != NULL &&
 			      IS_ROOM (room) && !IS_BADROOM (room))
 			    {
-			      move_dir (th, dir);
+			      move_dir (th, dir, 0);
 			      return TRUE;
 			    }
 			}
@@ -1069,7 +1057,7 @@ hunt_thing (THING *th, int max_depth)
 	  IS_SET (exit->val[1], EX_CLOSED))
 	do_open (th, dir_name[trk->dir_to]);
       else
-	move_dir (th, trk->dir_to);
+	move_dir (th, trk->dir_to, 0);
       return TRUE;
     }
   
@@ -1471,7 +1459,7 @@ attack_stuff (THING *th)
   
   if (vict)
     {
-      act ("@1n are@s being attacked.", vict, NULL, NULL, NULL, TO_ALL);
+      act ("@1n is@s being attacked.", vict, NULL, NULL, NULL, TO_ALL);
       /* See if the victim has been captured. */
       if ((vsocval = FNV (vict, VAL_SOCIETY)) != NULL)
 	esociety = find_society_num (vsocval->val[5]);

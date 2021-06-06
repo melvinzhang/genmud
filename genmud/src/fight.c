@@ -267,8 +267,6 @@ multi_hit (THING *th, THING *vict)
 		  check_spell (th, NULL,  572 /* 3rd attack */) && 
 		  (!used_weapon || RAVAGE || nr (1,2) != 1))
 		num_hits++;
-	      if (!IS_PC (th))
-		num_hits += nr (0, LEVEL (th)/40);
 	    }
 	  /* Now do the actual hits... */
   	  num_hits += nr (0, wpn->val[3]);
@@ -1109,7 +1107,7 @@ damage (THING *th, THING *vict, int dam, char *word)
       if (IS_SET (flags, PC_ASCENDED))
 	dam /= 2;
       if ((align = FALIGN(vict)) != NULL)
-	dam += dam*(align->relic_amt+align->power_bonus)/100;
+	dam -= dam*(align->relic_amt+align->power_bonus)/100;
     }
   
   /* Defensive bonus for built up cities. */
@@ -2048,6 +2046,9 @@ make_corpse (THING *vict, THING *killer)
   if (IS_PC (vict))
     corpse->thing_flags |= TH_NO_TAKE_BY_OTHER;
   
+
+  /* Npc on Npc kills don't drop loot in Arkane's code. */
+#ifndef ARKANE
   if (!empty_corpse)  
     add_money (corpse, total_money (vict));
   sub_money (vict, total_money (vict));
@@ -2062,6 +2063,7 @@ make_corpse (THING *vict, THING *killer)
       else
 	thing_to (obj, vict->in);
     }
+#endif
   return corpse;
 }
 
@@ -2162,7 +2164,7 @@ TO_ALL);
     if (IS_SET (dirs, (1 << i)) && ++dirchose == chose)
       break;  
   
-  if (move_dir (th, i + 69))
+  if (move_dir (th, i, MOVE_FLEE))
     {
       if (start_in->cont)
 	act ("$A@2n panics and flees @t!$7", start_in->cont, th, NULL,dir_name[i], TO_ALL);
@@ -2198,7 +2200,7 @@ TO_ALL);
 		if (IS_SET (dirs, (1 << i)) && ++dirchose == chose)
 		  break;  
 	      
-	      move_dir (th, i);
+	      move_dir (th, i, 0);
 	    }
 	}
       else if (th->hp < th->max_hp/4)

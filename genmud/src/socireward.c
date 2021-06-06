@@ -156,17 +156,15 @@ society_give_reward (THING *giver, THING *receiver, int reward_type, int reward)
     sprintf (buf, "Thank you %s.", NAME (receiver));
   do_say (giver, buf);
   /* Cap the reward. */
-  reward = MID (1, reward, 1000);
+  reward = MID (1, reward, REWARD_AMOUNT_MAX);
   
   /* First add the exp. */
-  add_exp (receiver, reward*100);
+  add_exp (receiver, reward*REWARD_EXP_MULT);
   
   add_money (receiver, reward);
   act ("@1n give@s some money to @3f.", giver, NULL, receiver, NULL, TO_ALL);
   
-  receiver->pc->quest_points += reward/10;
-  if (reward < 10 && nr (1,10) <= reward)
-    receiver->pc->quest_points++;
+  receiver->pc->quest_points += nr (reward, reward+REWARD_QPS_DIVISOR-1)/REWARD_QPS_DIVISOR;
   return TRUE;
 }
 
@@ -181,8 +179,8 @@ add_society_reward (THING *th, THING *to, int type, int amount)
     return;
   
   /* Dork checking. */
-  if (amount > 1000)
-    amount = 1000;
+  if (amount > REWARD_AMOUNT_MAX)
+    amount = REWARD_AMOUNT_MAX;
 
   if (th->pc->society_rewards[type] < 0)
     th->pc->society_rewards[type] = 0;

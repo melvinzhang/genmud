@@ -12,6 +12,7 @@
 #include "detailgen.h"
 
 
+
 /* Global society name used because I don't feel like passing it
    around to all of the functions. */
 
@@ -717,7 +718,7 @@ add_detail_resets (THING *area, THING *to, THING *detail_thing, int depth)
 		  (new_detail_thing = 
 		   objectgen (area, ITEM_WEAR_NONE, 
 			      nr (to->level*2/3, to->level*5/4), 
-			      0, NULL, NULL)) != NULL)
+			      0, NULL)) != NULL)
 		{
 		  newreset = new_reset();
 		  newreset->vnum = new_detail_thing->vnum;
@@ -1061,7 +1062,7 @@ generate_detail_name (THING *proto, THING *target)
         /* If the word belongs to another edesc add a random word... */
 	  if ((wdesc = find_edesc_thing (proto, lookup_word, TRUE)) != NULL)
 	    {
-	      strcpy (word, full_named_in (wdesc->desc, target->short_desc));
+	      strcpy (word, string_found_in (wdesc->desc, target->short_desc));
 	      if (!*word)
 		strcpy (word, find_random_word (wdesc->desc, NULL));
 	    }

@@ -64,6 +64,37 @@ f_word (char *ol, char *nw)
   return ol;
 }  
 
+/* This returns the next line of text. It assumes that it's not
+   more than STD_LEN long. */
+
+char *
+f_line (char *ol, char *nw)
+{
+  if (!ol)
+    {
+      if (nw)
+	*nw = '\0';
+      return ol;
+    }
+  
+  while (*ol && *ol != '\n' && *ol != '\r')
+    {
+      *nw = *ol;
+      nw++;
+      ol++;
+    }
+  /* If this isn't the end, go past the \r in the \n\r EOL. */
+  if (*ol)
+    {
+      ol++;
+      if (*ol == '\r')
+	ol++;
+    }
+  *nw = '\0';
+  return ol;
+}
+
+
 /* This checks if the small string (a) is the same as the beginning of
    the big string (b). If the big string (b) ends too soon, then it
    returns as not the same, but if the small string ends first then
@@ -224,29 +255,50 @@ named_in_full_word (char *search_in, char *look_for)
    string. */
 
 char *
-full_named_in (char *search_in, char *look_for)
+string_found_in (char *search_in, char *look_for)
 { 
   static char look_for_word[STD_LEN*2];
   char *pos;
+  
   if (!search_in || !look_for || !*search_in || !*look_for)
     return nonstr;
   
-  /* Strip off the first word in the list of names to look for
-     and look for it. */
   
   do 
     {
-      look_for = f_word (look_for, look_for_word);      
+      look_for = f_word (look_for, look_for_word);
       if (*look_for_word &&
-	  (pos = strstr (search_in, look_for_word)) != NULL &&
-	  (pos == search_in || isspace (*(pos - 1))))
+	  ((pos = strstr (search_in, look_for_word)) == NULL || 
+	   (pos != search_in || isspace (*(pos - 1)))))
 	return look_for_word;
     }
   while (*look_for);
   
   return nonstr;
 }
+
+/* This checks to see if every word in the list we have is found in the
+   string of words to search in. */
+
+bool
+named_in_all_words (char *search_in, char *look_for)
+{
+  char look_for_word[STD_LEN];
   
+  if (!search_in || !*search_in)
+    return FALSE;
+  
+  
+  while (look_for && *look_for)
+    {
+      look_for = f_word (look_for, look_for_word);
+      
+      if (!named_in (search_in, look_for_word))
+	return FALSE;
+    }
+  return TRUE;
+}
+
 /* This assumes that the buffer has room for a few more characters
    and that we return most of the same string in place. Since I 
    use big fixed-length buffers a lot, this shouldn't be too 
@@ -280,7 +332,8 @@ possessive_form (char *txt)
     strcat (txt, "ies'");
   else if (c == 'o')
     strcat (txt, "oes'");
-  else if (c == 'f')
+  /* thief -> thieves, but hippogriff -/> hippogrifves. :P */
+  else if (c == 'f' && t > txt && (LC(*(t-1)) != 'f'))
     strcat (txt, "ves'");
   else /* Add the last letter back on and then add the s' or ' */
     {

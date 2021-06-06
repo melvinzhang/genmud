@@ -14,7 +14,7 @@
 #include "detailgen.h"
 #include "mobgen.h"
 
-
+ 
 /* These are the kinds of patches you can use to make areas. */
 
 const int sector_patchtypes[SECTOR_PATCHTYPE_MAX] =
@@ -58,6 +58,8 @@ areagen (THING *th, char *arg)
 			  the area. */
   THING *ar2; /* Used to find if the area name is valid. */
   int vnum;
+  int dir;
+  int i;
   MAPGEN *map, *map_part[AREAGEN_MAP_PART_MAX];
   char buf[STD_LEN];
   char namebuf[STD_LEN], *t;   /* The name of the area. */
@@ -65,12 +67,13 @@ areagen (THING *th, char *arg)
   char realnamebuf[STD_LEN]; /* The real full name the area used in the
 				game. */
   char filetypebuf[STD_LEN];
-  bool name_ok = FALSE;
+  bool name_ok = FALSE;  /* Is the filename for the area ok? */
+  int go_dirs = 0;   /* Directions the area goes in...not just big blob. */
   int arealevel;
   int length; /* sqrt of size -- length of the area generated. */
   int num_map_parts = 1;
   /* Curr length and width of the map. */
-  int curr_length, curr_width;
+  int curr_length = 0, curr_width;
   /* These are the max and min number of rooms in the area allowed. 
      They aren't close to area->mv so that there are lots of rooms
      left over for trees and catwalks and special locations. */
@@ -81,6 +84,13 @@ areagen (THING *th, char *arg)
   arg = f_word (arg, arg1);
   start = atoi (arg1);
   
+  if (start <= 1)
+    {
+      stt ("areagen <start> <size> <type> [<level>]\n\r", th);
+      stt ("Start must be a number where the new area will start.\n\r", th);
+      return;
+    }
+
   arg = f_word (arg, arg1);
   size = atoi (arg1);
   
@@ -89,6 +99,11 @@ areagen (THING *th, char *arg)
   if ((type = atoi (arg1)) == 0)
     type = find_bit_from_name (FLAG_ROOM1, arg1);
   
+  if (!IS_SET (type, ROOM_SECTOR_FLAGS))
+    {
+      stt ("You can only setup areas with room sector flags as a base!\n\r", th);
+      return;
+    }
   /* Add the type of area this is. */
   
   sprintf (filetypebuf, arg1);
@@ -96,11 +111,23 @@ areagen (THING *th, char *arg)
  
    /* We can also specify a level. Othewise the level is size/10. */
   
-
-  if (atoi(arg) >= 0)
-    arealevel = atoi (arg);
-  else
+  
+  if (atoi(arg) > 0)
+    arealevel = atoi (arg);  
+  else      
     arealevel = size/10;
+  
+  
+  for (t = arg; *t; t++)
+    {
+      for (dir = 0; dir < FLATDIR_MAX; dir++)
+	{
+	  if (LC(*t) == dir_name[dir][0])
+	    {
+	      go_dirs |= (1 << dir);
+	    }
+	}
+    }
   
   
   /* Sanity checks. */
@@ -123,7 +150,9 @@ areagen (THING *th, char *arg)
   if ((area = find_thing_num (start)) != NULL &&
       area->cont)
     area = NULL;
-      
+  
+  /* If this area already exists, we don't check it really except
+     to make sure the rooms/mobjects won't overlap other areas. */
   if (!check_area_vnums (area, start, start + size - 1))
     {
       stt ("areagen <start> <size> <type> [<level>]\n\r", th);
@@ -151,8 +180,8 @@ areagen (THING *th, char *arg)
   add_thing_to_list (area);
   set_up_new_area(area, size);
   area->mv = size*4/5;
-  min_num_rooms = area->mv*2/5;
-  max_num_rooms = area->mv*3/5;    
+  min_num_rooms = area->mv/3;
+  max_num_rooms = area->mv*2/3;    
   area->max_mv = size;
   area->level = arealevel;
   add_flagval (area, FLAG_ROOM1, type);
@@ -163,7 +192,7 @@ areagen (THING *th, char *arg)
   while (!name_ok && name_times < 100)
     {
       name_ok = TRUE;
-      strcpy (namebuf, create_society_name (NULL));
+      strcpy (namebuf, capitalize(create_society_name (NULL)));
       if (strlen (namebuf) < 4)
 	name_ok = FALSE;
       else
@@ -200,22 +229,34 @@ areagen (THING *th, char *arg)
 	}
     }
   
+  
+  /* If the name matches, then try to randomize the name a bit. */
   if (ar2)
     { 
-      sprintf (filenamebuf, "%s%s%cqz.are",
-	       namebuf, filetypebuf, nr ('a','z')); 
       
-      /* Not likely to see two matching names in a row. */
+      int tries;
       
-      for (ar2 = the_world->cont; ar2 != NULL; ar2 =ar2->next_cont)
+      for (tries = 0; tries < 10; tries++)
 	{
-	  if (ar2 != area &&
-	      !str_cmp (ar2->name, arg))
-	    {	  
-	      break;
+	  sprintf (filenamebuf, "%s%s%cqz.are",
+		   namebuf, filetypebuf, nr ('a','z')); 
+	  
+	  /* Not likely to see two matching names in a row. */
+	  
+	  for (ar2 = the_world->cont; ar2 != NULL; ar2 =ar2->next_cont)
+	    {
+	      if (ar2 != area &&
+		  !str_cmp (ar2->name, arg))
+		{	  
+		  break;
+		}
 	    }
+	  
+	  if (!ar2)
+	    break;
 	}
       
+      /* Failed to find a different name after several tries. :( */
       if (ar2)
 	{
 	  stt ("Again a matching name found. Bailing out.\n\r", th);
@@ -244,53 +285,157 @@ areagen (THING *th, char *arg)
   
   /* Now generate the map. The map consists of 1-4 map parts that
      get overlaid to try to make more random maps. */
-
-  num_map_parts = nr (2,AREAGEN_MAP_PART_MAX);
+ /* If this area goes in certain directions, you must attempt to
+	 make parts for each of those directions. */
+      
+  if (go_dirs != 0)
+    num_map_parts = FLATDIR_MAX;
+  else
+    num_map_parts = nr (2,AREAGEN_MAP_PART_MAX);
 
   
 
   
-  for (map_times = 0; map_times < 100; map_times++)
+  for (map_times = 0; map_times < 500; map_times++)
     {      
       map = NULL;
       
       for (count = 0; count < AREAGEN_MAP_PART_MAX; count++)
 	map_part[count] = NULL;
       
+      
       for (count = 0; count < num_map_parts; count++)
-	{	
-	  dx = count % 2;
-	  dy = (count+1) %2;
+	{
 	  
 	  curr_length = nr (length*5/4, length*3/2)/(num_map_parts);
 	  if (curr_length < 1)
 	    curr_length = 1;
 	  curr_width = size/(nr (curr_length, curr_length*3/2)*(num_map_parts));
+	  
+	  /* For regular areas, go to the old code. */
+	  if (go_dirs == 0)
+	    {
+	      dx = count % 2;
+	      dy = (count+1) %2;
+	     
+	    }
+	  else  /* Go dirs is > 0 */
+	    {
+	      if (!IS_SET (go_dirs, (1 << count)))
+		continue;
+	      
+	      dx = 0;
+	      dy = 0;
+	      
+	      
+		  
+	      /* THIS MAKES HEAVY USE OF THE ORDERING OF THE DIR_XXXX 
+		 CONSTANTS IN SERV.H ! */
+	      
+	      if (count <= DIR_SOUTH)
+		{
+		  dy = (1-2*count)*50;
+		  if (IS_SET (go_dirs, (1 << DIR_EAST)))
+		    dx += nr (5,10);
+		  if (IS_SET (go_dirs, (1 << DIR_WEST)))
+		    dx -= nr (5,10);
+		}
+	      else /* EW parts */
+		{
+		  dx = (5- 2*count)*50;
+		  if (IS_SET (go_dirs, (1 << DIR_NORTH)))
+		    dy += nr (5,10);
+		  if (IS_SET (go_dirs, (1 << DIR_SOUTH)))
+		    dy -= nr (5,10);
+		} 
+	      
+	      curr_width = curr_width*2/3;
+	      if (curr_width < 7)
+		curr_width = 7;
+	      curr_length = curr_length*2;
+	    }
+	  
 	  sprintf (buf, "%d %d %d %d %d %d %d %d",
 		   dx, 
 		   dy, 
 		   curr_length,
 		   curr_width,
-		   nr (1,2),
+		       nr (1,2),
 		   /* Making the number below this higher (like 9+) makes
 		      the areas "thinner" and therefore it's cheaper
 		      to do tracking and it will cut down on CPU quite
 		      a bit. */
 		   nr (8,9) ,
-		   nr (5,15),
-		   nr(0,size/300));
+		   nr (10,20),
+		   nr (0, size/100));
 	  map_part[count] = mapgen_generate (buf);
 	}
-      
-      map = map_part[0];
-      map_part[0] = NULL;
+      map = NULL;
+      for (i = 0; i < num_map_parts; i++)
+	{
+	  if (map_part[i] != NULL)
+	    {
+	      map = map_part[i];
+	      map_part[i] = NULL;
+	      break;
+	    }
+	}
       for (count = 0; count < num_map_parts; count++)
-	{	    
+	{
+	  if (go_dirs != 0)
+	    {
+	      dx = 0;
+	      dy = 0;
+	      if (!IS_SET (go_dirs, (1 << count)))
+		continue;
+	      /* Combine the edges together only. */
+	      if (count == DIR_NORTH)
+		dy = curr_length*5/4;
+	      else if (count == DIR_SOUTH)
+		dy = -curr_length*5/4;
+	      else if (count == DIR_WEST || count == DIR_EAST)
+		{ /* E/W Get added later and if the map only has
+		     an N or S component, then these get added up
+		     or down respectively to make the map look correct. */
+		  if (IS_SET (go_dirs, (1 << DIR_NORTH)))
+		    {
+		      if (IS_SET (go_dirs, (1 << DIR_SOUTH)))
+			dy = curr_length*3/5;
+		      else
+			dy = curr_length*5/4;	
+		    }	  
+		  else if (IS_SET (go_dirs, (1 << DIR_SOUTH)))
+		    dy = -curr_length*5/4;
+		  /*
+		      if (IS_SET (go_dirs, (1 << RDIR(count))))
+			dy = curr_length*5/4;
+		      else if (!IS_SET (go_dirs, (1 << DIR_SOUTH)))
+			dy = -curr_length*5/4;
+		    }
+		  else if (IS_SET (go_dirs, (1 << DIR_SOUTH)))
+		    {
+		      if (IS_SET (go_dirs, (1 << RDIR(count))))
+			dy = -curr_length*5/4;
+		      else if (!IS_SET (go_dirs, (1 << DIR_NORTH)))
+			dy = curr_length*5/4;
+		    }
+		  */
+		  if (count == DIR_WEST)
+		    dx = -curr_length*5/4;
+		  else if (count == DIR_EAST) 
+		    dx = curr_length*5/4;
+		 
+		}
+	    }
+	  else
+	    {
+	      dx = nr (-length/2, length/2);
+	      dy = nr (-length/2, length/2);
+	    }
 	  if ((map = mapgen_combine 
 	       (map, map_part[count], 
-		nr (-length/2, length/2),
-		nr (-length/2, length/2))) == NULL)
-	    {
+		dx, dy)) == NULL)
+	  {
 	      int count2;
 	      free_mapgen (map);
 	      map = NULL;
@@ -309,6 +454,10 @@ areagen (THING *th, char *arg)
 	  if (map->num_rooms < min_num_rooms ||
 	      map->num_rooms > max_num_rooms)
 	    {
+	      if (map->num_rooms < min_num_rooms)
+		length++;
+	      else
+		length--;
 	      free_mapgen (map);
 	      map = NULL;
 	    }
@@ -359,7 +508,7 @@ areagen (THING *th, char *arg)
     {
       /* Now add the "roads" into the area. */
  
-      add_roads (area);
+      add_roads (area, go_dirs);
       /* Add water to the area. */
       
       add_water (area);
@@ -373,6 +522,7 @@ areagen (THING *th, char *arg)
   add_room_descriptions (area);
   /* This tries to reconnect any sections that were disconnected by
      water. First pass -- no bad bridges, 2nd pass -- yes bad bridges. */
+  
   
   if (type != ROOM_WATERY)
     fix_disconnected_sections (area);
@@ -407,7 +557,8 @@ areagen (THING *th, char *arg)
   
   add_elevations (area);
   
-    
+  add_shorelines (area);
+
   /* This adds some secret doors to the area. */
   
   add_secret_doors (area);
@@ -585,27 +736,22 @@ generate_area_name (char *name, int type)
 }
 
 
-/* This adds roads to an area. */
+/* This adds roads to an area. It only adds roads between the 
+   edges defined in the go_dirs bits. */
 
 void
-add_roads (THING *area)
+add_roads (THING *area, int go_dirs)
 {
-  int num_roads = 2, dir;
-  THING *room, *nroom;
-  VALUE *exit;
-  int i;
+  int num_roads = 2;
   int sector_type;
-  char roadname[STD_LEN];
-  BFS *bfs;
   bool half_road = FALSE;
-  /* The road starting and ending points. */
-  THING *road_start_room, *road_end_room, *temp_room;
-
+  int start_dir, end_dir;
   /* This is the number of full roads that fully cross the area. */
   
   int ns_roads = 0, ew_roads = 0;
   int num_full_roads = 0;
   int road_loop;
+  int num_dirs = 0, i; /* Number of dirs this area goes. */
   bool ew_road, ns_road;
   
   if (!area || !IS_AREA (area))
@@ -614,19 +760,85 @@ add_roads (THING *area)
   if ((sector_type = flagbits (area->flags, FLAG_ROOM1)) == 0)
     return;
   
-  /* Number of roads is proportional to the size of the area. */
-
-  for (i = 0; i < area->mv/DETAIL_DENSITY; i++)
-    num_roads += nr (0,1);
+  for (i = 0; i < FLATDIR_MAX; i++)
+    if (IS_SET (go_dirs, (1 << i)))
+      num_dirs++;
   
-  /* Some of the roads are full roads that go edge to edge...some are
-     half roads that stop as soon as they're adjacent to another road. */
-  num_full_roads = nr (num_roads/5, num_roads*2/3);
-    
-  if (num_roads < 1)
+  if (num_dirs == 1) /* 1 direction area...no roads...it's a dead end. */
     return;
-  
-  
+
+  /* 3 dirs...find the missing one -- make a full road on the long axis
+     and a short one on the opp axis. */
+  	
+  /* All or none set, we do a "Regular" area. */
+  if (num_dirs == 0 || num_dirs == FLATDIR_MAX)
+    {
+      /* Number of roads is proportional to the size of the area. */
+      
+      for (i = 0; i < area->mv/DETAIL_DENSITY; i++)
+	num_roads += nr (0,1);
+      
+      /* Some of the roads are full roads that go edge to edge...some are
+	 half roads that stop as soon as they're adjacent to another road. */
+      num_full_roads = nr (num_roads/5, num_roads*2/3);
+      
+      if (num_roads < 1)
+	return;
+    }
+  else if (num_dirs == 3) /* Num dirs 3. */ 
+    {
+      /* Ew is main. */
+      if (!IS_SET (go_dirs, (1 << DIR_NORTH)) || 
+	  !IS_SET (go_dirs, (1 << DIR_SOUTH)))
+	{
+	  /* Add the long EW road. */
+	  add_road (area, DIR_EAST, DIR_WEST);
+	  if (IS_SET (go_dirs, (1 << DIR_NORTH)))
+	    add_road (area, DIR_NORTH, REALDIR_MAX);
+	  else if (IS_SET (go_dirs, (1 << DIR_SOUTH)))
+	    add_road (area, DIR_SOUTH, REALDIR_MAX);
+	}
+      else
+	{
+	  add_road (area, DIR_NORTH, DIR_SOUTH);
+	  if (IS_SET (go_dirs, (1 << DIR_EAST)))
+	    add_road (area, DIR_EAST, REALDIR_MAX);
+	  else if (IS_SET (go_dirs, (1 << DIR_WEST)))
+	    add_road (area, DIR_WEST, REALDIR_MAX);
+	}
+      return;
+    }
+  else if (num_dirs == 2)
+    {
+      start_dir = REALDIR_MAX;
+      end_dir = REALDIR_MAX;
+      if (IS_SET (go_dirs, (1 << DIR_NORTH)))
+	start_dir = DIR_NORTH;
+      if (IS_SET (go_dirs, (1 << DIR_SOUTH)))
+	{
+	  if (start_dir != REALDIR_MAX)
+	    end_dir = DIR_SOUTH;
+	  else
+	    start_dir = DIR_SOUTH;
+	}
+      if (IS_SET (go_dirs, (1 << DIR_EAST)))
+	{
+	  if (start_dir != REALDIR_MAX)
+	    end_dir = DIR_EAST;
+	  else
+	    start_dir = DIR_EAST;
+	}
+      if (IS_SET (go_dirs, (1 << DIR_WEST)))
+	{
+	  if (start_dir != REALDIR_MAX)
+	    end_dir = DIR_WEST;
+	  else
+	    /* Shouldn't be possible...*/
+	    start_dir = DIR_WEST;
+	}
+      add_road (area, start_dir, end_dir);
+      return;
+    }  
   for (road_loop = 0; road_loop < num_roads; road_loop++)
     {
       if (road_loop > num_full_roads)
@@ -651,110 +863,136 @@ add_roads (THING *area)
       
       if (ew_road)
 	{
-	  road_start_room = find_room_on_area_edge (area, DIR_WEST, 0);
-	  road_end_room = find_room_on_area_edge (area, DIR_EAST, 0);
+	  start_dir = nr (DIR_EAST, DIR_WEST);
+	  if (half_road)
+	    end_dir = REALDIR_MAX;
+	  else
+	    end_dir = RDIR (start_dir);	  
+	  add_road (area, start_dir, end_dir);
 	  ew_roads++;	
 	}
       else
 	{
-	  road_start_room = find_room_on_area_edge (area, DIR_NORTH, 0);
-	  road_end_room = find_room_on_area_edge (area, DIR_SOUTH, 0);
+	  start_dir = nr (DIR_NORTH, DIR_SOUTH);
+	  if (half_road)
+	    end_dir = REALDIR_MAX;
+	  else
+	    end_dir = RDIR (start_dir);	  
+	  add_road (area, start_dir, end_dir);
 	  ns_roads++;
 	}
-      
-      
-      if (!road_start_room || !road_end_room)
-	{ 
-	  char errbuf[STD_LEN];
-	  sprintf (errbuf, "Areagen failed to find edge rooms to make %s road.\n", (ew_road ? "ew" : "ns"));
-	  log_it (errbuf);
-	  continue;
-	}
-      
-      /* If it's a full road, we go from start to end. If it's a 
-	 half road, we go from start to until we find another road.
-	 It also stands to reason that if we don't find a road, then
-	 we still go from start to end. Since we want to have some
-	 half roads starting in news sides, we must switch start 
-	 and end so they can start from all 4 sides. */
-      
-      if (half_road && nr (0,1) == 1)
-	{
-	  temp_room = road_start_room;
-	  road_start_room = road_end_room;
-	  road_end_room = temp_room;
-	}
-      
-      clear_bfs_list();
-      undo_marked(road_start_room);      
-      add_bfs (NULL, road_start_room, REALDIR_MAX);
-      
-      while (bfs_curr)
-	{
-	  if ((room = bfs_curr->room) != NULL && IS_ROOM(room))
-	    { /* Go until the end room is found or a road is found
-		 with a half room. */
-	      if (room == road_end_room ||		  
-		  (half_road && IS_ROOM_SET (room, ROOM_EASYMOVE)))
-		break;
-	      
-	      
-	      /* Otherwise add more rooms. */
-	      
-	      for (dir = 0; dir < REALDIR_MAX; dir++)
-		{
-		  if ((exit = FNV (room, dir + 1)) != NULL &&
-		      (nroom = find_thing_num (exit->val[0])) != NULL &&
-		      IS_ROOM (nroom) &&
-		      !IS_MARKED(nroom))
-		    {
-		      add_bfs (bfs_curr, nroom, dir);
-		    }
-		}
-	    }
-	  bfs_curr = bfs_curr->next;
-	}
-      
-      /* If the list looks ok from start to end, alter the rooms 
-	 along this road. */
-      
-      strcpy (roadname, generate_road_name(sector_type));
-      
-      
-      /* Now if the endpoints exist, overwrite the rooms. */
-      
-      if (bfs_list &&
-	  bfs_list->room &&
-	  bfs_list->room == road_start_room &&
-	  bfs_curr &&
-	  bfs_curr->room &&
-	  (bfs_curr->room == road_end_room ||
-	   (half_road && 
-	    IS_ROOM_SET (bfs_curr->room, ROOM_EASYMOVE))))
-	{
-	  
-	  for (bfs = bfs_curr; bfs; bfs = bfs->from)
-	    {
-	      /* Don't overwrite current roads. */
-	      if ((room = bfs->room) != NULL &&
-		  !IS_ROOM_SET (room, ROOM_EASYMOVE))
-		{
-		  free_str (room->short_desc);
-		  room->short_desc = new_str (roadname);
-		  add_flagval (room, FLAG_ROOM1, ROOM_EASYMOVE);
-		  if (sector_type != ROOM_UNDERGROUND)
-		    remove_flagval (room, FLAG_ROOM1, sector_type);
-		
-		}
-	    }
-	}
-      clear_bfs_list();
     }
-
   add_road_turns (area);
   return;
 }
-   
+
+/* This adds a road to an area. If the end_dir is REALDIR_MAX, it assumes
+   that the road stops at the first road it meets. */
+
+
+void
+add_road (THING *area, int start_dir, int end_dir)
+{
+  int dir;
+  THING *room, *nroom;
+  VALUE *exit;
+  int sector_type;
+  char roadname[STD_LEN];
+  BFS *bfs;
+  bool half_road = FALSE;
+  /* The road starting and ending points. */
+  THING *road_start_room, *road_end_room;
+  /* This is the number of full roads that fully cross the area. */
+  
+  
+  if (start_dir < 0 || start_dir >= FLATDIR_MAX || !area || !IS_AREA (area))
+    return;
+
+  if ((road_start_room = find_room_on_area_edge (area, start_dir, 0)) == NULL)
+    return;
+  
+  if (end_dir < 0 || end_dir >= FLATDIR_MAX || end_dir == start_dir)
+    {
+      end_dir = RDIR(start_dir);
+      half_road = TRUE;
+    }
+      
+  sector_type = flagbits (area->flags, FLAG_ROOM1);
+  /* Find an end room on the opposite side anyway...it's just that with
+     half roads, we stop them once they hit another road. */
+  
+  if ((road_end_room = find_room_on_area_edge (area, end_dir, 0)) == NULL)
+    return;
+  
+
+  /* Find the shortest path from the start dir to the end dir. */
+  
+  clear_bfs_list();  
+  add_bfs (NULL, road_start_room, REALDIR_MAX);
+  
+  while (bfs_curr)
+    {
+      if ((room = bfs_curr->room) != NULL && IS_ROOM(room))
+	{ /* Go until the end room is found or a road is found
+	     with a half room. */
+	  if (room == road_end_room ||		  
+	      (half_road && IS_ROOM_SET (room, ROOM_EASYMOVE)))
+	    break;
+	  
+	  
+	  /* Otherwise add more rooms. */
+	  
+	  for (dir = 0; dir < REALDIR_MAX; dir++)
+	    {
+	      if ((exit = FNV (room, dir + 1)) != NULL &&
+		  (nroom = find_thing_num (exit->val[0])) != NULL &&
+		  IS_ROOM (nroom) &&
+		  !IS_MARKED(nroom))
+		{
+		  add_bfs (bfs_curr, nroom, dir);
+		}
+	    }
+	}
+      bfs_curr = bfs_curr->next;
+    }
+  
+  /* If the list looks ok from start to end, alter the rooms 
+     along this road. */
+  
+  strcpy (roadname, generate_road_name(sector_type));
+  
+  
+  /* Now if the endpoints exist, overwrite the rooms. */
+  
+  if (bfs_list &&
+      bfs_list->room &&
+      bfs_list->room == road_start_room &&
+      bfs_curr &&
+	  bfs_curr->room &&
+      (bfs_curr->room == road_end_room ||
+	   (half_road && 
+	    IS_ROOM_SET (bfs_curr->room, ROOM_EASYMOVE))))
+    {
+      
+      for (bfs = bfs_curr; bfs; bfs = bfs->from)
+	{
+	  /* Don't overwrite current roads. */
+	  if ((room = bfs->room) != NULL &&
+	      !IS_ROOM_SET (room, ROOM_EASYMOVE))
+	    {
+	      free_str (room->short_desc);
+	      room->short_desc = new_str (roadname);
+	      remove_flagval (room, FLAG_ROOM1, ROOM_SECTOR_FLAGS);
+	      add_flagval (room, FLAG_ROOM1, ROOM_EASYMOVE);
+	      if (sector_type == ROOM_UNDERGROUND)
+		add_flagval (room, FLAG_ROOM1, ROOM_UNDERGROUND);
+	      
+	    }
+	}
+    }
+  clear_bfs_list();
+  return;
+}
 
 /* This adds turns into the roads in the area. */
 
@@ -775,7 +1013,7 @@ add_road_turns (THING *area)
 	continue;
       adjacent_with_same_name = 0;
       dirs_with_same_name = 0;
-      for (dir = 0; dir < 4; dir++)
+      for (dir = 0; dir < FLATDIR_MAX; dir++)
 	{
 	  if ((nroom = find_track_room (room, dir, 0)) != NULL &&
 	      IS_ROOM_SET (nroom, ROOM_EASYMOVE) &&
@@ -880,7 +1118,7 @@ generate_room_grid (THING *room, int grid[AREAGEN_MAX][AREAGEN_MAX], int extreme
   
   /* Now check the other exits. */
   
-  for (dir = 0; dir < 4; dir++)
+  for (dir = 0; dir < FLATDIR_MAX; dir++)
     {
       if ((exit = FNV (room, dir + 1)) != NULL &&
 	  (nroom = find_thing_num (exit->val[0])) != NULL &&
@@ -1025,52 +1263,36 @@ add_lakes (THING *area)
       /* If no more open rooms, bail out. */
       if (!room)
 	break;
-      
-      
-      if (sector_type == ROOM_DESERT)
-	{	  	  
-	  strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, "watery_prefixes", NULL));
-	  strcpy (typename, find_gen_word (AREAGEN_AREA_VNUM, "oasis_names", NULL));
-	  sprintf (name, "%s %s%s",
-		   (*prefixname ? a_an(prefixname) : a_an (typename)),
-		   prefixname, typename);
-	  capitalize_all_words (name);
-	  strcpy (fullname, name);
-	}      
+
+      if (nr (1,5) == 2)
+	{
+	  if (nr (1,2) == 1)
+	    sprintf (fullname, "%s Lake", capitalize(create_society_name(NULL)));
+	  else
+	    sprintf (fullname, "Lake %s", capitalize(create_society_name(NULL)));
+	}
       else
-	{ 
+	{
 	  strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, "watery_prefixes", NULL));
-	  strcpy (typename, find_gen_word (AREAGEN_AREA_VNUM, "lake_names", NULL));
+	  if (*prefixname)
+	    strcat (prefixname, " ");
+	  
 	  if (IS_SET (sector_type, ROOM_UNDERGROUND))	    
 	    strcpy (undergroundname, find_gen_word (AREAGEN_AREA_VNUM, "underground_placenames", NULL));
 	  else
 	    undergroundname[0] = '\0';
-	  if (*prefixname)
-	    strcat (prefixname, " ");
 	  if (*undergroundname)
 	    strcat (undergroundname, " ");
 	  
-	  if (nr (1,4) != 3)
-	    {
-	      sprintf (name, "%s%s%s", prefixname, undergroundname, typename);
-	      sprintf (fullname, "%s %s", a_an (name), name);
-	    }
-	  /* Named lakes. */
-	  else if (nr (1,3) == 2)
-	    {
-	      if (nr (1,2) == 1)
-		sprintf (fullname, "%s Lake", create_society_name(NULL));
-	      else
-		sprintf (fullname, "Lake %s", create_society_name(NULL));
-	    }
+	  if (sector_type == ROOM_DESERT)
+	    strcpy (typename, find_gen_word (AREAGEN_AREA_VNUM, "oasis_names", NULL));
 	  else
-	    {
-	      sprintf (fullname, "%s %s%s%s",
-		       (*prefixname ? a_an (prefixname) : a_an(typename)),
-		       prefixname, (*prefixname ? " " : ""),
-		       typename);
-	    }
+	    strcpy (typename, find_gen_word (AREAGEN_AREA_VNUM, "lake_names", NULL));
+	  
+	  sprintf (name, "%s%s%s", prefixname, undergroundname, typename);
+	  sprintf (fullname, "%s %s", a_an (name), name);
 	  capitalize_all_words (fullname);
+	  
 	}
       if (sector_type == ROOM_DESERT)
 	lake_size = 1;
@@ -1213,21 +1435,20 @@ generate_stream_name (int sector_flags)
     }
   /* Otherwise make a "named" stream. */
 
-  strcpy (name, create_society_name(NULL));
-  
+  strcpy (name, capitalize(create_society_name(NULL)));
   for (t = name; *t; t++);
   t--;
   
   /* Possessive name Bob's Stream vs The Bob Stream. */
   if (nr (1,2) == 2)
     {
-      sprintf (buf, "%s%s %s", name,  (*t == 's' ? "\'" : "\'s"), typename);
+      possessive_form (name);
+      sprintf (buf, "%s %s", name, typename);
     }
   else
-    {
+    { 
       sprintf (buf, "The %s %s", name, typename);
     }
-  
   buf[0] = UC(buf[0]);
   return buf;
 }
@@ -1598,7 +1819,7 @@ generate_patch_name (int sector_type, int patch_type)
   if (sector_type == ROOM_WATERY && patch_type != ROOM_WATERY &&
       nr (1,4) == 2)
     {
-      sprintf (retbuf, "%s Island", create_society_name (NULL));
+      sprintf (retbuf, "%s Island", capitalize(create_society_name (NULL)));
     }
   else
     {
@@ -1682,10 +1903,10 @@ add_sector_patch (THING *room, char *name, int sector_type, int patch_type,
   
   if (!room || !name || !*name || sector_type == 0 || patch_type == 0 ||
       curr_depth > max_depth || nr (1,12) == 3 ||
-       (curr_depth == max_depth && nr (1,3) == 1) || 
-       !IS_ROOM (room) || IS_MARKED(room))
-      return;
-      
+      (curr_depth == max_depth && nr (1,3) == 1) || 
+      !IS_ROOM (room) || IS_MARKED(room))
+    return;
+  
   SBIT (room->thing_flags, TH_MARKED);
   room_flags = flagbits (room->flags, FLAG_ROOM1);
   if (room_flags != sector_type)
@@ -1694,6 +1915,7 @@ add_sector_patch (THING *room, char *name, int sector_type, int patch_type,
       if (!IS_SET (room_flags, ROOM_WATERY | ROOM_EASYMOVE))
 	return;
     }
+  append_name (room, "sector_patch");
   /* If we want to change this room, do it. */
   
   if (!IS_SET (room_flags, ROOM_EASYMOVE) &&
@@ -1771,7 +1993,7 @@ fix_disconnected_sections (THING *area)
   
   /* Do this in several passes to try to get all areas connected. */
   
-  for (pass = 0; pass < 4; pass++)
+  for (pass = 0; pass < 10; pass++)
     {
       for (start_room = area->cont; start_room; start_room = start_room->next_cont)
 	{
@@ -1795,7 +2017,7 @@ fix_disconnected_sections (THING *area)
       
       /* For each length search through all rooms */
 
-      for (depth = 1; depth < 10; depth++)
+      for (depth = 1; depth < MAX(5,pass); depth++)
 	{
 	  for (room = area->cont; room; room = room->next_cont)
 	    {
@@ -1808,7 +2030,7 @@ fix_disconnected_sections (THING *area)
 		  
 		  found_path = FALSE;
 		  /* See if there are any badrooms connected to this room. */
-		  for (dir = 0; dir < 4; dir++)
+		  for (dir = 0; dir < FLATDIR_MAX; dir++)
 		    {
 		      /* If we can make a path... */
 		      if ((exit = FNV (room, dir + 1)) != NULL &&
@@ -1827,11 +2049,13 @@ fix_disconnected_sections (THING *area)
 	}
     }
   
- 
-
-  for (room = area->cont; room; room = room->next_cont)
-    RBIT (room->thing_flags, TH_MARKED);
   
+  
+  for (room = area->cont; room; room = room->next_cont)
+    {
+      
+      RBIT (room->thing_flags, TH_MARKED);
+    }
  return;
 }
 
@@ -1895,7 +2119,7 @@ found_path_through_badrooms (THING *start_room, int max_depth)
       
       if ((room = bfs_curr->room) != NULL && IS_ROOM (room))
 	{
-	  for (dir = 0; dir < 4 && !found_end_room; dir++)
+	  for (dir = 0; dir < FLATDIR_MAX && !found_end_room; dir++)
 	    {
 	      /* If it's next to a good marked room, then break out
 		 and make the bridge. Otherwise, add more rooms. */
@@ -2154,7 +2378,7 @@ add_tree (THING *base_room)
 	branch_length = 3-(3*height/max_height);
       branch_length = MID(1,branch_length,3);
       
-      for (dir = 0; dir < 4; dir++)
+      for (dir = 0; dir < FLATDIR_MAX; dir++)
 	{	
 	  room = trunk_room;
 	  /* Set up the branch name. */
@@ -2235,7 +2459,7 @@ add_tree (THING *base_room)
 		  side_branch_depth == dist))
 		{
 		  side_branch_depth = dist;
-		  for (dir2 = 0; dir2 < 4; dir2++)
+		  for (dir2 = 0; dir2 < FLATDIR_MAX; dir2++)
 		    {
 		      if ((new_room = make_room_dir (room, dir2, currname, ROOM_FOREST)) != NULL)
 			SBIT (new_room->thing_flags, TH_MARKED);

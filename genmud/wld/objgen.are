@@ -2,10 +2,10 @@ THING 108000
 Name objgen.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 3
+Timer 15
 Short The Object Gen Area`
 type Lonath`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 28
 END_THING
 
@@ -297,6 +297,9 @@ ball
 'spinning disc'
 'spinning sphere'
 essence
+'hovering ball'
+'hovering orb'
+'hovering sphere'
 `
 END_THING
 
@@ -555,6 +558,8 @@ quill
 spike
 tanto
 shard
+piercer
+stabber
 `
 END_THING
 
@@ -583,6 +588,8 @@ katana
 katar
 claymore
 battlesword
+slasher
+slicer
 `
 END_THING
 
@@ -614,6 +621,10 @@ sledgehammer
 shillelagh
 cudgel
 Truncheon
+basher
+pounder
+smasher
+crusher
 `
 END_THING
 
@@ -629,6 +640,17 @@ bullwhip
 tail
 'battle flail'
 'war flail'
+thrasher
+lasher
+chain
+cord
+whip
+whip
+whip
+flail
+flail
+whip
+'spiked chain'
 `
 END_THING
 
@@ -733,29 +755,25 @@ END_THING
 THING 108036
 Name metal_gen_names`
 HWT 0 0
-Desc Buwite & $9Buwite$7
-Uhhewium & $2Uhhe$Awium$7
-Cinate & $4Cinate$7
-Retium & $CRet$Dium$7
-Rihate & $FRihate$7
-Egukium & $7Egukium$7
-Piiwium & $8Pi$7iw$8ium$7
-Kerorium & $BKe$Eror$Bium$7
-Feropium & $1Feropium$7
-Nisium & $DNisium$7
-Ingemate & $1Ingemate$7
-Dilate & $9Dilate$7
-Equuhium & $FEquu$9hium$7
-Milium & $2Milium$7
-Marigate & $2Ma$8rig$2ate$7
-Nionium
-Tepetite & $1Te$8pet$1ite$7
-Elipium & $BEl$1ip$Bium$7
-Sabite & $9Sa$2bi$9te$7
-Nepium & $8Nepium$7
-Pecium & $BPec$5ium$7
-Fegate & $EFe$8ga$Ete$7
-`
+Desc Esimium & $1Es$9im$1ium$7
+Fanate
+Pepium & $EPepium$7
+Tabite & $2Ta$Dbi$2te$7
+Fowate
+Petium & $EPetium$7
+Ewedium & $CEwe$7dium$7
+Thewite & $1Th$Bew$1ite$7
+Sicium & $8Sic$Bium$7
+Pepate & $DPep$4ate$7
+Nitate & $ENi$Ata$Ete$7
+Fatium
+Oposium & $6Oposium$7
+Sinamate & $ESi$8nam$Eate$7
+Lilium
+Hebidium & $5Hebidium$7
+Imerium & $3Imerium$7
+Metite & $CMe$1ti$Cte$7
+`
 END_THING
 
 THING 108037
@@ -814,8 +832,83 @@ Leather & $3Leather$7
 Leather & $3Leather$7
 Leather & $3Leather$7
 Leather & $3Leather$7
+Coral & $3Coral$7
+Limestone & $2Limestone$7
 `
 Short Descriptive Name`
+END_THING
+
+THING 108038
+Name called_prefix`
+HWT 0 0
+Desc sky
+sun
+moon
+air
+earth
+fire
+water
+spirit
+light
+dark
+heaven
+hell
+chaos
+order
+oath
+pledge
+cloud
+sea
+mist
+time
+world
+life
+death
+storm
+lightning
+power
+ice
+soul
+thunder
+wind
+blood
+cold
+forest
+mind
+sight
+breath
+`
+END_THING
+
+THING 108039
+Name called_suffix`
+HWT 0 0
+Desc dancer
+blighter
+maker
+breaker
+keeper
+chaser
+guard
+shield
+pledge
+ward
+crusher
+smasher
+stealer
+taker
+drinker
+storm
+fire
+force
+power
+store
+bane
+bringer
+giver
+bender
+warp
+`
 END_THING
 
 END_OF_AREA

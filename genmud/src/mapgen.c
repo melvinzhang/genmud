@@ -592,14 +592,17 @@ mapgen_generate (char *arg)
 	break;
       
       /* Now "fatten the line" */
-      
+       
+
+      if (fuzziness > 0)
+	curr_width += nr (0,fuzziness) - nr (0,fuzziness);
       curr_width = MAX (1, last_width);
       if (curr_width > width && nr (1,3) == 2)
 	curr_width--;
       if (curr_width < width && nr (1,3) == 2)
 	curr_width++;
-      if (fuzziness > 0)
-	curr_width += nr (0,fuzziness) - nr (0,fuzziness);
+      if (curr_width < width/2 && last_width < width/2)
+	curr_width++;
       
       if (curr_width - last_width > 2)
 	curr_width = last_width + 2;
@@ -929,12 +932,7 @@ mapgen_create (MAPGEN *map, int start_vnum)
 	      if (map->used[x][y])
 		{
 		  new_map[x][y] = count;
-		  room = new_thing();
-		  room->vnum = count;
-		  add_thing_to_list(room);
-		  thing_to (room, ar);
-		  room->thing_flags = ROOM_FLAGS;
-		  ar->thing_flags |= TH_CHANGED;
+		  room = new_room(count);
 		  count++;
 		}
 	      else
@@ -951,12 +949,7 @@ mapgen_create (MAPGEN *map, int start_vnum)
 	      if (map->used[x][y])
 		{
 		  new_map[x][y] = count;
-		  room = new_thing();
-		  room->vnum = count;
-		  add_thing_to_list(room);
-		  thing_to (room, ar);
-		  room->thing_flags = ROOM_FLAGS;
-		  ar->thing_flags |= TH_CHANGED;
+		  room = new_room(count);
 		  count++;
 		}
 	      else
@@ -1213,7 +1206,7 @@ set_up_modnar_room (THING *room, int flagval, char *shortdesc, int depth)
 
     /*  Check and set up all adjacent rooms. */
   
-  for (dir = 0; dir < 4; dir++)
+  for (dir = 0; dir < FLATDIR_MAX; dir++)
     {
       if ((exit = FNV (room, ((dir + depth) % 4) + 1)) != NULL &&
 	  (nroom = find_thing_num (exit->val[0])) != NULL)
@@ -1368,11 +1361,11 @@ mapgen_combine (MAPGEN *map1, MAPGEN *map2, int offset_x, int offset_y)
       if (!rooms_overlap)
 	{
 	  free_mapgen(map);
-	  offset_x /= 2;
-	  offset_y /= 2;
+	  offset_x = offset_x*9/10;
+	  offset_y = offset_y*9/10;
 	}
     }
-  while (!rooms_overlap && ++times < 1000);
+  while (!rooms_overlap && ++times < 100);
   
   if (!rooms_overlap)
     {

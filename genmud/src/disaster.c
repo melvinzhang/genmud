@@ -152,7 +152,7 @@ flood_disaster (void)
 			  break;
 			}
 		    }
-		  /* If we have adjacent water and this floots its bank,
+		  /* If we have adjacent water and this floods its bank,
 		     then flood the room. */
 		}
 	      if (water_adjacent && nroom)

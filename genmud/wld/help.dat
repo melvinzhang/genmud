@@ -2,23 +2,88 @@ HELP MORT
 Key WORLDMAP WORLD_MAP`
 Admin `
 Text World Map:
-                $5^$F*$F*$F*             $7
-              $2*$A,$2*$5^$F*$5^             $7
-             $C#$2#  $F*$F*              $7
-             $2#$A,$B,  $9@              $7
-             $A,$B,$B,$B,                $7
-             $2*$B,$B,$2*$2#$A,$5^$5^            $7
-          $A,  $2*$A,$2#$A,$2*$A,$5^$B,            $7
-          $A,$2* $5^$2#$C#$A,$2*$5^$B,$B,            $7
-          $A,$2#$2#$2*$2*$2#$A,$5^$5^$F*$B,            $7
-          $A, $5^$A, $2*$2#$2#$A,              $7
-          $A@ $5^$2*$2*$2#$2#                $7
-            $B,$C#$2#$C#$2#$2#$2*              $7
-             $2#$2# $A,$2#$2#              $7
+                $5^$F*               $7
+            $5^$A,$B,$5^$F*$F*$F*$F*$2*            $7
+           $5^$5^$2*$A,$A,$A,$F*$F*$F*$5^$5^           $7
+           $B,     $9@$5^$F*$A,$2*           $7
+           $B,   $2*$C#  $F*$5^            $7
+               $A,$2#   $B,            $7
+             $2*$2*$2#$A,$A,$5^ $5^$B,           $7
+             $A,$2*  $B,$5^$5^$B,$B,$5^          $7
+                 $B,  $5^$5^$5^          $7
+                $B,$B,$5^ $A,$2*           $7
+               $2#$C# $2* $A,            $7
+              $2#$C#$C#$2#$2#$5^$2*            $7
+              $A,$2# $C#$C# $A@            $7
 
 
 Evil outpost: $9@$7.   Good outpost: $A@$7.   
 All outposts are entered from the area just north of them.
+`
+SeeAlso `
+END_HELP
+
+HELP MORT
+Key CRAFT CRAFTING CRAFTS`
+Admin You make craft items in area 106200 and they load automatically on
+worldgen.
+
+You put the base name of the item as a name (in quotes if it's more than 
+one word).
+
+Then you make a list of edescs. 
+
+gen: These words go in the gen edesc if you want.
+	base: This is a base item (raw material).
+	noname: Don't generate a series of objects based on different
+	types. Just make one thing. Like forge vs granite forge.
+	plural: Object shows up as "some foo" instead of "a/an foo"
+
+names: List of names (used on base raw materials only) to generate
+	many of these kinds of objects.
+
+process: This isn't literally called process, but it's called whatever
+	you want like mine, smelt, build etc... It has a list of
+	ingredients needed to make the object.
+
+	hold/wield/wear: You must wear/wield this item.
+
+	make <number>: Make a certain number of things instead of
+	just one.
+
+	here/use/made <number> item [in <item2>]:
+	Here just says the item has to be here.
+	Use and made actually use up the item. The reason for the
+	difference is that the made argument tells what prefixes
+	may be put onto the item based on the prefixes on the raw
+	materials used.
+	The item can also be put into another item if you want.
+
+	Special args:
+		corpse: requires a corpse to be in the room.
+		water: Requires a drink container someplace.
+		Can specify what kind of container must contain water.
+
+$9Remember this: The crafted item MUST have a "made" line or be a base
+item or the game won't be able to make the item, since it won't be
+able to search back to find its "base prototype".$7
+
+`
+Text The craft command gives you info about crafting. Type
+
+craft commands
+
+to see a list of crafting commands you can use and what gets made.
+
+Type
+
+craft materials <itemname> 
+
+to see what is needed to make that item.
+
+Then type
+
+process item  or  process prefix item  to make an item named item.
 `
 SeeAlso `
 END_HELP
@@ -43,27 +108,27 @@ END_HELP
 HELP MORT
 Key HISTORY BACKSTORY`
 Admin `
-Text Looking back the legendary years back through the ages, I cannot help
-becoming great sorrow regarding what we have lost from the ancient world.
-It was the time when the united gods followed Gumohgoc the Neutral god of
-Innocence, Judgment and Weal, Hakror the Evil god of Misfortune and Pain
-and Wagwis the Good god of Love and Summer. the Powerful Neutral Tekahe,
-the Mighty Evil Etlihi and the Mighty Good Isrewi oversaw harmony at the
-behest of the gods.
+Text As I remember the forgotten days fading into history, I cannot help a
+great sense of extreme sorrow about how the past is lost. It was the time
+when the harmonious gods followed Ernespo the Neutral deity of Warriors,
+Atimec the Evil god of Silence, Fate and The Sky and Foorir the Good god
+of Artists and Poetry. the Ancient Neutral Uc-nosa, the Mighty Evil Tobuse
+and the Powerful Good Of-sefa preserved harmony at the behest of the gods.
 
-Yet the sundering came. The many civilizations of the world were
-destroyed, and the societies like the Green Slaan were cast from their
-towns. Many campaigns were fought and the Mighty Isrewi and the other
-ancient races were removed from the world. And thus did the power of the
-deities retreat into the mists of time. This is what the Demons hoped for
-as they flooded into the world, but were cast back to the Pits at the cost
-of civilization.
 
-The governments slid into dark ages, and the state of the world stayed
-withering for many years. But now, the Demons are gathering their power.
-The races are broken and disorganized and squabbling among themselves.
-They must be brought together to fight the demons in this Battle for
-Destiny
+But the breaking came. The many civilizations of the world were destroyed,
+and the nations such as the Sand Ogre were forced from their villages.
+Many battles were fought and the Mighty Tobuse and the other ancient races
+were brought low by the turmoil. And thus did the power of the deities
+become weaker. This was what the Demons had hoped for as they surged into
+the world, but were cast back to the Pits wiping out many nations.
+
+
+The societies fell into dark ages, and the nations stayed withering for
+many eras. But now, the Demons are gaining strength. The races are broken
+and disorganized and squabbling among themselves. They must be brought
+together to fight the demons in this Testing Battle for Destiny Testing
+
 
 `
 SeeAlso `
@@ -1639,9 +1704,8 @@ Find some bugs and give me some suggestions and you can get on this list:
 
 GenMUD:	  Prophit (Yes the one from MPV. :))
 	  Irmin Auwerda (Sideshowbob)
-	  Arkane
+	  Charles Dube (Arkane)
 	  Thomas Schwarz
-	  
 `
 SeeAlso `
 END_HELP
@@ -1696,7 +1760,7 @@ SeeAlso `
 END_HELP
 
 HELP BLD
-Key SOCIETY SOCIETIES`
+Key SOCIETY SOCIETIES SOCI_FLAGS SOCIETY_FLAGS`
 Admin `
 Text Societies are groups of mobs that are born weak, and grow in power.
 They are placed in certain areas around the world. Once a society
@@ -1739,10 +1803,8 @@ write_societies() in societyio.c to alter the conditions when a
 society is saved.$7
 
 Societies have a room_start which is the lower end of the starting
-rooms where they can appear, and they have a room_amt which is
-the number of rooms above room_start where they may appear. So,
-room start 1000(100) will make the society creatures randomly appear
-in rooms 1000-1100. 
+rooms where they can appear, and they have a room_end 
+and they should appear in the rooms in that range.
 
 Societies have several names associated with them.
 name is the singular form of the society name. It is not used much
@@ -1959,7 +2021,21 @@ END_HELP
 
 HELP MORT
 Key MAP MAPPING`
-Admin `
+Admin Legend for the society caste houses:
+
+Children - S - School
+Warrior - B - Barracks
+Leader - P - Pavillion
+Worker - W - Worker's Hall
+Builder - H - Hall of Builders
+Healer - T - Temple
+Wizard - A - Academy
+Thief - D - Den
+Shopkeeper - M - Marketplace
+Crafter - C - Craftsman's Guild
+Farmer - F - Farm
+
+`
 Text Overhead mapping works. Type config mapping to toggle it.  You can
 check out the rest of the configuration options by typing help
 configure.  
@@ -3682,6 +3758,8 @@ Text Thing flags give the most important information about an item.  They
 determine how this thing can interact with other things through
 movement and other methods.
 
+You alter them by typing thing <flagname> while editing a thing.
+
 
 no_take:                Another thing cannot move this.  
 no_move_self:           This cannot move itself.  
@@ -4274,6 +4352,13 @@ ingredients that are needed to make this item.
 replaceby: If this thing times out, then when it gets destroyed,
 it gets replaced by whatever thing is picked. The form for telling
 what gets created in its place is the same as the randpop code.
+
+craft: Used internally to keep track of crafted items.
+     v0 = base_proto vnum -- raw materials used for this.
+     v1 = prototype vnum -- what general item generates items in this
+          class.
+     v2 = made from proto, what is the prototype for the item that 
+          makes this thing.
 
 
 `
@@ -4985,6 +5070,8 @@ mob -- finds things that can move or fight.
 obj -- finds things that cannot move or fight.  
 room -- finds things that are rooms.  
 area -- If you are in a room or area, it restricts it to this area.
+nodesc -- find things without descriptions
+noval -- don't search for values -- like guard
 <valname> -- finds things which have values of this kind.  
 <number> -- the first number is the lower vnum range, second is upper.  
 <name> -- it searches for things with this specific name.

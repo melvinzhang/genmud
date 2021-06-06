@@ -2,10 +2,10 @@ THING 104000
 Name areadetails.are`
 HpMv 0 10 400 1000
 HWT 0 0
-Timer 6
+Timer 15
 Short Area Details Area`
 type Lonath`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 28
 END_THING
 
@@ -709,7 +709,7 @@ EDESC klong`
 proper_name
 `
 EDESC format`
-klong the kshort kname
+'klong the kshort kname'
 `
 END_THING
 
@@ -904,6 +904,8 @@ wooden wood metal banded oak scratched iron steel
 `
 EDESC kname`
 chest locker box
+lockbox
+strongbox
 `
 END_THING
 

@@ -106,8 +106,14 @@ string_gen (char *txt, int area_vnum)
 	  (!*(t+1) || isspace (*(t+1))))
 	*t = 'I';
     }
-	   
-  strcat (ret, "\n");
+  /* Remove the last enter from the formatted string. */
+  
+  t--;
+  while ((*t == '\n' || *t == '\t') && t >= ret)
+    {
+      *t = '\0';
+      t--;
+    }
   return ret;
 }
 

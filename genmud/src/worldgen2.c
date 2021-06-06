@@ -204,7 +204,7 @@ remove_newbie_area_aggros (void)
     {
       if (area->vnum < WORLDGEN_START_VNUM ||
 	  area->vnum > WORLDGEN_END_VNUM ||
-	  LEVEL (area) >= 40)
+	  LEVEL (area) >= WORLDGEN_AGGRO_AREA_MIN_LEVEL)
 	continue;
       
 
@@ -216,7 +216,7 @@ remove_newbie_area_aggros (void)
 	{
 	  remove_flagval (mob, FLAG_ACT1, ACT_AGGRESSIVE | ACT_ANGRY);
 	}
-
+      
       /* Now add more "animal" resets to these areas so players have
 	 more stuff to kill. */
 
@@ -270,7 +270,6 @@ worldgen_place_guildmasters (void)
       /* Mark the outpost and the adjacent area(s). */
       SBIT (outpost_area->thing_flags, TH_MARKED);
       mark_adjacent_areas (outpost_area);
-      
       for (area = the_world->cont; area; area = area->next_cont)
 	{
 	  if (IS_MARKED (area) && area != outpost_area)
@@ -281,9 +280,11 @@ worldgen_place_guildmasters (void)
 	continue;
       
       /* Now mark the areas adjacent to this new area. */
-      
-      mark_adjacent_areas (area);
-      
+       
+      /* Not anymore--- just have the guildmasters right outside the 
+	 homeland. */
+      /* mark_adjacent_areas (area); */
+       
 	      
       /* Now pick an area at random -- not the outpost area. */
       
@@ -508,7 +509,7 @@ void
 worldgen_link_special_room (int special_room_vnum)
 {
 
-  THING *area, *room, *proto, *special_room;
+  THING *area, *room, *proto, *special_room, *start_area;
   int count, num_choices = 0, num_chose = 0;
   VALUE *exit, *guard;
   int guard_vnum = 0;
@@ -520,7 +521,8 @@ worldgen_link_special_room (int special_room_vnum)
   
   if ((special_room = find_thing_num (special_room_vnum)) == NULL)
     return;
-
+  if ((start_area = find_thing_num (1)) == NULL)
+    return;
   /* Clear exits and all else. */
   while (special_room->values)
     remove_value (special_room, special_room->values);
@@ -534,8 +536,9 @@ worldgen_link_special_room (int special_room_vnum)
 	      area->vnum > WORLDGEN_END_VNUM ||
 	      IS_ROOM_SET (area, BADROOM_BITS) ||
 	      (guard_vnum = find_free_mobject_vnum (area)) == 0 ||
-	      LEVEL (area) < 50 ||
-	      LEVEL (area) > 100)
+	      IS_AREA_SET (area, AREA_NOLIST | AREA_NOSETTLE | AREA_NOREPOP) ||
+	      LEVEL (area) < WORLDGEN_AGGRO_AREA_MIN_LEVEL*3/2 ||
+	      LEVEL (area) > WORLDGEN_AGGRO_AREA_MIN_LEVEL*3)
 	    continue;
 	  
 	  if (count == 0)
@@ -551,7 +554,6 @@ worldgen_link_special_room (int special_room_vnum)
 	  num_chose = nr (1,num_choices);
 	}
     }
-  
   if (!area)
     return;
 
@@ -564,6 +566,7 @@ worldgen_link_special_room (int special_room_vnum)
       num_chose = 0;
       if ((room = find_random_room (area, FALSE, 0, BADROOM_BITS | ROOM_EASYMOVE)) != NULL)
 	{
+	  
 	  for (count = 0; count < 2; count++)
 	    {
 	      /* Check for open dirs to this room. */

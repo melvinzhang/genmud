@@ -25,9 +25,9 @@ do_chop (THING *th, char *arg)
 }
 
 void 
-do_gather (THING *th, char *arg)
+do_find (THING *th, char *arg)
 {
-  gather_raw (th, "gather");
+  gather_raw (th, "find");
   return;
 }
 

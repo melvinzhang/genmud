@@ -35,7 +35,7 @@ static char *burn_message[BURN_MESSAGE_MAX] =
 
 
 void
-do_build (THING *th, char* arg)
+do_citybuild (THING *th, char* arg)
 {
   VALUE *soc, *build, *worst_build_val = NULL, *exit, *rev_exit;
   SOCIETY *society;

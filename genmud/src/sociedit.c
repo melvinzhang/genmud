@@ -529,7 +529,7 @@ society_edit (THING *th, char *arg)
       show_society (th, soc);
       return;
     }
-  else if (!str_cmp (arg1, "society_flag"))
+  else if (!str_cmp (arg1, "society_flag") || !str_cmp (arg1, "soci_flag"))
     {
       if ((value = find_bit_from_name (FLAG_SOCIETY, arg)) != 0)
 	{

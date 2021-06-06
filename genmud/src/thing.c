@@ -62,21 +62,14 @@ new_thing (void)
     }
   if (!newthing)
     {
-      if (thing_free)
+      if (!thing_free)
+	ADD_TO_MEMORY_POOL(THING,thing_free,thing_count);
+      newthing = thing_free;
+      thing_free = thing_free->next; 
+      if (thing_count >= MAX_NUMBER_OF_THINGS)
 	{
-	  newthing = thing_free;
-	  thing_free = thing_free->next;
-	}
-      else
-	{
-	
-
-	  newthing = (THING *) mallok (sizeof (THING));
-	  if (thing_count++ > MAX_NUMBER_OF_THINGS)
-	    {
-	      log_it ("TOO MANY THINGS!!!\n\r");
-	      exit (1);
-	    }
+	  log_it ("TOO MANY THINGS!!!\n\r");
+	  exit (1);
 	}
     }
   bzero (newthing, sizeof (THING));
@@ -368,18 +361,12 @@ FLAG *
 new_flag (void)
 {
   FLAG *newflag;
-  
-  if (flag_free)
-    {
-      newflag = flag_free;
-      flag_free = flag_free->next;
-    }
-  else
-    {
-      newflag = (FLAG *) mallok (sizeof (FLAG));
-      flag_count++;
-    }
+  if (!flag_free)
+    ADD_TO_MEMORY_POOL(FLAG,flag_free,flag_count);
+  newflag = flag_free;
+  flag_free = flag_free->next;
   bzero (newflag, sizeof (FLAG));
+  newflag->next = NULL;
   return newflag;
 }
 
@@ -402,16 +389,10 @@ new_value (void)
 {
   VALUE *newval;
   
-  if (value_free)
-    {
-      newval = value_free;
-      value_free = value_free->next;
-    }
-  else
-    {
-      newval = (VALUE *) mallok (sizeof (VALUE));
-      value_count++;
-    }
+  if (!value_free)
+    ADD_TO_MEMORY_POOL(VALUE,value_free,value_count);
+  newval = value_free;
+  value_free = value_free->next;
   bzero (newval, sizeof (VALUE));
   newval->word = nonstr;
   return newval;
@@ -758,13 +739,14 @@ find_thing_thing (THING *th, THING *in, char *arg, bool is_worn)
   if (!th || !in || !arg || arg[0] == '\0')
     return NULL;
   
-  if (IS_AREA (in) || in == the_world)
+  /* Removed this...will it screw things up? */
+  /* if (IS_AREA (in) || in == the_world)
     {
       if (in->vnum == START_AREA_VNUM || in == the_world)
 	in = find_random_room (NULL, FALSE, 0, 0);
       else
 	in = find_random_room (in, FALSE, 0, 0);
-    }
+	} */
   
   if (!in)
     return NULL;
@@ -1582,9 +1564,9 @@ set_up_thing (THING *th)
   if (th->armor == 0)
     {
       if (CAN_MOVE (th) || CAN_FIGHT (th))
-	th->armor = nr (LEVEL (th), LEVEL (th)*2);
+	th->armor = nr (LEVEL (th)/2, LEVEL (th));
       else
-	th->armor = MIN (40, LEVEL (th)/2);
+	th->armor = MID (10, LEVEL (th)/2, 40);
     }
   
 
@@ -2157,49 +2139,6 @@ find_thing_num (int num)
 }
 
 
-int
-find_aff_with_rank (int rank)
-{
-  int num_choices = 0, num_chose = 0, count, afftype;
-  
-  if (rank < AFF_RANK_POOR ||
-      rank >= AFF_RANK_MAX)
-    return 0;
-  
-  /* This is kind of a hack but I want more +damroll eq, so... */
-
-  if (rank == AFF_RANK_EXCELLENT && nr (1,4) == 2)
-    return FLAG_AFF_DAM;
-  
-  /* Find a random affect with the correct rank. */
-
-  for (count = 0; count < 2; count++)
-    {
-      for (afftype = 0; afftype < AFF_MAX-AFF_START; afftype++)
-	{
-	  if (aff_power_ranks[afftype] == rank)
-	    {
-	      if (count == 0)
-		num_choices++;
-	      else if (--num_chose < 1)
-		break;
-	    }
-	}
-      
-      if (count == 0)
-	{
-	  if (num_choices < 1)
-	    return 0;
-	  num_chose = nr (1, num_choices);
-	}
-    }
-
-  afftype += AFF_START;
-  /* FEW + con items. */
-  if (afftype == FLAG_AFF_CON && nr (1,65) != 3)
-    afftype = FLAG_AFF_DAM;
-  return (afftype);
-}
 
 /* This finds a random marked (or unmarked) room in an area. It also allows
    you to specify room flags that the room needs or needs to avoid. */
@@ -2531,4 +2470,32 @@ append_name (THING *th, char *name)
   strcat (buf, name);
   free_str (th->name);
   th->name = new_str (buf);
+}
+
+/* This makes and sets up a new room with this vnum. */
+
+THING *
+new_room (int vnum)
+{
+  THING *room;
+  THING *area;
+  
+  if ((area = find_area_in (vnum)) == NULL)
+    return NULL;
+  if ((room = find_thing_num (vnum)) != NULL)
+    {
+      if (IS_ROOM (room))
+	return room;
+      else
+	return NULL;
+    }
+  if ((room = new_thing ()) == NULL)
+    return NULL;
+
+  room->vnum = vnum;
+  add_thing_to_list(room);
+  thing_to (room, area);
+  room->thing_flags = ROOM_FLAGS;
+  area->thing_flags |= TH_CHANGED;
+  return room;
 }

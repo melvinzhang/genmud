@@ -752,12 +752,13 @@ act (char *buf, THING *th, THING *use, THING *vict, char *txt, int type)
   if (type == TO_VICT && !vict)
     return;
   
+  // if (nr (1,200) == 35) log_it (buf);
   /* The code makes 2 passes. First, it goes down the list of things
      in th->in ... (th->in->cont) and then it attempts to show them all
      the message. Then, if the type is not TO_CHAR, it then checks
      if the vict is in another thing. If it is, it shows the message
      to the vict's "room" and whoever can see it in there. */
-
+  
   for (i = 0; i < 2; i++)
     {
       if (i == 0)

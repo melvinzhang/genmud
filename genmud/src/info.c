@@ -104,9 +104,12 @@ weather_names[weat] : "sunny"));
     {
       sprintf (buf, "A total of %d things have been made this reboot.\n\r", thing_made_count);
       stt (buf, th);
+      do_society (th, "count");
+      do_areas (th, "count");
     }
   sprintf (buf, "There have been %d players max online since the last reboot.\n\r", max_players);
   stt (buf, th);
+  
   return;
 }
 

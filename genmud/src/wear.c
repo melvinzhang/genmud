@@ -629,12 +629,13 @@ find_eq_to_wear (THING *th)
 {
   THING *obj, *objn, *equip = NULL;
   int armorsum = 0, weaponsum = 0, curr_armorsum, curr_weaponsum;
-  bool found_corpse = FALSE, new_is_better = FALSE;
+  bool new_is_better = FALSE;
   VALUE *armor, *weapon = NULL, *curr_armor, *curr_weapon, *money;
   VALUE *raw = NULL, *socval = NULL, *shopval;
   int pass; /* Two passes. 1. Check my eq. 2. Check ground here. */
   bool is_worker = FALSE;
-  
+  int corpse_count = 0;
+  char buf[STD_LEN];
   /* The thing must be smart and able to move things. */
   
   if (!th || !th->in  || !IS_ROOM (th->in) || IS_PC (th) || 
@@ -713,13 +714,27 @@ find_eq_to_wear (THING *th)
 	      if (IS_WORN (obj))
 		continue;
 	    }
-	  if (obj->vnum == CORPSE_VNUM && nr (1,15) == 3 && !found_corpse)
+	  /* Loot corpses. Don't loot player corpses. */
+	  if (obj->vnum == CORPSE_VNUM || is_named (obj, "corpse"))
 	    {
-	      found_corpse = TRUE;
-	      if (!obj->cont)
-		do_sacrifice (th, "corpse");
-	      else
-		do_get (th, "all corpse");
+	      corpse_count++;
+	      if (nr (1,15) == 3 &&
+		  /* Don't let them take player corpses. */
+		  !IS_SET (obj->thing_flags, TH_NO_TAKE_BY_OTHER))	
+		{
+		  if (!obj->cont)
+		    {
+		      sprintf (buf, "%d.corpse", corpse_count);
+		      do_sacrifice (th, buf);
+		      break;
+		    }
+		  else
+		    {
+		      sprintf (buf, "all %d.corpse", corpse_count);
+		      do_get (th, buf);
+		      break;
+		    }
+		}
 	    }
 	  
 	  /* Small chance to pick this, and the item needs to be armor or wpn. */

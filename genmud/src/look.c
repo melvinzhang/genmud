@@ -290,8 +290,7 @@ do_look (THING *th, char *arg)
       flags = LOOK_SHOW_SHORT |
 	LOOK_SHOW_EXITS | LOOK_SHOW_CONTENTS;
       /* If we "look zzduhql" and have brief on, we don't see desc. */
-      if ((str_cmp (arg1, "zzduhql") || !IS_PC2_SET (th, PC2_BRIEF)) &&
-	  !RUNNING)
+      if ((str_cmp (arg1, "zzduhql") || !IS_PC2_SET (th, PC2_BRIEF)))
 	flags |= LOOK_SHOW_DESC;
     }  
   /* Look outside if we're in something. */
@@ -889,7 +888,7 @@ do_butcher (THING *th, char *arg)
 void
 show_contents_list (THING *th, THING *target, int flags)
 {  
-  char listbuf[LBUF_SIZE][LBUF_SIZE]; 
+  char listbuf[LBUF_SIZE][STD_LEN]; 
   int listnum[LBUF_SIZE], cost[LBUF_SIZE];
   char buf[STD_LEN*2];
   char buf2[STD_LEN*2];
@@ -992,7 +991,7 @@ show_contents_list (THING *th, THING *target, int flags)
 	    {
 	      combine = TRUE;
 	      if (is_valid_shop_item (cont, shop))
-		sprintf (buf, "%s", NAME (cont));
+		strncpy (buf, NAME (cont), STD_LEN-1);
 	      else
 		continue;
 	    }
@@ -1072,13 +1071,10 @@ show_contents_list (THING *th, THING *target, int flags)
 	  
 	  if (listbuf[i][0] == '\0')
 	    {
-	      strncpy (listbuf[i], buf, LBUF_SIZE -1);
+	      strncpy (listbuf[i], buf, STD_LEN -1);
               listbuf[i][LBUF_SIZE-1] = '\0';
 	      if (IS_SET (flags, LOOK_SHOW_SHOP) && shop)
-		{
-		  cost[i] = cont->cost*shop->val[2]/100;
-		  cost[i] -= (get_stat (th, STAT_CHA)-STAT_MAX/2)*cost[i]/100;
-		}
+		cost[i] = find_item_cost (th, cont, target, SHOP_COST_BUY);
 	    }	 
 	  if (combine)
 	    listnum[i]++;

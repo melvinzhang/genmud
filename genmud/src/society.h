@@ -28,7 +28,7 @@
 					 to see which ones should be made
 					 into guard posts. */
 
-#define POP_BEFORE_SETTLE     200   /* Soc needs N members before it
+#define POP_BEFORE_SETTLE     150   /* Soc needs N members before it
 					attempts to make a new society. */
 
 #define SOCIETY_SETTLE_CHANCE 230   /* 1 out of N chance to settle
@@ -140,6 +140,13 @@
 
 #define MAX_MORALE           200 /* Max that morale can be (min is neg
 				     of this. */
+
+#define REWARD_EXP_MULT    1000 /* This many exp rewarded per 1 
+				   reward unit. */
+
+#define REWARD_AMOUNT_MAX  100000 /* Max amount a reward can be. */
+
+#define REWARD_QPS_DIVISOR 50     /* 1/50 qps per reward pt. */
 
 /* These are the vnums used to make the "ancient races" and "organizations"
    created in the historygen code. It's so that they have special vnums
@@ -1047,3 +1054,9 @@ bool society_can_add_overlord (SOCIETY *);
    does. */
 
 THING *find_society_overlord (SOCIETY *soc);
+
+
+/* This makes a society attack a package holder to keep him/her from
+   delivering it. */
+
+void attack_package_holder (THING *obj);

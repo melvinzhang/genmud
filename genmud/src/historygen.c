@@ -669,12 +669,13 @@ generate_deity (char *name, char *spheres, int align)
   proto->short_desc = new_str (buf);
   proto->long_desc = new_str ("A being of amazing and awesome power stands before you...");
   
+  sprintf (buf, "owner %s", name);
   for (wearloc = ITEM_WEAR_NONE + 1; wearloc < ITEM_WEAR_MAX; wearloc++)
     {
       for (wearnum = 0; wearnum < wear_data[wearloc].how_many_worn; wearnum++)
 	{
 	  curr_vnum++;
-	  if ((obj = objectgen (area, wearloc, DEITY_LEVEL, curr_vnum, NULL, name)) != NULL)
+	  if ((obj = objectgen (area, wearloc, DEITY_LEVEL, curr_vnum, buf)) != NULL)
 	    add_reset (proto, obj->vnum, 100, 1, 1);
 	}
     }
@@ -841,8 +842,8 @@ historygen_past(void)
 	   ("Looking_back the olden ages z_the_past, I cannot_help feeling_feeling extreme feeling_loss prep_for what_was_lost. It was the age when the united gods followed list_controller_deities. list_ancient_race_names enforced justice at the behest of the gods.", HISTORYGEN_AREA_VNUM));
    
    
+   strcat (ret, "\n\n");
    /* Now do some wars...*/
-   
    
    return ret;
 }
@@ -854,6 +855,7 @@ historygen_disaster (void)
   ret[0] = '\0';
   strcat (ret, string_gen ("But_then came_disaster. The myriad nations of the world were destroyed, and the nations such_as the genned_society_name were cast_out from their home_names. Many battle_names were fought and the ancient_race_name and the other ancient races were driven_from_the_world. And thus did the power of the deities lessen_word. This_was_what the Demons were_waiting_for as they surged into the world, but were cast back to the Pits at_a_terrible_cost.", HISTORYGEN_AREA_VNUM));
   
+  strcat (ret, "\n\n");
   return ret;
 
 }
@@ -869,6 +871,7 @@ historygen_present (void)
   sprintf (buf, "The nations descended into dark_days, and the_world stayed the_same for many ages. But now, the Demons are demon_stirring. The races are broken and disorganized and squabbling among themselves. They must be brought together to fight the demons in this %s", remove_color(game_name_string));
 
   strcat (ret, string_gen (buf, HISTORYGEN_AREA_VNUM));
-
+  
+  strcat (ret, "\n\n");
   return ret;
 }

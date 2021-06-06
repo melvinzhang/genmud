@@ -1068,7 +1068,7 @@ check_spell (THING *th, char *name, int vnum)
     return FALSE;
   
   if (!IS_PC (th))
-    pct = MIN (80, LEVEL (th)*2/3-20);
+    pct = MIN (60, LEVEL (th)*2/3-20);
   else if (spl->vnum < 1 || spl->vnum >=  MAX_SPELL ||
 	   th->pc->prac[spl->vnum] < MIN_PRAC/2 || 
 	   spl->level > LEVEL(th))

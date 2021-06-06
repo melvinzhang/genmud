@@ -27,16 +27,10 @@ new_event (void)
 {
   EVENT *newevent;
   
-  if (event_free)
-    {
-      newevent = event_free;
-      event_free = event_free->next;
-    }
-  else
-    {
-      newevent = (EVENT *) mallok (sizeof (EVENT));
-      event_count++;
-    }
+  if (!event_free)
+    ADD_TO_MEMORY_POOL(EVENT,event_free,event_count);
+  newevent = event_free;
+  event_free = event_free->next;
   bzero (newevent, sizeof (EVENT));
   newevent->th_prev = NULL;
   newevent->th_next = NULL;

@@ -22,6 +22,8 @@
 #endif
 #include "worldgen.h"
 #include "historygen.h"
+#include "citygen.h"
+#include "craft.h"
 
 int listen_socket = 0;
 int max_fd = 0;
@@ -48,6 +50,7 @@ CMD *com_list[256];
 THING *thing_hash[HASH_SIZE];
 THING *thing_hash_pointer = NULL;
 THING *thing_cont_pointer = NULL;
+CMD *cmd_free = NULL;
 char prev_command[STD_LEN];
 char bigbuf[BIGBUF];
 int bigbuf_length = 0;
@@ -352,6 +355,8 @@ init_variables (void)
 	log_it ("YOU HAVE BAD WORDS IN YOUR AFFECT, FLAG, OR VALUE STRUCTS AND MUST FIX THEM!!!\n\r");
 	exit(1);
       }
+    clear_city_grid (FALSE);
+    return;
   }
   
   
@@ -395,6 +400,7 @@ read_server (void)
   read_rumors();
   read_raids();
   reset_world ();
+  add_craft_commands();
 #ifdef USE_WILDERNESS
   read_wildalife();
 #endif

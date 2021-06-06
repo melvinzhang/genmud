@@ -685,6 +685,7 @@ generate_society_objects (SOCIETY *soc, int level, int curr_vnum)
   int vnum;
   THING *area, *obj;
   char sociname[STD_LEN];
+  char names[STD_LEN];
   if (!soc || !soc->name || !*soc->name)
     return 0;
   
@@ -732,9 +733,9 @@ generate_society_objects (SOCIETY *soc, int level, int curr_vnum)
 		 (soc->adj && *soc->adj ? " " : ""),
 		 (soc->aname && *soc->aname && nr (1,2) == 1 ?
 		  soc->aname : soc->name));
-      
+      sprintf (names, "society %s", sociname);
       objectgen (NULL, ITEM_WEAR_NONE, nr (level/3, level), vnum,
-		 sociname, NULL);
+		 names);
     }
   return num_objects;
 }

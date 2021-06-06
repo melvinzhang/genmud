@@ -48,7 +48,7 @@ const struct flag_data caste1_flags[] =
     {"builder", " Builder", CASTE_BUILDER, "Hall of Builders"},
     {"healer", " Healer", CASTE_HEALER, "Temple"},
     {"wizard", " Wizard", CASTE_WIZARD, "Academy"},
-    {"thief", " Thief", CASTE_THIEF, "Hideout"},
+    {"thief", " Thief", CASTE_THIEF, "Den"},
     /* These are things that I don't feel like having in right now. */
     //{"shopkeeper", " Shopkeeper", CASTE_SHOPKEEPER, "Marketplace"},
     //{"crafter", " Crafter", CASTE_CRAFTER, "Craftsmens' Guild"},
@@ -478,7 +478,11 @@ do_society (THING *th, char *arg)
 	  total_population += soc->population;
 	  num_societies++;
 	}
-      sprintf (buf, "\n\n\rThere %s \x1b[1;33m%d\x1b[0;37m societ%s with \x1b[1;33m%d\x1b[0;37m member%s total.\n\r", 
+      if (list_them)
+	sprintf (buf, "\n\n\r");
+      else
+	buf[0] = '\0';
+      sprintf (buf + strlen(buf), "There %s \x1b[1;33m%d\x1b[0;37m societ%s with \x1b[1;33m%d\x1b[0;37m member%s total.\n\r", 
 	       (num_societies == 1 ? "is" : "are"),
 	       num_societies, 
 	       (num_societies == 1 ? "y" : "ies"),

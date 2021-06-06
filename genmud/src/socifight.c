@@ -316,3 +316,65 @@ society_get_killed (THING *killer, THING *vict)
   return;
 }
 
+/* This checks to see if a society sends some assassins after a player
+   messenger carrying a package for an enemy society. */
+
+void
+attack_package_holder (THING *obj)
+{
+  VALUE *package;
+  THING *th;
+  SOCIETY *soc_to, *soc; /* Attacker society. */
+  THING *room, *area;
+  int count, num_chose = 0, num_choices = 0;
+  char buf[STD_LEN];
+
+  if (!obj || (package = FNV (obj, VAL_PACKAGE)) == NULL || nr (1,2) != 2)
+    return;
+  th = obj;
+  while (th && !IS_PC (th))
+    th = th->in;
+  
+  if (!th || !IS_PC (th))
+    return;
+  
+  if ((room = th->in) == NULL || !IS_ROOM (room))
+    return;
+  
+  if ((area = room->in) == NULL || !IS_AREA (area))
+    return;
+  
+  if ((soc_to = find_society_num (package->val[0])) == NULL ||
+       soc_to->align == 0 || DIFF_ALIGN (soc_to->align, th->align))
+    return;
+  /* Find an enemy society in the area where the player is. */
+
+  for (count = 0; count < 2; count++)
+    {      
+      for (soc = society_list; soc; soc = soc->next)
+	{
+	  if (area != find_area_in (soc->room_start) ||
+	      !DIFF_ALIGN (th->align, soc->align))
+	    continue;
+	  
+	  if (count == 0)
+	    num_choices++;
+	  else if (--num_chose < 1)
+	    break;
+	}
+      if (count == 0)
+	{
+	  if (num_choices < 1)
+	    break;
+	  num_chose = nr (1, num_choices);
+	}
+    }
+  if (!soc || !DIFF_ALIGN (soc->align, th->align) ||
+      find_area_in (soc->room_start) != area)
+    return;
+
+  
+  sprintf (buf, "home battle one nosent end kill name %s", KEY(th));
+  society_do_activity (soc, 100, buf);
+  return;
+}
