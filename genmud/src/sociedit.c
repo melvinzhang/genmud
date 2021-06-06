@@ -411,6 +411,14 @@ society_edit (THING *th, char *arg)
       show_society (th, soc);
       return;
     } 
+  else if (!str_cmp (arg1, "lifespan") ||
+	   !str_cmp (arg1, "life"))
+    {
+      soc->lifespan = atoi(arg);
+      show_society (th, soc);
+      stt ("Lifepan changed.\n\r", th);
+      return;
+    }
   else if (!str_cmp (arg1, "level") ||
 	   !str_cmp (arg1, "levels") || 
 	   !str_cmp (arg1, "max_level") ||
@@ -554,7 +562,7 @@ society_edit (THING *th, char *arg)
  
 	  
 
-
+/* This shows the data for a society to an admin. */
 
 
 void
@@ -574,7 +582,7 @@ show_society (THING *th, SOCIETY *soc)
 	   soc->vnum, soc->name,
 	   soc->pname, soc->aname);
   stt (buf, th);
-  sprintf (buf, "LevBon: %d Align: %d Generator: %d Adj: %s. CraftNeed: %d  ShopNeed: %d Morale: %d\n\rPop: %d(%d)  Hrs(Setl.: %d  Raid: %d  Ast.: %d) Wr%%: %d Pow: %d\n\r",
+  sprintf (buf, "LevBon: %d Align: %d Generator: %d Adj: %s. CraftNeed: %d  ShopNeed: %d Morale: %d\n\rPop: %d(%d)  Hrs(Setl.: %d  Raid: %d  Ast.: %d) Wr%%: %d Pow: %d Life: %d\n\r",
 	   soc->level_bonus, 
 	   soc->align,
 	   soc->generated_from,
@@ -588,7 +596,8 @@ show_society (THING *th, SOCIETY *soc)
 	   soc->raid_hours,
 	   soc->assist_hours,
 	   soc->warrior_percent, 
-	   soc->power);
+	   soc->power,
+	   soc->lifespan);
   stt (buf, th);
   sprintf (buf, "Rooms:  %d-%d Objs: %d-%d Goal: (%d) Qual: (%d) Popcap (%d) Level (%d)\n\r", soc->room_start, soc->room_end, soc->object_start, soc->object_end,
 	   soc->goals, soc->quality, soc->population_cap, soc->level);

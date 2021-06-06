@@ -1,4 +1,4 @@
-// This file has the stuff related to scripts.
+/* This file has the stuff related to scripts. */
 
 
 /**********************************************************************/
@@ -111,7 +111,7 @@ struct code_data
 };
 
  
-// Globals.
+/* Globals. */
 
 
 extern CODE *code_hash[CODE_HASH][CODE_HASH];
@@ -128,7 +128,7 @@ extern int trigger_count;
 
 extern const char *trigger_types[];
 
-// Functions.
+/* Functions. */
 
 void remove_from_script_events (THING *);
 char *script_math_parse (SCRIPT_EVENT *, char *); 

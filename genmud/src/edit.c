@@ -1252,7 +1252,7 @@ edit (THING *th, char *arg)
 	    nest = 5;
 	  newreset = new_reset ();
 	  newreset->pct = pct;
-	  newreset->max_num = max_num;
+	  newreset->times = max_num;
 	  newreset->nest = nest;
 	  newreset->vnum = thing_num;
 	  if (reset_num <= 1 || !thg->resets)
@@ -1646,7 +1646,7 @@ do_reset (THING *th , char *arg)
 		   sprintf (buf, "Reset \x1b[1;34m%d\x1b[0;37m: (\x1b[1;36m%d\x1b[0;37m - %s (V:%d)) (\x1b[1;37m%d\x1b[0;37m pct) (\x1b[1;32m%d\x1b[0;37m max)\n\r",
 			    num++, res->vnum, (thg ? NAME(thg) : "nothing"),
 			    (thg ? thg->vnum : 0),
-			    res->pct, res->max_num);
+			    res->pct, res->times);
                    stt (buf, th);
                  }
 	       if ((randpop = FNV (thg, VAL_RANDPOP)) != NULL &&
@@ -1696,7 +1696,7 @@ do_reset (THING *th , char *arg)
  the reset exists. Then, we make sure we are not trying to copy a
  room or area. Then, we check how many of those things with that
  number are already in th. Then, if this number is too big (>= 
- reset->max_num, we goto the next reset. If the number is smaller,
+ reset->times, we goto the next reset. If the number is smaller,
  we then attempt to reset things a number of times equal to the
  difference between how many things can be there, and how many
  are there. Each new reset chance gets a new percentage roll
@@ -1864,7 +1864,7 @@ reset_thing (THING *th, int rdepth)
       /* The number of times the reset is attempted is the total number
 	 allowed minus the number already here. */
       
-      times_through = MAX (0, reset->max_num - curr_num_here);
+      times_through = MAX (0, reset->times - curr_num_here);
       for (j = 0; j < times_through; j++)
 	{	   
 	  if (np () > reset->pct)

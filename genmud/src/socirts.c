@@ -1128,6 +1128,11 @@ set_new_member_stats (THING *newmem, SOCIETY *soc)
   socval->val[1] = 0;
   socval->val[2] = soc->cflags[0];
   
+  /* Set each mob to a specific lifespan. */
+  if (soc->lifespan > 0)
+    {
+      newmem->timer = MAX (1, nr (soc->lifespan*4/5, soc->lifespan*6/5));
+    }
   if (!IS_SET (soc->society_flags, SOCIETY_NONAMES))
     {
       create_society_name (socval);

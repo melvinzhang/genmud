@@ -550,6 +550,7 @@ generate_society (THING *proto)
       
       soc->align = proto->align;
       soc->generated_from = proto->vnum;
+      soc->lifespan = proto->timer;
       soc->society_flags = society_flags;
       
       curr_vnum += generate_society_objects (soc, proto->level, curr_vnum);

@@ -95,6 +95,10 @@ society_give_reward (THING *giver, THING *receiver, int reward_type, int reward)
   char target_name[STD_LEN];
   VALUE *build, *socval;
   SOCIETY *soc, *soc2;
+
+  int obj_vnum;
+  THING *obj;
+
   
   *target_name = '\0';
   if (!giver || !receiver || !IS_PC (receiver) ||
@@ -165,6 +169,22 @@ society_give_reward (THING *giver, THING *receiver, int reward_type, int reward)
   act ("@1n give@s some money to @3f.", giver, NULL, receiver, NULL, TO_ALL);
   
   receiver->pc->quest_points += nr (reward, reward+REWARD_QPS_DIVISOR-1)/REWARD_QPS_DIVISOR;
+
+  /* Give a small chance of giving out an item. */
+
+  if (soc && nr (1,1000) < reward) 
+    {
+      obj_vnum = nr (soc->object_start, soc->object_end);
+      
+      if ((obj = create_thing (obj_vnum)) != NULL &&
+	  !CAN_FIGHT(obj))
+	{
+	  do_say (giver, "Here's something extra.");
+	  thing_from (obj);
+	  thing_to (obj, receiver);
+	  act ("@1n give@s @2n to @3n,", giver, obj, receiver, NULL, TO_ALL);
+	}
+    }
   return TRUE;
 }
 

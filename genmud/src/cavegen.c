@@ -11,6 +11,10 @@
 
 static int cave_grid[CAVEGEN_MAX*2+1][CAVEGEN_MAX*2+1][CAVEGEN_MAX];
 
+/* These are the min/max xyz variables so that the code will
+   be a bit faster here. */
+static int min_x, max_x, min_y, max_y, min_z, max_z;
+
 #define USED_CAVE(x,y,z) (IS_SET(cave_grid[(x)][(y)][(z)],CAVEGEN_USED))
 
 void 
@@ -29,11 +33,10 @@ cavegen (THING *th, char *arg)
   int total_rooms = 0;
   int x, y, z;
   int count = 0;
-  /* Edges of the cave. */
-  int min_x, min_y, min_z, max_x, max_y, max_z;
   char arg1[STD_LEN];
   int total_dist, val;
   int tries = 0, i;
+  int max_room_add_tries;
   if (!arg || !*arg)
     {
       stt ("Cavegen <rooms|size|num> <size> or cavegen <dx> [<dy>] [<dz>] or cavegen show or cavegen generate vnum\n\r", th);
@@ -67,11 +70,7 @@ cavegen (THING *th, char *arg)
       for (dx = 1; dx*dx*dx < total_rooms/9; dx++);
       dy = dx;
       dz = MAX(1,dx*2/5);
-      {
-	char buf[STD_LEN];
-	sprintf (buf, "%d %d %d\n\r", dx, dy, dz);
-	echo (buf);
-      }
+     
     }
   else
     {
@@ -93,22 +92,33 @@ cavegen (THING *th, char *arg)
   if (dx >CAVEGEN_MAX*2-2)
     dx = CAVEGEN_MAX*2-2;
   if (dy > CAVEGEN_MAX*2-2)
-    dy = CAVEGEN_MAX*2-2;
+      dy = CAVEGEN_MAX*2-2;
   if (dz >= CAVEGEN_MAX -2)
     dz = CAVEGEN_MAX-2;
   
   /* Now set the min/max x/y/z. */
-
-  min_x = CAVEGEN_MAX-(dx-1)/2;
-  max_x = CAVEGEN_MAX+dx/2;
-  min_y = CAVEGEN_MAX-(dy-1)/2;
-  max_y = CAVEGEN_MAX+dy/2;
-  min_z = CAVEGEN_MAX/2-(dz-1)/2;
-  max_z = CAVEGEN_MAX/2+dz/2;
   
-  /* Now clear the grid. and seed some rooms. */
- cavegen_clear_bit (~0);
+  /* NOTE: This is the only place these variables should EVER
+     be set or else bad things may happen since other loops in
+     other functions depend on these being correct. */
+  
+  min_x = MID (1, CAVEGEN_MAX-(dx-1)/2, CAVEGEN_MAX*2);
+  max_x = MID (1,  CAVEGEN_MAX+dx/2, CAVEGEN_MAX*2);  
+  min_y = MID (1, CAVEGEN_MAX-(dy-1)/2, CAVEGEN_MAX*2);
+  max_y = MID (1,  CAVEGEN_MAX+dy/2, CAVEGEN_MAX*2); 
+  min_z = MID (1, CAVEGEN_MAX/2-(dz-1)/2, CAVEGEN_MAX-2);
+  max_z = MID (1,  CAVEGEN_MAX/2+dz/2, CAVEGEN_MAX-2);
+  
+  /* Basically don't attempt to add rooms too much to really small maps
+     since most of the maps will fail, so let them fail quickly. */
+  
+  max_room_add_tries = MIN (dx, dy)*3/2;
+  
+
  
+  /* Now clear the grid. and seed some rooms. */
+  cavegen_clear_bit (~0);
+  
   for (x = min_x; x <= max_x; x++)
     {
       for (y = min_y; y <= max_y; y++)
@@ -132,29 +142,29 @@ cavegen (THING *th, char *arg)
   /* Now keep checking if the cave is connected or not and adding
      more rooms until it's done. */
   
-  for (tries = 0; tries < 100; tries++)
+  for (tries = 0; tries < 200; tries++)
     {
       /* Clear used flags and seed the rooms. The reason that I 
 	 keep reseeding if the numbers get big is that I've noticed
 	 that it either generates a cave really quickly, or it thrashes
 	 for a long time, so if it gets a bad seed, I will just start over
 	 with a new seed. */
-      cavegen_clear_bit (CAVEGEN_USED);
-      cavegen_seed_rooms (dx, dy, dz);      
+      cavegen_clear_bit (CAVEGEN_USED | CAVEGEN_ADDED_ADJACENT);
+      cavegen_seed_rooms ();      
       count = 0;
-      while (!cavegen_is_connected () && ++count < 100)
+      while (!cavegen_is_connected () && ++count < max_room_add_tries)
 	{
-	  /* Do 10 add rooms before checking connected status. */
-	  for (i = 0; i < 10; i++)
-	    cavegen_add_rooms(dx, dy, dz, (count >= 50));
+	  /* Do N add rooms before checking connected status. */
+	  for (i = 0; i < CAVEGEN_ADD_BEFORE_CHECK_CONNECT; i++)
+	    cavegen_add_rooms(count*CAVEGEN_FORCE_UD/CAVEGEN_ADD_TRIES);
 	}
       if (cavegen_is_connected())
 	break;
     }
-  
   if (!cavegen_is_connected ())
     {
       stt ("Failed to generate a cave!\n\r", th);
+      
       return FALSE;
     }
   stt ("Cave generated. Use cavegen generate <number> to make the map.\n\r", th);
@@ -170,13 +180,31 @@ cavegen_clear_bit (int bit)
 {
   int x, y, z;
   
-  for (x = 0; x < CAVEGEN_MAX*2+1; x++)
+  
+  /* When clearing cavegen allowed, clear EVERYTHING. */
+  if (IS_SET (bit, CAVEGEN_ALLOWED))
     {
-      for (y = 0; y < CAVEGEN_MAX*2+1; y++)
+      for (x = 0; x < CAVEGEN_MAX*2+1; x++)
 	{
-	  for (z = 0; z < CAVEGEN_MAX; z++)
+	  for (y = 0; y < CAVEGEN_MAX*2+1; y++)
 	    {
-	      RBIT(cave_grid[x][y][z], bit);
+	      for (z = 0; z < CAVEGEN_MAX; z++)
+		{
+		  RBIT(cave_grid[x][y][z], bit);
+		}
+	    }
+	}
+    }
+  else
+    {
+      for (x = min_x; x < max_x; x++)
+	{
+	  for (y = min_y; y <= max_y;  y++)
+	    {
+	      for (z = min_z; z <= max_z; z++)
+		{
+		  RBIT(cave_grid[x][y][z], bit);
+		}
 	    }
 	}
     }
@@ -185,72 +213,23 @@ cavegen_clear_bit (int bit)
 
 /* This seeds the map with some rooms on the edges of the map so that they
    have to grow toward the middle of the map. */
-
+  
 void
-cavegen_seed_rooms (int dx, int dy, int dz)
+cavegen_seed_rooms (void)
 {  
-  int min_x, max_x, min_y, max_y, min_z, max_z, z;
-  int i;
-  if (dx >CAVEGEN_MAX*2-2)
-    dx = CAVEGEN_MAX*2-2;
-  if (dy > CAVEGEN_MAX*2-2)
-    dy = CAVEGEN_MAX*2-2;
-  if (dz >= CAVEGEN_MAX -2)
-    dz = CAVEGEN_MAX-2;
-  min_x = CAVEGEN_MAX-(dx-1)/2;
-  max_x = CAVEGEN_MAX+dx/2;
-  min_y = CAVEGEN_MAX-(dy-1)/2;
-  max_y = CAVEGEN_MAX+dy/2;
-  min_z = CAVEGEN_MAX/2-(dz-1)/2;
-  max_z = CAVEGEN_MAX/2+dz/2;
-  /* Used for seeding random spots along the edges of the map. */  
-  
-  /* Sanity check the variables. */
-
-  if (max_x < min_x)
-    max_x = min_x;
-  if (max_y < min_y)
-    max_y = min_y;
-  if (max_z < min_z)
-    max_z = min_z;
-  
-  if (min_x < 1 || min_x >= CAVEGEN_MAX*2)
-    min_x = CAVEGEN_MAX;
-  if (max_x < 1 || max_x >= CAVEGEN_MAX*2)
-    max_x = CAVEGEN_MAX;
-  if (min_y < 1 || min_y >= CAVEGEN_MAX*2)
-    min_y = CAVEGEN_MAX;
-  if (max_y < 1 || max_y >= CAVEGEN_MAX*2)
-    max_y = CAVEGEN_MAX;
-  if (min_z < 1 || min_z >= CAVEGEN_MAX-1)
-    min_z = CAVEGEN_MAX/2;
-  if (max_z < 1 || max_z >= CAVEGEN_MAX-1)
-    max_z = CAVEGEN_MAX/2;
-  
-  
+    int i;
+    int z;
   
   /* Now go to the edges and seed new rooms. */
-
+  
   for (z = min_z; z <= max_z; z++)
     {
-      int times = 1;
+      int times = 2;
       if (z > min_z && z < max_z && nr (1,3) != 2)
 	times++;
       for (i = 0; i < times; i++)
 	cavegen_seed_room (0, 0, z);
     }
-  /*
-  cavegen_seed_room (0, 0, min_z);
-  cavegen_seed_room (0, 0, max_z);
-  cavegen_seed_room (0, min_y, 0);
-  cavegen_seed_room (0, max_y, 0);
-  cavegen_seed_room (min_x, 0, 0);
-  cavegen_seed_room (max_x, 0, 0);
-  
-  for (i = 0; i < 4; i++)
-    cavegen_seed_room (0, 0, 0);
- 
-  */
   return;
 }
 
@@ -264,58 +243,9 @@ cavegen_seed_room (int start_x, int start_y, int start_z)
 {
   int x, y, z;
   int times, i;
-  int min_x = 1, max_x = CAVEGEN_MAX*2, min_y = 1, max_y = CAVEGEN_MAX*2, min_z = 1, max_z = CAVEGEN_MAX-1;
   int tries;
   /* Get min/max x, y, z values. */
-  
-  for (x = CAVEGEN_MAX*2; x >= 0; x--)
-    {
-      if (cave_grid[x][CAVEGEN_MAX][CAVEGEN_MAX/2])
-	{
-	  max_x = x;
-	  break;
-	}
-    }
-  for (x = 0; x <= CAVEGEN_MAX*2; x++)
-    {
-      if (cave_grid[x][CAVEGEN_MAX][CAVEGEN_MAX/2])
-	{
-	  min_x = x;
-	  break;
-	}
-    }
-  for (y = CAVEGEN_MAX*2; y >= 0; y--)
-    {
-      if (cave_grid[CAVEGEN_MAX][y][CAVEGEN_MAX/2])
-	{
-	  max_y = y;
-	  break;
-	}
-    }
-  for (y = 0; y <= CAVEGEN_MAX*2; y++)
-    {
-      if (cave_grid[CAVEGEN_MAX][y][CAVEGEN_MAX/2])
-	{
-	  min_y = y;
-	  break;
-	}
-    }
-  for (z = CAVEGEN_MAX-1; z >= 0; z--)
-    {
-      if (cave_grid[CAVEGEN_MAX][CAVEGEN_MAX][z])
-	{
-	  max_z = z;
-	  break;
-	}
-    }
-  for (z = 0; z <= CAVEGEN_MAX-1; z++)
-    {
-      if (cave_grid[CAVEGEN_MAX][CAVEGEN_MAX][z])
-	{
-	  min_z = z;
-	  break;
-	}
-    }
+ 
 
   times = 1;
   
@@ -354,10 +284,9 @@ cavegen_seed_room (int start_x, int start_y, int start_z)
 
 
 void
-cavegen_add_rooms (int dx, int dy, int dz, bool force_it)
+cavegen_add_rooms (int force_ud)
 { 
   int x, y, z;
-  int min_x, max_x, min_y, max_y, min_z, max_z;
   /* Number of adjacent rooms. */
   int num_adj_rooms;   /* Number of rooms directly adjacent to this NEWS. */
   int num_above_below_rooms; /* How many rooms are above and below this. */
@@ -365,19 +294,7 @@ cavegen_add_rooms (int dx, int dy, int dz, bool force_it)
 			   NEWS plane. */
   int chance_to_add_room;
   
-  if (dx >CAVEGEN_MAX*2-2)
-    dx = CAVEGEN_MAX*2-2;
-  if (dy > CAVEGEN_MAX*2-2)
-    dy = CAVEGEN_MAX*2-2;
-  if (dz >= CAVEGEN_MAX -2)
-    dz = CAVEGEN_MAX-2;
-  min_x = CAVEGEN_MAX-(dx-1)/2;
-  max_x = CAVEGEN_MAX+dx/2;
-  min_y = CAVEGEN_MAX-(dy-1)/2;
-  max_y = CAVEGEN_MAX+dy/2;
-  min_z = CAVEGEN_MAX/2-(dz-1)/2;
-  max_z = CAVEGEN_MAX/2+dz/2;
-
+  
   cavegen_clear_bit(CAVEGEN_ADDED_ADJACENT);
   for (x = min_x; x <= max_x; x++)
     {
@@ -421,35 +338,38 @@ cavegen_add_rooms (int dx, int dy, int dz, bool force_it)
 	      
 	      /* Don't connect if there's too many rooms on the
 		 same level. */
-	      if (num_adj_rooms < 1 || num_adj_rooms > 2)
+	      if (num_adj_rooms < 1 || num_adj_rooms > 3)
+		continue;
+
+	      if (num_adj_rooms == 3 && nr (1,50) != 34)
 		continue;
 	      
 	      /* Don't connect 3 levels at once. */
-	      if (num_above_below_rooms >= 2)
+	      if (num_above_below_rooms >= 2 && nr (1,20) != 3)
 		continue;
 	      
 	      /* Dont' connect if there are lots of adjacent rooms and
 		 an above/below room. */
 	      if (num_adj_rooms > 1 && num_above_below_rooms > 0 &&
-		  (!force_it || nr (1,100) == 2))
+		  (nr (1, CAVEGEN_FORCE_UD) > force_ud*2  || nr (1,15) == 2))
 		continue;
 	      
 	      /* Don't allow too many corner rooms near this. */
 	      if (num_adj_rooms > 1 && num_corner_rooms > 1 &&
-		  nr (1,4) != 2)
+		  nr (1,3) == 2)
 		continue;
 	      
 	      /* Don't allow too many corner rooms near this. */
-	      if (num_corner_rooms > 2)
+	      if (num_corner_rooms > 2 && nr (1,5) != 3)
 		continue;
 	      
-	      if (num_corner_rooms > 1 && nr (1, 10) != 2)
+	      if (num_corner_rooms > 1 && nr (1, 4) != 2)
 		continue;
 	      
 	      /* Don't connect most of the time if there are adj and
 		 above/below rooms. */
 	      if (num_adj_rooms > 0 && num_above_below_rooms > 0 &&
-		  nr (1,200) != 2)
+		  nr (1,100) != 2)
 		continue;
 	      
 	      /* The chance to add a room drops off like the fourth
@@ -458,9 +378,9 @@ cavegen_add_rooms (int dx, int dy, int dz, bool force_it)
 		 but not many caverns. */
 	      
 	      if (num_adj_rooms == 1)
-		chance_to_add_room = 2;
-	      else if (num_adj_rooms == 2)
-		chance_to_add_room = 200;
+		chance_to_add_room = 1;
+	      else 
+		chance_to_add_room = num_adj_rooms*3;
 	      
 	      if (nr (0,chance_to_add_room) != chance_to_add_room/2)
 		continue;
@@ -472,8 +392,6 @@ cavegen_add_rooms (int dx, int dy, int dz, bool force_it)
 	      cave_grid[x-1][y][z] |= CAVEGEN_ADDED_ADJACENT;
 	      cave_grid[x][y+1][z] |= CAVEGEN_ADDED_ADJACENT;
 	      cave_grid[x][y-1][z] |= CAVEGEN_ADDED_ADJACENT;
-	      cave_grid[x][y][z+1] |= CAVEGEN_ADDED_ADJACENT;
-	      cave_grid[x][y][z-1] |= CAVEGEN_ADDED_ADJACENT;
 	      
 	    }
 	}
@@ -489,11 +407,11 @@ cavegen_is_connected (void)
   int x, y, z;
   bool found = FALSE;
   /* Find a room in the cave. */
-  for (x = 1; x < CAVEGEN_MAX*2; x++)
+  for (x = min_x; x <= max_x; x++)
     {
-      for (y = 1; y < CAVEGEN_MAX*2; y++)
+      for (y = min_y; y <= max_y; y++)
 	{
-	  for (z = 1; z < CAVEGEN_MAX-1; z++)
+	  for (z = min_z; z <= max_z; z++)
 	    {
 	      if (USED_CAVE(x,y,z))
 		{
@@ -517,14 +435,14 @@ cavegen_is_connected (void)
   /* Loop through all rooms and if any are used and not connected, then
      the cave is not connected. */
 
-  for (x = 1; x < CAVEGEN_MAX*2; x++)
+  for (x = min_x; x <= max_x; x++)
     {
-      for (y = 1; y < CAVEGEN_MAX*2; y++)
+      for (y = min_y; y <= max_y; y++)
 	{
-	  for (z = 1; z < CAVEGEN_MAX-1; z++)
+	  for (z = min_z; z <= max_z; z++)
 	    {
 	      if (USED_CAVE(x,y,z))
-		{
+		{ 
 		  if (!IS_SET (cave_grid[x][y][z], CAVEGEN_CONNECTED))
 		    {
 		      return FALSE;
@@ -543,9 +461,9 @@ cavegen_is_connected (void)
 void
 cavegen_check_connected (int x, int y, int z)
 {
-  if (x < 0 || x >= CAVEGEN_MAX*2 ||
-      y < 0 || y >= CAVEGEN_MAX*2 ||
-      z < 0 || z >= CAVEGEN_MAX)
+  if (x < min_x || x > max_x ||
+      y < min_y || y > max_y ||
+      z < min_z || z > max_z)
     return;
   
   if (!USED_CAVE (x, y, z))
@@ -572,13 +490,16 @@ cavegen_generate (THING *th, int start_vnum)
   int x, y, z;
   int end_vnum, num_rooms = 0, vnum;
   THING *area, *area2, *room;
+  /* These next 6 variables are used for setting the dir_edge names
+     on rooms for use with the worldgen linking code. */
+  int min_z_room = CAVEGEN_MAX, max_z_room = 0;
+  int min_x_room = CAVEGEN_MAX*2, max_x_room = 0;
+  int min_y_room = CAVEGEN_MAX*2, max_y_room = 0;
   char buf[STD_LEN];
-  int min_x = CAVEGEN_MAX*2, max_x = 0,  min_y = CAVEGEN_MAX*2, max_y = 0, min_z = CAVEGEN_MAX, max_z = 0;
+ 
   /* Used to start doing the DFS to mark rooms so we don't have
      many U/D connections in our map. */
   
-  THING *first_room = NULL;
-  int first_x, first_y, first_z;
   if ((area = find_area_in (start_vnum)) == NULL)
     {
       stt ("This start vnum isn't in an area!\n\r", th);
@@ -594,21 +515,23 @@ cavegen_generate (THING *th, int start_vnum)
 	  for (z = 0; z < CAVEGEN_MAX-1; z++)
 	    {
 	      if (USED_CAVE(x,y,z))
-		{
-		  if (x > max_x)
-		    max_x = x;
-		  if (x < min_x)
-		    min_x = x;
-		  if (y > max_y)
-		    max_y = y;
-		  if (y < min_y)
-		    min_y = y;
-		  if (z > max_z)
-		    max_z = z;
-		  if (z < min_z)
-		    min_z = z;
+		{		  
 		  num_rooms++;
+		  if (z > max_z_room)
+		    max_z_room = z;
+		  if (z < min_z_room)
+		    min_z_room = z;
+		  if (x > max_x_room)
+		    max_x_room = x;
+		  if (x < min_x_room)
+		    min_x_room = x; 
+		  if (y > max_y_room)
+		    max_y_room = y;
+		  if (y < min_y_room)
+		    min_y_room = y;
 		}
+	      else
+		cave_grid[x][y][z] = 0;
 	    }
 	}
     }
@@ -638,7 +561,7 @@ cavegen_generate (THING *th, int start_vnum)
       return FALSE;
     }
   
-  if (end_vnum >= area->vnum + area->mv)
+  if (end_vnum > area->vnum + area->mv)
     {
       sprintf (buf, "The cave is too big to fit in the room space you've allotted for your area. Increase the number of rooms to at least %d.\n\r", num_rooms+(start_vnum-area->vnum));
       stt (buf, th);
@@ -657,14 +580,16 @@ cavegen_generate (THING *th, int start_vnum)
   
   /* At this point we know that the target area exists and that it has
      enough space for the rooms and nothing is in the target vnum range,
-     so start to add the rooms in. Use a loop. */
-
+     so start to add the rooms in. The loop goes from minmax_xyz -1 to
+     minmax_xyz + 1 because there are "adjacent" rooms marked at the 
+     edges of the map that need to be unmarked. */
+  
   vnum = start_vnum;
-  for (x = min_x; x <= max_x; x++)
+  for (x = min_x - 1; x <= max_x + 1; x++)
     {
-      for (y = min_y; y <= max_y; y++)
+      for (y = min_y - 1; y <= max_y + 1; y++)
 	{
-	  for (z = min_z; z <= max_z; z++)
+	  for (z = min_z - 1; z <= max_z + 1; z++)
 	    {
 	      if (USED_CAVE(x,y,z))
 		cave_grid[x][y][z] = vnum++;
@@ -689,7 +614,20 @@ cavegen_generate (THING *th, int start_vnum)
 		    return FALSE;
 		  
 		  room->vnum = cave_grid[x][y][z];
-		  room->thing_flags = ROOM_SETUP_FLAGS;
+		  room->thing_flags = ROOM_SETUP_FLAGS; 
+		  if (z == max_z_room)
+		    append_name (room, "up_edge");
+		  if (z == min_z_room)
+		    append_name (room, "down_edge");
+		  if (x == max_x_room)
+		    append_name (room, "east_edge");
+		  if (x == min_x_room)
+		    append_name (room, "west_edge");
+		  if (y == max_y_room)
+		    append_name (room, "north_edge");
+		  if (y == min_y_room)
+		    append_name (room, "south_edge");
+		  
 		  thing_to (room, area);
 		  add_thing_to_list (room);
 		}
@@ -710,19 +648,13 @@ cavegen_generate (THING *th, int start_vnum)
 	    {
 	      if (cave_grid[x][y][z] &&
 		  (room = find_thing_num (cave_grid[x][y][z])) != NULL)
-		{	  
-		  if (first_room == NULL)
-		    {
-		      first_room = room;
-		      first_x = x; 
-		      first_y = y;
-		      first_z = z;
-		    }
-		  
+		{
 		  room_add_exit (room, DIR_EAST, cave_grid[x+1][y][z]);
 		  room_add_exit (room, DIR_WEST, cave_grid[x-1][y][z]);
 		  room_add_exit (room, DIR_NORTH, cave_grid[x][y+1][z]);
 		  room_add_exit (room, DIR_SOUTH, cave_grid[x][y-1][z]);
+		  room_add_exit (room, DIR_UP, cave_grid[x][y][z-1]);
+		  room_add_exit (room, DIR_DOWN, cave_grid[x][y][z+1]);
 		}
 	    }
 	}
@@ -765,6 +697,8 @@ cavegen_generate (THING *th, int start_vnum)
 	}
     }
   SBIT (area->thing_flags, TH_CHANGED);
+  stt ("Caves generated.\n\r", th);
+  cavegen_clear_bit (~0);
   return TRUE;
 }
   
@@ -773,58 +707,24 @@ cavegen_generate (THING *th, int start_vnum)
 void
 cavegen_show (THING *th)
 {
-  int min_x = CAVEGEN_MAX*2;
-  int max_x = 0;
-  int min_y = CAVEGEN_MAX*2;
-  int max_y = 0;
-  int min_z = CAVEGEN_MAX;
-  int max_z = 0;
-  int num_rooms = 0;
   int x, y, z;
   char buf[STD_LEN];
   char *t;
   
   if (!th)
     return;
-
-  /* First calculate the min and max levels of the area. */
   
-  for (x = 0; x < CAVEGEN_MAX*2+1; x++)
-    {
-      for (y = 0; y < CAVEGEN_MAX*2+1; y++)
-	{
-	  for (z = 0; z < CAVEGEN_MAX; z++)
-	    {
-	       if (USED_CAVE(x,y,z))
-		{
-		  if (x > max_x)
-		    max_x = x;
-		  if (x < min_x)
-		    min_x = x;
-		  if (y > max_y)
-		    max_y = y;
-		  if (y < min_y)
-		    min_y = y;
-		  if (z > max_z)
-		    max_z = z;
-		  if (z < min_z)
-		    min_z = z;
-		  num_rooms++;
-		}
-	    }
-	}
-    }
   
   /* Loop through the levels from highest down to lowest and show each
-     level of the map. */
-
-  for (z = max_z; z >= min_z; z--)
+     level of the map. Loop through y dir first, then across
+     show all levels of the cave in each row. */
+  
+  stt ("\n\r", th);
+  for (y = max_y; y >= min_y; y--)
     {
-      sprintf (buf, "Level %d ------------------\n\n\r", max_z-z+1);
-      stt (buf, th);
-      for (y = max_y; y >= min_y; y--)
+      t = buf;
+      for (z = max_z; z >= min_z; z--)
 	{
-	  t = buf;
 	  for (x = min_x; x <= max_x; x++)
 	    {
 	      
@@ -861,15 +761,41 @@ cavegen_show (THING *th)
 		*t = ' ';
 	      t++;
 	    }
-	  *t++ = '\n';
-	  *t++ = '\r';
-	  *t = '\0';
-	  stt (buf, th);
+	  if (z > min_z)
+	    {
+	      sprintf (t, " | ");
+	      t += 3;
+	    }
 	}
+      *t++ = '\n';
+      *t++ = '\r';
+      *t = '\0';
+      stt (buf, th);
     }
   
-  sprintf (buf, "The total number of rooms is %d\n\r", num_rooms);
+  sprintf (buf, "The total number of rooms is %d\n\r", find_num_cave_rooms());
   stt (buf, th);
   return;
 }
 
+
+/* This returns the number of cave rooms currently in use. */
+
+int
+find_num_cave_rooms (void)
+{
+  int x, y, z;
+  int total = 0;
+  for (x = min_x; x < max_x; x++)
+    {
+      for (y = min_y; y <= max_y; y++)
+	{
+	  for (z = min_z; z <= max_z; z++)
+	    {
+	      if (USED_CAVE(x,y,z))
+		total++;
+	    }
+	}
+    }
+  return total;
+}

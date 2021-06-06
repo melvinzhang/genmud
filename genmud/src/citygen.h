@@ -24,6 +24,12 @@
 #define CITY_STREET_LEVEL  2 /* Street level is height 2...(allows for
 				 sewers and such below the city). */
 
+/* Min and max numbers of rooms in the city to generate. */
+#define CITYGEN_MIN_SIZE  100
+#define CITYGEN_MAX_SIZE  2000
+
+
+
 THING *city_grid[CITY_SIZE][CITY_SIZE][CITY_HEIGHT];
 
 
@@ -45,7 +51,17 @@ bool city_coord_is_ok (int x, int y, int z);
 void generate_base_city_grid (THING *obj, int start_vnum);
 
 
+/* This adds a detail to a city. This is normally first called in
+   citygen() by going down the list of words in the citygen area
+   and looking for the rooms corresponding to those words. */
+
+void citygen_add_detail (THING *obj, THING *area_to, VALUE *search_dims, 
+		     int depth);
+
 /* This shows the city map to a player (street level only) */
 
 void show_city_map (THING *th);
 
+/* This connects blocks of rooms inside of the city. */
+
+void connect_city_blocks (int x, int y, int z, int dir);

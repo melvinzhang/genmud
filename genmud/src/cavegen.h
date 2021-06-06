@@ -17,6 +17,17 @@
 #define CAVEGEN_MAX  21
 
 
+#define CAVEGEN_ADD_TRIES   50  /* Number of times you try to add rooms. */
+#define CAVEGEN_FORCE_UD    15 /* The likelihood of linking U/D rooms
+				   increases with this number goes from 
+				   1-N so that the UD rooms get connected
+				   after most rooms are connected, but still
+				   fairly quickly. */
+
+
+#define CAVEGEN_ADD_BEFORE_CHECK_CONNECT 3 /* Try to add N rooms before you
+					      check connections
+					      again. */
 /* Min number of cavegen rooms: */
 
 #define CAVEGEN_MIN_ROOMS 100
@@ -39,7 +50,7 @@ bool cavegen_is_connected (void);
 void cavegen_check_connected (int x, int y, int z);
 
 /* This seeds rooms into the cavegen map. */
-void cavegen_seed_rooms (int dx, int dy, int dz); 
+void cavegen_seed_rooms (); 
 
 
 /* This seeds a few rooms at the edge of the map. The 0 args are randomized
@@ -54,10 +65,18 @@ void cavegen_seed_room (int x, int y, int z);
    new rooms adjacent to existing rooms in such a way that the rooms are
    not likely to end up in clumps. */
 
-void cavegen_add_rooms (int dx, int dy, int dz, bool force_it);
+void cavegen_add_rooms (int force_number);
 
 /* This actually generates the cavegen rooms for use within an area.*/
 bool cavegen_generate (THING *th, int start_vnum);
 
+
+/* This shows the levels of the caves that were generated as a series of
+   maps. It also shows up exits as green, down exits as red, and up/down
+   exits as cyan. */
+
 void cavegen_show (THING *th);
 
+/* This returns the number of cavegen rooms made. */
+
+int find_num_cave_rooms (void);

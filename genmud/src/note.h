@@ -10,12 +10,12 @@
 struct note_data 
 {
   NOTE *next;
-  char *sender;      // Name of sender.
-  char *to;          // List of recipients.
-  char *subject;     // What the note is about.
-  char *message;     // The message the note contains.
+    char *sender;      /* Name of sender. */
+    char *to;          /* List of recipients. */
+    char *subject;     /* What the note is about. */
+    char *message;     /* The message the note contains. */
   char *adminresp;   /* Admin response...neat idea taken from ???? */
-  int time;          // When it was posted.
+    int time;          /* When it was posted. */
 };
 
 extern NOTE *note_free;

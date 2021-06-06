@@ -136,8 +136,10 @@ show_exits (THING *th, THING *in)
   VALUE *exit;
   int door, roomflags;
   THING *room;
+  int exit_color = 7; /* Last digit of the exit color...to make it
+			 easier to read. 4 = regular blue. */
   buf[0] = '\0';
-  buf2[0] = '\0';
+  buf2[0] = '\0';  
   if (!th || !in)
     return;
   
@@ -164,10 +166,10 @@ show_exits (THING *th, THING *in)
 		{
 		  if (!IS_PC1_SET (th, PC_HOLYLIGHT))
 		    continue;
-		  sprintf (buf3, "\x1b[1;34m (%s)", dir_name[door -1]);
+		  sprintf (buf3, "\x1b[1;3%dm (%s)", exit_color, dir_name[door -1]);
 		}
 	      else
-		sprintf (buf3, "\x1b[1;34m [%s]", dir_name[door -1]);
+		sprintf (buf3, "\x1b[1;3%dm [%s]", exit_color, dir_name[door -1]);
 	    }
 	  else if (IS_SET (roomflags, ROOM_AIRY))
 	    {
@@ -186,7 +188,7 @@ show_exits (THING *th, THING *in)
 	      sprintf (buf3, "\x1b[0;33m #%s#", dir_name[door -1]); 
 	    }
 	  else
-	    sprintf (buf3, "\x1b[1;34m %s", dir_name[door -1]);
+	    sprintf (buf3, "\x1b[1;3%dm %s", exit_color, dir_name[door -1]);
 	  
 	  strcat (buf, buf3);
 	}

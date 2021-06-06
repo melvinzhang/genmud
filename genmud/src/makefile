@@ -27,7 +27,7 @@ OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 CC = gcc
 
 
-LFLAGS = -lpthread -lcrypt -pg
+LFLAGS = -lpthread -lcrypt
 
 .c.o: serv.h
 	$(CC) $(CFLAGS) $<

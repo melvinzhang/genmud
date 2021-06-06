@@ -682,7 +682,7 @@ society_setup_shopkeeper (THING *th)
 		  reset->pct = 50;
 		  reset->nest = 1;
 		  reset->vnum = obj->vnum;
-		  reset->max_num = society_shop_data[socval->val[3]].resets[i][1];
+		  reset->times = society_shop_data[socval->val[3]].resets[i][1];
 		  reset->next = th->proto->resets;
 		  th->proto->resets = reset;
 		}

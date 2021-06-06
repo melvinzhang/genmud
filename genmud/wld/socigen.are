@@ -3,7 +3,7 @@ Name socigen.are`
 HpMv 0 10 5 200
 HWT 0 0
 Cost 100
-Timer 18
+Timer 2
 Short Society Generators`
 type Lonath`
 ThFl 1089531
@@ -78,6 +78,7 @@ Name hobgoblin hobgoblins hobgoblin`
 Level 110
 HWT 0 0
 Align 1
+Timer 2000
 Short cave gray`
 Flag Room 0 0 987136
 Flag Det 0 0 4
@@ -88,6 +89,7 @@ Name kobold kobolds kobold`
 Level 80
 HWT 0 0
 Align 1
+Timer 1500
 Short cave forest`
 Flag Room 0 0 1249280
 Flag Det 0 0 4

@@ -500,6 +500,7 @@ update_thing_hour (THING *th)
   TRACK *trkn, *trk, *prev;
   int  i, j, feed_choices, feed_chose, condval;
   bool killed = FALSE;
+  SOCIETY *soc;
   
   if (!th || !th->in || (IS_AREA (th->in)  && !IS_ROOM (th) &&
 		  !IS_AREA (th)))
@@ -549,8 +550,14 @@ update_thing_hour (THING *th)
 	      write_playerfile (th);
 	      if (th->pc->no_quit < 1)
 		free_thing (th);
+	    } /* Society members die. */
+	  else if ((soc = FNV (th, VAL_SOCIETY)) != NULL)
+	    {
+	      act ("$9@1n die@s of old age.$7", th, NULL, NULL, NULL, TO_ALL);
+	      get_killed (th, NULL);
+	      return;
 	    }
-	  else
+	  else	      
 	    { /* Replaceby is a simple way to make an ecology by making
 		 things transform into other things when they time out. */
 	      THING *replacer;

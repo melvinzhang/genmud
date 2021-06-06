@@ -880,7 +880,7 @@ read_reset (FILE *f)
 
   newreset->vnum = read_number (f);
   newreset->pct = read_number (f);
-  newreset->max_num = read_number (f);
+  newreset->times = read_number (f);
   newreset->nest = read_number (f);
   return newreset;
 }
@@ -890,7 +890,7 @@ write_reset (FILE *f, RESET *reset)
 {
   if (!f || !reset)
     return;
-  fprintf (f, "Reset %d %d %d %d\n", reset->vnum, reset->pct, reset->max_num, reset->nest);
+  fprintf (f, "Reset %d %d %d %d\n", reset->vnum, reset->pct, reset->times, reset->nest);
   return;
 }
 

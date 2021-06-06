@@ -2,7 +2,7 @@ THING 106200
 Name craftgen.are`
 HpMv 0 10 5 800
 HWT 0 0
-Timer 6
+Timer 3
 Short The Crafting Generators`
 type Lonath`
 ThFl 1089531
@@ -26,15 +26,15 @@ Name fibers`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-plural base
+EDESC names`
+cotton
 `
 EDESC gather`
 inventory container
 room field
 `
-EDESC names`
-cotton
+EDESC gen`
+plural base
 `
 END_THING
 
@@ -42,14 +42,6 @@ THING 106207
 Name tree`
 HWT 0 0
 ThFl 101062
-EDESC gen`
-base
-`
-EDESC chop`
-room forest
-hand saw axe
-room forest
-`
 EDESC names`
 oak cedar maple ash poplar
 hickory
@@ -58,21 +50,29 @@ darkwood
 elm
 cherry
 `
+EDESC chop`
+room forest
+hand saw axe
+room forest
+`
+EDESC gen`
+base
+`
 END_THING
 
 THING 106208
 Name boulder`
 HWT 0 0
 ThFl 101062
-EDESC gen`
-base
+EDESC names`
+granite limestone stone marble
 `
 EDESC mine`
 room underground rough
 hand sledgehammer
 `
-EDESC names`
-granite limestone stone marble
+EDESC gen`
+base
 `
 END_THING
 
@@ -81,16 +81,16 @@ Name hide`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-plural
-base
+EDESC names`
+randmobs
 `
 EDESC skin`
 hand knife
 made corpse
 `
-EDESC names`
-randmobs
+EDESC gen`
+plural
+base
 `
 END_THING
 
@@ -99,12 +99,12 @@ Name thread`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-plural
-`
 EDESC spin`
 made 4 fibers
 here 'spinning wheel'
+`
+EDESC gen`
+plural
 `
 END_THING
 
@@ -113,12 +113,12 @@ Name cloth`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-plural
-`
 EDESC weave`
 here loom
 made 3 thread
+`
+EDESC gen`
+plural
 `
 END_THING
 
@@ -142,13 +142,13 @@ need tanning_liquid
 `
 Wear wield`
 ThFl 100934
-EDESC gen`
-plural
-noname
-`
 EDESC tan`
 hold tanning_liquid
 made 3 hide
+`
+EDESC gen`
+plural
+noname
 `
 END_THING
 
@@ -180,13 +180,13 @@ HWT 0 0
 Timer 2
 Wear wield`
 ThFl 100934
-EDESC gen`
-plural noname
-`
 EDESC mix`
 use jar
 use water
 made dust
+`
+EDESC gen`
+plural noname
 `
 END_THING
 
@@ -195,16 +195,16 @@ Name chunk`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-base
+EDESC names`
+brass bronze copper silver iron gold steel platinum
+obsidian mithril adamantium
 `
 EDESC mine`
 hand pick
 room underground
 `
-EDESC names`
-brass bronze copper silver iron gold steel platinum
-obsidian mithril adamantium
+EDESC gen`
+base
 `
 END_THING
 
@@ -265,12 +265,12 @@ Name sand`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-base plural
-`
 EDESC gather`
 inventory jar
 room desert rough
+`
+EDESC gen`
+base plural
 `
 END_THING
 
@@ -279,13 +279,13 @@ Name dirt`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-plural
-base
-`
 EDESC gather`
 use jar
 room field forest rough underground
+`
+EDESC gen`
+plural
+base
 `
 END_THING
 
@@ -295,12 +295,12 @@ HWT 0 0
 Timer 5
 Wear wield`
 ThFl 100934
-EDESC gen`
-plural noname
-`
 EDESC mix`
 use water
 made dirt
+`
+EDESC gen`
+plural noname
 `
 END_THING
 
@@ -310,15 +310,15 @@ HWT 0 0
 Timer 2
 Wear wield`
 ThFl 100934
-EDESC gen`
-plural noname
-`
 EDESC melt`
 here forge
 hold tongs
 use 10 charcoal
 make 5
 made 4 sand
+`
+EDESC gen`
+plural noname
 `
 END_THING
 
@@ -342,14 +342,14 @@ HWT 0 0
 Wear wield`
 ThFl 100930
 Val drink 0 2 0 0 0 0 0 0 `
-EDESC gen`
-noname
-`
 EDESC mold`
 here pottery_wheel
 hold knife
 here oven
 made 3 mud
+`
+EDESC gen`
+noname
 `
 END_THING
 
@@ -357,14 +357,14 @@ THING 106228
 Name loom`
 HWT 0 0
 ThFl 101062
-EDESC gen`
-noname
-`
 EDESC build`
 hold hammer
 hold saw
 use 40 nail
 made 10 board
+`
+EDESC gen`
+noname
 `
 END_THING
 
@@ -372,14 +372,14 @@ THING 106229
 Name 'spinning wheel'`
 HWT 0 0
 ThFl 101062
-EDESC gen`
-noname
-`
 EDESC build`
 use 15 nail
 hold hammer
 hold saw
 made 5 board
+`
+EDESC gen`
+noname
 `
 END_THING
 
@@ -388,15 +388,15 @@ Name needle`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-noname
-`
 EDESC forge`
 hand forging_hammer
 here forge
 make 10 20
 made ingot
 use 4 charcoal in forge
+`
+EDESC gen`
+noname
 `
 END_THING
 
@@ -405,9 +405,6 @@ Name nail`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-noname
-`
 EDESC forge`
 here forge
 here anvil
@@ -416,6 +413,9 @@ use 15 charcoal
 make 30 60
 made ingot
 `
+EDESC gen`
+noname
+`
 END_THING
 
 THING 106232
@@ -423,9 +423,6 @@ Name saw`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-noname
-`
 EDESC make`
 use board
 use 5 charcoal
@@ -434,6 +431,9 @@ hold hammer
 hold saw
 here anvil
 made 3 ingot
+`
+EDESC gen`
+noname
 `
 END_THING
 
@@ -471,14 +471,14 @@ THING 106235
 Name 'charcoal hut'`
 HWT 0 0
 ThFl 101058
-EDESC gen`
-noname
-`
 EDESC build`
 use 20 nail
 hold hammer
 hold saw
 made 10 board
+`
+EDESC gen`
+noname
 `
 END_THING
 
@@ -487,14 +487,14 @@ Name charcoal`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-plural noname
-`
 EDESC smolder`
 here charcoal_hut
 use 15 charcoal
 make 40 100
 made 5 board
+`
+EDESC gen`
+plural noname
 `
 END_THING
 
@@ -503,13 +503,13 @@ Name 'tanning liquid'`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-noname
-`
 EDESC brew`
 use 2 charcoal
 use jar
 made 5 blood
+`
+EDESC gen`
+noname
 `
 END_THING
 
@@ -518,12 +518,12 @@ Name blood`
 HWT 0 0
 Wear wield`
 ThFl 100934
+EDESC gen`
+noname
+`
 EDESC extrude`
 inventory jar
 made corpse
-`
-EDESC gen`
-noname
 `
 END_THING
 
@@ -532,6 +532,9 @@ Name trowel`
 HWT 0 0
 Wear wield`
 ThFl 100934
+EDESC gen`
+noname
+`
 EDESC forge`
 here forge
 use 5 charcoal
@@ -540,9 +543,6 @@ hold 'forging hammer'
 use handle
 made 1 ingot
 `
-EDESC gen`
-noname
-`
 END_THING
 
 THING 106240
@@ -550,6 +550,9 @@ Name tongs`
 HWT 0 0
 Wear wield`
 ThFl 100934
+EDESC gen`
+noname
+`
 EDESC forge`
 here forge
 use 5 charcoal
@@ -559,22 +562,19 @@ hold 'forging hammer'
 use handle
 made 2 ingot
 `
-EDESC gen`
-noname
-`
 END_THING
 
 THING 106241
 Name dust`
 HWT 0 0
 ThFl 100934
-EDESC crush`
-made boulder
-hold hammer
-`
 EDESC gen`
 noname
 plural
+`
+EDESC crush`
+made boulder
+hold hammer
 `
 END_THING
 
@@ -582,6 +582,8 @@ THING 106242
 Name anvil`
 HWT 0 0
 ThFl 101062
+EDESC gen`
+`
 EDESC forge`
 here forge
 hold 'forging hammer'
@@ -589,14 +591,15 @@ here anvil
 use 50 charcoal in forge
 made 10 ingot in forge
 `
-EDESC gen`
-`
 END_THING
 
 THING 106243
 Name knife`
 HWT 0 0
 ThFl 100934
+EDESC gen`
+noname
+`
 EDESC forge`
 made 1 ingot in forge
 use 5 charcoal in forge
@@ -606,9 +609,6 @@ here anvil
 here forge
 use handle
 `
-EDESC gen`
-noname
-`
 END_THING
 
 THING 106244
@@ -616,9 +616,6 @@ Name prod`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-noname
-`
 EDESC forge`
 here forge
 use 10 charcoal in forge
@@ -628,6 +625,9 @@ wield tongs
 made 3 ingot
 use 1 handle
 `
+EDESC gen`
+noname
+`
 END_THING
 
 THING 106245
@@ -635,14 +635,14 @@ Name pick`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-noname
-`
 EDESC assemble`
 hold hammer
 use 2 nail
 made 'pick head'
 use handle
+`
+EDESC gen`
+noname
 `
 END_THING
 
@@ -651,14 +651,14 @@ Name handle`
 HWT 0 0
 Wear wield`
 ThFl 100934
-EDESC gen`
-noname
-`
 EDESC make`
 made board
 make 4
 hold saw
 hold plane
+`
+EDESC gen`
+noname
 `
 END_THING
 
@@ -667,15 +667,15 @@ Name plane`
 HWT 0 0
 Wear wield`
 ThFl 100934
+EDESC gen`
+noname
+`
 EDESC assemble`
 use 1 block
 made scraper
 hold hammer
 hold saw
 here file
-`
-EDESC gen`
-noname
 `
 END_THING
 

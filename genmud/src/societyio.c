@@ -111,6 +111,7 @@ read_society (FILE *f)
 	  soc->level = read_number (f);
 	  soc->abandon_hours = read_number (f);
 	  soc->morale = read_number (f);
+	  soc->lifespan = read_number (f);
 	  if ((room = find_thing_num (soc->room_start)) == NULL ||
 	      !IS_ROOM (room))
 	    {
@@ -254,7 +255,7 @@ write_society (FILE *f, SOCIETY *soc)
   write_string (f, "PName", soc->pname);
   write_string (f, "AName", soc->aname);
   write_string (f, "Adj", soc->adj);
-  fprintf (f, "Gen %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+  fprintf (f, "Gen %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
 	   soc->vnum, 
 	   soc->society_flags, 
 	   soc->room_start, 
@@ -271,7 +272,8 @@ write_society (FILE *f, SOCIETY *soc)
 	   soc->generated_from,
 	   soc->level,
 	   soc->abandon_hours,
-	   soc->morale);
+	   soc->morale,
+	   soc->lifespan);
   fprintf (f, "Needs %d %d\n",
 	   soc->crafters_needed, soc->shops_needed);
 

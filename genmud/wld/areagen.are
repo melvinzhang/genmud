@@ -2,7 +2,7 @@ THING 107100
 Name areagen.are`
 HpMv 0 10 5 400
 HWT 0 0
-Timer 1
+Timer 5
 Short The Areagen Area`
 type Lonath`
 ThFl 1089531
@@ -1015,6 +1015,23 @@ Desc 'the banks of'
 'banks of'
 'the shore of'
 'the shoreline by'
+`
+END_THING
+
+THING 107152
+Name area_name_suffix`
+HWT 0 0
+Desc ia
+eth
+ith
+oth
+ath
+idol
+idor
+idon
+iden
+ar
+arn
 `
 END_THING
 

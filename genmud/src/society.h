@@ -431,6 +431,7 @@ struct society_data
   int morale;                 /* Morale of society--goes up with 
 				 winning battles, down with losing. 
 				 Affected by diplomats. Tends to 0 -- normal */
+  int lifespan;               /* Average lifespan for members of this race. */
 };
 
 /**********************************************************************/

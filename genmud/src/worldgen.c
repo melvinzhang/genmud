@@ -764,6 +764,9 @@ worldgen_generate_areas (int area_size)
 		  /* Make sure this area will still fit in the
 		     range. */
 		  curr_size = nr (area_size/2, area_size*2);
+		  /* Underworld areas are MUCH bigger because they
+		     have more levels. */
+		  curr_size *= 2;
 		  curr_size = (curr_size/55+1)*50;
 		  dirbuf[0] = '\0';
 		  if (y < WORLDGEN_MAX-1 && worldgen_underworld[x][y+1])
@@ -1227,8 +1230,8 @@ worldgen_link_above_to_below (THING *above_area, THING *below_area)
 
   THING *above_room, *below_room = NULL;
   VALUE *exit;
-  int count;
-
+  int count, num_choices = 0, num_chose = 0;
+  
   if (!above_area || !IS_AREA (above_area) || !below_area ||
       !IS_AREA (below_area))
     return;
@@ -1243,13 +1246,37 @@ worldgen_link_above_to_below (THING *above_area, THING *below_area)
   if (!above_room)
     return;
   
-  for (count = 0; count < 100; count++)
+  for (count = 0; count < 2; count++)
     {
-      if ((below_room = find_random_room 
-	   (below_area, FALSE, ROOM_UNDERGROUND, BADROOM_BITS | ROOM_EASYMOVE)) != NULL &&
-	  (exit = FNV (below_room, DIR_UP+1)) == NULL)
-	break;
+      for (below_room = below_area->cont; below_room; below_room = below_room->next_cont)
+	{
+	  if (is_named (below_room, "up_edge"))
+	    {
+	      if (count == 0)
+		num_choices++;
+	      else if (--num_chose < 1)
+		break;
+	    }
+	}
+      if (count == 0)
+	{
+	  if (num_choices == 0)
+	    break;
+	  num_chose = nr (1, num_choices);
+	}
     }
+  
+  if (!below_room)
+    {
+      for (count = 0; count < 100; count++)
+	{
+	  if ((below_room = find_random_room 
+	       (below_area, FALSE, ROOM_UNDERGROUND, BADROOM_BITS | ROOM_EASYMOVE)) != NULL &&
+	      (exit = FNV (below_room, DIR_UP+1)) == NULL)
+	    break;
+	}
+    }
+  
   if (!below_room)
     return;
   

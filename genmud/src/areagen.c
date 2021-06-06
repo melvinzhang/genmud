@@ -13,6 +13,7 @@
 #include "roomdescgen.h"
 #include "detailgen.h"
 #include "mobgen.h"
+#include "cavegen.h"
 
  
 /* These are the kinds of patches you can use to make areas. */
@@ -181,7 +182,7 @@ areagen (THING *th, char *arg)
   set_up_new_area(area, size);
   area->mv = size*3/5;
   min_num_rooms = area->mv/3;
-  max_num_rooms = area->mv*2/3;    
+  max_num_rooms = area->mv*5/6;    
   area->max_mv = size;
   area->level = arealevel;
   add_flagval (area, FLAG_ROOM1, type);
@@ -284,222 +285,244 @@ areagen (THING *th, char *arg)
   
   
   /* Now generate the map. The map consists of 1-4 map parts that
-     get overlaid to try to make more random maps. */
+     get overlaid to try to make more random maps. If the map is an
+     underground area, then you use different cavegen code to generate
+     the area. */
+  
  /* If this area goes in certain directions, you must attempt to
 	 make parts for each of those directions. */
-      
-  if (go_dirs != 0)
-    num_map_parts = FLATDIR_MAX;
-  else
-    num_map_parts = nr (2,AREAGEN_MAP_PART_MAX);
-
   
-
+  if (!IS_SET (type, ROOM_UNDERGROUND))
+    {
   
-  for (map_times = 0; map_times < 500; map_times++)
-    {      
-      map = NULL;
       
-      for (count = 0; count < AREAGEN_MAP_PART_MAX; count++)
-	map_part[count] = NULL;
+      if (go_dirs != 0)
+	num_map_parts = FLATDIR_MAX;
+      else
+	num_map_parts = nr (2,AREAGEN_MAP_PART_MAX);
       
       
-      for (count = 0; count < num_map_parts; count++)
-	{
+      
+      
+      for (map_times = 0; map_times < 500; map_times++)
+	{      
+	  map = NULL;
 	  
-	  curr_length = nr (length*5/4, length*3/2)/(num_map_parts);
-	  if (curr_length < 4)
-	    curr_length = 4;
-	  if (num_map_parts < 1)
-	    num_map_parts = 1;
-	  curr_width = size/(nr (curr_length/2, curr_length)*(num_map_parts));
+	  for (count = 0; count < AREAGEN_MAP_PART_MAX; count++)
+	    map_part[count] = NULL;
 	  
+	  
+	  for (count = 0; count < num_map_parts; count++)
+	    {
+	      
+	      curr_length = nr (length*5/4, length*3/2)/(num_map_parts);
+	      if (curr_length < 4)
+		curr_length = 4;
+	      if (num_map_parts < 1)
+		num_map_parts = 1;
+	      curr_width = size/(nr (curr_length/2, curr_length)*(num_map_parts));
+	      
 	  /* For regular areas, go to the old code. */
-	  if (go_dirs == 0)
-	    {
-	      dx = count % 2;
-	      dy = (count+1) %2;
-	     
-	    }
-	  else  /* Go dirs is > 0 */
-	    {
-	      if (!IS_SET (go_dirs, (1 << count)))
-		continue;
-	      
-	      dx = 0;
-	      dy = 0;
-	      
-	      
+	      if (go_dirs == 0)
+		{
+		  dx = count % 2;
+		  dy = (count+1) %2;
 		  
-	      /* THIS MAKES HEAVY USE OF THE ORDERING OF THE DIR_XXXX 
-		 CONSTANTS IN SERV.H ! */
-	      
-	      if (count <= DIR_SOUTH)
-		{
-		  dy = (1-2*count)*50;
-		  if (IS_SET (go_dirs, (1 << DIR_EAST)))
-		    dx += nr (5,10);
-		  if (IS_SET (go_dirs, (1 << DIR_WEST)))
-		    dx -= nr (5,10);
 		}
-	      else /* EW parts */
+	      else  /* Go dirs is > 0 */
 		{
-		  dx = (5- 2*count)*50;
-		  if (IS_SET (go_dirs, (1 << DIR_NORTH)))
-		    dy += nr (5,10);
-		  if (IS_SET (go_dirs, (1 << DIR_SOUTH)))
-		    dy -= nr (5,10);
-		} 
-	      
-	      curr_width = curr_width*2/3;
-	      if (curr_width < 7)
-		curr_width = 7;
-	      curr_length = curr_length*2;
-	    }
-	  
-	  sprintf (buf, "%d %d %d %d %d %d %d %d",
-		   dx, 
-		   dy, 
-		   curr_length,
-		   curr_width,
-		       nr (1,2),
-		   /* Making the number below this higher (like 9+) makes
-		      the areas "thinner" and therefore it's cheaper
-		      to do tracking and it will cut down on CPU quite
-		      a bit. */
-		   nr (8,9) ,
-		   nr (10,20),
-		   nr (0, size/100));
-	  map_part[count] = mapgen_generate (buf);
-	}
-      map = NULL;
-      for (i = 0; i < num_map_parts; i++)
-	{
-	  if (map_part[i] != NULL)
-	    {
-	      map = map_part[i];
-	      map_part[i] = NULL;
-	      break;
-	    }
-	}
-      for (count = 0; count < num_map_parts; count++)
-	{
-	  if (go_dirs != 0)
-	    {
-	      dx = 0;
-	      dy = 0;
-	      if (!IS_SET (go_dirs, (1 << count)))
-		continue;
-	      /* Combine the edges together only. */
-	      if (count == DIR_NORTH)
-		dy = curr_length*5/4;
-	      else if (count == DIR_SOUTH)
-		dy = -curr_length*5/4;
-	      else if (count == DIR_WEST || count == DIR_EAST)
-		{ /* E/W Get added later and if the map only has
-		     an N or S component, then these get added up
-		     or down respectively to make the map look correct. */
-		  if (IS_SET (go_dirs, (1 << DIR_NORTH)))
+		  if (!IS_SET (go_dirs, (1 << count)))
+		    continue;
+		  
+		  dx = 0;
+		  dy = 0;
+		  
+		  
+		  
+		  /* THIS MAKES HEAVY USE OF THE ORDERING OF THE DIR_XXXX 
+		     CONSTANTS IN SERV.H ! */
+		  
+		  if (count <= DIR_SOUTH)
 		    {
+		      dy = (1-2*count)*50;
+		      if (IS_SET (go_dirs, (1 << DIR_EAST)))
+			dx += nr (5,10);
+		      if (IS_SET (go_dirs, (1 << DIR_WEST)))
+			dx -= nr (5,10);
+		    }
+		  else /* EW parts */
+		    {
+		      dx = (5- 2*count)*50;
+		      if (IS_SET (go_dirs, (1 << DIR_NORTH)))
+			dy += nr (5,10);
 		      if (IS_SET (go_dirs, (1 << DIR_SOUTH)))
-			dy = curr_length*3/5;
-		      else
-			dy = curr_length*5/4;	
-		    }	  
-		  else if (IS_SET (go_dirs, (1 << DIR_SOUTH)))
-		    dy = -curr_length*5/4;
-		  /*
-		      if (IS_SET (go_dirs, (1 << RDIR(count))))
-			dy = curr_length*5/4;
-		      else if (!IS_SET (go_dirs, (1 << DIR_SOUTH)))
-			dy = -curr_length*5/4;
-		    }
-		  else if (IS_SET (go_dirs, (1 << DIR_SOUTH)))
-		    {
-		      if (IS_SET (go_dirs, (1 << RDIR(count))))
-			dy = -curr_length*5/4;
-		      else if (!IS_SET (go_dirs, (1 << DIR_NORTH)))
-			dy = curr_length*5/4;
-		    }
-		  */
-		  if (count == DIR_WEST)
-		    dx = -curr_length*5/4;
-		  else if (count == DIR_EAST) 
-		    dx = curr_length*5/4;
-		 
+			dy -= nr (5,10);
+		    } 
+		  
+		  curr_width = curr_width*2/3;
+		  if (curr_width < 7)
+		    curr_width = 7;
+		  curr_length = curr_length*2;
 		}
-	    }
-	  else
-	    {
-	      dx = nr (-length/2, length/2);
-	      dy = nr (-length/2, length/2);
-	    }
-	  if ((map = mapgen_combine 
-	       (map, map_part[count], 
-		dx, dy)) == NULL)
-	  {
-	      int count2;
-	      free_mapgen (map);
-	      map = NULL;
 	      
-	      for (count2 = count+1; count2 < num_map_parts; count2++)
-		{
-		  free_mapgen (map_part[count2]);
-		  map_part[count2] = NULL;
-		}
-	      break;
-	    }  
-	  map_part[count] = NULL;
-	}
-      if (map)
-	{
-	  if (map->num_rooms < min_num_rooms ||
-	      map->num_rooms > max_num_rooms)
+	      sprintf (buf, "%d %d %d %d %d %d %d %d",
+		       dx, 
+		       dy, 
+		       curr_length,
+		       curr_width,
+		       nr (1,2),
+		       /* Making the number below this higher (like 9+) makes
+			  the areas "thinner" and therefore it's cheaper
+			  to do tracking and it will cut down on CPU quite
+			  a bit. */
+		       nr (8,9) ,
+		   nr (10,20),
+		       nr (0, size/100));
+	      map_part[count] = mapgen_generate (buf);
+	    }
+	  map = NULL;
+	  for (i = 0; i < num_map_parts; i++)
 	    {
-	      if (map->num_rooms < min_num_rooms)
-		length++;
+	      if (map_part[i] != NULL)
+		{
+		  map = map_part[i];
+		  map_part[i] = NULL;
+		  break;
+		}
+	    }
+	  for (count = 0; count < num_map_parts; count++)
+	    {
+	      if (go_dirs != 0)
+		{
+		  dx = 0;
+		  dy = 0;
+		  if (!IS_SET (go_dirs, (1 << count)))
+		    continue;
+		  /* Combine the edges together only. */
+		  if (count == DIR_NORTH)
+		    dy = curr_length*5/4;
+		  else if (count == DIR_SOUTH)
+		    dy = -curr_length*5/4;
+		  else if (count == DIR_WEST || count == DIR_EAST)
+		    { /* E/W Get added later and if the map only has
+			 an N or S component, then these get added up
+			 or down respectively to make the map look correct. */
+		      if (IS_SET (go_dirs, (1 << DIR_NORTH)))
+			{
+			  if (IS_SET (go_dirs, (1 << DIR_SOUTH)))
+			    dy = curr_length*3/5;
+			  else
+			    dy = curr_length*5/4;	
+			}	  
+		      else if (IS_SET (go_dirs, (1 << DIR_SOUTH)))
+			dy = -curr_length*5/4;
+		      
+		      if (count == DIR_WEST)
+			dx = -curr_length*5/4;
+		      else if (count == DIR_EAST) 
+			dx = curr_length*5/4;
+		      
+		    }
+		}
 	      else
-		length--;
-	      free_mapgen (map);
-	      map = NULL;
+		{
+		  dx = nr (-length/2, length/2);
+		  dy = nr (-length/2, length/2);
+		}
+	      if ((map = mapgen_combine 
+		   (map, map_part[count], 
+		    dx, dy)) == NULL)
+		{
+		  int count2;
+		  free_mapgen (map);
+		  map = NULL;
+		  
+		  for (count2 = count+1; count2 < num_map_parts; count2++)
+		    {
+		      free_mapgen (map_part[count2]);
+		      map_part[count2] = NULL;
+		    }
+		  break;
+		}  
+	      map_part[count] = NULL;
 	    }
 	  if (map)
-	    break;      
+	    {
+	      if (map->num_rooms < min_num_rooms ||
+		  map->num_rooms > max_num_rooms)
+		{
+		  if (map->num_rooms < min_num_rooms)
+		    length++;
+		  else
+		    length--;
+		  free_mapgen (map);
+		  map = NULL;
+		}
+	      if (map)
+		break;      
+	    }
 	}
-    }
-  
-  
-  if (!map)
-    {
       
-      sprintf (buf, "Failed to make area of size %d at %d\n", size, start);
-      log_it (buf);
-      return;
-    }
-  
-  /* Otherwise make the map. */
-  
-  stt (mapgen_create (map, start + 1), th);
-  free_mapgen (map);
-  
-  /* Now set all of the rooms to have the name of the area and
-     the correct room flags. */
-
-  for (vnum = start + 1; vnum < start + size; vnum++)
-    {
-      if ((room = find_thing_num (vnum)) != NULL &&
-	  IS_ROOM (room))
+      
+      if (!map)
 	{
-	  free_str (room->short_desc);
-	  room->short_desc = new_str (realnamebuf);
-	  add_flagval (room, FLAG_ROOM1, type);
+	  
+	  sprintf (buf, "Failed to make area of size %d at %d\n", size, start);
+	  log_it (buf);
+	  return;
+	}
+      
+      /* Otherwise make the map. */
+      
+      stt (mapgen_create (map, start + 1), th);
+      free_mapgen (map);
+    }
+  else /* Do underground area...CAVEGEN! */
+    {
+      int dx, dy, dz;
+      for (dx = 1; dx*dx < area->mv*2/3; dx++);
+      	  
+      for (map_times = 0; map_times < 100; map_times++)
+	{
+	  dy = nr (dx*5/6,dx*6/5);
+	  dz = 2 + nr (0,8)/8;
+	  if (dx < 10)
+	    dx = 10;
+	  if (dy < 10)
+	    dy = 10;
+	  sprintf (buf, "%d %d %d", dx, dy, dz);
+	  cavegen (th, buf);
+	  if (!cavegen_is_connected())
+	    continue;
+	  else if (find_num_cave_rooms () < min_num_rooms)
+	    dx++;
+	  else if (find_num_cave_rooms () > max_num_rooms)
+	    dx--;
+	  else  if (cavegen_generate (th, start + 1))
+	    break;	  	  
 	}
     }
-  
-  /* Now mark the edge rooms with dir_edge as their name. This
-     must be done before you try to do any road linking or anything 
-     or else you won't be able to find rooms on area edges. */
-
+	    
+	    
+	  
+      /* Now set all of the rooms to have the name of the area and
+	 the correct room flags. */
+      
+      for (vnum = start + 1; vnum < start + size; vnum++)
+	{
+	  if ((room = find_thing_num (vnum)) != NULL &&
+	      IS_ROOM (room))
+	    {
+	      free_str (room->short_desc);
+	      room->short_desc = new_str (realnamebuf);
+	      add_flagval (room, FLAG_ROOM1, type);
+	    }
+	}
+      
+      /* Now mark the edge rooms with dir_edge as their name. This
+	 must be done before you try to do any road linking or anything 
+	 or else you won't be able to find rooms on area edges. */
+      
   mark_area_edges (area);
 
   
@@ -530,6 +553,7 @@ areagen (THING *th, char *arg)
     fix_disconnected_sections (area);
  
 
+
   /* Now add trees to the area. This is after details so that
      you don't add details to the trees.*/
   add_trees (area);
@@ -555,9 +579,12 @@ areagen (THING *th, char *arg)
   /*  These can be added whenever now that the area extremes are 
       premarked. */
   
-  add_underpasses (area);
-  
-  add_elevations (area);
+  if (!IS_SET (type, ROOM_UNDERGROUND))
+    {
+      add_underpasses (area);
+      
+      add_elevations (area);
+    }
   
   add_shorelines (area);
 
@@ -629,6 +656,7 @@ generate_area_name (char *name, int type)
   char prefixname[STD_LEN]; /* Dark light etc... */
   char keyword[STD_LEN];
   char suffixname[STD_LEN];
+  static char buf[STD_LEN];
   char *t;
   SOCIETY *soc = NULL;
   
@@ -636,6 +664,41 @@ generate_area_name (char *name, int type)
   if (!name || !*name || strlen(name) > 100 ||
       type == 0 || !IS_SET (type, ROOM_SECTOR_FLAGS))
     return retbuf;
+
+  /* Ok, give a small chance of a single word name that's a random
+     syllable or two followed by a specal suffix. */
+  
+  if (nr (1,6) == 2)
+    {
+      int size = nr (3,5);
+      do
+	{
+	  strcpy (buf, create_society_name (NULL));
+	  buf[size] = '\0';
+	  for (t = buf; *t; t++);
+	  t--;
+	  
+	  if (strlen (buf) < 4 || strlen (buf) > 7 || isvowel (*t))
+	    continue;
+	  for (t = buf; *t; t++)
+	    {
+	      if (!isalpha(*t))
+		break;
+	    }
+	  if (*t)
+	    continue;
+	}
+      while (0);
+      
+      strcat (buf, find_gen_word (AREAGEN_AREA_VNUM, "area_name_suffix", NULL));
+      buf[0] = UC (buf[0]);
+      for (t = buf + 1; *t; t++)
+	*t = LC(*t);
+  
+      return buf;
+    }
+  
+
   
   /* Find which row in the room_flag array we want to use. */
   
@@ -2000,73 +2063,86 @@ fix_disconnected_sections (THING *area)
   int depth;
   bool found_path = FALSE;
   bool added_bridge = FALSE; /* Did we add a bridge at this depth? */
+  bool added_bridge_this_time = TRUE;
+  
   if (!area)
     return;
   
  
-      /* For each length search through all rooms */
+  /* For each length search through all rooms. Keep going until we make
+     a pass where we add no more bridges. */
 
-  for (depth = 1; depth < 10; depth++)
+  while (added_bridge_this_time)
     {
-      /* Do this in several passes to try to get all areas connected. */
-      
-      for (start_room = area->cont; start_room; start_room = start_room->next_cont)
+      added_bridge_this_time = FALSE;
+      for (depth = 1; depth < 10; depth++)
 	{
-	  if (IS_ROOM (start_room) &&
-	      IS_ROOM_SET (start_room, ROOM_EASYMOVE))
-	    break;
-	}
+	  /* Do this in several passes to try to get all areas connected. */
+	  for (start_room = area->cont; start_room; start_room = start_room->next_cont)
+	    {
+	      if (IS_ROOM (start_room) &&
+		  IS_ROOM_SET (start_room, ROOM_EASYMOVE))
+		break;
+	    }
+	  
+	  /* Boggle, no roads? Shouldn't happen. */
       
-      /* Boggle, no roads? Shouldn't happen. */
-      
-      if (!start_room)
-	return;
-      
-      /* Find the number of rooms marked in the main section of the map. */
-      
-      undo_marked (area);
-      
-      main_section_size = find_connected_rooms_size (start_room);
-      
-      added_bridge = FALSE;
-      for (room = area->cont; room; room = room->next_cont)
-	{
-	  /* Any room that's not connected and isn't a badroom bit
-	     gets checked. */
-	  if (IS_ROOM (room) &&
-	      !IS_MARKED (room) &&
-	      !IS_ROOM_SET (room, BADROOM_BITS))
-	    { 	      
+	  if (!start_room)
+	    {
+	      if (area->cont && IS_ROOM (area->cont))
+		start_room = area->cont;
+	      else
+		return;
+	    }
+	  
+	  
+	  
+	  /* Find the number of rooms marked in the main section of the map. */
+	  
+	  undo_marked (area);
+	  
+	  main_section_size = find_connected_rooms_size (start_room);
+	  
+	  added_bridge = FALSE;
+	  for (room = area->cont; room; room = room->next_cont)
+	    {
+	      /* Any room that's not connected and isn't a badroom bit
+		 gets checked. */
+	      if (IS_ROOM (room) &&
+		  !IS_MARKED (room) &&
+		  !IS_ROOM_SET (room, BADROOM_BITS))
+		{ 	      
 		  
-	      found_path = FALSE;
-	      /* See if there are any badrooms connected to this room. */
-	      for (dir = 0; dir < FLATDIR_MAX; dir++)
-		{
-		  /* If we can make a path... */
-		  if ((exit = FNV (room, dir + 1)) != NULL &&
-		      (nroom = find_thing_num (exit->val[0])) != NULL &&
-		      found_path_through_badrooms (nroom, depth))
+		  found_path = FALSE;
+		  /* See if there are any badrooms connected to this room. */
+		  for (dir = 0; dir < FLATDIR_MAX; dir++)
 		    {
-		      
-		      found_path = TRUE;
-		      /* Mark everything we just connected. */
-		      find_connected_rooms_size (room);
-		      added_bridge = TRUE;
-		      break;
+		      /* If we can make a path... */
+		      if ((exit = FNV (room, dir + 1)) != NULL &&
+			  (nroom = find_thing_num (exit->val[0])) != NULL &&
+			  found_path_through_badrooms (nroom, depth))
+			{
+			  
+			  found_path = TRUE;
+			  /* Mark everything we just connected. */
+			  find_connected_rooms_size (room);
+			  added_bridge = TRUE;
+			  added_bridge_this_time = TRUE;
+			  break;
+			}
 		    }
 		}
 	    }
+	  if (added_bridge)
+	    depth--;
 	}
-      if (added_bridge)
-	depth--;
+      
     }
-  
   undo_marked (area);
-  
- return;
+  return;
 }
 
-
+  
 /* This returns the number of rooms that are connected to this room in the
    area that aren't blocked by badroom rooms. */
 
@@ -2118,7 +2194,7 @@ found_path_through_badrooms (THING *start_room, int max_depth)
 							    BADROOM_BITS))
     return FALSE;
   
-  add_bfs (NULL, start_room, REALDIR_MAX);
+  add_bfs (NULL, start_room, nr (0, FLATDIR_MAX-1));
   
   while (bfs_curr && !found_end_room)
     {
@@ -2130,7 +2206,7 @@ found_path_through_badrooms (THING *start_room, int max_depth)
 	    {
 	      /* If it's next to a good marked room, then break out
 		 and make the bridge. Otherwise, add more rooms. */
-	      curr_dir = (bfs_curr->dir + dir) % 4;
+	      curr_dir = (bfs_curr->dir + dir) % FLATDIR_MAX;
 	      if ((exit = FNV (room, curr_dir + 1)) != NULL &&
 		  (nroom = find_thing_num (exit->val[0])) != NULL)
 		{
@@ -2154,9 +2230,11 @@ found_path_through_badrooms (THING *start_room, int max_depth)
       clear_bfs_list();
       return FALSE;
     }
-  
+
   /* Get the overall name. */
-  
+
+
+
   strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, "bridge_prefixes", NULL));
   strcpy (bridgename, find_gen_word (AREAGEN_AREA_VNUM, "bridge_names", NULL));
   strcpy (locname, find_gen_word (AREAGEN_AREA_VNUM, "bridge_locations", NULL));

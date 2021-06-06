@@ -1,0 +1,1608 @@
+THING 13000
+Name area13000.are`
+HpMv 0 10 333 500
+HWT 0 0
+ThFl 1089531
+END_THING
+
+THING 13001
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13002
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13003
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13004
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13005
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13006
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13007
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13008
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13009
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13010
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13011
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13012
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13013
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13014
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13015
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13016
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13017
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13018
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13019
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13020
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13021
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13022
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13023
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13024
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13025
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13026
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13027
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13028
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13029
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13030
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13031
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13032
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13033
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13034
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13035
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13036
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13037
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13038
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13039
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13040 0 0 0 0 0 0 0 `
+Val e_exit 13047 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13040
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13093 0 0 0 0 0 0 0 `
+Val e_exit 13048 0 0 0 0 0 0 0 `
+Val s_exit 13039 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13041
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13042
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13043
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13044
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13045
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13046
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13047
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13048 0 0 0 0 0 0 0 `
+Val e_exit 13055 0 0 0 0 0 0 0 `
+Val w_exit 13039 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13048
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13102 0 0 0 0 0 0 0 `
+Val e_exit 13056 0 0 0 0 0 0 0 `
+Val s_exit 13047 0 0 0 0 0 0 0 `
+Val w_exit 13040 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13049
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13050
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13051
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13052
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13053
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13054
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13055
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13056 0 0 0 0 0 0 0 `
+Val e_exit 13114 0 0 0 0 0 0 0 `
+Val w_exit 13047 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13056
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13111 0 0 0 0 0 0 0 `
+Val e_exit 13115 0 0 0 0 0 0 0 `
+Val s_exit 13055 0 0 0 0 0 0 0 `
+Val w_exit 13048 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13057
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13058
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13059
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13060
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13061
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13062
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13063
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13064
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13065
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13066
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13067
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13068
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13069
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13070
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13071
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13072
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13073
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13074
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13075
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13076
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13077
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13078
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13079
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13080
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13081
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13082
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13083
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13084
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13085
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13086
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13087
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13088
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13089
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13090
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13091
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13092
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13093
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13094 0 0 0 0 0 0 0 `
+Val e_exit 13102 0 0 0 0 0 0 0 `
+Val s_exit 13040 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13094
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13095 0 0 0 0 0 0 0 `
+Val e_exit 13103 0 0 0 0 0 0 0 `
+Val s_exit 13093 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13095
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13096 0 0 0 0 0 0 0 `
+Val e_exit 13104 0 0 0 0 0 0 0 `
+Val s_exit 13094 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13096
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13097 0 0 0 0 0 0 0 `
+Val e_exit 13105 0 0 0 0 0 0 0 `
+Val s_exit 13095 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13097
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13098 0 0 0 0 0 0 0 `
+Val e_exit 13106 0 0 0 0 0 0 0 `
+Val s_exit 13096 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13098
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13099 0 0 0 0 0 0 0 `
+Val e_exit 13107 0 0 0 0 0 0 0 `
+Val s_exit 13097 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13099
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13100 0 0 0 0 0 0 0 `
+Val e_exit 13108 0 0 0 0 0 0 0 `
+Val s_exit 13098 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13100
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val e_exit 13109 0 0 0 0 0 0 0 `
+Val s_exit 13099 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13101
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13102
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13103 0 0 0 0 0 0 0 `
+Val e_exit 13111 0 0 0 0 0 0 0 `
+Val s_exit 13048 0 0 0 0 0 0 0 `
+Val w_exit 13093 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13103
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13104 0 0 0 0 0 0 0 `
+Val e_exit 13112 0 0 0 0 0 0 0 `
+Val s_exit 13102 0 0 0 0 0 0 0 `
+Val w_exit 13094 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13104
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13105 0 0 0 0 0 0 0 `
+Val e_exit 13113 0 0 0 0 0 0 0 `
+Val s_exit 13103 0 0 0 0 0 0 0 `
+Val w_exit 13095 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13105
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13106 0 0 0 0 0 0 0 `
+Val e_exit 13144 0 0 0 0 0 0 0 `
+Val s_exit 13104 0 0 0 0 0 0 0 `
+Val w_exit 13096 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13106
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13107 0 0 0 0 0 0 0 `
+Val e_exit 13155 0 0 0 0 0 0 0 `
+Val s_exit 13105 0 0 0 0 0 0 0 `
+Val w_exit 13097 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13107
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13108 0 0 0 0 0 0 0 `
+Val e_exit 13156 0 0 0 0 0 0 0 `
+Val s_exit 13106 0 0 0 0 0 0 0 `
+Val w_exit 13098 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13108
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13109 0 0 0 0 0 0 0 `
+Val e_exit 13211 0 0 0 0 0 0 0 `
+Val s_exit 13107 0 0 0 0 0 0 0 `
+Val w_exit 13099 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13109
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val e_exit 13214 0 0 0 0 0 0 0 `
+Val s_exit 13108 0 0 0 0 0 0 0 `
+Val w_exit 13100 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13110
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13111
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13112 0 0 0 0 0 0 0 `
+Val e_exit 13116 0 0 0 0 0 0 0 `
+Val s_exit 13056 0 0 0 0 0 0 0 `
+Val w_exit 13102 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13112
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13113 0 0 0 0 0 0 0 `
+Val e_exit 13117 0 0 0 0 0 0 0 `
+Val s_exit 13111 0 0 0 0 0 0 0 `
+Val w_exit 13103 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13113
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13144 0 0 0 0 0 0 0 `
+Val e_exit 13118 0 0 0 0 0 0 0 `
+Val s_exit 13112 0 0 0 0 0 0 0 `
+Val w_exit 13104 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13114
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13115 0 0 0 0 0 0 0 `
+Val e_exit 13119 0 0 0 0 0 0 0 `
+Val w_exit 13055 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13115
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13116 0 0 0 0 0 0 0 `
+Val e_exit 13120 0 0 0 0 0 0 0 `
+Val s_exit 13114 0 0 0 0 0 0 0 `
+Val w_exit 13056 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13116
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13117 0 0 0 0 0 0 0 `
+Val e_exit 13121 0 0 0 0 0 0 0 `
+Val s_exit 13115 0 0 0 0 0 0 0 `
+Val w_exit 13111 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13117
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13118 0 0 0 0 0 0 0 `
+Val e_exit 13122 0 0 0 0 0 0 0 `
+Val s_exit 13116 0 0 0 0 0 0 0 `
+Val w_exit 13112 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13118
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13145 0 0 0 0 0 0 0 `
+Val e_exit 13123 0 0 0 0 0 0 0 `
+Val s_exit 13117 0 0 0 0 0 0 0 `
+Val w_exit 13113 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13119
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13120 0 0 0 0 0 0 0 `
+Val e_exit 13124 0 0 0 0 0 0 0 `
+Val w_exit 13114 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13120
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13121 0 0 0 0 0 0 0 `
+Val e_exit 13125 0 0 0 0 0 0 0 `
+Val s_exit 13119 0 0 0 0 0 0 0 `
+Val w_exit 13115 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13121
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13122 0 0 0 0 0 0 0 `
+Val e_exit 13126 0 0 0 0 0 0 0 `
+Val s_exit 13120 0 0 0 0 0 0 0 `
+Val w_exit 13116 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13122
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13123 0 0 0 0 0 0 0 `
+Val e_exit 13127 0 0 0 0 0 0 0 `
+Val s_exit 13121 0 0 0 0 0 0 0 `
+Val w_exit 13117 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13123
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13146 0 0 0 0 0 0 0 `
+Val e_exit 13128 0 0 0 0 0 0 0 `
+Val s_exit 13122 0 0 0 0 0 0 0 `
+Val w_exit 13118 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13124
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13125 0 0 0 0 0 0 0 `
+Val w_exit 13119 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13125
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13126 0 0 0 0 0 0 0 `
+Val s_exit 13124 0 0 0 0 0 0 0 `
+Val w_exit 13120 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13126
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13127 0 0 0 0 0 0 0 `
+Val s_exit 13125 0 0 0 0 0 0 0 `
+Val w_exit 13121 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13127
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13128 0 0 0 0 0 0 0 `
+Val s_exit 13126 0 0 0 0 0 0 0 `
+Val w_exit 13122 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13128
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13161 0 0 0 0 0 0 0 `
+Val s_exit 13127 0 0 0 0 0 0 0 `
+Val w_exit 13123 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13129
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13130
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13131
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13132
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13133
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13134
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13135
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13136
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13137
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13138
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13139
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13140
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13141
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13142
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13143
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13144
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13155 0 0 0 0 0 0 0 `
+Val e_exit 13145 0 0 0 0 0 0 0 `
+Val s_exit 13113 0 0 0 0 0 0 0 `
+Val w_exit 13105 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13145
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13157 0 0 0 0 0 0 0 `
+Val e_exit 13146 0 0 0 0 0 0 0 `
+Val s_exit 13118 0 0 0 0 0 0 0 `
+Val w_exit 13144 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13146
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13159 0 0 0 0 0 0 0 `
+Val e_exit 13161 0 0 0 0 0 0 0 `
+Val s_exit 13123 0 0 0 0 0 0 0 `
+Val w_exit 13145 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13147
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13148
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13149
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13150
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13151
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13152
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13153
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13154
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13155
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13156 0 0 0 0 0 0 0 `
+Val e_exit 13157 0 0 0 0 0 0 0 `
+Val s_exit 13144 0 0 0 0 0 0 0 `
+Val w_exit 13106 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13156
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13211 0 0 0 0 0 0 0 `
+Val e_exit 13158 0 0 0 0 0 0 0 `
+Val s_exit 13155 0 0 0 0 0 0 0 `
+Val w_exit 13107 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13157
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13158 0 0 0 0 0 0 0 `
+Val e_exit 13159 0 0 0 0 0 0 0 `
+Val s_exit 13145 0 0 0 0 0 0 0 `
+Val w_exit 13155 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13158
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13212 0 0 0 0 0 0 0 `
+Val e_exit 13160 0 0 0 0 0 0 0 `
+Val s_exit 13157 0 0 0 0 0 0 0 `
+Val w_exit 13156 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13159
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13160 0 0 0 0 0 0 0 `
+Val e_exit 13162 0 0 0 0 0 0 0 `
+Val s_exit 13146 0 0 0 0 0 0 0 `
+Val w_exit 13157 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13160
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13216 0 0 0 0 0 0 0 `
+Val e_exit 13163 0 0 0 0 0 0 0 `
+Val s_exit 13159 0 0 0 0 0 0 0 `
+Val w_exit 13158 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13161
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13162 0 0 0 0 0 0 0 `
+Val s_exit 13128 0 0 0 0 0 0 0 `
+Val w_exit 13146 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13162
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13163 0 0 0 0 0 0 0 `
+Val s_exit 13161 0 0 0 0 0 0 0 `
+Val w_exit 13159 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13163
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13218 0 0 0 0 0 0 0 `
+Val s_exit 13162 0 0 0 0 0 0 0 `
+Val w_exit 13160 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13164
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13165
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13166
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13167
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13168
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13169
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13170
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13171
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13172
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13173
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13174
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13175
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13176
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13177
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13178
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13179
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13180
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13181
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13182
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13183
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13184
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13185
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13186
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13187
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13188
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13189
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13190
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13191
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13192
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13193
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13194
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13195
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13196
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13197
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13198
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13199
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13200
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13201
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13202
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13203
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13204
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13205
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13206
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13207
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13208
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13209
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13210
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13211
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13214 0 0 0 0 0 0 0 `
+Val e_exit 13212 0 0 0 0 0 0 0 `
+Val s_exit 13156 0 0 0 0 0 0 0 `
+Val w_exit 13108 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13212
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13215 0 0 0 0 0 0 0 `
+Val e_exit 13216 0 0 0 0 0 0 0 `
+Val s_exit 13158 0 0 0 0 0 0 0 `
+Val w_exit 13211 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13213
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13214
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val e_exit 13215 0 0 0 0 0 0 0 `
+Val s_exit 13211 0 0 0 0 0 0 0 `
+Val w_exit 13109 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13215
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val e_exit 13217 0 0 0 0 0 0 0 `
+Val s_exit 13212 0 0 0 0 0 0 0 `
+Val w_exit 13214 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13216
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13217 0 0 0 0 0 0 0 `
+Val e_exit 13218 0 0 0 0 0 0 0 `
+Val s_exit 13160 0 0 0 0 0 0 0 `
+Val w_exit 13212 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13217
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val e_exit 13219 0 0 0 0 0 0 0 `
+Val s_exit 13216 0 0 0 0 0 0 0 `
+Val w_exit 13215 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13218
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val n_exit 13219 0 0 0 0 0 0 0 `
+Val s_exit 13163 0 0 0 0 0 0 0 `
+Val w_exit 13216 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13219
+HWT 0 0
+Short the loud marketplace`
+ThFl 524779
+Val s_exit 13218 0 0 0 0 0 0 0 `
+Val w_exit 13217 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 13220
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13221
+HWT 0 0
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 13222
+HWT 0 0
+ThFl 524779
+END_THING
+
+END_OF_AREA
+

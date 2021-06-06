@@ -4,11 +4,11 @@ HpMv 0 10 25 50
 HWT 0 0
 Align 2
 Cost 100
-Timer 6
+Timer 17
 Short The Good Outpost`
 Long The Good Outpost comes to life again.`
 type Lonath`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 12
 END_THING
 
@@ -21,7 +21,7 @@ Desc The good outpost serves as shelter from the dangers of the world.
 Short The Good Outpost`
 MIW 1
 Symbol |`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1052 0 0 0 0 0 0 0 `
 Flag Room 0 0 769
 Reset 1090 100 1 1
@@ -36,7 +36,7 @@ Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol |`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1053 0 0 0 0 0 0 0 `
 Val s_exit 1051 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
@@ -52,7 +52,7 @@ Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol +`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1058 0 0 0 0 0 0 0 `
 Val d_exit 1057 0 0 0 0 0 0 0 `
 Val u_exit 1056 0 0 0 0 0 0 0 `
@@ -71,7 +71,7 @@ Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val w_exit 1053 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1087 100 1 1
@@ -86,7 +86,7 @@ Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val e_exit 1053 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1086 100 1 1
@@ -101,7 +101,7 @@ Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val d_exit 1053 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1088 100 1 1
@@ -116,7 +116,7 @@ Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val d_exit 1069 3 3 50 50 0 0 0 trapdoor`
 Val u_exit 1053 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
@@ -132,7 +132,7 @@ Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol +`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1063 0 0 0 0 0 0 0 `
 Val d_exit 1062 0 0 0 0 0 0 0 `
 Val u_exit 1061 0 0 0 0 0 0 0 `
@@ -151,7 +151,7 @@ Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val w_exit 1058 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1083 100 1 1
@@ -166,7 +166,7 @@ Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val e_exit 1058 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1082 100 1 1
@@ -181,7 +181,7 @@ Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val d_exit 1058 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1084 100 1 1
@@ -196,7 +196,7 @@ Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val u_exit 1058 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1085 100 1 1
@@ -210,7 +210,7 @@ Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol +`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1068 0 0 0 0 0 0 0 `
 Val d_exit 1067 0 0 0 0 0 0 0 `
 Val u_exit 1066 0 0 0 0 0 0 0 `
@@ -243,7 +243,7 @@ Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val e_exit 1063 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Flag Det 0 0 1
@@ -287,7 +287,7 @@ Short The Good Outpost`
 MIW 1
 Symbol |`
 ThFl 524779
-Val n_exit 210114 0 0 0 0 0 0 0 `
+Val n_exit 208559 0 0 0 0 0 0 0 `
 Val s_exit 1063 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 END_THING
@@ -300,7 +300,7 @@ Desc You can learn to fight in relative safety here.
 Short The Training Hall`
 MIW 1
 Symbol }`
-ThFl 524779
+ThFl 134742507
 Val e_exit 1072 0 0 0 0 0 0 0 `
 Val n_exit 1074 0 0 0 0 0 0 0 `
 Val s_exit 1070 0 0 0 0 0 0 0 `
@@ -317,7 +317,7 @@ Desc 1069`
 Short The Training Hall`
 MIW 1
 Symbol \`
-ThFl 524779
+ThFl 134742507
 Val e_exit 1071 0 0 0 0 0 0 0 `
 Val n_exit 1069 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
@@ -332,7 +332,7 @@ Desc 1069`
 Short The Training Hall`
 MIW 1
 Symbol /`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1072 0 0 0 0 0 0 0 `
 Val w_exit 1070 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
@@ -347,7 +347,7 @@ Desc 1069`
 Short The Training Hall`
 MIW 1
 Symbol {`
-ThFl 524779
+ThFl 134742507
 Val w_exit 1069 0 0 0 0 0 0 0 `
 Val n_exit 1073 0 0 0 0 0 0 0 `
 Val s_exit 1071 0 0 0 0 0 0 0 `
@@ -363,7 +363,7 @@ Desc 1069`
 Short The Training Hall`
 MIW 1
 Symbol \`
-ThFl 524779
+ThFl 134742507
 Val w_exit 1074 0 0 0 0 0 0 0 `
 Val s_exit 1072 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
@@ -378,7 +378,7 @@ Desc 1069`
 Short The Training Hall`
 MIW 1
 Symbol /`
-ThFl 524779
+ThFl 134742507
 Val s_exit 1069 0 0 0 0 0 0 0 `
 Val e_exit 1073 0 0 0 0 0 0 0 `
 Flag Room 0 0 1

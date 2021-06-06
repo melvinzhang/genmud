@@ -198,6 +198,8 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 #define FORGED_EQ_AREA_VNUM      100000 /* Forged eq starts here. */
 
 
+#define CITYGEN_AREA_VNUM       101000 /* Used to generate cities. */
+
 #define DETAILGEN_AREA_VNUM      104000 /* Where area details get
 					   generated from. */
 #define PERSONGEN_AREA_VNUM     105000 /* The vnum of the area with all
@@ -377,6 +379,13 @@ avg..*/
 #define PACKAGE_VNUM        240  /* Vnum of packages players can deliver. */
 /* Default prompt :P */
 #define PACKAGE_DELIVERY_HOURS 30 /* How long you have to deliver a package. */
+
+
+/* Dimensions used internally for generating things. */
+#define DIM_X    0
+#define DIM_Y    1
+#define DIM_Z    2
+#define DIM_MAX  3 /* Number of dimensions. */
 
 #define DEFAULT_PROMPT    "@ed@@bl@@dl@$E@hc@/@hm@$7hp $A@vc@/@vm@$7mv $D@mc@/@mm@$7m @tk@@oc@> "
 
@@ -2007,7 +2016,7 @@ struct reset_data
   int vnum;
   unsigned char pct;
   unsigned char nest;
-  unsigned int max_num;
+  unsigned int times;
 };
 
 /**********************************************************************/
@@ -2614,7 +2623,7 @@ void log_it (char *); /* Adds a string to the logfile. */
 /**********************************************************************/
 
 char *crypt2 (const char*, const char *);
-// extern "C" { char *crypt (const char *, const char *); }
+/* extern "C" { char *crypt (const char *, const char *); } */
 char *crypt (const char *, const char *);
 
 void do_something (FILE_DESC *, char *);
@@ -3578,6 +3587,7 @@ void undo_marked (THING *start_in); /* Removes marks from things... */
 #define MIN(a, b)                    ((a) < (b) ? (a) : (b))
 #define MID(a, b, c)       ((b) < (a) ? (a) : ((b) > (c) ? (c) : (b)))
 #define ABS(a)                       ((a) < 0 ? -(a) : (a))
+
 /* Inline toupper/tolower */
 #define UC(a)              (toupper((a)))
 #define LC(a)              (tolower((a)))

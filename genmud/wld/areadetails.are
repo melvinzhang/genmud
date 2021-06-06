@@ -2,7 +2,7 @@ THING 104000
 Name areadetails.are`
 HpMv 0 10 400 1000
 HWT 0 0
-Timer 17
+Timer 13
 Short Area Details Area`
 type Lonath`
 ThFl 1089531
@@ -49,16 +49,16 @@ Flag Room 0 0 16977920
 Reset 104200 100 1 1
 Reset 104401 50 8 1
 Reset 104421 50 3 1
-EDESC klong`
-Hidden secret
-covered
-concealed
+EDESC kname`
+outpost camp encampment lair hideout
 `
 EDESC kshort`
 bandit brigand highwayman outlaw robber 
 `
-EDESC kname`
-outpost camp encampment lair hideout
+EDESC klong`
+Hidden secret
+covered
+concealed
 `
 END_THING
 
@@ -74,19 +74,19 @@ Reset 104403 100 1 1
 Reset 104201 100 1 1
 Reset 104202 100 1 1
 Reset 104404 50 8 1
+EDESC kshort`
+well-kept run-down fenced open overgrown barren dry dusty
+well-maintained
+well-run
+`
+EDESC klong`
+large small old tiny giant little
+`
 EDESC kname`
 'wheat field' 'oat field' 'barley field' 'corn field' 'corn patch' garden
 field field farm farm farm farm 'wheat farm' 'oat farm' 'corn farm'
 orchard vineyard plantation nursery 'pig farm' 'cow farm' 'horse farm'
 'chicken farm' 
-`
-EDESC klong`
-large small old tiny giant little
-`
-EDESC kshort`
-well-kept run-down fenced open overgrown barren dry dusty
-well-maintained
-well-run
 `
 END_THING
 
@@ -99,14 +99,14 @@ MIW 1
 Symbol -`
 ThFl 524779
 Reset 278 100 1 1
-EDESC klong`
-large small tiny
+EDESC kname`
+lair den nest
 `
 EDESC kshort`
 clean dirty littered barren
 `
-EDESC kname`
-lair den nest
+EDESC klong`
+large small tiny
 `
 END_THING
 
@@ -121,14 +121,14 @@ ThFl 524779
 Flag Room 0 0 1
 Reset 104407 100 10 1
 Reset 104203 100 1 1
-EDESC klong`
-Old small tiny large
+EDESC kname`
+inn tavern bar hotel waystation pub
 `
 EDESC kshort`
 weatherbeaten dirty clean crowded smelly comfortable great-smelling dingy brick stone wood well-lit
 `
-EDESC kname`
-inn tavern bar hotel waystation pub
+EDESC klong`
+Old small tiny large
 `
 END_THING
 
@@ -140,15 +140,15 @@ Color 7
 MIW 1
 Symbol -`
 ThFl 524779
-EDESC klong`
-Old ancient overgrown forgotten ruined
+EDESC kname`
+temple shrine circle
 `
 EDESC kshort`
 stone bloody sacrificial ceremonial society_name
 holy unholy
 `
-EDESC kname`
-temple shrine circle
+EDESC klong`
+Old ancient overgrown forgotten ruined
 `
 END_THING
 
@@ -161,18 +161,18 @@ MIW 1
 Symbol -`
 ThFl 524779
 Reset 104408 100 1 1
+EDESC kname`
+monument statue pillar megalith monolith slab
+fountain
+`
+EDESC kshort`
+fallen forgotten overgrown silent mossy
+`
 EDESC klong`
 old
 ancient
 large
 small
-`
-EDESC kshort`
-fallen forgotten overgrown silent mossy
-`
-EDESC kname`
-monument statue pillar megalith monolith slab
-fountain
 `
 END_THING
 
@@ -185,16 +185,16 @@ MIW 1
 Symbol -`
 ThFl 524779
 Reset 104409 100 1 1
-EDESC klong`
-Old run-down hidden small tiny overgrown ramshackle sad forlorn
-`
-EDESC kshort`
-stick wooden mudbrick brick stone
-`
 EDESC kname`
 hut shack cabin house lean-to hovel
 cottage
 home
+`
+EDESC kshort`
+stick wooden mudbrick brick stone
+`
+EDESC klong`
+Old run-down hidden small tiny overgrown ramshackle sad forlorn
 `
 END_THING
 
@@ -207,15 +207,15 @@ MIW 1
 Symbol -`
 ThFl 524779
 Reset 104410 50 10 1
-EDESC kname`
-camp encampment
+EDESC klong`
+society_name
 `
 EDESC kshort`
 refugee
 travelers
 `
-EDESC klong`
-society_name
+EDESC kname`
+camp encampment
 `
 END_THING
 
@@ -229,15 +229,15 @@ ThFl 524779
 Reset 104411 100 1 1
 Reset 104412 100 1 1
 Reset 104413 50 3 1
-EDESC kname`
-caravan
-company
+EDESC klong`
+rich poor large small colorful drab
 `
 EDESC kshort`
 name society_name
 `
-EDESC klong`
-rich poor large small colorful drab
+EDESC kname`
+caravan
+company
 `
 END_THING
 
@@ -251,15 +251,15 @@ Symbol -`
 ThFl 524779
 Reset 104413 100 15 1
 Reset 104204 75 10 1
-EDESC kname`
-city town village
-outpost 
+EDESC klong`
+Old creepy spooky haunted cold sinister evil ancient lost silent dead decaying 
 `
 EDESC kshort`
 abandoned overgrown forgotten forbidden forsaken society_name forbidding burned blackened destroyed devastated
 `
-EDESC klong`
-Old creepy spooky haunted cold sinister evil ancient lost silent dead decaying 
+EDESC kname`
+city town village
+outpost 
 `
 END_THING
 
@@ -272,14 +272,14 @@ MIW 1
 Symbol ,`
 ThFl 524779
 Flag Room 0 0 262912
-EDESC kname`
-campfire sanctuary fire place 'resting place'
+EDESC klong`
+Small tiny hidden secluded 
 `
 EDESC kshort`
 warm glowing magical enchanted safe
 `
-EDESC klong`
-Small tiny hidden secluded 
+EDESC kname`
+campfire sanctuary fire place 'resting place'
 `
 END_THING
 
@@ -357,14 +357,14 @@ MIW 1
 Symbol -`
 ThFl 524779
 Reset 104420 100 2 1
-EDESC klong`
-glowing enchanted magical small shining mystical
+EDESC kname`
+ring patch field circle
 `
 EDESC kshort`
 mushroom rock stone faerie leprechaun
 `
-EDESC kname`
-ring patch field circle
+EDESC klong`
+glowing enchanted magical small shining mystical
 `
 END_THING
 
@@ -376,6 +376,9 @@ MIW 1
 Symbol -`
 ThFl 524779
 Reset 104402 100 1 1
+EDESC kshort`
+warm glowing bright dim hot
+`
 EDESC kname`
 campfire fire
 fireplace
@@ -383,9 +386,6 @@ fireplace
 'rock circle'
 'firepit'
 'fire pit'
-`
-EDESC kshort`
-warm glowing bright dim hot
 `
 END_THING
 
@@ -397,14 +397,14 @@ MIW 1
 Symbol -`
 ThFl 524779
 Flag Room 0 0 1
-EDESC kname`
-house farmhouse
+EDESC klong`
+Old clean dirty run-down well-maintained
 `
 EDESC kshort`
 white tall short small large
 `
-EDESC klong`
-Old clean dirty run-down well-maintained
+EDESC kname`
+house farmhouse
 `
 END_THING
 
@@ -415,14 +415,14 @@ Color 7
 MIW 1
 Symbol -`
 ThFl 524779
-EDESC kname`
-barn stable outhouse
+EDESC klong`
+old rickety ramshackle sagging
 `
 EDESC kshort`
 worn-out unsafe weathered
 `
-EDESC klong`
-old rickety ramshackle sagging
+EDESC kname`
+barn stable outhouse
 `
 END_THING
 
@@ -434,17 +434,17 @@ MIW 1
 Symbol -`
 ThFl 524779
 Reset 104406 100 1 1
-EDESC kname`
-bar counter
-`
-EDESC kshort`
-tall short long old
+EDESC format`
+'a kshort klong kname'
 `
 EDESC klong`
 wooden stone sticky smelly stinky clean dirty
 `
-EDESC format`
-'a kshort klong kname'
+EDESC kshort`
+tall short long old
+`
+EDESC kname`
+bar counter
 `
 END_THING
 
@@ -455,15 +455,15 @@ Color 7
 MIW 1
 Symbol -`
 ThFl 524779
-EDESC kname`
-house building shop home well marketplace barracks hall manor tower 'pile of rubble' store
+EDESC klong`
+Old tall short skinny wide big small tiny
 `
 EDESC kshort`
 burned burnt-out ruined 'rubble-strewn' broken-down overgrown infested
 melted devastated destroyed fallen toppled shattered smashed crushed 
 `
-EDESC klong`
-Old tall short skinny wide big small tiny
+EDESC kname`
+house building shop home well marketplace barracks hall manor tower 'pile of rubble' store
 `
 END_THING
 
@@ -488,15 +488,15 @@ Flag Act 0 0 1
 Reset 108000 50 4 1
 Reset 270 50 2 1
 Reset 271 50 4 1
-EDESC kshort`
-society_name
+EDESC klong`
+Rough tough dirty smelly hardened nasty ugly gruff stinky
+burly
 `
 EDESC kname`
 brigand bandit highwayman robber thief outlaw
 `
-EDESC klong`
-Rough tough dirty smelly hardened nasty ugly gruff stinky
-burly
+EDESC kshort`
+society_name
 `
 END_THING
 
@@ -504,14 +504,14 @@ THING 104402
 Name campfire`
 HWT 0 0
 ThFl 100934
+EDESC kshort`
+warm glowing hot bright dim cool
+`
 EDESC kname`
 campfire fire firepit 'fire pit' embers  campsite 
 'cooking pit' 'cooking site'
 'spit over a fire'
 'stone circle'
-`
-EDESC kshort`
-warm glowing hot bright dim cool
 `
 END_THING
 
@@ -521,14 +521,14 @@ Level 20
 HWT 65 2000
 ThFl 2209
 Reset 104405 100 1 1
-EDESC kname`
-farmer farmhand
+EDESC klong`
+young retired energetic hard-working plain old grizzled
 `
 EDESC kshort`
 society_name
 `
-EDESC klong`
-young retired energetic hard-working plain old grizzled
+EDESC kname`
+farmer farmhand
 `
 END_THING
 
@@ -548,13 +548,13 @@ HWT 30 100
 Cost 50
 Wear wield`
 ThFl 100934
-EDESC kname`
-pitchfork hoe shovel axe
-`
 EDESC kshort`
 old rusty worn-out used
 bent
 dull
+`
+EDESC kname`
+pitchfork hoe shovel axe
 `
 END_THING
 
@@ -567,14 +567,14 @@ ThFl 2209
 Flag Act 0 0 256
 Reset 270 50 2 1
 Reset 271 50 5 1
-EDESC kshort`
-society_name
+EDESC klong`
+Wizened old gruff plain-spoken nice friendly kind generous decent honest hard-working
 `
 EDESC kname`
 barkeep bartender innkeeper owner proprietor shopkeeper
 `
-EDESC klong`
-Wizened old gruff plain-spoken nice friendly kind generous decent honest hard-working
+EDESC kshort`
+society_name
 `
 END_THING
 
@@ -587,14 +587,14 @@ Flag Act 0 0 258
 Reset 270 50 2 1
 Reset 271 50 5 1
 Reset 108000 50 1 1
-EDESC kname`
-patron customer regular
+EDESC klong`
+Society_name
 `
 EDESC kshort`
 bar inn tavern pub
 `
-EDESC klong`
-Society_name
+EDESC kname`
+patron customer regular
 `
 END_THING
 
@@ -602,8 +602,18 @@ THING 104408
 Name monument`
 HWT 200 20000
 ThFl 101063
-EDESC format`
-'a_an plaq remem fname lname'
+EDESC lname`
+proper_name
+`
+EDESC fname`
+proper_name
+`
+EDESC remem`
+commemorating
+remembering
+for
+'dedicated to'
+'in memory of'
 `
 EDESC plaq`
 plaque
@@ -621,18 +631,8 @@ tombstone
 pillar
 fountain
 `
-EDESC remem`
-commemorating
-remembering
-for
-'dedicated to'
-'in memory of'
-`
-EDESC fname`
-proper_name
-`
-EDESC lname`
-proper_name
+EDESC format`
+'a_an plaq remem fname lname'
 `
 END_THING
 
@@ -645,17 +645,17 @@ Val cast 59 67 84 0 0 0 0 0 `
 Flag Act 0 0 256
 Reset 277 10 1 1
 Reset 108000 50 3 1
-EDESC prof`
-hermit witch
-`
-EDESC kname`
-proper_name
+EDESC format`
+'kname kname the dsc type'
 `
 EDESC dsc`
 old ancient wizened ugly stooped grumbling smelly
 `
-EDESC format`
-'kname kname the dsc type'
+EDESC kname`
+proper_name
+`
+EDESC prof`
+hermit witch
 `
 END_THING
 
@@ -664,14 +664,14 @@ Name refugee`
 Level 20
 HWT 0 0
 ThFl 2209
-EDESC kname`
-refugee child mother refugee woman man elder 'old man' 'old woman' father
+EDESC klong`
+Tired hungry weak dejected moaning sad forlorn
 `
 EDESC kshort`
 society_name
 `
-EDESC klong`
-Tired hungry weak dejected moaning sad forlorn
+EDESC kname`
+refugee child mother refugee woman man elder 'old man' 'old woman' father
 `
 END_THING
 
@@ -679,15 +679,15 @@ THING 104411
 Name cart`
 HWT 0 0
 ThFl 101062
-EDESC kname`
-cart carriage wagon
+EDESC klong`
+old new painted bare
+empty full
 `
 EDESC kshort`
 creaky worn gray
 `
-EDESC klong`
-old new painted bare
-empty full
+EDESC kname`
+cart carriage wagon
 `
 END_THING
 
@@ -699,17 +699,17 @@ ThFl 2209
 Reset 108000 50 2 1
 Reset 270 50 2 1
 Reset 271 50 5 1
-EDESC kname`
-'caravan master' 'caravan leader' leader master
-`
-EDESC kshort`
-society_name
+EDESC format`
+'klong the kshort kname'
 `
 EDESC klong`
 proper_name
 `
-EDESC format`
-'klong the kshort kname'
+EDESC kshort`
+society_name
+`
+EDESC kname`
+'caravan master' 'caravan leader' leader master
 `
 END_THING
 
@@ -722,16 +722,16 @@ Flag Det 0 0 15
 Flag Act 0 0 1
 Flag Mob 0 0 4
 Reset 108000 20 1 1
-EDESC kname`
-skeleton 'skeleton warrior' reaver zombie ghast wight wraith ghoul ghast lich vampire
-undead
+EDESC klong`
+Rotting shambling rotten putrid awful giant glowing evil partial wobbly
+fetid
 `
 EDESC kshort`
 society_name
 `
-EDESC klong`
-Rotting shambling rotten putrid awful giant glowing evil partial wobbly
-fetid
+EDESC kname`
+skeleton 'skeleton warrior' reaver zombie ghast wight wraith ghoul ghast lich vampire
+undead
 `
 END_THING
 
@@ -739,14 +739,14 @@ THING 104414
 Name stone`
 HWT 0 0
 ThFl 101062
-EDESC kname`
-rock stone boulder slab
+EDESC klong`
+Large small round
 `
 EDESC kshort`
 moss-covered chipped cracked pockmarked granite mossy worn rough
 `
-EDESC klong`
-Large small round
+EDESC kname`
+rock stone boulder slab
 `
 END_THING
 
@@ -754,14 +754,14 @@ THING 104415
 Name old wall`
 HWT 0 0
 ThFl 101063
-EDESC kname`
-ruins  wall foundation house shack building tower home 
+EDESC klong`
+Old ancient abandoned unused overgrown hidden covered
 `
 EDESC kshort`
 mossy moss-covered bug-ridden sagging toppled blackened burned singed melted
 `
-EDESC klong`
-Old ancient abandoned unused overgrown hidden covered
+EDESC kname`
+ruins  wall foundation house shack building tower home 
 `
 END_THING
 
@@ -769,12 +769,8 @@ THING 104416
 Name pile leaves`
 HWT 0 0
 ThFl 101063
-EDESC kname`
-twigs branches logs sticks leaves 'split logs'
-`
-EDESC kshort`
-old moldy musty wet damp smelly dry rotten mushroomy 'fungus-ridden'
-bug-ridden eaten dirty crunchy decaying decayed cracked 
+EDESC format`
+'a_an klong of kshort kname'
 `
 EDESC klong`
 pile
@@ -783,8 +779,12 @@ group
 mound
 stack
 `
-EDESC format`
-'a_an klong of kshort kname'
+EDESC kshort`
+old moldy musty wet damp smelly dry rotten mushroomy 'fungus-ridden'
+bug-ridden eaten dirty crunchy decaying decayed cracked 
+`
+EDESC kname`
+twigs branches logs sticks leaves 'split logs'
 `
 END_THING
 
@@ -792,15 +792,6 @@ THING 104417
 Name pile rocks`
 HWT 0 0
 ThFl 101063
-EDESC format`
-'a_an klong of kshort kname'
-`
-EDESC kname`
-stones rocks pebbles gravel blocks
-`
-EDESC kshort`
-old cracked chipped forgotten moss-covered weathered weatherbeaten small large round sharp jagged
-`
 EDESC klong`
 pile
 mound
@@ -808,12 +799,31 @@ stack
 group
 bunch
 `
+EDESC kshort`
+old cracked chipped forgotten moss-covered weathered weatherbeaten small large round sharp jagged
+`
+EDESC kname`
+stones rocks pebbles gravel blocks
+`
+EDESC format`
+'a_an klong of kshort kname'
+`
 END_THING
 
 THING 104418
 Name broken cart`
 HWT 0 0
 ThFl 101063
+EDESC klong`
+old rusted rotted discarded rotten rusty forgotten slimy smelly
+`
+EDESC kshort`
+wagon
+cart
+wheelbarrow
+carriage
+chariot
+`
 EDESC kname`
 wheel
 seat
@@ -823,30 +833,20 @@ gate
 box
 harness
 `
-EDESC kshort`
-wagon
-cart
-wheelbarrow
-carriage
-chariot
-`
-EDESC klong`
-old rusted rotted discarded rotten rusty forgotten slimy smelly
-`
 END_THING
 
 THING 104419
 Name tree`
 HWT 0 0
 ThFl 101062
-EDESC klong`
-rotten infested eaten rotting putrid smelly dead decaying decayed
+EDESC kname`
+log trunk stump tree bole
 `
 EDESC kshort`
 hollow hollowed-out fallen empty open
 `
-EDESC kname`
-log trunk stump tree bole
+EDESC klong`
+rotten infested eaten rotting putrid smelly dead decaying decayed
 `
 END_THING
 
@@ -856,11 +856,11 @@ Level 30
 HWT 0 0
 ThFl 2209
 Flag Det 0 0 5
-EDESC kshort`
-small tiny dancing flitting smiling happy swirling
-`
 EDESC kname`
 leprechaun sprite faerie pixie nymph
+`
+EDESC kshort`
+small tiny dancing flitting smiling happy swirling
 `
 END_THING
 
@@ -870,15 +870,6 @@ HWT 0 0
 ThFl 99018
 Reset 104401 50 2 1
 Reset 104422 30 1 1
-EDESC klong`
-old small large tilted slanted 
-`
-EDESC kshort`
-canvas stitched dirty blotched sturdy flimsy tattered 
-wool woolen hide fur furlined 
-skin
-'animal skin'
-`
 EDESC kname`
 tent lean-to
 teepee
@@ -886,6 +877,15 @@ tent
 tent
 tent
 tent
+`
+EDESC kshort`
+canvas stitched dirty blotched sturdy flimsy tattered 
+wool woolen hide fur furlined 
+skin
+'animal skin'
+`
+EDESC klong`
+old small large tilted slanted 
 `
 END_THING
 
@@ -896,16 +896,16 @@ HWT 0 0
 ThFl 101066
 Val o_exit 0 67 67 0 0 0 0 0 `
 Reset 108000 50 3 1
-EDESC klong`
-old ancient large small 
-`
-EDESC kshort`
-wooden wood metal banded oak scratched iron steel
-`
 EDESC kname`
 chest locker box
 lockbox
 strongbox
+`
+EDESC kshort`
+wooden wood metal banded oak scratched iron steel
+`
+EDESC klong`
+old ancient large small 
 `
 END_THING
 

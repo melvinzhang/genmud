@@ -706,7 +706,7 @@ show_resets (RESET *start)
 	       num, res->vnum, 
 	       (thg ? 
 		(*NAME(thg) ? NAME(thg) : KEY(thg)) : "nothing"), 
-	       res->pct, res->max_num, res->nest);
+	       res->pct, res->times, res->nest);
       
       strcat (retpos, buf);
       retpos += strlen(buf);

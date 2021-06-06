@@ -243,7 +243,7 @@ setup_newbie_areas (void)
       if (!rst)
 	add_reset (area, MOB_RANDPOP_VNUM, 50, area->mv/2, 1);
       else
-	rst->max_num *= 2;
+	rst->times *= 2;
     }
   return;
 }

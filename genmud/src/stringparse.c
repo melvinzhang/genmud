@@ -173,7 +173,8 @@ str_suffix (char *a, char *b)
 
 /* I think this is roughly what strcmp does, but it's just my implementation
    where empty strings are always set to not be the same as anything... and 
-   it's not case sensitive. */
+   it's not case sensitive. (strcasecmp). */
+
 
 bool
 str_cmp (const char *a, const char *b)
@@ -192,7 +193,6 @@ str_cmp (const char *a, const char *b)
     return TRUE;
   return FALSE;
 }
-	
 
 /* This function takes a search_in string (big string) and starts
    to strip off words from it until we either find the 

@@ -2,26 +2,6 @@ PBASE
 Lonath`
 johna@wam.umd.edu`
 127.0.0.1`
-110 3 1 0 1055523749
-PBASE
-Lonb`
-myname@here.com`
-127.0.0.1`
-100 1 1 0 1053944692
-PBASE
-Lontester`
-johna@wam.umd.edu`
-127.0.0.1`
-6 0 1 10 1047835612
-PBASE
-Lontest`
-johna@wam.umd.edu`
-127.0.0.1`
-5 0 1 1 1053264107
-PBASE
-Lonc`
-johna@wam.umd.du`
-127.0.0.1`
-5 1 2 10 1053944684
+110 0 1 6 1057864995
 
 END_OF_PBASE
