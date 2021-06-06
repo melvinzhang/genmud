@@ -585,7 +585,7 @@ Message @1p feet lift off the ground!`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
 Guilds 0 2 0 0 0 0 0 0 0 
-Teachers 230 0 0 0 0 0 0 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 
 Flag Aff 0 0 524288
 END_SPELL
@@ -755,7 +755,7 @@ Wear_Off The spell has worn off @1n.`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
 Guilds 3 0 0 0 2 0 0 1 0 
-Teachers 230 0 0 0 0 0 0 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 
 END_SPELL
 
@@ -778,7 +778,7 @@ Wear_Off The spell has worn off @1n.`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
 Guilds 0 0 0 0 0 0 0 0 0 
-Teachers 230 0 0 0 0 0 0 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 
 END_SPELL
 
@@ -918,7 +918,7 @@ Wear_Off The spell has worn off @1n.`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
 Guilds 0 0 0 0 0 3 0 3 0 
-Teachers 230 0 0 0 0 0 0 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 
 END_SPELL
 
@@ -1278,7 +1278,7 @@ Comp 0 0 0 0 0
 Repeat 0 0 0
 Pre_Name Stone Skin`
 Guilds 0 0 3 0 0 0 0 2 0 
-Teachers 230 0 0 0 0 0 0 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 
 Flag Aff 0 0 65536
 END_SPELL
@@ -2216,7 +2216,7 @@ Wear_Off The spell has worn off @1n.`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
 Guilds 0 5 5 0 0 0 0 0 0 
-Teachers 230 0 0 0 0 0 0 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 
 END_SPELL
 
@@ -2299,7 +2299,7 @@ Message A $8black$9 aura$7 surrounds @3n!`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
 Guilds 0 0 0 0 0 0 0 0 0 
-Teachers 230 0 0 0 0 0 0 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 
 Flag Hurt 0 0 8192
 END_SPELL

@@ -26,25 +26,6 @@ dice (int first, int second)
 }
 
 
-/* This finds the number of lines of text in a string. */
-
-
-int
-find_num_lines (char *txt)
-{
-  char *t;
-  int lines = 0;
-  if (!txt || !*txt)
-    return 0;
-  for (t = txt; *t; t++)
-    if (*t == '\n' || *t == '\r')
-      {
-	lines++;
-	if (*(t + 1) == '\r')
-	  t++;
-      }
-  return lines;
-}
 
 /* This takes a list of words and returns a random one. */
 
@@ -482,7 +463,25 @@ show_values (VALUE *startval, int type, bool details)
     }
   return ret;
 }
+
+/* This finds a value type from a given name. */
+
+int 
+find_value_from_name (char *name)
+{
+  int valtype;
+
+  if (!name || !*name)
+    return VAL_MAX;
   
+  for (valtype = 1; valtype < VAL_MAX; valtype++)
+    {
+      if (!str_prefix (name, value_list[valtype]))
+	break;
+    }
+  return valtype;
+}
+
 /* Show one value, using details or not. */
 
 char *

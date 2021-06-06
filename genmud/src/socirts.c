@@ -1219,7 +1219,7 @@ weaken_society (SOCIETY *soc)
       if (IS_SET (soc->cflags[i], CASTE_WARRIOR))
 	soc->max_pop[i] = MAX (10, soc->max_pop[i]);
       
-      if (IS_SET (soc->cflags[i], CASTE_HEALER | CASTE_WIZARD | CASTE_LEADER))
+      if (IS_SET (soc->cflags[i], (BATTLE_CASTES &~CASTE_WARRIOR)))
 	soc->max_pop[i] = MAX (3, soc->max_pop[i]);
       
     }

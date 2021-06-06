@@ -14,6 +14,7 @@
 #include "mobgen.h"
 #include "questgen.h"
 #include "objectgen.h"
+#include "historygen.h"
 
 /* Are we allowed to have areas in these places? */
 static int worldgen_allowed[WORLDGEN_MAX][WORLDGEN_MAX];
@@ -145,6 +146,8 @@ worldgen (THING *th, char *arg)
       society_clearall (th);
       clear_base_randpop_mobs (th);
       worldgen_clear_quests (th);
+      historygen_clear();
+      clear_provisions (th);
       worldgen_clear();
       worldgen_clear_player_items();
       return;
@@ -193,18 +196,20 @@ worldgen (THING *th, char *arg)
 	}
       SBIT (server_flags, SERVER_WORLDGEN);
       generate_metal_names();
+      generate_provisions (th);
       generate_societies (th);  
       generate_randpop_mobs (th);
       worldgen_generate_areas(area_size);
       worldgen_link_areas();
       worldgen_add_catwalks_between_areas();
+      historygen ();
       worldgen_society_seed();
       worldgen_link_align_outposts();
       if (th)
 	worldgen_show_sectors (th);
       worldgen_show_sectors (NULL);
       worldgen_generate_quests();
-      
+     
       do_purge (th, "all");
       set_up_teachers();
       set_up_map(NULL);
@@ -454,11 +459,12 @@ worldgen_check_vnums (void)
   return TRUE;
 }
 
+/* This marks all worldgen areas as nosave areas. */
 
 void
 worldgen_clear (void)
 {
-  THING *area;
+  THING *area, *thg;
   int start_vnum = WORLDGEN_START_VNUM;
   int end_vnum = WORLDGEN_END_VNUM;
   char buf[STD_LEN];
@@ -469,8 +475,14 @@ worldgen_clear (void)
       if ((area->vnum >= start_vnum && area->vnum < end_vnum) ||
 	  (area->vnum + area->max_mv >= start_vnum &&
 	   (area->vnum + area->max_mv < end_vnum)))
-	SBIT (area->thing_flags, TH_NUKE);
+	{
+	  SBIT (area->thing_flags, TH_NUKE);
+	  for (thg = area->cont; thg; thg = thg->next_cont)
+	    SBIT (thg->thing_flags, TH_NUKE);
+	}
+      
     }
+  
   sprintf (buf, "\\rm %s*qz.are", WLD_DIR);
   system (buf);
   return;
@@ -1996,13 +2008,13 @@ worldgen_check_resets (THING *th)
 void
 clear_player_worldgen_quests (THING *th)
 {
-  VALUE *qf, *prev;
+  VALUE *qf;
   char *t;
   int i;
   if (!th || !IS_PC (th))
     return;
   
-  for (qf = th->pc->qf; prev; prev = prev->next)
+  for (qf = th->pc->qf; qf; qf = qf->next)
     {
       
       if (!qf->word || !*qf->word)

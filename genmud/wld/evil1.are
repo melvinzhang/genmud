@@ -1,12 +1,12 @@
 THING 1000
-Name darkie1.are`
+Name evil1.are`
 HpMv 0 10 25 50
 HWT 0 0
 Align 1
 Cost 100
-Timer 10
-Short The Darkie Outpost`
-Long The Darkie Outpost comes to life again!`
+Timer 11
+Short The Evil Outpost`
+Long The Evil Outpost comes to life again!`
 type Lonath`
 ThFl 1089531
 Flag Area 0 0 12
@@ -36,8 +36,8 @@ Short The Sanctuary`
 MIW 1
 Symbol |`
 ThFl 524779
-Val n_exit 1003 0 0 0 0 0 0 0 `
 Val s_exit 1001 0 0 0 0 0 0 0 `
+Val n_exit 1003 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1031 10 5 1
 END_THING
@@ -51,12 +51,12 @@ Short The Training Hall`
 MIW 1
 Symbol +`
 ThFl 524779
-Val n_exit 1008 0 0 0 0 0 0 0 `
-Val d_exit 1007 0 0 0 0 0 0 0 `
-Val u_exit 1006 0 0 0 0 0 0 0 `
-Val e_exit 1005 0 0 0 0 0 0 0 `
-Val w_exit 1004 0 0 0 0 0 0 0 `
 Val s_exit 1002 0 0 0 0 0 0 0 `
+Val w_exit 1004 0 0 0 0 0 0 0 `
+Val e_exit 1005 0 0 0 0 0 0 0 `
+Val u_exit 1006 0 0 0 0 0 0 0 `
+Val d_exit 1007 0 0 0 0 0 0 0 `
+Val n_exit 1008 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1031 10 5 1
 END_THING
@@ -130,12 +130,12 @@ Short Shopkeeper's Square`
 MIW 1
 Symbol +`
 ThFl 524779
-Val n_exit 1013 0 0 0 0 0 0 0 `
-Val d_exit 1012 0 0 0 0 0 0 0 `
-Val u_exit 1011 0 0 0 0 0 0 0 `
-Val w_exit 1010 0 0 0 0 0 0 0 `
-Val e_exit 1009 0 0 0 0 0 0 0 `
 Val s_exit 1003 0 0 0 0 0 0 0 `
+Val e_exit 1009 0 0 0 0 0 0 0 `
+Val w_exit 1010 0 0 0 0 0 0 0 `
+Val u_exit 1011 0 0 0 0 0 0 0 `
+Val d_exit 1012 0 0 0 0 0 0 0 `
+Val n_exit 1013 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1031 10 5 1
 END_THING
@@ -209,12 +209,12 @@ Short The Gatehouse`
 MIW 1
 Symbol +`
 ThFl 524779
-Val n_exit 1018 0 0 0 0 0 0 0 `
-Val d_exit 1017 0 0 0 0 0 0 0 `
-Val u_exit 1016 0 0 0 0 0 0 0 `
-Val w_exit 1015 0 0 0 0 0 0 0 `
-Val e_exit 1014 0 0 0 0 0 0 0 `
 Val s_exit 1008 0 0 0 0 0 0 0 `
+Val e_exit 1014 0 0 0 0 0 0 0 `
+Val w_exit 1015 0 0 0 0 0 0 0 `
+Val u_exit 1016 0 0 0 0 0 0 0 `
+Val d_exit 1017 0 0 0 0 0 0 0 `
+Val n_exit 1018 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1031 30 10 1
 END_THING
@@ -283,8 +283,8 @@ Short The Outpost Entrance`
 MIW 1
 Symbol |`
 ThFl 524779
-Val s_exit 1013 0 0 0 0 0 0 0 `
 Val n_exit 209338 0 0 0 0 0 0 0 `
+Val s_exit 1013 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 END_THING
 
@@ -298,8 +298,8 @@ Short a buffed guard`
 Long A buffed guard watches over the outpost.`
 Sex 2
 ThFl 2209
-Val guard 2 0 0 0 0 0 0 0 s`
 Val money 2000 0 0 0 0 0 0 0 `
+Val guard 2 0 0 0 0 0 0 0 s`
 Flag Det 0 0 31
 Flag Act 0 0 272
 END_THING
@@ -391,8 +391,8 @@ Short Gofem the trainer`
 Long Gofem the trainer is here.`
 Sex 2
 ThFl 2209
-Val teach2 551 561 573 302 303 0 3 0 `
 Val teacher 582 579 576 581 552 550 571 0 `
+Val teach2 551 561 573 302 303 0 3 0 `
 Flag Det 0 0 4
 Flag Act 0 0 256
 END_THING
@@ -420,8 +420,8 @@ Short Isbehxu the trainer`
 Long Isbehxu the trainer is here.`
 Sex 2
 ThFl 2209
-Val teach2 66 591 59 0 0 0 0 0 `
 Val teacher 50 89 85 51 58 72 7 0 `
+Val teach2 66 591 59 0 0 0 0 0 `
 Flag Det 0 0 4
 Flag Act 0 0 256
 END_THING

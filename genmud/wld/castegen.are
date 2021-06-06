@@ -3,7 +3,7 @@ Name castegen.are`
 HpMv 0 10 5 100
 HWT 0 0
 Cost 100
-Timer 12
+Timer 8
 Short Caste Tier Names`
 type Lonath`
 ThFl 1089531
@@ -84,7 +84,7 @@ worshipper
 disciple
 preacher
 healer
-faithful
+'faithful one'
 adept
 friar
 cleric
@@ -94,7 +94,7 @@ seer
 'high priest'
 prelate
 elder
-enlightened
+'enlightened one'
 bishop
 archbishop
 prophet
@@ -182,6 +182,23 @@ champion
 "elite guard"
 `
 Flag Caste 0 0 1
+END_THING
+
+THING 107020
+Name thief thiefcaste`
+HWT 0 0
+Desc beggar
+footpad
+burglar
+pilferer
+spy
+thief
+'master thief'
+assassin
+nightstalker
+deathbringer
+`
+Flag Caste 0 0 1024
 END_THING
 
 END_OF_AREA

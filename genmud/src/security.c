@@ -453,7 +453,7 @@ do_pbase (THING *th, char *arg)
 	  sprintf (buf, "\x1b[1;37m%d.\x1b[0;37m %-12s has no players at all.\n\r", i, align->name);
 	}
       else
-	sprintf (buf, "\x1b[1;37m%d.\x1b[0;37m %-12s has \x1b[1;36m%d\x1b[0;37m player%s with ave level \x1b[1;31m%d\x1b[0;37m, and top remort \x1b[1;35m%d\x1b[0;37m\n\r", i, align->name, num[i], (num[i] == 1 ? "" : "s"),
+	sprintf (buf, "\x1b[1;37m%d.\x1b[0;37m %-12s has \x1b[1;36m%d\x1b[0;37m player%s with average level \x1b[1;31m%d\x1b[0;37m, and top remort \x1b[1;35m%d\x1b[0;37m\n\r", i, align->name, num[i], (num[i] == 1 ? "" : "s"),
 		 lev[i]/num[i], max_rem[i]);
       stt (buf, th);
     }

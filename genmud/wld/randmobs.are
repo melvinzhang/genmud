@@ -3,7 +3,7 @@ Name randmobs.are`
 HpMv 0 10 5 3000
 HWT 0 0
 Cost 100
-Timer 9
+Timer 12
 Short Random Animals/Mobs`
 type Lonath`
 ThFl 1089531

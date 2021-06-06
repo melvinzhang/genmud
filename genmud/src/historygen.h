@@ -11,10 +11,11 @@
 
 #define MAX_GODS_PER_ALIGN          10
 
+#define DEITY_LEVEL                 500 /* What level the gods are. */
 
 extern char *old_races[ALIGN_MAX];
 extern char *old_gods[ALIGN_MAX][MAX_GODS_PER_ALIGN];
-
+extern const char vowels[NUM_VOWELS+1];
 /* Read and write the historygen data. */
 
 void read_history_data (void);
@@ -34,12 +35,32 @@ void historygen_setup (void);
 void historygen_generate_races (void);
 
 /* Generate gods for each race. */
-void historygen_generate_gods (void);
+void historygen_generate_gods (THING *);
 
-/* Generate an age. */
-char *historygen_age (int age);
+/* Generate organizations for players to use to get help. */
+void historygen_generate_organizations (void);
 
 
-/* Find a random generated society. */
-SOCIETY *find_random_generated_society (int align);
+/* This generates the past history that tells of the times of peace
+   and so forth. */
 
+char *historygen_past(void);
+
+/* This tells of the bad thing that ended the good times. */
+
+char *historygen_disaster(void);
+
+/* This tells how the world is in flux now and the old powers are stirring
+   and how you should go make your mark. */
+
+char *historygen_present(void);
+
+
+/* This clears some of the historygen data. Mainly the gods and their
+   items. */
+
+void historygen_clear(void);
+
+/* This creates a deity and gives it equipment. */
+
+void generate_deity (char *name, char *spheres, int align);

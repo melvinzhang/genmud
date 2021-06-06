@@ -741,9 +741,9 @@ do_beep (THING *th, char *arg)
     }
   
  
-  sprintf (buf, "%s beeps you!\7\n\r", name (vict, th));
+  sprintf (buf, "%s beeps you!\7\n\r", name_seen_by (vict, th));
   stt (buf, vict);
-  sprintf (buf, "You beep %s.", name (th, vict));
+  sprintf (buf, "You beep %s.", name_seen_by (th, vict));
   stt (buf, th);
   return;
 }

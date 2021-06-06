@@ -1427,7 +1427,7 @@ start_fighting (THING *att, THING *vict)
 		    {
 		      SBIT (server_flags, SERVER_BEING_ATTACKED_YELL);
 		      sprintf (buf, "yell Come help! %s is at %s!",
-			       name(att, vict), NAME (att->in));
+			       name_seen_by (att, vict), NAME (att->in));
 		      interpret (att, buf);
 		    }
 		  RBIT (server_flags, SERVER_BEING_ATTACKED_YELL);
@@ -1444,7 +1444,7 @@ start_fighting (THING *att, THING *vict)
 		    {
 		      SBIT (server_flags, SERVER_BEING_ATTACKED_YELL);
 		      sprintf (buf, "yell Help! I'm being attacked by %s at %s!",
-			       name(vict, att), NAME (vict->in));
+			       name_seen_by (vict, att), NAME (vict->in));
 		      interpret (vict, buf);
 		    }
 		  RBIT (server_flags, SERVER_BEING_ATTACKED_YELL);

@@ -1,11 +1,11 @@
 THING 108000
 Name objgen.are`
-HpMv 0 10 5 1000
+HpMv 0 10 5 500
 HWT 0 0
-Timer 6
+Timer 2
 Short The Object Gen Area`
 type Lonath`
-ThFl 135307259
+ThFl 1089531
 Flag Area 0 0 28
 END_THING
 
@@ -730,22 +730,27 @@ END_THING
 THING 108036
 Name metal_gen_names`
 HWT 0 0
-Desc Osudium
-Nupate & $BNupate$7
-Adpebate
-Ihosite & $DIh$Eos$Dite$7
-Duirate & $9Du$Dir$9ate$7
-Hihium & $DHi$3hi$Dum$7
-Wipite & $CWipite$7
-Didujate & $ADi$Eduj$Aate$7
-Buhitium & $BBuhitium$7
-Datium & $FDa$5ti$Fum$7
-Wuolium & $3Wu$Col$3ium$7
-Awisium & $3Aw$Eis$3ium$7
-Litate & $2Li$Bta$2te$7
-Nicite & $1Nicite$7
-Dealium & $EDe$Aal$Eium$7
-`
+Desc Dinate & $6Di$Bna$6te$7
+Equunite & $CEquunite$7
+Cimirium & $3Cimirium$7
+Duvabium
+Kunate & $7Ku$Cna$7te$7
+Somate & $5Somate$7
+Famite & $BFa$6mi$Bte$7
+Huegate & $DHue$Bgate$7
+Maloxite & $2Ma$9lox$2ite$7
+Fawate & $6Faw$3ate$7
+Ruxium & $8Ruxium$7
+Ifosium & $3If$7os$3ium$7
+Wigium & $FWi$Bgi$Fum$7
+Ulsewate & $7Ul$4sew$7ate$7
+Marite & $5Ma$6ri$5te$7
+Nanite & $4Na$Cni$4te$7
+Enonite & $DEnonite$7
+Laewium & $6Laewium$7
+Duohium
+Gadium & $7Ga$8di$7um$7
+`
 END_THING
 
 THING 108037

@@ -14,7 +14,7 @@
 /* Note that this may overlap with the wilderness area if the numbers
    are too big. Deal with it by making the vnum size a bit smaller. */
 #define WORLDGEN_START_VNUM             200000
-#define WORLDGEN_VNUM_SIZE              400000
+#define WORLDGEN_VNUM_SIZE              1000000
 #define WORLDGEN_UNDERWORLD_START_VNUM  (WORLDGEN_START_VNUM+WORLDGEN_VNUM_SIZE)
 #define WORLDGEN_END_VNUM (WORLDGEN_UNDERWORLD_START_VNUM+WORLDGEN_VNUM_SIZE)
 

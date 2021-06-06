@@ -1,0 +1,24 @@
+THING 125000
+Name provisions.are`
+HpMv 0 10 5 1000
+HWT 0 0
+Timer 19
+Short Real Provisions Area`
+ThFl 1089531
+Flag Area 0 0 28
+END_THING
+
+THING 125001
+HWT 0 0
+Color 7
+Desc This is the area where the generated provisions get put. Don't build
+anything here because it will get nuked when the worldgen is cleared. 
+`
+Short The Provision Load Area`
+MIW 1
+Symbol -`
+ThFl 524779
+END_THING
+
+END_OF_AREA
+

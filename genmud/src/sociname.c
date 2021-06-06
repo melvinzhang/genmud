@@ -6,7 +6,7 @@
 #include "society.h"
 
 
-static char vowels[NUM_VOWELS+1] = "aeiou";
+const char vowels[NUM_VOWELS+1] = "aaeeeiioou";
 static char consonants[NUM_CONSONANTS+1] = "bcdfghjklmnpqrstvwxyz";
 
 /* These are consonants that must be near a vowel, not a consonant due
@@ -19,13 +19,13 @@ LC((a))=='v'|| \
 LC((a))=='x'|| \
 LC((a))=='y'|| \
 LC((a))=='z' ? TRUE:FALSE) 
- 
+
 char *
 create_society_name (VALUE *socval)
 {
   SOCIETY *soc;
   int num_syllables;
-  char syll[STD_LEN], *t, c, *s;
+  char syll[STD_LEN], *t, c = '\0', *s;
   int i, count;
   bool added_spacer = FALSE; /* Tells if we added a - or ' to space out the
 				name or not. If not, we don't go to

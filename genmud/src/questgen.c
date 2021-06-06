@@ -241,7 +241,7 @@ generate_job (JOB *next_job)
   /* If we don't find good objects for previous steps, we just bail 
      out. */
   
-  bool bad_things_found;
+  bool bad_things_found = FALSE;
   /* Need a place where we'll do this quest. */
   
   

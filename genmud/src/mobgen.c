@@ -85,18 +85,54 @@ persongen_find_society (void)
 }
 	      
 
+
   
 /* This finds a kind of type for the person by using the persongen area. */
 
 THING *
 find_persongen_type (void)
 {
-  THING *area, *person; 
-  int count, num_choices = 0, num_chose = 0;
-
+  THING *area, *person = NULL; 
+  int count, num_choices = 0, num_chose = 0, return_flags = 0;
+  VALUE *cast;
+  /* Use a society caste name...*/
+  
   if ((area = find_thing_num (PERSONGEN_AREA_VNUM)) == NULL ||
       !IS_AREA (area))
     return NULL;
+  
+  if ((person = area->cont) == NULL)
+    return NULL;
+  
+  if (nr (1,3) == 2)
+    {
+      free_str (person->name);
+      person->name = new_str (find_random_caste_name_and_flags (BATTLE_CASTES, &return_flags));
+      person->level = nr (10,40);
+
+      /* Add or remove a cast value depending on whether or not
+	 the thing is a caster or not. */
+      if (IS_SET (return_flags, CASTE_WIZARD | CASTE_HEALER))
+	{	 
+	  if ((cast = FNV (person, VAL_CAST)) == NULL)
+	    {
+	      cast = new_value();
+	      cast->type = VAL_CAST;
+	      add_value (person, cast);
+	    }
+	}
+      else if ((cast = FNV (person, VAL_CAST)) != NULL)
+	remove_value (person, cast);
+      
+      /* Add or remove sneak and hide based on if its a thief or not. */
+     
+      if (IS_SET (return_flags, CASTE_THIEF))
+	add_flagval (person, FLAG_AFF, AFF_SNEAK | AFF_HIDDEN);
+      else
+	remove_flagval (person, FLAG_AFF, AFF_SNEAK | AFF_HIDDEN);
+      if (person)
+	return person;
+    }
   
   
   for (count = 0; count < 2; count++)
@@ -120,7 +156,9 @@ find_persongen_type (void)
 	  num_chose = nr (1, num_choices);
 	}
     }
+  
   return person;
+  
 }
 
 /* This generates a person for an area. */
@@ -142,10 +180,10 @@ areagen_generate_person (THING *area, int level_bonus)
   namebuf[0] = '\0';
   if (!area || !IS_AREA (area))
     return NULL;
-
+  
   area->level = MID (AREA_LEVEL_MIN, area->level, AREA_LEVEL_MAX);
   /* Find an open slot to make this person. */
-
+  
   for (curr_vnum = area->vnum + area->mv+1; curr_vnum <
 	 area->vnum+area->max_mv; curr_vnum++)
     {
@@ -157,17 +195,16 @@ areagen_generate_person (THING *area, int level_bonus)
     return NULL;
   
   /* Get the society name. */
-
+  
   strcpy (socinamebuf, find_random_society_name ('n', TRUE));
   
   
-  if ((proto = find_persongen_type()) == NULL &&
-      proto->name && *proto->name)
+  if ((proto = find_persongen_type()) == NULL ||
+      !proto->name || !*proto->name)
     return NULL;
-  
-  /* Now we have a society, a name and a type. Now get name and 
-     move on. */
-  
+      /* Now we have a society, a name and a type. Now get name and 
+	 move on. */
+      
   if ((person = new_thing()) == NULL)
     return NULL;
   
@@ -183,7 +220,11 @@ areagen_generate_person (THING *area, int level_bonus)
     person->sex = proto->sex;
   /* Set to unique. */
   person->max_mv = 1;
-  person->thing_flags = proto->thing_flags;
+  if (IS_SET (proto->thing_flags, TH_IS_ROOM | TH_IS_AREA) ||
+      proto->thing_flags == 0)
+    person->thing_flags = MOB_SETUP_FLAGS;
+  else
+    person->thing_flags = proto->thing_flags;
   thing_to (person, area);
   add_thing_to_list (person);
   
@@ -236,7 +277,7 @@ areagen_generate_person (THING *area, int level_bonus)
       free_str (person->long_desc);
       person->long_desc = new_str (buf);
     }
-
+  
   /* Now copy values and flags. */
 
   copy_flags (proto, person);
@@ -288,7 +329,7 @@ areagen_generate_person (THING *area, int level_bonus)
 
 /* This adds some objects to the person. A lot of the time, it doesn't
    have any objects, but sometimes it does and we add the objects then. */
-
+  
 void
 add_objects_to_person (THING *person, char *name)
 {
@@ -308,16 +349,18 @@ add_objects_to_person (THING *person, char *name)
   if ((cast = FNV (person, VAL_CAST)) != NULL &&
       nr (1,3) == 2)
     {
-      add_reset (person, 277, MAX(1, 10-person->level/15), 1, 1);
+      add_reset (person, GEM_RANDPOP_VNUM, MAX(1, 10-person->level/15), 1, 
+1);
     }
   
       /* Add standard armor/wpn pops. */
   
   if (nr (1,3) == 2)
-    add_reset (person, 270, 30, 2, 1);
+    add_reset (person, WEAPON_RANDPOP_VNUM, 30, 2, 1);
   if (nr (1,3) == 2)
-    add_reset (person, 271, 20, 5, 1);
-  
+    add_reset (person, ARMOR_RANDPOP_VNUM, 20, 5, 1);
+  if (nr (1,3) == 2)
+    add_reset (person, PROVISION_RANDPOP_VNUM, 20, 3, 1);
   
   /* Sometimes there are no objects. */
   

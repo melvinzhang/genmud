@@ -64,3 +64,11 @@ void objectgen_setup_stats (THING *object, int weapon_type);
 /* This generates some fake metal names. */
 
 void generate_metal_names (void);
+
+/* This generates provisions like food, drinks, bags and tools. */
+
+void generate_provisions (THING *);
+
+/* This clears the provisions load area. */
+
+void clear_provisions (THING *);

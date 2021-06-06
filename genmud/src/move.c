@@ -57,8 +57,8 @@ move_thing (THING *initiator, THING *mover, THING *start_in, THING *end_in)
 	  (end_in->size - (end_in->carry_weight)))
 	{
 	  sprintf (buf, "%s is too big to fit inside of ",
-		   name (initiator, mover));
-	  sprintf (buf2, "%s!!\n\r", name (initiator, end_in));
+		   name_seen_by (initiator, mover));
+	  sprintf (buf2, "%s!!\n\r", name_seen_by (initiator, end_in));
 	  strcat (buf, buf2);
 	  stt (buf, initiator);
 	  return FALSE;
@@ -76,7 +76,7 @@ move_thing (THING *initiator, THING *mover, THING *start_in, THING *end_in)
         {
           if (CAN_MOVE (mover))
 	    {
-	      sprintf (buf, "%s won't let you take it!\n\r",name(initiator, mover));
+	      sprintf (buf, "%s won't let you take it!\n\r", name_seen_by (initiator, mover));
               stt (buf, initiator);
 	      return FALSE;
 	    }
@@ -105,7 +105,7 @@ move_thing (THING *initiator, THING *mover, THING *start_in, THING *end_in)
       if(IS_SET (initiator->thing_flags, TH_NO_MOVE_OTHER) ||
 	 IS_SET (mover->thing_flags, TH_NO_MOVE_BY_OTHER))
 	{  
-	  sprintf (buf, "You can't budge %s!\n\r", name (initiator, mover));
+	  sprintf (buf, "You can't budge %s!\n\r", name_seen_by (initiator, mover));
 	  stt (buf, initiator);
 	  return FALSE;
 	}
@@ -127,7 +127,7 @@ move_thing (THING *initiator, THING *mover, THING *start_in, THING *end_in)
       
       if (IS_SET (end_in->thing_flags, TH_NO_MOVE_INTO))
 	{
-	  sprintf (buf, "You can't move into %s!\n\r", name (initiator, end_in));
+	  sprintf (buf, "You can't move into %s!\n\r", name_seen_by (initiator, end_in));
 	  stt (buf, initiator);
 	  return FALSE;
 	}
@@ -139,7 +139,7 @@ move_thing (THING *initiator, THING *mover, THING *start_in, THING *end_in)
   
   if (IS_SET (end_in->thing_flags, TH_NO_CONTAIN))
     {
-      sprintf (buf, "%s cannot contain anything!\n\r", name (initiator, end_in));
+      sprintf (buf, "%s cannot contain anything!\n\r", name_seen_by (initiator, end_in));
        stt (buf, initiator);
        return FALSE;
     }
@@ -148,7 +148,7 @@ move_thing (THING *initiator, THING *mover, THING *start_in, THING *end_in)
     {
       if (IS_SET (end_in->thing_flags, TH_NO_GIVEN))
 	{
-	  sprintf (buf, "%s won't take this!\n\r", name (initiator, end_in));
+	  sprintf (buf, "%s won't take this!\n\r", name_seen_by (initiator, end_in));
 	  stt (buf, initiator);
 	  return FALSE;
 	}
@@ -158,7 +158,7 @@ move_thing (THING *initiator, THING *mover, THING *start_in, THING *end_in)
 	}
       if (!IS_ROOM (end_in) && IS_SET (mover->thing_flags, TH_NO_GIVE))
 	{
-	  sprintf (buf, "%s won't let you give it to anyone else!", name (mover, initiator));
+	  sprintf (buf, "%s won't let you give it to anyone else!", name_seen_by (mover, initiator));
 	  stt (buf, initiator);
 	  return FALSE;
 	}
@@ -168,7 +168,7 @@ move_thing (THING *initiator, THING *mover, THING *start_in, THING *end_in)
     {
       if (IS_SET (mover->thing_flags, TH_NO_DROP))
 	{
-	  sprintf (buf, "You can't let go of %s!\n\r", name (initiator, mover));
+	  sprintf (buf, "You can't let go of %s!\n\r", name_seen_by (initiator, mover));
 	  stt (buf, initiator);
 	  return FALSE;
 	}
@@ -188,8 +188,8 @@ move_thing (THING *initiator, THING *mover, THING *start_in, THING *end_in)
     {
       if (IS_SET (start_in->thing_flags, TH_NO_TAKE_FROM))
 	{
-	  sprintf (buf, "%s won't let you take ", name (initiator, start_in));
-	  sprintf (buf2, "%s from it!\n\r", name (initiator, mover));
+	  sprintf (buf, "%s won't let you take ", name_seen_by (initiator, start_in));
+	  sprintf (buf2, "%s from it!\n\r", name_seen_by (initiator, mover));
 	  strcat (buf, buf2);
 	  stt (buf, initiator);
 	  return FALSE;
@@ -217,7 +217,7 @@ move_thing (THING *initiator, THING *mover, THING *start_in, THING *end_in)
     {
       if(IS_SET(start_in->thing_flags, TH_NO_LEAVE))
 	{
-	  sprintf (buf, "%s won't let you leave it!\n\r", name (initiator, start_in));
+	  sprintf (buf, "%s won't let you leave it!\n\r", name_seen_by (initiator, start_in));
 	  stt (buf, initiator);
 	  return FALSE;
 	} 
@@ -1340,7 +1340,7 @@ do_leave (THING *th, char *arg)
   
   
   stt ("You leave.\n\r", th);
-  sprintf (buf, "%s leaves you.\n\r", name (th->in, th));
+  sprintf (buf, "%s leaves you.\n\r", name_seen_by (th->in, th));
   stt (buf, th->in);
   act ("@1n arrives from @2n.", th, start_in, NULL, NULL, TO_ROOM);
   if (IS_PC (th))
@@ -1385,7 +1385,7 @@ do_enter (THING *th, char *arg)
     return;  
   if (start_in->cont)
     act ("@2n enters @3n.", start_in->cont, th, entering, NULL, TO_ALL);
-  sprintf (buf, "You enter %s.\n\r", name (th, entering));
+  sprintf (buf, "You enter %s.\n\r", name_seen_by (th, entering));
   stt (buf, th);
   act ("@1n enters from @2n.", th, entering, NULL, NULL, TO_ROOM);
   if (IS_PC(th))

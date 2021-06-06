@@ -432,7 +432,7 @@ thg->hp, thg->max_hp,  mvbuf, thg->max_mv, thg->mv, thg->size);
   for (i = 0; i < pad; i++)
     padbuf[i] = ' ';
   padbuf[pad] = '\0';
-  sprintf (buf, "\x1b[1;37mShort\x1b[1;36m:\x1b[0;37m %s%s Wgt: \x1b[1;37m%d\x1b[0;37m Hgt: \x1b[1;32m%d\x1b[0;37m Type: %s\n\r" , thg->short_desc, padbuf, thg->weight, thg->height, thg->type);  
+  sprintf (buf, "\x1b[1;37mShort\x1b[1;36m:\x1b[0;37m %s%s Wgt: \x1b[1;37m%d\x1b[0;37m Hgt: \x1b[1;32m%d\x1b[0;37m %s: %s\n\r" , thg->short_desc, padbuf, thg->weight, thg->height, (!IS_AREA(thg) ? "Type" : "Builders"), thg->type);  
   stt (buf, th);
   sprintf (buf, "\x1b[1;37mLong\x1b[1;36m :\x1b[0;37m %s\n\r", thg->long_desc);
   stt (buf, th);
@@ -1453,12 +1453,7 @@ edit (THING *th, char *arg)
 	  arg = f_word (arg, arg2);
 	  
 	  /* Check if we are asking for a proper type */
-	  for (valtype = 1; valtype < VAL_MAX; valtype++)
-	    {
-	      
-	      if (!str_prefix (arg1, value_list[valtype]))
-		break;
-	    }
+	  valtype = find_value_from_name (arg1);
 	  
 	  if (valtype == VAL_MAX)
 	    {

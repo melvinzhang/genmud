@@ -785,7 +785,7 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
 	{
 	  if (targ == th->in)
 	    {
-	      sprintf (buf, "You are in: %s\n\r", name (targ, th));
+	      sprintf (buf, "You are in: %s\n\r", name_seen_by (targ, th));
 	      stt (buf, th);
 	      stt (show_flags (targ->flags, 0, (LEVEL(th) >= BLD_LEVEL ? TRUE : FALSE)), th);
 	      if (targ->in && IS_AREA (targ->in))

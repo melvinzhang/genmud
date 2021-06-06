@@ -1,12 +1,12 @@
 THING 1050
-Name whitie1.are`
+Name good1.are`
 HpMv 0 10 25 50
 HWT 0 0
 Align 2
 Cost 100
-Timer 19
-Short The Whitie Outpost`
-Long The Whitie Outpost comes to life again!`
+Timer 7
+Short The Good Outpost`
+Long The Good Outpost comes to life again.`
 type Lonath`
 ThFl 1089531
 Flag Area 0 0 12

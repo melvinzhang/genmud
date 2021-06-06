@@ -396,7 +396,8 @@ add_main_detail_room (THING *room, int depth_left, int room_bits)
   int dir;
   char buf[STD_LEN];
   VALUE *oval, *nval;
-  if (depth_left < 1 || !room || !IS_ROOM (room) || !name || !*name ||
+  if (depth_left < 1 || !room || !IS_ROOM (room) || 
+      !room->name || !*room->name ||
       IS_ROOM_SET (room, BADROOM_BITS | ROOM_EASYMOVE) ||
       IS_MARKED (room))
     return;

@@ -251,9 +251,11 @@ society_get_killed (THING *killer, THING *vict)
     }
   
   /* If an opp align thing kills, it may encourage the society 
-     to turn to a new alignment. */
+     to turn to a new alignment. May also happen with align 0 vs
+     align 0. */
   
-  if (DIFF_ALIGN (killer->align, vsoc->align))
+  if (DIFF_ALIGN (killer->align, vsoc->align) ||
+      (killer->align == 0 && vsoc->align == 0))
     {
       
       /* If a society member kills another in a different
@@ -268,12 +270,29 @@ society_get_killed (THING *killer, THING *vict)
 	    {
 	      
 	      int i, raw_amt;
+	      VALUE *build;
+
+	      /* Build is only used when it's a pavillion since
+		 that means a leader was killed in its own caste
+		 house. */
+	      if ((build = FNV (vict->in, VAL_BUILD)) != NULL &&
+		  (build->val[0] != vsoc->vnum || 
+		   !IS_SET (build->val[3], CASTE_LEADER)))
+		build = NULL;
+	      
 	      for (i = 0; i < RAW_MAX; i++)
 		{
 		  raw_amt = MIN (vsoc->raw_curr[i], 
 				 nr (0, LEVEL(vict)/10 - 20));
 		  vsoc->raw_curr[i] -= raw_amt;
 		  ksoc->raw_curr[i] += raw_amt;
+		  /* If vict is a leader, remove some of total raws...*/
+		  if (IS_SET (vsocval->val[2], CASTE_LEADER))
+		    {
+		      vsoc->raw_curr[i] -= vsoc->raw_curr[i]/10;
+		      if (build)
+			vsoc->raw_curr[i] -= vsoc->raw_curr[i]/8;
+		    }
 		}		      
 	    }
 	  if ((raid = find_raid_num (ksocval->val[4])) != NULL &&

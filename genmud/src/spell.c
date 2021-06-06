@@ -1137,7 +1137,7 @@ do_slist (THING *th, char *arg)
   char *t, *oldarg = arg;
   int spellt = SPELLT_MAX, mana = 0, guild = GUILD_MAX, i, targett = TAR_MAX;
   SPELL *spl;
-  bool no_prereq;
+  bool no_prereq = FALSE;
   
   if (str_cmp (arg, "all"))
     {

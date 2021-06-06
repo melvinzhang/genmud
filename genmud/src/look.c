@@ -598,9 +598,9 @@ do_scan (THING *th, char *arg)
 		    {
 		      seen = TRUE;
 		      if (!buf[0])
-			sprintf (buf, "%s %s from here you see %s",dir_dist[dist], dir_name[dir], name (th, vict));
+			sprintf (buf, "%s %s from here you see %s",dir_dist[dist], dir_name[dir], name_seen_by (th, vict));
 		      else if (strlen (buf) < STD_LEN * 2)
-			sprintf (buf + strlen(buf), ", %s", name (th, vict));
+			sprintf (buf + strlen(buf), ", %s", name_seen_by (th, vict));
 		    }
 		}
 	      if (buf[0])
@@ -918,7 +918,7 @@ show_contents_list (THING *th, THING *target, int flags)
 	  stt ("Error. No shop here.\n\r", th);
 	  return;
 	}
-      sprintf (buf, "A list of things for sale at %s's shop:\n\n\rNum   Cost:       Name:\n\r", name (th, target));
+      sprintf (buf, "A list of things for sale at %s's shop:\n\n\rNum   Cost:       Name:\n\r", name_seen_by (th, target));
       stt (buf, th);
       can_peek = TRUE;
     }
@@ -1005,7 +1005,7 @@ show_contents_list (THING *th, THING *target, int flags)
 		  buf2[0] = '\0';
 		  posbuf[0] = '\0';
 		  if (cont->position == POSITION_FIGHTING || cont->position == POSITION_TACKLED)
-		    sprintf (posbuf, position_looks[cont->position], (FIGHTING (cont) ? name (th, FIGHTING(cont)) : "noone"));
+		    sprintf (posbuf, position_looks[cont->position], (FIGHTING (cont) ? name_seen_by (th, FIGHTING(cont)) : "noone"));
 		  else
 		    strcpy (posbuf, position_looks[(cont->position > 0 && cont->position < POSITION_MAX ? cont->position : POSITION_STANDING)]);
 		  
@@ -1013,7 +1013,7 @@ show_contents_list (THING *th, THING *target, int flags)
 		    sprintf (buf, "\x1b[1;34m> LINKDEAD: \x1b[1;31mPKILL ME\x1b[1;34m!!! < ");
 		  if (IS_PC (th) && IS_PC (cont) && DIFF_ALIGN (th->align, cont->align))
 		    {
-		      sprintf (buf + strlen (buf), "\x1b[%d;3%dm%s is %s %s\x1b[0;37m", bright, color, name (th, cont), posbuf, show_affects(cont));
+		      sprintf (buf + strlen (buf), "\x1b[%d;3%dm%s is %s %s\x1b[0;37m", bright, color, name_seen_by (th, cont), posbuf, show_affects(cont));
 		    }
 		  else
 		    sprintf (buf + strlen(buf), "\x1b[%d;3%dm%s is %s %s\x1b[0;37m", bright, color, NAME (cont), posbuf, show_affects (cont));

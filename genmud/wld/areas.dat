@@ -1,6 +1,6 @@
 start.are
-darkie1.are
-whitie1.are
+evil1.are
+good1.are
 forgedeq.are
 randmobs.are
 areadetails.are
@@ -10,10 +10,13 @@ mobdescgen.are
 socigen.are
 castegen.are
 areagen.are
-objgen.are
+provisionegen.are
+organizations.are
 questgen.are
 historygen.are
 sociperm.are
 socigenmob.are
+deities.are
+provisions.are
 
 END_AREA_LIST

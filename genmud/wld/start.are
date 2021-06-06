@@ -1,13 +1,13 @@
 THING 1
 Name start.are`
-HpMv 0 1 100 998
+HpMv 0 1 109 998
 HWT 0 0
 Cost 100
-Timer 15
+Timer 12
 Short the start area`
 Long A cold wind blows by...`
 type Lonath`
-ThFl 672137216
+ThFl 537919488
 Flag Area 0 0 28
 END_THING
 
@@ -51,14 +51,14 @@ Long Lonath's Room is Here.`
 Symbol -`
 ThFl 524779
 Flag Room 0 0 1
+EDESC tapestry`
+This large wall-hanging depicts Lonath in battle with the forces of PortalWhoreness!
+`
 EDESC potty toilet`
 This is where Lonath relaxes with his list of people who are naughty, and
 people who are really naughty. Nobody here is nice. It's very clean
 because he can aim and he uses those little wipey things that keep the
 stink and whatnot from building up too much.
-`
-EDESC tapestry`
-This large wall-hanging depicts Lonath in battle with the forces of PortalWhoreness!
 `
 END_THING
 
@@ -245,7 +245,7 @@ Color 8
 Short The Darkie Recall Room`
 MIW 1
 Symbol -`
-ThFl 134742507
+ThFl 524779
 Flag Room 0 0 1
 Reset 251 100 1 1
 END_THING
@@ -260,7 +260,7 @@ Desc The Recall Room
 Short The Whitie Recall Room`
 MIW 1
 Symbol -`
-ThFl 134742507
+ThFl 524779
 Flag Room 0 0 1
 Reset 252 100 1 1
 END_THING
@@ -339,11 +339,14 @@ THING 110
 Name gem chip diamond`
 Level 20
 HWT 2 5
+Color 7
 Cost 5000
 Short a chip of $Fdiamond$7`
 Wear wield`
+MIW 1
 Long A chip of diamond is on the ground.`
-ThFl 100934
+Symbol -`
+ThFl 625222
 Val gem 1 30 30 10 0 0 0 0 `
 END_THING
 
@@ -1475,7 +1478,16 @@ HWT 0 0
 Short the mob randpop`
 Long The mob randpop is here.`
 ThFl 100934
-Val randpop 101100 952 2 1000 0 0 0 0 `
+Val randpop 101100 988 2 1000 0 0 0 0 `
+END_THING
+
+THING 279
+Name provision provisionpop`
+HWT 0 0
+Short The provision pop`
+Long The provision po pis here.`
+ThFl 101063
+Val randpop 125006 195 1 0 0 0 0 0 `
 END_THING
 
 THING 300
@@ -1561,8 +1573,8 @@ Short a knife`
 Wear wield`
 Long A knife is here.`
 ThFl 100934
-Val weapon 1 2 0 0 0 0 0 0 `
 Val tool 6 0 0 0 0 0 0 0 `
+Val weapon 1 2 0 0 0 0 0 0 `
 END_THING
 
 THING 356

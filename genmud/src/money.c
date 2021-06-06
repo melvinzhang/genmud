@@ -172,7 +172,7 @@ show_money (THING *th, THING *target, bool inside_person)
   if (cointypes == 0)
     return;
   if (inside_person)
-    sprintf (buf, "%s %s", name (th, target), IS_SET (target->thing_flags, TH_NO_MOVE_SELF) ? "contains" : (target == th ? "have" : "has"));
+    sprintf (buf, "%s %s", name_seen_by (th, target), IS_SET (target->thing_flags, TH_NO_MOVE_SELF) ? "contains" : (target == th ? "have" : "has"));
   else
     sprintf (buf, "There %s", top_coin < 2 ? "is" : "are");
   buf[0] = UC(buf[0]); 

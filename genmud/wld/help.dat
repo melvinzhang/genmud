@@ -2,12 +2,15 @@ HELP MORT
 Key WORLDMAP WORLD_MAP`
 Admin `
 Text World Map:
-              $A,                  $7
-            $A,$2#$A, $2*                $7
-            $2# $A,$2*$A,                $7
-            $5^$A,$9@ $2*                $7
-             $A, $2*$2*$2#$A,              $7
-             $A,$2*$A,  $A@              $7
+            $F*$2* $A,$5^                $7
+           $5^$5^$2*$A,$A,$A,$A,               $7
+           $F*$B,$B,$2*$A,$A,                $7
+          $A,$5^$5^$2*$2*$2*                 $7
+            $B, $9@                  $7
+            $A,                    $7
+            $A,$A,$A,                  $7
+            $2*$2*$2*$2#                 $7
+            $A@ $A,$2#                 $7
 
 
 Evil outpost: $9@$7.   Good outpost: $A@$7.   
@@ -19,8 +22,7 @@ END_HELP
 HELP MORT
 Key HISTORY BACKSTORY`
 Admin `
-Text This is the history of the world.
-`
+Text `
 SeeAlso `
 END_HELP
 

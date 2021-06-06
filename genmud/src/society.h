@@ -124,7 +124,8 @@
 #define SOCIETY_GEN_CASTE_TIER_MAX 40 /* Max N tiers of names to choose
 					 from when generating a society. */
 
-#define NUM_VOWELS               5
+#define NUM_VOWELS              10 /* This is because the vowels are 
+				      weighted..e = 3x, aio = 2x, u = 1x. */
 #define NUM_CONSONANTS          21
 
 /* Stages of decay for an area after a society gets defeated. */
@@ -272,7 +273,8 @@
 #define CASTE_FARMER            0x00000080  /* Farmers/herders */
 #define CASTE_CRAFTER           0x00000100  /* Craftsmen who make items. */
 #define CASTE_CHILDREN          0x00000200  /* Childrens' caste. */
-#define BATTLE_CASTES CASTE_WARRIOR | CASTE_HEALER | CASTE_WIZARD | CASTE_LEADER
+#define CASTE_THIEF             0x00000400  /* Thief/spy caste. */
+#define BATTLE_CASTES (CASTE_WARRIOR | CASTE_HEALER | CASTE_WIZARD | CASTE_LEADER | CASTE_THIEF)
 /**********************************************************************/
 /* Warrior Caste(s) status Flags */
 /**********************************************************************/
@@ -938,3 +940,13 @@ bool society_necro_generate (THING *th);
 
 /* Find a random generated society. */
 SOCIETY *find_random_generated_society (int align);
+
+/* This generates a society. */
+
+void society_generate (THING *proto);
+
+
+/* This finds a random name of a caste tier in one of the given
+   castes. */
+
+char *find_random_caste_name_and_flags (int caste_flags, int *return_flags);

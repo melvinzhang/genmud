@@ -124,7 +124,7 @@ do_practice (THING *th, char *arg)
     }
   if (arg[0] == '\0' && teacher && is_teacher)
     {
-      sprintf (buf, "%s teaches:\n\n\r--------------------------------------------------------------------\n\n\r", name (th, teacher));
+      sprintf (buf, "%s teaches:\n\n\r--------------------------------------------------------------------\n\n\r", name_seen_by (th, teacher));
       stt (buf, th);
       for (j = 0; j < 3; j++)
 	{

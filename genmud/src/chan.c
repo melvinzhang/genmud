@@ -1007,7 +1007,7 @@ act (char *buf, THING *th, THING *use, THING *vict, char *txt, int type)
 		      if (curr)
 			{
 			  if (UC (*t) == 'N')
-			    r = name (to, curr);
+			    r = name_seen_by (to, curr);
 			  else if (UC (*t) == 'H')
 			    r = he_she (to, curr);
 			  else if (UC (*t) == 'M')
@@ -1256,7 +1256,7 @@ his_her (THING *viewer, THING *victim)
 
 
 char *
-name (THING *viewer, THING *victim)
+name_seen_by (THING *viewer, THING *victim)
 {
   static char ret[200];
   RACE *race, *align;
@@ -1328,7 +1328,7 @@ himself_herself (THING *th, THING *viewer, THING *victim)
   else if (viewer == victim)
     return "you";
   if (th != victim)
-    return name (viewer, victim);
+    return name_seen_by (viewer, victim);
   if (SEX (victim) == 1)
     return "herself";
   else if (SEX (victim) == 2)

@@ -6,6 +6,7 @@
 #include "society.h"
 #include "historygen.h"
 #include "areagen.h"
+#include "objectgen.h"
 
 
 /* Each align gets an ancient race that can help it if it's found. 
@@ -112,10 +113,17 @@ write_history_data (void)
   return;
 }
 
+/* This generates the history of the world...by using the society names
+   and areas and deities and ancient races and alignments and
+   organizations to make up a little story in 3 parts.
+   
+   1. Ancient history..things were good for a long time.
+   2. Disaster...Things went bad for some reason.
+   3. Rebirth...Now things are changing so you go make your mark. */
+
 void
 historygen (void)
 {
-  int num_ages, age;
   HELP *help;
   bigbuf[0] = '\0';
 
@@ -133,12 +141,16 @@ historygen (void)
 
   historygen_setup ();
 
-  num_ages = nr (2,4);
-  
   /* Now generate each of the ages. */
-
-  for (age = 0; age < num_ages; age++)
-    add_to_bigbuf (historygen_age(age));
+  
+  /* The idea is that there was a long period of peace and harmony
+     then something bad happened and the ancient powers went away
+     and the world was thrown into turmoil. Now, ancient things
+     are stirring and here's the state of the world, and you
+     have to find the ancient powers blah blah blah... */
+  add_to_bigbuf (historygen_past());
+  add_to_bigbuf (historygen_disaster());
+  add_to_bigbuf (historygen_present());
   
   free_str (help->text);
   help->text = new_str (bigbuf);
@@ -155,9 +167,14 @@ do_mythology (THING *th, char *arg)
   RACE *align;
   char buf[STD_LEN];
 
-  if (LEVEL (th) == MAX_LEVEL && IS_PC (th) &&
-      !str_cmp (arg, "setup"))
-    historygen_setup();
+  if (LEVEL (th) == MAX_LEVEL && IS_PC (th))
+    {
+      if (!str_cmp (arg, "setup"))
+	{
+	  historygen_generate_gods(th);
+	  historygen_generate_races();
+	}
+    }
   
   for (al = 0; al < ALIGN_MAX; al++)
     {
@@ -177,6 +194,8 @@ do_mythology (THING *th, char *arg)
 	    }
 	}
       stt ("\n\r", th);
+      sprintf (buf, "The %s race: %s\n\n\r", align->name, old_races[al]);
+      stt (buf, th);
     }
   return;
 }
@@ -189,7 +208,8 @@ historygen_setup (void)
 {
 
   historygen_generate_races();
-  historygen_generate_gods();
+  historygen_generate_gods(NULL);
+  historygen_generate_organizations();
   write_history_data();  
   return;
 }
@@ -201,21 +221,255 @@ historygen_generate_races (void)
 {
   int al;
   RACE *align;
+  THING *proto;
+  char buf[STD_LEN];
+  char *t;
+  bool race_name_ok = FALSE;
+  proto = new_thing();
+  proto->level = 300;
+  proto->vnum = the_world->vnum + 2;
+  add_flagval (proto, FLAG_DET, AFF_INVIS | AFF_HIDDEN | AFF_SNEAK | AFF_CHAMELEON | AFF_FOGGY);
+  add_flagval (proto, FLAG_AFF, AFF_FLYING | AFF_SANCT);
   for (al = 0; al < ALIGN_MAX; al++)
     {
       if ((align = find_align (NULL, al)) != NULL)
 	{
 	  free_str (old_races[al]);
-	  old_races[al] = new_str (create_society_name(NULL));
+	  
+	  /* A race name has 5+ letters in it ending with the last
+	     letter being a consonant. After a name like that
+	     is created, the race then adds a random vowel onto
+	     the end. */
+	  
+	  do
+	    {
+	      race_name_ok = TRUE;
+	      
+	      strcpy (buf, create_society_name (NULL));
+	      
+	      for (t = buf; *t; t++);
+	      
+	      /* Go backwards until we hit a letter that isn't a vowel
+		 that's preceeded by a vowel. */
+	      do 
+		{
+		  t--;
+		  if (t <= buf) /* Stop if we go back to the beginning
+				   of the buffer. */
+		    break;
+		  if (!isalpha (*t)) /* Stop on a letter. */
+		    continue;
+		  if (isvowel (*t)) /* Must not be a vowel. */
+		    continue;
+		  if (!isvowel (*(t-1))) /* Previous must be a vowel. */
+		    continue;
+		  break;
+		}
+	      while (1);
+	      
+	      /* Make sure the name's long enough...allow - and ' in the
+		 names. */
+	      
+	      if (t - buf < 4 || t - buf > 6)
+		race_name_ok = FALSE;
+	      
+	      /* Append a vowel...*/
+	      
+	      *(t + 1) = vowels[nr(0,NUM_VOWELS-1)];
+	      *(t + 2) = '\0';
+	    }
+	  while (!race_name_ok);
+
+	  free_str (proto->name);
+	  old_races[al] = new_str (buf);
+	  sprintf (buf, "%s %s %s", old_races[al], old_races[al], old_races[al]);	  
+	  proto->name = new_str (buf);
+	  free_str (proto->short_desc);
+	  proto->short_desc = new_str ((nr (1,3) == 2 ? "Ancient" :
+					(nr (1,2) == 1 ? "Mighty" : "Powerful")));
+	  
+	  /* They get random mob protect flags...*/
+	  remove_flagval (proto, FLAG_MOB, ~0);
+	  add_flagval (proto, FLAG_MOB, nr (1, MOB_AIR * 2 - 1));
+ 	  proto->align = al;
+	  add_flagval (proto, FLAG_SOCIETY, SOCIETY_FIXED_ALIGN | SOCIETY_SETTLER);
+	  generate_society (proto);
 	}
     }
+  free_thing (proto);
   return;
 }
+
+/* This generates the organizations that players use to get their
+   skills. These organizations are societies that can't change align
+   and which get put into the world in random areas. */
+
+
+void
+historygen_generate_organizations (void)
+{
+  RACE *align;
+  int al, count, num_organizations, caste_flag, num_choices,
+    num_chose;
+  THING *proto;
+  char name[STD_LEN];
+  char prefix_name[STD_LEN]; /* From a list of prefixes in the
+				organizations area. */
+  char tiernames[SOCIETY_GEN_CASTE_TIER_MAX][STD_LEN];
+  
+  /* Need a proto just to make things work...*/
+  if ((proto = new_thing()) == NULL)
+    return;
+  
+  proto->vnum = the_world->vnum + 1;
+  /* These flags are added because societies that are generated have 
+     AUTOMATIC flags added to them... (SOCIETY_BASE_FLAGS) where they're
+     set to aggressive and settler atm. Therefore, the fix align and
+     xenophobic are added, but settler is removed. */
+  add_flagval (proto, FLAG_SOCIETY, SOCIETY_FIXED_ALIGN |  SOCIETY_XENOPHOBIC | SOCIETY_SETTLER );
+  /* Loop through aligns and give a society to each nonzero align. */
+
+  for (al = 1; al < ALIGN_MAX; al++)
+    {
+      if ((align = align_info[al]) == NULL)
+	continue;
+      
+      /* Different numbers of organizations per align...*/
+      num_organizations = nr(3,5);
+      
+
+      for (count = 0; count < num_organizations; count++)
+	{
+	  switch (nr (1,9))
+	    {
+	      case 1:
+		caste_flag = CASTE_THIEF;
+		break;
+	      case 2:
+	      case 3:
+	      case 4:
+		caste_flag = CASTE_WARRIOR;
+		break;
+	      case 5:
+	      case 6:
+	      case 7:
+		caste_flag = CASTE_WIZARD;
+		break;
+	      case 8:
+	      case 9:
+	      default:
+		caste_flag = CASTE_HEALER;
+		break;
+	    }
+	  
+	  /* Pick the name. */
+	  if ((num_choices = num_caste_tiernames (tiernames, caste_flag, proto)) < 1)
+	    continue;
+	  
+	  /* Make sure it's within the acceptable range. */
+	  num_chose = nr (num_choices/3,num_choices)-1;
+	  if (num_chose < 1)
+	    num_chose = 1;
+
+	  if (num_chose >= SOCIETY_GEN_CASTE_TIER_MAX)
+	    num_chose = SOCIETY_GEN_CASTE_TIER_MAX-1;
+	  
+	  /* Make sure it's actually a name. */
+	  if (!*tiernames[num_chose])
+	    continue;
+
+	  
+	  /* Get the prefix. */
+
+	  strcpy (prefix_name, find_gen_word (ORGANIZATION_AREA_VNUM,
+					      "organization_prefixes", NULL));
+		  
+	  if (!*prefix_name)
+	    continue;
+	  
+	  
+	  /* Now set up the names. */
+
+	  if (nr (1,2) == 1)
+	    {
+	      /* Magician's assembly...*/
+
+	      sprintf (name, "%s %s %s", prefix_name, prefix_name, prefix_name);
+	      free_str (proto->name);
+	      capitalize_all_words(name);
+	      proto->name = new_str (name);
+	      
+	      /* Make the prefix possessive...*/
+	      
+	      sprintf (name, tiernames[num_chose]);
+	      possessive_form (name);
+	      capitalize_all_words(name);
+	      free_str (proto->short_desc);
+	      proto->short_desc = new_str (name);
+	    }
+	  else /* Assembly of magicians. */
+	    {
+
+	      /* This code looks strange putting the words in
+		 there three times..but it's needed since societies
+		 have three names: name, plural name, possessive name.
+		 Since all three are needed for the society and since
+		 English sucks and there are so many exceptions, I tried
+		 to put them into the code in one spot and so when
+		 you create a society, you need all three names. */
+	      
+	      /* The single quotes are necessary below so that when
+		 the words are read in, any multiple word names are not
+		 split into pieces. That split can occur because when
+		 the words are read out of the list, the quotes around
+		 strings of words get removed. */
+	      sprintf (name, "'%s' '%s", tiernames[num_chose],
+		       tiernames[num_chose]);
+
+	      /* Add the plural form name. */
+	      plural_form (name);
+	      
+	      /* Add the possessive name.. */
+	      strcat (name, "' '");
+	      strcat (name, tiernames[num_chose]);
+	      strcat (name, "'");
+	      free_str (proto->name);
+	      capitalize_all_words(name);
+	      proto->name = new_str (name);
+	      
+	      /* Set up prefix now...*/
+	      
+	      /* The single quotes in the below line are necessary since
+		 the society_generate code looks at the proto->short_desc
+		 and starts doing f_words to get the arguments out
+		 of it. If the quotes were not there, the first f_word
+		 would strip off the first word like "assembly" and the
+		 second would strip off "of"...which would lead to a
+		 society called "Of Magicians" and one called 
+		 "Assembly Magicians"...neither of which is what we
+		 really want. */
+	      sprintf (name, "'%s of'", prefix_name);
+	      capitalize_all_words(name);
+	      free_str (proto->short_desc);
+	      proto->short_desc = new_str (name);
+	    }
+	  
+	  proto->align = al;
+	  proto->level = nr (80,130);
+	  generate_society (proto);
+	}
+      
+    }
+  free_thing (proto);
+  return;
+}
+  
+
 
 /* This sets up the historygen gods and their spheres of influence. */
 
 void
-historygen_generate_gods (void)
+historygen_generate_gods (THING *th)
 {
   int al, gd, max_gods;
   
@@ -226,6 +480,15 @@ historygen_generate_gods (void)
   RACE *align;
   int name_tries;
   bool name_ok = FALSE;
+  bool deity_things_exist = FALSE;
+  THING *area;
+  if ((area = find_thing_num (DEITY_AREA_VNUM)) == NULL ||
+      (area->cont && area->cont->next_cont))
+    {
+      deity_things_exist = TRUE;
+      stt ("Could not set up deity things. They already exist. Do a worldgen clear yes to clear them.\n\r", th);
+    }
+ 
   for (al = 0; al < ALIGN_MAX; al++)
     {
       
@@ -294,20 +557,130 @@ historygen_generate_gods (void)
 		}
 	      capitalize_all_words (buf2);
 	      strcat (buf, buf2);
-	      old_gods_spheres[al][gd] = new_str (buf);
 	    }
+	  old_gods_spheres[al][gd] = new_str (buf);
+	  if (!deity_things_exist)
+	    generate_deity (old_gods[al][gd], old_gods_spheres[al][gd], al);
 	}
     }
   return;
 }
 
 
-/* This generates an age of history. */
+
+/* This generates a deity...almost unkillable and with tons of 31337 
+   eq on it. */
+
+void
+generate_deity (char *name, char *spheres, int align)
+{
+  THING *proto, *area, *obj;
+  int curr_vnum, min_vnum, max_vnum;
+  int wearloc, wearnum; /* For making the eq for the character. */
+  char buf[STD_LEN];
+  if (!name || !*name || !spheres || !*spheres)
+    return;
+  
+  if (align < 0 || align >= ALIGN_MAX)
+    return;
+  if ((area = find_thing_num (DEITY_AREA_VNUM)) == NULL)
+    return;
+  area->thing_flags |= TH_CHANGED;
+  min_vnum = area->vnum + area->mv + 1;
+  max_vnum = area->vnum + area->max_mv -1;
+  
+  
+  for (curr_vnum = min_vnum; curr_vnum <= max_vnum; curr_vnum++)
+    if ((proto = find_thing_num (curr_vnum)) == NULL)
+      break;
+  
+  if (curr_vnum < min_vnum && curr_vnum > max_vnum)
+    return;
+  
+  /* Base stats like level and flags. */
+  proto = new_thing();
+  proto->vnum = curr_vnum;
+  proto->timer = 3; /* Only get 3 hours to use this thing...*/
+  proto->height = nr (200,600);
+  proto->weight = nr (10000, 30000);
+  thing_to (proto, area);
+  add_thing_to_list (proto);
+  
+  proto->thing_flags = MOB_SETUP_FLAGS;
+  proto->align = align;
+  add_flagval (proto, FLAG_DET, AFF_INVIS | AFF_HIDDEN | AFF_CHAMELEON | AFF_FOGGY);
+  add_flagval (proto, FLAG_AFF, AFF_FLYING | AFF_SANCT | AFF_HASTE | AFF_WATER_BREATH | AFF_AIR | AFF_EARTH | AFF_FIRE | AFF_WATER | AFF_PROTECT | AFF_PROT_ALIGN);
+  add_flagval (proto, FLAG_MOB, (MOB_AIR *2 - 1));
+  add_flagval (proto, FLAG_PROT, ~0);
+  proto->level = DEITY_LEVEL;
+  
+  sprintf (buf, "%s deity", name);
+  proto->name = new_str (buf);
+  sprintf (buf, "%s the %s of %s", name, 
+	   (nr (1,3) == 2 ? "God" : (nr (1,2) == 1 ? "Deity" : "Lord")),
+	   spheres);
+  proto->short_desc = new_str (buf);
+  proto->long_desc = new_str ("A being of amazing and awesome power stands before you...");
+  
+  for (wearloc = ITEM_WEAR_NONE + 1; wearloc < ITEM_WEAR_MAX; wearloc++)
+    {
+      for (wearnum = 0; wearnum < wear_data[wearloc].how_many_worn; wearnum++)
+	{
+	  curr_vnum++;
+	  if ((obj = objectgen (area, wearloc, DEITY_LEVEL, curr_vnum, NULL, name)) != NULL)
+	    add_reset (proto, obj->vnum, 100, 1, 1);
+	}
+    }
+  free_thing (proto);
+  return;
+}
+	  
+
+
+/* This clears the things created for the history data. */
+
+void
+historygen_clear (void)
+{
+  THING *area, *mobject;
+
+  if ((area = find_thing_num (DEITY_AREA_VNUM)) != NULL)
+    {
+      area->thing_flags |= TH_CHANGED;
+      for (mobject = area->cont; mobject; mobject = mobject->next_cont)
+	{
+	  if (IS_ROOM (mobject))
+	    continue;
+	  mobject->thing_flags |= TH_NUKE;
+	}
+    }
+  
+  /* More things will be added later. */
+
+  return;
+}
+
+
+
+char * 
+historygen_past(void)
+{
+ 
+  return nonstr;
+}
 
 char *
-historygen_age (int age)
+historygen_disaster (void)
 {
-  
+
+  return nonstr;
+
+}
+
+char *
+historygen_present (void)
+{
+
 
   return nonstr;
 }

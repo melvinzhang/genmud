@@ -175,27 +175,26 @@ generate_society (THING *proto)
       free_str (soc->name);
       soc->name = nonstr;
       arg = f_word (arg, arg1);
-      /*   *arg1 = UC(*arg1); */
+      capitalize_all_words (arg1);
       soc->name = new_str (arg1);
       
       free_str (soc->pname);
       soc->pname = nonstr;
       arg = f_word (arg, arg1);
-      /*      *arg1 = UC(*arg1); */
+      capitalize_all_words (arg1);
       soc->pname = new_str (arg1);
       
       
       free_str (soc->aname);
       soc->aname = nonstr;
       arg = f_word (arg, arg1);
-      /*      *arg1 = UC(*arg1); */
+      capitalize_all_words (arg1);
       soc->aname = new_str (arg1);
       
       free_str (soc->adj);
       soc->adj = nonstr;
-      strcpy (arg1, adjbuf);
-      /*      *arg1 = UC(*arg1); */
-      soc->adj = new_str (arg1);
+      capitalize_all_words (adjbuf);
+      soc->adj = new_str (adjbuf);
       
       /* Now find out what castes we need. */
 

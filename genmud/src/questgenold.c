@@ -121,11 +121,13 @@ questgen_fedex_multi_areas (void)
     {
       for (area_tries = 0; area_tries < 30; area_tries++)
 	{
-	  if ((area = find_random_area (BADROOM_BITS)) == NULL ||
+	  if ((area = find_random_area 
+(AREA_NOLIST|AREA_NOSETTLE|AREA_NOREPOP)) == NULL ||
 	      area->vnum < WORLDGEN_START_VNUM ||
 	      area->vnum >= WORLDGEN_END_VNUM ||
 	      IS_MARKED (area) ||
-	      (area2 = find_random_area (BADROOM_BITS)) == NULL ||
+	      (area2 = find_random_area 
+(AREA_NOLIST|AREA_NOSETTLE|AREA_NOREPOP)) == NULL ||
 	      area2 == area  ||
 	      area->vnum < WORLDGEN_START_VNUM || 
 	      area->vnum > WORLDGEN_END_VNUM)

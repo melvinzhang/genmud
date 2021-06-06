@@ -379,7 +379,7 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
     {
       /* Most of the time keep the name on the front, otherwise move
 	 it to the back where the suffix is. */
-      if (nr (1,10) != 2)
+      if (nr (1,6) != 2)
 	*name[OBJECTGEN_NAME_A_AN] = '\0';
       else
 	{
@@ -394,9 +394,13 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	  strcpy (name[OBJECTGEN_NAME_A_AN], "The");
 	  strcpy (colorname[OBJECTGEN_NAME_A_AN], "The");
 	}
+    } 
+      /* If there's a suffix, usually change the "A/An" into a "The" */
+  else if (*name[OBJECTGEN_NAME_SUFFIX] && nr (1,5) != 3)
+    {
+      strcpy (name[OBJECTGEN_NAME_A_AN], "The");
+      strcpy (colorname[OBJECTGEN_NAME_A_AN], "The");
     }
-  
-
   num_names += nr (0, level/125+1);
   if (num_names > 3)
     num_names = 3;
@@ -470,25 +474,9 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
       
     }
   else
-    {
-      for (t = name[OBJECTGEN_NAME_OWNER]; *t; t++);
-      t--;
-      if (isspace (*t))
-	t--;
-      *t++ = '\'';
-      if (LC (*t) != 's')
-	*t++ = 's';
-      *t = '\0';
-    }
+    possessive_form (name[OBJECTGEN_NAME_OWNER]);
   
-  /* If there's a suffix, usually change the "A/An" into a "The" */
-
-  if (*name[OBJECTGEN_NAME_SUFFIX] && nr (1,7) != 3)
-    {
-      strcpy (name[OBJECTGEN_NAME_A_AN], "The");
-      strcpy (colorname[OBJECTGEN_NAME_A_AN], "The");
-    }
-      
+  
   return;
 }
   
@@ -835,13 +823,13 @@ objectgen_setup_stats (THING *obj, int weapon_type)
 		 level_sqrt number. */
 	      
 	      if (rank == AFF_RANK_POOR)		
-		flg->val = nr (lev_sqrt*3/4, lev_sqrt*3/2);
+		flg->val = nr (1, lev_sqrt*3/2);
 	      else if (rank == AFF_RANK_FAIR)
-		flg->val = nr (lev_sqrt/3, lev_sqrt*2/3);
+		flg->val = nr (1, lev_sqrt*2/3);
 	      else if (rank == AFF_RANK_GOOD)
-		flg->val = nr (lev_sqrt/6, lev_sqrt/3);
+		flg->val = nr (1, lev_sqrt/3);
 	      else 
-		flg->val = nr (lev_sqrt/20, lev_sqrt/10);
+		flg->val = nr (1, lev_sqrt/10);
 	      if (obj->wear_pos != ITEM_WEAR_WIELD &&
 		  wear_data[obj->wear_pos].how_many_worn > 1)
 		flg->val = flg->val*2/3;

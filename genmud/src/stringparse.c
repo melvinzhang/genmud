@@ -222,3 +222,136 @@ full_named_in (char *search_in, char *look_for)
   return nonstr;
 }
   
+/* This assumes that the buffer has room for a few more characters
+   and that we return most of the same string in place. Since I 
+   use big fixed-length buffers a lot, this shouldn't be too 
+   much of a problem. */
+
+void
+possessive_form (char *txt)
+{
+  char *t, c;
+
+  if (!txt || !*txt)
+    return;
+  
+  /* This takes a phrase and turns it into a possessive form. (Hopefully...
+     since the English language sucks and has about 2349823904203948
+     exceptions. catch (ObscureEnglishException) */
+  
+  for (t = txt; *t; t++);
+  t--;
+  c = LC(*t);
+  *t = '\0';
+  
+  /* DO NOT MOVE t BELOW HERE SINCE SEVERAL LINES DOWN
+     WE HAVE A *t = c; LINE SO IF YOU MOVE t THAT LINE
+     WILL NOT WORK!!! IF YOU NEED TO MOVE t, THEN REPLACE
+     THE LINE SEVERAL LINES BELOW WITH A sprintf OR SOMETHING. */
+  /* Ending in y o f means not just adding a s' or a '. */
+  if (c == 'y')
+    strcat (txt, "ies'");
+  else if (c == 'o')
+    strcat (txt, "oes'");
+  else if (c == 'f')
+    strcat (txt, "ves'");
+  else /* Add the last letter back on and then add the s' or ' */
+    {
+      *t = c;
+      if (c != 's')
+	strcat (txt, "s'");	      
+      else
+	strcat (txt, "'");
+    }
+  return;
+}
+
+/* This should return the plural form of a word. Again since English sucks
+   and there are many exceptions, this won't always work and you may
+   need to tweak this to get it working better. As before, it is assumed
+   that txt has a few extra spaces in it for new letters.*/
+
+
+void
+plural_form (char *txt)
+{
+  char *t, c;
+  
+  if (!txt || !*txt)
+    return;
+  
+  for (t = txt; *t; t++);
+  t--; /* Move back to the letter before the last ' */      
+  c = LC(*t);
+  *t = '\0';
+  /* DO NOT MOVE t BELOW HERE SINCE SEVERAL LINES DOWN
+     WE HAVE A *t = c; LINE SO IF YOU MOVE t THAT LINE
+     WILL NOT WORK!!! IF YOU NEED TO MOVE t, THEN REPLACE
+     THE LINE SEVERAL LINES BELOW WITH A sprintf OR SOMETHING. */
+  
+  if (c == 'y')
+    strcat (txt, "ies");	      
+  else if (c == 'o')
+    strcat (txt, "oes");
+  else if (c == 'f')
+    strcat (txt, "ves");
+  else
+    {
+      *t = c;
+      if (c != 's')
+	strcat (txt, "s");		  
+      else
+	strcat (txt, "");
+    }
+  return;
+}
+  
+
+/* This finds the number of lines of text in a string. */
+
+
+int
+find_num_lines (char *txt)
+{
+  char *t;
+  int lines = 0;
+  if (!txt || !*txt)
+    return 0;
+  for (t = txt; *t; t++)
+    if (*t == '\n' || *t == '\r')
+      {
+	lines++;
+	if (*(t + 1) == '\r')
+	  t++;
+      }
+  return lines;
+}
+
+/* This finds the number of words within a string of text. */
+
+int
+find_num_words (char *txt)
+{
+  int num_words = 0;
+  char arg1[STD_LEN*3], *arg;
+
+  if (!txt || !*txt)
+    return 0;
+  
+  arg = txt;
+  
+  do
+    {
+      arg = f_word (arg, arg1);
+      
+      if (*arg1)
+	num_words++;
+      
+    }
+  while (*arg && *arg1);
+  return num_words;
+}
+
+
+
+	  

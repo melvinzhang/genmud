@@ -45,7 +45,7 @@ const struct flag_data caste1_flags[] =
     {"builder", " Builder", CASTE_BUILDER, "Hall of Builders"},
     {"healer", " Healer", CASTE_HEALER, "Temple"},
     {"wizard", " Wizard", CASTE_WIZARD, "Academy"},
-
+    {"thief", " Thief", CASTE_THIEF, "Hideout"},
     /* These are things that I don't feel like having in right now. */
     //{"shopkeeper", " Shopkeeper", CASTE_SHOPKEEPER, "Marketplace"},
     //{"crafter", " Crafter", CASTE_CRAFTER, "Craftsmens' Guild"},
@@ -449,7 +449,7 @@ do_society (THING *th, char *arg)
 		sprintf (namebuf, "%s %s", soc->adj, soc->pname);
 	      else
 		sprintf (namebuf, "%s", soc->pname);
-	      sprintf (buf, "[\x1b[1;37m%3d\x1b[0;37m] \x1b[1;32m%-25s\x1b[0;37m RmSt: \x1b[1;36m%6d\x1b[0;37m Cnum: \x1b[1;35m%2d\x1b[0;37m Pop: \x1b[1;31m%3d\x1b[0;37m Al: \x1b[1;34m%d\x1b[0;37m\n\r", 
+	      sprintf (buf, "[\x1b[1;37m%3d\x1b[0;37m] \x1b[1;32m%-25s\x1b[0;37m RmSt: \x1b[1;36m%7d\x1b[0;37m Cnum: \x1b[1;35m%2d\x1b[0;37m Pop: \x1b[1;31m%3d\x1b[0;37m Al: \x1b[1;34m%d\x1b[0;37m\n\r", 
 		       soc->vnum, namebuf, soc->room_start, num_castes,
 		       soc->population, soc->align);
 	      add_to_bigbuf (buf);
@@ -1616,4 +1616,56 @@ find_random_generated_society (int align)
     }
   return soc;
 }
+  
+/* This finds a random caste name based on the "acceptable" castes passed
+   as an argument to this. */
+
+char *
+find_random_caste_name_and_flags (int caste_flags, int *return_flags)
+{
+  static char ret[STD_LEN];
+  int count, num_choices = 0, num_chose = 0;
+  THING *area, *obj;
+  
+  if ((area = find_thing_num (SOCIETY_CASTE_AREA_VNUM)) == NULL)
+    return NULL;
+  
+
+  for (count = 0; count < 2; count++)
+    {
+      for (obj = area->cont; obj; obj = obj->next_cont)
+	{
+	  if (IS_ROOM (obj) || !obj->desc || !*obj->desc ||
+	      (caste_flags && 
+	       !IS_SET (flagbits (obj->flags, FLAG_CASTE), caste_flags)))
+	    continue;
+	  
+	  if (count == 0)
+	    num_choices++;
+	  else if (--num_chose < 1)
+	    break;
+	  
+	}
+      
+      if (count == 0)
+	{
+	  if (num_choices < 1)
+	    return NULL;
+	  
+	  num_chose = nr (1, num_choices);
+	}
+    }
+  
+  if (!obj)
+    return NULL;
+  
+  strcpy (ret, find_random_word (obj->desc, NULL));
+  if (return_flags)
+    *return_flags = flagbits (obj->flags, FLAG_CASTE);
+  return ret;
+}
+  
+	    
+	  
+  
   

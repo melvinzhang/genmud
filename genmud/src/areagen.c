@@ -201,11 +201,27 @@ areagen (THING *th, char *arg)
     }
   
   if (ar2)
-    {
-      stt ("Area name already in use. Bailing out.\n\r", th);
-      return;
+    { 
+      sprintf (filenamebuf, "%s%s%cqz.are",
+	       namebuf, filetypebuf, nr ('a','z')); 
+      
+      /* Not likely to see two matching names in a row. */
+      
+      for (ar2 = the_world->cont; ar2 != NULL; ar2 =ar2->next_cont)
+	{
+	  if (ar2 != area &&
+	      !str_cmp (ar2->name, arg))
+	    {	  
+	      break;
+	    }
+	}
+      
+      if (ar2)
+	{
+	  stt ("Again a matching name found. Bailing out.\n\r", th);
+	  return;
+	}
     }
-  
   
   
   free_str (area->name);
