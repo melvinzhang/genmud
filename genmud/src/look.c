@@ -61,7 +61,9 @@ show_thing_to_thing (THING *th, THING *target, int flags)
 	      if(!IS_SET (roomflags, ROOM_UNDERWATER | ROOM_INSIDE | ROOM_UNDERGROUND | ROOM_EARTHY))
 		{
 		  sprintf (buf2, "\x1b[1;34m[\x1b[0;37m%s\x1b[1;34m%s]\x1b[0;37m",
-			   weather_names[wt_info->val[WVAL_WEATHER]],
+			   ((find_room_temperature (target) > 30 ||
+			    wt_info->val[WVAL_WEATHER] < WEATHER_RAINY) ?
+			    weather_names[wt_info->val[WVAL_WEATHER]] : "Snow"),
 			   (wt_info->val[WVAL_HOUR] > NUM_HOURS - 6 ||
 			    wt_info->val[WVAL_HOUR] < 6) ? "/\x1b[1;30mNight\x1b[1;34m" : "");
 		}

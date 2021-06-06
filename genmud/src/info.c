@@ -94,6 +94,8 @@ weather_names[weat] : "sunny"));
 		   (UPD_PER_SECOND*(current_time-boot_time)));
 	  stt (buf, th);
 	}
+      sprintf (buf, "Averge track size: %d\n\r", bfs_tracks_count/MAX(1, bfs_times_count));
+      stt (buf, th);
     }
   
   
@@ -212,7 +214,7 @@ do_memory (THING *th, char *arg)
 	   popul_count, sizeof(POPUL), popul_count * sizeof(POPUL));
   stt (buf, th); 
 #else
-  sprintf (buf, "[%5d] Events    @ %4d B: %-7d\n\r [%5d] Edescs    @ %4d B: %-7d\n\r",
+  sprintf (buf, "[%5d] Events    @ %4d B: %-7d [%5d] Edescs    @ %4d B: %-7d\n\r",
 	   event_count, sizeof (EVENT), event_count * sizeof (EVENT),
 	   edesc_count, sizeof (EDESC), edesc_count * sizeof (EDESC)
 	   );

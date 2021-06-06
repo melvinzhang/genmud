@@ -12,9 +12,11 @@
 #define MAX_GODS_PER_ALIGN          10
 
 #define DEITY_LEVEL                 500 /* What level the gods are. */
-
+#define DEITY_SUMMON_COST        10000  /* Wps needed to summon a god. */
+#define DEITY_SUMMON_HOURS          30 /* Hours summoned deity is here. */
 extern char *old_races[ALIGN_MAX];
 extern char *old_gods[ALIGN_MAX][MAX_GODS_PER_ALIGN];
+extern char *old_gods_spheres[ALIGN_MAX][MAX_GODS_PER_ALIGN];
 extern const char vowels[NUM_VOWELS+1];
 /* Read and write the historygen data. */
 
@@ -64,3 +66,7 @@ void historygen_clear(void);
 /* This creates a deity and gives it equipment. */
 
 void generate_deity (char *name, char *spheres, int align);
+
+/* This lets a deity hunt and kill really fast. */
+
+void deity_hunt (THING *th);

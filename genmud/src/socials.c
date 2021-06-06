@@ -109,13 +109,13 @@ clear_socials (void)
 void
 do_random_social (THING *th)
 {
-  int choice, count = 0, num_choices = 0;
+  int choice, count = 0, num_choices = 0, num_chose = 0;
   char buf[STD_LEN];
   char name[STD_LEN];
   SOCIAL *soc;
   THING *vict;
   
-  if (IS_PC (th) || !CAN_TALK (th) || !th->in)
+  if (IS_PC (th) || !CAN_TALK (th) || !th->in || !CAN_MOVE (th))
     return;
   
   choice = nr (1, social_count);
@@ -129,27 +129,31 @@ do_random_social (THING *th)
   strcpy (buf, soc->name);
   if (nr (1,5) != 2)
     {
-      count = 0;
-      for (vict = th->in->cont; vict; vict = vict->next_cont)
+      for (count = 0; count < 2; count++)
 	{
-	  if (CAN_MOVE (vict) && CAN_TALK (vict) && vict != th)
-	    num_choices++;
-	}
-      if (num_choices > 0)
-	{
-	  choice = nr (1, num_choices);
 	  for (vict = th->in->cont; vict; vict = vict->next_cont)
 	    {
 	      if (CAN_MOVE (vict) && CAN_TALK (vict) && vict != th &&
-		  ++count == choice)
-		break;
+		  !is_enemy (vict, th) && !is_enemy (th, vict))
+		{
+		  if (count == 0)
+		    num_choices++;
+		  else if (--num_chose < 1)
+		    break;
+		}
 	    }
-	  if (vict && th != vict)
+	  if (count == 0)
 	    {
-	      strcat (buf,  " ");
-	      f_word ((char *) KEY (vict), name);
-	      strcat (buf, name);
+	      if (num_choices < 1)
+		return;
+	      num_chose = nr (1, num_choices);
 	    }
+	}
+      if (vict && th != vict)
+	{
+	  strcat (buf,  " ");
+	  f_word ((char *) KEY (vict), name);
+	  strcat (buf, name);
 	}
     }
   
@@ -165,24 +169,46 @@ found_social (THING *th, char *arg)
 {
   THING *vict = NULL;
   char arg1[STD_LEN];
-  SOCIAL *soc;
-  
+  char *oldarg = arg;
   if (th->position < POSITION_FIGHTING)
     return FALSE;
   arg = f_word (arg, arg1);
   
   if (*arg)
-    vict = find_thing_in (th, arg);
-
-  for (soc = social_hash[LC (arg1[0])]; soc != NULL; soc = soc->next)
     {
-      if (!str_prefix (arg1, soc->name))
+      vict = find_thing_in (th, arg);
+    }
+  else
+    vict = NULL;
+  
+  return do_social_to (th, vict, oldarg);
+  
+}
+
+
+bool
+do_social_to (THING *th, THING *vict, char *arg)
+{
+  SOCIAL *soc;
+  char socname[STD_LEN];
+  if (!th || !arg || !*arg)
+    return FALSE;
+  
+  
+  arg = f_word (arg, socname);
+  
+  for (soc = social_hash[LC (*socname)]; soc != NULL; soc = soc->next)
+    {
+      if (!str_prefix (socname, soc->name))
 	{
-	  if (!*arg)
-	    act (soc->no_vict, th, NULL, NULL, NULL, TO_ALL);
-	  else if (!vict || (!CAN_MOVE(vict) && !CAN_FIGHT (vict)))
-	    {
-	      stt ("They aren't here.\n\r", th);
+	  if (!vict || (!CAN_FIGHT (vict) && !CAN_MOVE (vict)))
+	    { 
+	      /* No vict and no extra word in the social name means 
+		 do the no vict social. */
+	      if (!*arg)
+		act (soc->no_vict, th, NULL, NULL, NULL, TO_ALL);
+	      else /* Otherwise we wanted to find a victim but couldn't */
+		stt ("They aren't here.\n\r", th);
 	      return TRUE;
 	    }
 	  else
@@ -190,10 +216,8 @@ found_social (THING *th, char *arg)
 	  return TRUE;
 	}
     }
-  return FALSE;
+  return FALSE;  
 }
-
-
 
 void
 do_socials (THING *th, char *arg)

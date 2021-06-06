@@ -339,10 +339,8 @@ update_events (void)
 	  if (current_event)
 	    {
 	      if (IS_SET (current_event->flags, EVENT_REPEAT) ||
-		  current_event->times_left > 0)
+		  --current_event->times_left > 0)
 		{
-		  if (!IS_SET (current_event->flags, EVENT_REPEAT))
-		    current_event->times_left--;
 		  
 		  /* Haste and slow affect the speed at which events
 		     are reset. This may be changed to haste/slow as

@@ -12,14 +12,15 @@
 
 #define SOCIETY_NEW_MEMBER_TIMES 15    /* The number of tries a society
 	                                 gets each time it tries to build
-                                         a new member. */	
+                                         a new member. */
+
 
 #define NUM_GUARD_POSTS       10       /* Max num of posts a society has. */
 
-#define RAW_GATHER_DEPTH      40     /* Things only gather up to N
+#define RAW_GATHER_DEPTH      30     /* Things only gather up to N
 					 spaces from present location. */
 
-#define RAW_GATHER_ROOM_CHOICES   10     /* Pick up to 10 rooms to use to look
+#define RAW_GATHER_ROOM_CHOICES  5     /* Pick up to 10 rooms to use to look
 					for raw materials. */
 
 #define GUARD_POST_CHOICES    100     /* Maximum number of rooms that are
@@ -49,6 +50,9 @@
 
 #define SOCIETY_MAX_POP_INCREASE 3   /* Amount max pop is increased by
 					each time the society pays for it. */
+
+#define SOCIETY_MAXPOP_INCREASE_TRIES 10 /* number of maxpop increase tries... 
+					    increased when called for. */
 
 # define RAID_SETUP_HOURS    10    /* Hours for raiders to make it to setup room. */
 
@@ -98,9 +102,11 @@
 					patrolling society mob will go
 					to before it returns home. */
 
-#define SOCIETY_COST_MULTIPLIER 75   /* Every time the society gets
-					to a multiple of this population,
-					its costs go up. */
+#define SOCIETY_COST_MULTIPLIER 150   /* The society upgrade costs go
+					 up by base_cost every time the
+					 costs pass this number. It's
+					 proportional to the current
+					 population. */
 
 #define SOCIETY_HASH          500   /* Size of the society hash table. */
 
@@ -127,6 +133,15 @@
 #define NUM_VOWELS              10 /* This is because the vowels are 
 				      weighted..e = 3x, aio = 2x, u = 1x. */
 #define NUM_CONSONANTS          21
+
+
+/* These are the vnums used to make the "ancient races" and "organizations"
+   created in the historygen code. It's so that they have special vnums
+   that get their creatures and objects made differently. */
+
+#define ANCIENT_RACE_SOCIGEN_VNUM       (WORLD_VNUM+1)
+#define ORGANIZATION_SOCIGEN_VNUM       (WORLD_VNUM+2)
+#define DEMON_SOCIGEN_VNUM              (WORLD_VNUM+3)
 
 /* Stages of decay for an area after a society gets defeated. */
 
@@ -228,11 +243,15 @@
 #define SOCIETY_NECRO_GENERATE  0x00000400 /* The mages for this society
 					      raise the dead to become
 					      new members. */
+#define SOCIETY_MARKED          0x00000800 /* This society is marked. */
+#define SOCIETY_FASTGROW        0x00001000 /* More powerful...does
+					      things bigger and faster
+					      than other societies. */
 
 /* These are the base society flags given to societies when they're
    generated. */
 
-#define SOCIETY_BASE_FLAGS  (SOCIETY_AGGRESSIVE|SOCIETY_SETTLER)
+#define SOCIETY_BASE_FLAGS  (SOCIETY_AGGRESSIVE|SOCIETY_SETTLER|SOCIETY_XENOPHOBIC|SOCIETY_DESTRUCTIBLE)
 
 /**********************************************************************/
 /* Society Build Types --- things societies can spend resources on.  */
@@ -385,6 +404,10 @@ struct society_data
 				 the level of the society starting member. */
   int level;                  /* Level used internally to say where the
 				 society can be put when the world regens. */
+  int relic_raid_hours;       /* Hours until relic raid goes. */
+  int relic_raid_gather_point; /* Place where raiders gather. */
+  int relic_raid_target;      /* Place raiders will go. */
+  int abandon_hours;          /* Hours until we can abandon again. */
 };
 
 /**********************************************************************/
@@ -522,6 +545,10 @@ SOCIETY *create_new_society (void);
 /* Clear all society cities and clear out all society mobs and 
    remove all societies that are destructible. */
 void clear_societies (void);
+
+/* This unmarks all societies. */
+void unmark_all_societies (void);
+
 /* Clear all recent_maxpops for this area (or all areas if area == NULL)
    This is so that if you purge an area or purge all, you don't 
    make other societies assist/reinforce this society. */
@@ -552,7 +579,6 @@ void find_new_gather_type (THING *); /* Finds a type of thing to gather */
 void society_activity (THING *); /* Make this do some society activity */
 void society_worker_activity (THING *); /* What workers do. */
 void society_shopkeeper_activity (THING *); /* What shopkeepers do. */
-void society_builder_activity (THING *); /* What builders do. */
 void society_crafter_activity (THING *);
 
 /* This sets up a shopkeeper if it isn't set up already. */
@@ -648,9 +674,11 @@ void society_calm (SOCIETY *);  /* Makes society calm down and go back to
 void update_raiding (SOCIETY *, int);
 
 /* Attempt to raid a relic room instead of a society. Small chance of
-   occuring. */
+   occuring. _start lets them gather in their homeland. _actual sends
+   everyone in the gather room on the raid. */
 
-bool relic_raid (SOCIETY *); 
+bool relic_raid_start (SOCIETY *); 
+bool relic_raid_actual (SOCIETY *);
 /* When a player asks for news from a society member, the society
    member will sometimes check if there's someone/something kidnapped
    or taken and if so, it will tell the player who has the person/item. */
@@ -710,10 +738,11 @@ int find_build_type (int); /* Finds the build type based on the flag given. */
 int find_build_cost (SOCIETY *soc, int build_type, int raw_type);
 
 
-/* This moves a raw material from a thing to a builder and frees the
-   raw and updates the society data. */
+/* This moves a raw material or wpn/armor from a thing to a society member
+   and frees the raw and updates the society data. If it's a weapon/armor
+   the item isn't freed and the player gets a small reward. */
 
-void society_raw_move (THING *th, THING *mover, THING *builder);
+void society_item_move (THING *th, THING *mover, THING *builder);
 
 /* This deals with updates when a society member kills or is killed. */
 
@@ -901,7 +930,7 @@ bool start_hunting_dropoff_mob (THING *, NEED *);
 
 void generate_societies (THING *);
 
-void generate_society (THING *);
+SOCIETY * generate_society (THING *);
 
 /* Clears all societies and nukes "generated" societies. */
 void society_clearall (THING *);
@@ -927,7 +956,7 @@ void add_society_objects (THING *th);
    only_generated option decides if it's taking the name from all 
    societies or only the generated ones. */
 
-char *find_random_society_name (char name_type, bool only_generated);
+char *find_random_society_name (char name_type, int generated_from);
 
 /* This finds a random society (out of the indestructible ones!) */
 
@@ -950,3 +979,21 @@ void society_generate (THING *proto);
    castes. */
 
 char *find_random_caste_name_and_flags (int caste_flags, int *return_flags);
+
+/* This makes a society under assault run away and try to find a new
+   home. */
+
+void society_run_away (SOCIETY *soc);
+
+/* This causes a society to get a disease. */
+
+void society_get_disease (void);
+
+/* This lets a society member reward a player for helping out. It gives
+   money, exp and quest points. */
+
+void society_give_reward (THING *giver, THING *receiver, int reward);
+
+/* This makes somebody in the room give a reward to the player. */
+
+void society_somebody_give_reward (THING *player, int reward);

@@ -3,8 +3,10 @@
 #include<string.h>
 #include<stdlib.h>
 #include "serv.h"
+#include "track.h"
 #include "society.h"
 #include "historygen.h"
+#include "event.h"
 #include "areagen.h"
 #include "objectgen.h"
 
@@ -151,6 +153,7 @@ historygen (void)
   add_to_bigbuf (historygen_past());
   add_to_bigbuf (historygen_disaster());
   add_to_bigbuf (historygen_present());
+  echo (bigbuf);
   
   free_str (help->text);
   help->text = new_str (bigbuf);
@@ -174,6 +177,12 @@ do_mythology (THING *th, char *arg)
 	  historygen_generate_gods(th);
 	  historygen_generate_races();
 	}
+    }
+
+  if (!str_cmp (arg, "history"))
+    {
+      historygen();
+      return;
     }
   
   for (al = 0; al < ALIGN_MAX; al++)
@@ -225,9 +234,23 @@ historygen_generate_races (void)
   char buf[STD_LEN];
   char *t;
   bool race_name_ok = FALSE;
+  
+  /* If we have genned races and we aren't worldgenning then return. */
+  
+  if (!IS_SET (server_flags, SERVER_WORLDGEN))
+    {
+      SOCIETY *soc;
+      
+      for (soc = society_list; soc; soc = soc->next)
+	{
+	  if (soc->generated_from)
+	    return;
+	}
+    }
+
   proto = new_thing();
-  proto->level = 300;
-  proto->vnum = the_world->vnum + 2;
+  proto->level = 250;
+  proto->vnum = ANCIENT_RACE_SOCIGEN_VNUM;
   add_flagval (proto, FLAG_DET, AFF_INVIS | AFF_HIDDEN | AFF_SNEAK | AFF_CHAMELEON | AFF_FOGGY);
   add_flagval (proto, FLAG_AFF, AFF_FLYING | AFF_SANCT);
   for (al = 0; al < ALIGN_MAX; al++)
@@ -292,7 +315,7 @@ historygen_generate_races (void)
 	  remove_flagval (proto, FLAG_MOB, ~0);
 	  add_flagval (proto, FLAG_MOB, nr (1, MOB_AIR * 2 - 1));
  	  proto->align = al;
-	  add_flagval (proto, FLAG_SOCIETY, SOCIETY_FIXED_ALIGN | SOCIETY_SETTLER);
+	  add_flagval (proto, FLAG_SOCIETY, SOCIETY_SETTLER);
 	  generate_society (proto);
 	}
     }
@@ -316,17 +339,31 @@ historygen_generate_organizations (void)
   char prefix_name[STD_LEN]; /* From a list of prefixes in the
 				organizations area. */
   char tiernames[SOCIETY_GEN_CASTE_TIER_MAX][STD_LEN];
+
+  /* If we have genned races and we aren't worldgenning then return. */
   
+  if (!IS_SET (server_flags, SERVER_WORLDGEN))
+    {
+      SOCIETY *soc;
+      
+      for (soc = society_list; soc; soc = soc->next)
+	{
+	  if (soc->generated_from)
+	    return;
+	}
+    }
+
+
   /* Need a proto just to make things work...*/
   if ((proto = new_thing()) == NULL)
     return;
   
-  proto->vnum = the_world->vnum + 1;
+  proto->vnum = ORGANIZATION_SOCIGEN_VNUM;
   /* These flags are added because societies that are generated have 
      AUTOMATIC flags added to them... (SOCIETY_BASE_FLAGS) where they're
-     set to aggressive and settler atm. Therefore, the fix align and
-     xenophobic are added, but settler is removed. */
-  add_flagval (proto, FLAG_SOCIETY, SOCIETY_FIXED_ALIGN |  SOCIETY_XENOPHOBIC | SOCIETY_SETTLER );
+     set to aggressive and settler atm. Therefore, the fix align is added,
+     but settler is removed. */
+  add_flagval (proto, FLAG_SOCIETY, SOCIETY_SETTLER );
   /* Loop through aligns and give a society to each nonzero align. */
 
   for (al = 1; al < ALIGN_MAX; al++)
@@ -390,16 +427,18 @@ historygen_generate_organizations (void)
 	  
 	  /* Now set up the names. */
 
+	  /* I had to take this magicians' assembly thing out
+	     since the code wasn't working correctly in terms of
+	     making the names. Will have to try to fix this. */
+	  /* Magician's assembly...*/
+	  /*
 	  if (nr (1,2) == 1)
 	    {
-	      /* Magician's assembly...*/
-
 	      sprintf (name, "%s %s %s", prefix_name, prefix_name, prefix_name);
 	      free_str (proto->name);
 	      capitalize_all_words(name);
 	      proto->name = new_str (name);
 	      
-	      /* Make the prefix possessive...*/
 	      
 	      sprintf (name, tiernames[num_chose]);
 	      possessive_form (name);
@@ -407,7 +446,11 @@ historygen_generate_organizations (void)
 	      free_str (proto->short_desc);
 	      proto->short_desc = new_str (name);
 	    }
-	  else /* Assembly of magicians. */
+	  else 
+	  
+	  */
+	  /* Assembly of magicians. */
+
 	    {
 
 	      /* This code looks strange putting the words in
@@ -488,7 +531,9 @@ historygen_generate_gods (THING *th)
       deity_things_exist = TRUE;
       stt ("Could not set up deity things. They already exist. Do a worldgen clear yes to clear them.\n\r", th);
     }
- 
+  
+  /* Must be fixed for all aligns so divine summoning is fair. */
+  max_gods = nr (MAX_GODS_PER_ALIGN/2, MAX_GODS_PER_ALIGN);
   for (al = 0; al < ALIGN_MAX; al++)
     {
       
@@ -503,7 +548,6 @@ historygen_generate_gods (THING *th)
       if ((align = find_align (NULL, al)) == NULL)
 	continue;
       
-      max_gods = nr (MAX_GODS_PER_ALIGN/2, MAX_GODS_PER_ALIGN);
       for (gd = 0; gd < max_gods; gd++)
 	{
 	  if (nr (1,6) != 3)
@@ -600,9 +644,10 @@ generate_deity (char *name, char *spheres, int align)
   /* Base stats like level and flags. */
   proto = new_thing();
   proto->vnum = curr_vnum;
-  proto->timer = 3; /* Only get 3 hours to use this thing...*/
-  proto->height = nr (200,600);
-  proto->weight = nr (10000, 30000);
+  proto->timer = DEITY_SUMMON_HOURS; /* Only a few hours to use this thing...*/
+  proto->height = nr (100,200);
+  proto->weight = nr (3000,9000);
+  proto->max_mv = 1;
   thing_to (proto, area);
   add_thing_to_list (proto);
   
@@ -612,6 +657,7 @@ generate_deity (char *name, char *spheres, int align)
   add_flagval (proto, FLAG_AFF, AFF_FLYING | AFF_SANCT | AFF_HASTE | AFF_WATER_BREATH | AFF_AIR | AFF_EARTH | AFF_FIRE | AFF_WATER | AFF_PROTECT | AFF_PROT_ALIGN);
   add_flagval (proto, FLAG_MOB, (MOB_AIR *2 - 1));
   add_flagval (proto, FLAG_PROT, ~0);
+  add_flagval (proto, FLAG_ACT1, ACT_KILL_OPP | ACT_FASTHUNT | ACT_DEITY);
   proto->level = DEITY_LEVEL;
   
   sprintf (buf, "%s deity", name);
@@ -635,6 +681,129 @@ generate_deity (char *name, char *spheres, int align)
   return;
 }
 	  
+
+void
+do_divine (THING *th, char *arg)
+{
+  THING *proto, *deity_area, *deity = NULL;
+  char buf[STD_LEN];
+  if (!th || !th->in || !arg || !*arg || !IS_PC (th))
+    {
+      stt ("Divine <deity name>\n\r", th);
+      return;
+    }
+  
+  if ((deity_area = find_thing_num (DEITY_AREA_VNUM)) == NULL)
+    {
+      stt ("The deities ignore your prayers.\n\r", th);
+      return;
+    }
+
+  /* Find the deity with the proper name. */
+  
+  for (proto = deity_area->cont; proto; proto = proto->next_cont)
+    {
+      if (is_named (proto, arg) && 
+	  !IS_SET (proto->thing_flags, TH_NO_FIGHT | TH_NO_MOVE_SELF) &&
+	  proto->wear_pos == ITEM_WEAR_NONE)
+	break;
+    }
+
+  if (!proto)
+    {
+      stt ("There is no deity by that name that you can summon!\n\r", th);
+      return;
+    }
+
+  /* Make sure it's of the right alignment. */
+  if (proto->align != th->align)
+    {
+      stt ("That deity will not assist you! You are not of the proper alignment!\n\r", th);
+      return;
+    }
+
+  if (guild_rank (th, GUILD_HEALER) < GUILD_TIER_MAX - 1 ||
+      guild_rank (th, GUILD_MYSTIC) < GUILD_TIER_MAX - 1)
+    {
+      sprintf (buf, "You must attain tier %d in the Healer and Mystic Guilds before the deities will answer your call!\n\r", GUILD_TIER_MAX - 1);
+      stt (buf, th);
+      return;
+    }
+
+  /* Make sure that the summoner has enough wps. */
+
+  if (th->pc->pk[PK_WPS] < DEITY_SUMMON_COST)
+    {
+      sprintf (buf, "You need at least %d warpoints to summon a deity.\n\r", DEITY_SUMMON_COST);
+      stt (buf, th);
+      return;
+    }
+
+  /* Make sure only one copy out at a time. */
+
+  if (proto->mv > 0)
+    {
+      stt ("The deity ignores your pleas.\n\r", th);
+      return;
+    }
+
+  /* Make sure we can create this thing. */
+  if ((deity = create_thing (proto->vnum)) == NULL)
+    {
+      stt ("The deity ignores your pleas.\n\r", th);
+      return;
+    }
+
+  reset_thing (deity, 0);
+  do_wear (deity, "all");
+  th->pc->pk[PK_WPS] -= DEITY_SUMMON_COST;
+  act ("$9@1n reach@s up and bellow@s forth asking for succor!$7", th, NULL,NULL, NULL, TO_ALL);
+  thing_to (deity, th->in);
+  act ("$F@1n appear@s!$7", deity, NULL, NULL, NULL, TO_ALL);
+  create_repeating_event (deity, PULSE_PER_SECOND/2, deity_hunt); 
+  if (FIGHTING (th))
+    multi_hit (deity, FIGHTING (th));
+  else
+    deity_hunt (deity);
+  return;
+}
+
+/* Lets a deity hunt really fast. */
+void
+deity_hunt (THING *th)
+{
+  THING *enemy = NULL;
+  int times;
+  if (!th || LEVEL(th) != DEITY_LEVEL ||
+      !th->proto || !th->proto->in ||
+      th->proto->in->vnum != DEITY_AREA_VNUM)
+    return;
+  
+  if (is_hunting (th))
+    {
+      hunt_thing (th, 0);
+      return;
+    }
+  
+  for (times = 1; times < 5; times++)
+    {
+      if ((enemy = find_enemy_nearby (th, times*5)) != NULL)
+	break;
+    }
+  
+  if (!enemy)
+    return;
+
+  if (enemy->in == th->in)
+    {
+      multi_hit (th, enemy);
+      return;
+    }
+  start_hunting (th, NAME(enemy), HUNT_KILL);
+  return;
+}
+
+
 
 
 /* This clears the things created for the history data. */
@@ -665,15 +834,26 @@ historygen_clear (void)
 char * 
 historygen_past(void)
 {
- 
-  return nonstr;
+  static char ret[STRINGGEN_LEN];
+   *ret = '\0';
+   strcat (ret, string_gen 	   
+	   ("Looking_back the olden ages z_the_past, I cannot_help feeling_feeling extreme feeling_loss prep_for what_was_lost. It was the age when the united gods followed list_controller_deities. list_ancient_race_names enforced justice at the behest of the gods.", HISTORYGEN_AREA_VNUM));
+   
+   
+   /* Now do some wars...*/
+   
+   
+   return ret;
 }
 
 char *
 historygen_disaster (void)
 {
-
-  return nonstr;
+  static char ret[STRINGGEN_LEN];
+  ret[0] = '\0';
+  strcat (ret, string_gen ("But_then came_disaster. The myriad nations of the world were destroyed, and the nations such_as the genned_society_name were cast_out from their home_names. Many battle_names were fought and the ancient_race_name and the other ancient races were driven_from_the_world. And thus did the power of the deities lessen_word. This_was_what the Demons were_waiting_for as they surged into the world, but were cast back to the Pits at_a_terrible_cost.", HISTORYGEN_AREA_VNUM));
+  
+  return ret;
 
 }
 
@@ -681,6 +861,13 @@ char *
 historygen_present (void)
 {
 
+  char buf[STD_LEN*3];
+  static char ret[STRINGGEN_LEN];
 
-  return nonstr;
+  ret[0] = '\0';
+  sprintf (buf, "The nations descended into dark_days, and the_world stayed the_same for many ages. But now, the Demons are demon_stirring. The races are broken and disorganized and squabbling among themselves. They must be brought together to fight the demons in this %s", remove_color(game_name_string));
+
+  strcat (ret, string_gen (buf, HISTORYGEN_AREA_VNUM));
+
+  return ret;
 }

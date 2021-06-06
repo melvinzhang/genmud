@@ -193,6 +193,31 @@ named_in (char *search_in, char *look_for)
   return FALSE;
 }
 
+/* This is like named_in, but it requires the ENTIRE word to match,
+   not just a str_prefix...*/
+
+bool
+named_in_full_word (char *search_in, char *look_for)
+{
+   char search_in_word[STD_LEN*2], look_for_word[STD_LEN*2];
+  if (!search_in || !look_for || !*search_in || !*look_for)
+    return FALSE;
+  
+  /* Strip off the first word in the list of names to look for
+     and look for it. */
+  
+  look_for = f_word (look_for, look_for_word);
+ 
+  do
+    {
+      search_in = f_word (search_in, search_in_word);
+      
+      if (!str_cmp (look_for_word, search_in_word))
+	return TRUE;
+    }
+  while (*search_in);
+  return FALSE;
+}
 /* This loops through an entire list instead of just checking for one
    word in the list. It also checks for the full word as a strstr that
    starts at a blank or at the beginning of a word, not as a partial
@@ -231,16 +256,18 @@ void
 possessive_form (char *txt)
 {
   char *t, c;
-
+  
   if (!txt || !*txt)
     return;
   
-  /* This takes a phrase and turns it into a possessive form. (Hopefully...
-     since the English language sucks and has about 2349823904203948
-     exceptions. catch (ObscureEnglishException) */
+  /* This takes a phrase and turns it into a possessive form. */
   
-  for (t = txt; *t; t++);
+  for (t = txt; *t; t++);  
   t--;
+  /* Go back past any spaces. */
+  
+  while (isspace(*t) && t > txt)
+    t--;
   c = LC(*t);
   *t = '\0';
   
@@ -259,7 +286,7 @@ possessive_form (char *txt)
     {
       *t = c;
       if (c != 's')
-	strcat (txt, "s'");	      
+	strcat (txt, "'s");	      
       else
 	strcat (txt, "'");
     }

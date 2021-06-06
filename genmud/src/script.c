@@ -540,8 +540,10 @@ run_code_line (SCRIPT_EVENT *script_event, char *buf)
     signal = SIG_CONTINUE;
   else
     {
-      fprintf  (stderr, "Bad Line in code %s:  %s\n", 
-		(script_event->trig ? script_event->trig->code : ""), buf);
+      char errbuf[STD_LEN];
+      sprintf (errbuf, "Bad Line in code %s:  %s\n", 
+	       (script_event->trig ? script_event->trig->code : ""), buf);
+      log_it (errbuf);
       signal = SIG_CONTINUE;
     }
   return signal;

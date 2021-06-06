@@ -74,18 +74,18 @@ find_random_word (char *txt, char *society_name)
   if (!str_cmp (arg1, "society_name"))
     {
       if (!society_name)
-	return find_random_society_name ('n', TRUE);
+	return find_random_society_name ('n', 1);
       else if (*society_name)
 	return society_name;    
-      return find_random_society_name ('n', TRUE);
+      return find_random_society_name ('n', 1);
     }
   else if (!str_cmp (arg1, "society_any"))
     {
       if (!society_name)
-	return find_random_society_name ('n', FALSE);
+	return find_random_society_name ('n', 0);
       else if (*society_name)
 	return society_name;
-      return find_random_society_name ('n', FALSE);
+      return find_random_society_name ('n', 0);
     }
   else if (!str_cmp (arg1, "proper_name"))
     {

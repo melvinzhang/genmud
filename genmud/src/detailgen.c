@@ -55,7 +55,11 @@ detailgen (THING *area)
 	    {
 	      if (j == 0 || nr(1,2) == 1)
 		{
-		  detail_society_name[0] = '\0';
+		  detail_society_name[0] = '\0'; 
+		  for (room = area->cont; room; room = room->next_cont)
+		    {
+		      RBIT (room->thing_flags, TH_MARKED);
+		    }
 		  add_detail (area, area, start_room, 0); 
 		  for (room = area->cont; room; room = room->next_cont)
 		    {
@@ -96,6 +100,7 @@ find_detail_type (THING *area, int used[DETAIL_MAX])
 	     room allocation, and then we only pick rooms with
 	     names. */
 	  if (!IS_ROOM (room) || 
+	      (room->vnum - detail_area->vnum) < 2 ||
 	      ((room->vnum - detail_area->vnum) >= detail_area->mv/2))
 	    continue;
 			
@@ -232,15 +237,18 @@ add_detail (THING *area, THING *to, THING *detail_thing, int depth)
     }
   else 
     {
-      if (IS_AREA (detail_thing) || IS_ROOM (detail_thing) ||
-	  CAN_MOVE (detail_thing) || CAN_FIGHT (detail_thing))
+      /* Don't allow areas or rooms to go to nonroom/nonareas. */
+      /* Don't allow mobs into nonrooms UNLESS...that object 
+	 can contain, and it allows you to leave and enter. */
+      if (IS_AREA (detail_thing) || IS_ROOM (detail_thing) )
 	return;
+      	  
       newth = generate_detail_mobject (area, to, detail_thing);
     }
   
   if (newth)
     add_detail_resets (area, newth, detail_thing, depth);
-
+  
   /* Now if we didn't have a society name to start with and we do 
      now and this is a mobject, then delete the society name. */
   
@@ -277,6 +285,7 @@ start_main_detail_rooms (THING *area, THING *detail_room)
     return;
   
   if (!IS_ROOM (detail_room) || 
+      /* Only allow primary detail rooms to start this process. */
       ((detail_room->vnum - detail_area->vnum) >= detail_area->mv/2))
     return;
   
@@ -293,7 +302,7 @@ start_main_detail_rooms (THING *area, THING *detail_room)
   if (IS_SET (detail_room_bits, AREAGEN_SECTOR_FLAGS) &&
       !(area_sector_flags & detail_room_bits & AREAGEN_SECTOR_FLAGS))
     return;
-
+  
   /* Get an appropriate room to use for starting the detail. */
   
   for (count = 0; count < 2; count++)
@@ -354,13 +363,11 @@ start_main_detail_rooms (THING *area, THING *detail_room)
     return;
   
   /* Now get the name of this detail and make sure that it exists. */
-  
-  
-  generate_detail_name (detail_room, start_room);
-  capitalize_all_words (start_room->short_desc);
+ 
   if (!start_room->short_desc || !*start_room->short_desc)
     return;
 
+  
   detail_room_bits |= extra_detail_room_bits;
   
   
@@ -381,28 +388,20 @@ start_main_detail_rooms (THING *area, THING *detail_room)
 	}
     }
   undo_marked (start_room);
+  append_detail_to_room_name (start_room);
   add_main_detail_room (start_room, MAX(1,detail_room->height), detail_room_bits);
   return;
 }
 
-
-/* This adds a detail room to the map. It adds the room's name. */
+/* This adds the word "detail" to a room name. */
 
 void
-add_main_detail_room (THING *room, int depth_left, int room_bits)
+append_detail_to_room_name (THING *room)
 {
-  THING *nroom;
-  VALUE *exit;
-  int dir;
   char buf[STD_LEN];
-  VALUE *oval, *nval;
-  if (depth_left < 1 || !room || !IS_ROOM (room) || 
-      !room->name || !*room->name ||
-      IS_ROOM_SET (room, BADROOM_BITS | ROOM_EASYMOVE) ||
-      IS_MARKED (room))
+  if (!room || !IS_ROOM (room))
     return;
   
-  SBIT (room->thing_flags, TH_MARKED);
   if (room->name && *room->name)
     {
       strcpy (buf, room->name);
@@ -413,6 +412,27 @@ add_main_detail_room (THING *room, int depth_left, int room_bits)
   strcat (buf, "detail");
   free_str (room->name);
   room->name = new_str (buf);
+}
+
+/* This adds a detail room to the map. It adds the room's name. */
+
+void
+add_main_detail_room (THING *room, int depth_left, int room_bits)
+{
+  THING *nroom;
+  VALUE *exit;
+  int dir;
+  VALUE *oval, *nval;
+  if (!room || !IS_ROOM (room) || 
+      !room->name || !*room->name ||
+      IS_ROOM_SET (room, BADROOM_BITS | ROOM_EASYMOVE) ||
+      IS_MARKED (room) || depth_left < 1)
+    return;
+  
+  SBIT (room->thing_flags, TH_MARKED);
+  
+  if (depth_left < 1)
+    return;
   
   /* Now remove old bits except underground and add new bits. */
   
@@ -428,10 +448,11 @@ add_main_detail_room (THING *room, int depth_left, int room_bits)
     {
       if ((exit = FNV (room, dir + 1)) != NULL &&
 	  (nroom = find_thing_num (exit->val[0])) != NULL &&
-	  IS_ROOM (room) &&
-	  !is_named (room, "detail") &&
-	  !is_named (room, "in_tree") &&
-	  !is_named (room, "catwalk"))
+	  IS_ROOM (nroom) &&
+	  !is_named (nroom, "detail") &&
+	  !is_named (nroom, "in_tree") &&
+	  !is_named (nroom, "catwalk") &&
+	  !IS_SET (nroom->thing_flags, TH_MARKED))
 	{
 	  /* Now copy the flags and values over. */
 	  copy_flags (room, nroom); 
@@ -446,6 +467,7 @@ add_main_detail_room (THING *room, int depth_left, int room_bits)
 	    }
 	  free_str (nroom->short_desc);
 	  nroom->short_desc = new_str (room->short_desc);
+	  append_detail_to_room_name (nroom);
 	  add_main_detail_room (nroom, depth_left - 1, room_bits);
 	}
     }
@@ -538,7 +560,7 @@ start_other_detail_rooms (THING *area, THING *detail_thing)
 	  if (!is_named (detail_thing, "same_name"))
 	    {
 	      free_str (nroom->short_desc);
-	      nroom->short_desc = new_str (room->short_desc);
+	      nroom->short_desc = new_str (room->short_desc); 
 	    }
 	  RBIT (nroom->thing_flags, TH_MARKED);
 	  if (room_flags)
@@ -570,12 +592,15 @@ generate_detail_mobject (THING *area, THING *to, THING *detail_thing)
       detail_area->vnum != DETAILGEN_AREA_VNUM ||
       IS_ROOM (detail_thing) || IS_AREA (detail_thing))
     return NULL;
-  
-  /* Mobs can only go to areas/rooms. */
+  /* Mobs can only go to areas/rooms, unless the other object allows
+     people to enter and leave. That requres noleave, nocontain, 
+     no_move_into to all be turned off. */
   
   if (!IS_ROOM (to) && !IS_AREA(to) &&
+      IS_SET (to->thing_flags, TH_NO_CONTAIN | TH_NO_MOVE_INTO | TH_NO_LEAVE) &&
       (CAN_MOVE (detail_thing) || CAN_FIGHT (detail_thing)))
     return NULL;
+  
   
   /* Find an open vnum. */
   
@@ -708,7 +733,7 @@ add_detail_resets (THING *area, THING *to, THING *detail_thing, int depth)
 	  /* Deal with randpop mobs differently. In this case, pick
 	     a randpop mob and have several resets of it in one
 	     place. */
-
+	  
 	  if (reset->vnum == MOB_RANDPOP_VNUM &&
 	      (randpop_item = find_thing_num (MOB_RANDPOP_VNUM)) != NULL &&
 	      (randpop = FNV (randpop_item, VAL_RANDPOP)) != NULL &&
@@ -895,10 +920,11 @@ generate_detail_name (THING *proto, THING *target)
   /* So the sdesc is now set up. If it's a room, bail out. Otherwise
      continue to get the long desc. */
 
-  if (IS_ROOM (target))
+  if (IS_ROOM (target) && *sdesc)
     {
       free_str (target->short_desc);
-      target->short_desc = new_str (sdesc);
+      target->short_desc = new_str (sdesc); 
+      
       return;
     }
 

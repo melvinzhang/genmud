@@ -104,6 +104,7 @@ read_society (FILE *f)
 	  soc->recent_maxpop = read_number (f);
 	  soc->generated_from = read_number (f);
 	  soc->level = read_number (f);
+	  soc->abandon_hours = read_number (f);
 	  if ((room = find_thing_num (soc->room_start)) == NULL ||
 	      !IS_ROOM (room))
 	    {
@@ -170,6 +171,12 @@ read_society (FILE *f)
 	{
 	  for (i = 0; i < RAW_MAX; i++)
 	    soc->raw_curr[i] = read_number(f);
+	}
+      FKEY ("RelicRaid")
+	{
+	  soc->relic_raid_hours = read_number (f);
+	  soc->relic_raid_gather_point = read_number (f);
+	  soc->relic_raid_target = read_number (f);
 	}
       FKEY("RawWant")
 	{
@@ -241,7 +248,7 @@ write_society (FILE *f, SOCIETY *soc)
   write_string (f, "PName", soc->pname);
   write_string (f, "AName", soc->aname);
   write_string (f, "Adj", soc->adj);
-  fprintf (f, "Gen %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
+  fprintf (f, "Gen %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n",
 	   soc->vnum, 
 	   soc->society_flags, 
 	   soc->room_start, 
@@ -256,7 +263,8 @@ write_society (FILE *f, SOCIETY *soc)
 	   soc->assist_hours,
 	   soc->recent_maxpop,
 	   soc->generated_from,
-	   soc->level);
+	   soc->level,
+	   soc->abandon_hours);
   fprintf (f, "Needs %d %d\n",
 	   soc->crafters_needed, soc->shops_needed);
 
@@ -288,6 +296,9 @@ write_society (FILE *f, SOCIETY *soc)
     fprintf (f, " %d", soc->rumors_known[i]);
   fprintf (f, "\n");
   
+  fprintf (f, "RelicRaid %d %d %d\n", 
+	   soc->relic_raid_hours, soc->relic_raid_gather_point,
+	   soc->relic_raid_target);
   /* Write the resources/goals info. */
   
   fprintf (f, "RawWant");

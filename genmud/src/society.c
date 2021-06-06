@@ -26,6 +26,8 @@ const struct flag_data society1_flags[] =
     {"nosleep", " Nosleep", SOCIETY_NOSLEEP, "This society never sleeps."},
     {"nonames", " Nonames", SOCIETY_NONAMES, "No names given to members."},
     {"necrogenerate", " NecroGenerate", SOCIETY_NECRO_GENERATE, "Society mages/clerics raise new dead members of the society."},
+    {"marked", " Marked", SOCIETY_MARKED, "This society is marked for some purpose."},
+    {"fastgrow", " Fastgrow", SOCIETY_FASTGROW, "This society is larger and grows faster than others."},
     {"none", "none", 0, "nothing"},
   };
 
@@ -123,7 +125,7 @@ free_society (SOCIETY *soc)
   /* Only destructible societies get nuked. */
   if (!soc || !IS_SET (soc->society_flags, SOCIETY_DESTRUCTIBLE))
     return;
-
+  
   for (player = thing_hash[PLAYER_VNUM % HASH_SIZE]; player; player = player->next)
     {
       if (IS_PC (player) && player->pc->editing == soc)
@@ -377,12 +379,15 @@ copy_society (SOCIETY *osoc, SOCIETY *nsoc)
 void
 do_society (THING *th, char *arg)
 {
-  int i, num_times, num_castes, total_population = 0, vnum;
+  int i, num_times, num_castes, total_population = 0, vnum,
+    num_societies = 0;
   char arg1[STD_LEN];
   char arg2[STD_LEN];
   char arg3[STD_LEN];
   char buf[STD_LEN];
+  char areaname[STD_LEN];
   SOCIETY *soc = NULL;
+  THING *area;
   if (!th || !IS_PC (th) || LEVEL (th) < MAX_LEVEL || !th->fd)
     {
       stt ("Huh?\n\r", th);
@@ -434,11 +439,17 @@ do_society (THING *th, char *arg)
 	list_them = TRUE;
       else
 	list_them = FALSE;
-
+      
       if (list_them)
 	add_to_bigbuf ("\x1b[1;31m+++++++\x1b[1;37m          The Societies         \x1b[1;31m+++++++\x1b[0;37m\n\n\r");
       for (soc = society_list; soc != NULL; soc = soc->next)
 	{
+	  /* Allow a name to be specified */
+	  if (arg2 && str_prefix (arg2, soc->name) &&
+	      str_prefix (arg2, soc->pname) &&
+	      str_prefix (arg2, soc->adj))
+	    continue;
+	  
 	  if (list_them)
 	    {
 	      num_castes = 0;
@@ -449,14 +460,29 @@ do_society (THING *th, char *arg)
 		sprintf (namebuf, "%s %s", soc->adj, soc->pname);
 	      else
 		sprintf (namebuf, "%s", soc->pname);
-	      sprintf (buf, "[\x1b[1;37m%3d\x1b[0;37m] \x1b[1;32m%-25s\x1b[0;37m RmSt: \x1b[1;36m%7d\x1b[0;37m Cnum: \x1b[1;35m%2d\x1b[0;37m Pop: \x1b[1;31m%3d\x1b[0;37m Al: \x1b[1;34m%d\x1b[0;37m\n\r", 
-		       soc->vnum, namebuf, soc->room_start, num_castes,
+	      if ((area = find_area_in (soc->room_start)) != NULL &&
+		  area->short_desc)
+		{
+		  strncpy (areaname, NAME(area), 21);
+		  areaname[20] = '\0';
+		}
+	      else
+		*areaname = '\0';
+	      sprintf (buf, "[\x1b[1;37m%3d\x1b[0;37m] \x1b[1;32m%-22s\x1b[0;37m R:\x1b[1;36m%7d\x1b[0;37m (%-20s) C:\x1b[1;35m%2d\x1b[0;37m P:\x1b[1;31m%3d\x1b[0;37m A:\x1b[1;34m%d\x1b[0;37m\n\r", 
+		       soc->vnum, namebuf, soc->room_start, 
+		       areaname, num_castes,
 		       soc->population, soc->align);
 	      add_to_bigbuf (buf);
 	    }
 	  total_population += soc->population;
+	  num_societies++;
 	}
-      sprintf (buf, "\n\n\rTotal Society Population: \x1b[1;33m%d\x1b[0;37m\n\r", total_population);
+      sprintf (buf, "\n\n\rThere %s \x1b[1;33m%d\x1b[0;37m societ%s with \x1b[1;33m%d\x1b[0;37m member%s total.\n\r", 
+	       (num_societies == 1 ? "is" : "are"),
+	       num_societies, 
+	       (num_societies == 1 ? "y" : "ies"),
+	       total_population,
+	       (total_population == 1 ? "" : "s"));
       add_to_bigbuf (buf);
       send_bigbuf (bigbuf, th);
       return;
@@ -560,6 +586,7 @@ society_clearall (THING *th)
 	{
 	  if ((build = FNV (room, VAL_BUILD)) != NULL)
 	    {
+	      remove_flagval (room, FLAG_ROOM1, ROOM_EXTRAMANA | ROOM_EXTRAHEAL);
 	      remove_value (room, build);
 	      area->thing_flags |= TH_CHANGED;
 	    }
@@ -715,8 +742,10 @@ update_society (SOCIETY *soc, bool rapid)
 	      free_society (soc);
 	    }
 	}
+      if (soc->relic_raid_hours > 0)
+	soc->relic_raid_hours--;
       /* Update kills...*/
-
+      
       for (i = 0; i < ALIGN_MAX; i++)
 	{
 	  if (soc->kills[i] > 0)
@@ -741,11 +770,15 @@ update_society (SOCIETY *soc, bool rapid)
     }
   
   /* If the society is destructible it means that it will not
-     keep making new members if it's reduced to 0 members. */
+     keep making new members if it's reduced to 0 members.
+     A society struggling on the edge isn't destroyed outright. 
+     It is assumed that societies like that can "hide". The way
+     to destroy it is to take a big society and hit it hard all
+     at once. */
   
   if (IS_SET (soc->society_flags, SOCIETY_DESTRUCTIBLE) &&
       soc->population == 0 && 
-      soc->recent_maxpop < 10 &&
+      soc->recent_maxpop > 0 &&
       !IS_SET (soc->society_flags, SOCIETY_NUKE))
     {
       soc->delete_timer = RUMOR_HOURS_UNTIL_DELETE *2;
@@ -791,7 +824,12 @@ update_society (SOCIETY *soc, bool rapid)
   if ((daytime == !IS_SET (soc->society_flags, SOCIETY_NOCTURNAL)) ||
       IS_SET (soc->society_flags, SOCIETY_NOSLEEP))
     {
+      /* Maybe move to a new location if you're getting your butt
+	 kicked. */
       
+      society_run_away (soc);
+      
+
       /* Attempt to make a new society. */
       
       settle_new_society (soc);
@@ -804,6 +842,8 @@ update_society (SOCIETY *soc, bool rapid)
       
       update_patrols (soc);
       
+      
+
       /* Now the society will help other societies if needed. If there are
 	 other societies with the same mobs in their population on the
 	 same alignment and this society is big, and those are small, then
@@ -1160,12 +1200,13 @@ update_society_members (SOCIETY *soc)
 						    c_rank);
 		  
 		  /* Don't let the max tier get too big. It is restricted
-		     to 1/10 the total pop of the caste. */
+		     to 1/10 the total pop of the caste. Except for
+		     children that can max as many as they want. */
 		  
-		  if (c_rank + 1 >= soc->max_tier[caste_num] &&
+		  if (caste_num > 0 && 
+		      c_rank + 1 >= soc->max_tier[caste_num] &&
 		      c_rank > 1 &&
-		      soc->max_pop[caste_num] < 
-		      10 * n_rank_pop)
+		      soc->max_pop[caste_num] < 10 * n_rank_pop)
 		    continue;
 		  
 		  
@@ -1177,7 +1218,7 @@ update_society_members (SOCIETY *soc)
 		  
 		  if ((n_rank_pop > 0) &&
 		      (c_rank_pop <= n_rank_pop + 2 ||
-		       c_rank_pop < n_rank_pop * 3/2))
+		       c_rank_pop < n_rank_pop * 5/4))
 		    continue;
 		  
 		  /* Check if the prototype exists. */
@@ -1186,7 +1227,7 @@ update_society_members (SOCIETY *soc)
 		      !IS_SET (proto->thing_flags, TH_NO_FIGHT | TH_NO_MOVE_SELF | TH_IS_ROOM | TH_IS_AREA))
 		    vnum = th->vnum + 1;
 		  new_cnum = caste_num;
-
+		  
 		  /* Need to pay mineral costs to have battlers advance 
 		     tiers. Cost is 10*the new tier. */
 		  
@@ -1255,7 +1296,6 @@ update_society_members (SOCIETY *soc)
 			      if (IS_SET (soc->cflags[new_cnum],
 					  CASTE_SHOPKEEPER) &&
 				  shop_type == SOCIETY_SHOP_MAX)
-				echo ("Moo1\n");
 			      socval2->val[3] = shop_type;
 			      society_setup_shopkeeper(newmem);
 			    }
@@ -1496,21 +1536,27 @@ add_society_objects (THING *th)
 
 
 char *
-find_random_society_name (char name_type, bool only_generated)
+find_random_society_name (char name_type, int generated_from)
 {
   SOCIETY *soc;
   int num_choices = 0, num_chose = 0, count = 0;
   static char retbuf[STD_LEN];
-
+  
+  
   retbuf[0] = '\0';
   for (count = 0; count < 2; count++)
     {
       for (soc = society_list; soc; soc = soc->next)
 	{
 	  if (!soc->name || !*soc->name ||
-	      IS_SET (soc->society_flags, SOCIETY_DESTRUCTIBLE) ||
-	      (only_generated && soc->generated_from == 0))
-	    continue;
+	      /* Organization/ancient races only choose those types. */
+	      
+	      (generated_from >= ANCIENT_RACE_SOCIGEN_VNUM &&		
+	       soc->generated_from != generated_from) ||
+	      /* If generated from is reasonable, only pick those in
+		 the generated range. */
+	      (generated_from > 0 && generated_from <= 1000000 &&
+	       (soc->generated_from == 0 || soc->generated_from > 1000000)))       	    continue;
 	  
 	  if (count == 0)
 	    num_choices++;
@@ -1528,7 +1574,7 @@ find_random_society_name (char name_type, bool only_generated)
     }
   
   if (!soc)
-    return retbuf;
+    return "Society";
   
   if (soc->adj)
     sprintf (retbuf, "%s", soc->adj);
@@ -1665,7 +1711,50 @@ find_random_caste_name_and_flags (int caste_flags, int *return_flags)
   return ret;
 }
   
-	    
+/* This unmarks all societies. */
+
+void 
+unmark_all_societies (void)
+{
+  SOCIETY *soc;
+  
+  for (soc = society_list; soc; soc = soc->next)
+    RBIT (soc->society_flags, SOCIETY_MARKED);
+  return;
+}
 	  
+/* Give lots of society members disease. */
   
+void
+society_get_disease (void)
+{
+  SOCIETY *soc;
+  int caste, tier, vnum;
+  THING *mob;
+  VALUE *socval;
+  FLAG *flg;
+  if ((soc = find_random_society (TRUE)) == NULL)
+    return;
   
+  for (caste = 0; caste < CASTE_MAX; caste++)
+    {
+      for (tier = 0; tier < soc->max_tier[caste]; tier++)
+	{
+	  vnum = soc->start[caste] + tier;
+	  for (mob = thing_hash[vnum % HASH_SIZE]; mob; mob = mob->next)
+	    {
+	      if ((socval = FNV (mob, VAL_SOCIETY)) == NULL ||
+		  socval->val[0] != soc->vnum)
+		continue;
+	      
+	      flg = new_flag();
+	      flg->timer = nr (5, 10);
+	      flg->from = MAX_SPELL;
+	      flg->type = FLAG_HURT;
+	      flg->val = AFF_DISEASE;
+	      aff_update (flg, mob);
+	    }
+	}
+    }
+  return;
+}

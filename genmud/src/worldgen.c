@@ -15,6 +15,7 @@
 #include "questgen.h"
 #include "objectgen.h"
 #include "historygen.h"
+#include "rumor.h"
 
 /* Are we allowed to have areas in these places? */
 static int worldgen_allowed[WORLDGEN_MAX][WORLDGEN_MAX];
@@ -150,6 +151,7 @@ worldgen (THING *th, char *arg)
       clear_provisions (th);
       worldgen_clear();
       worldgen_clear_player_items();
+      clear_rumor_history();
       return;
     }
   
@@ -196,11 +198,11 @@ worldgen (THING *th, char *arg)
 	}
       SBIT (server_flags, SERVER_WORLDGEN);
       generate_metal_names();
-      generate_provisions (th);
       generate_societies (th);  
       generate_randpop_mobs (th);
       worldgen_generate_areas(area_size);
       worldgen_link_areas();
+      generate_provisions (th);
       worldgen_add_catwalks_between_areas();
       historygen ();
       worldgen_society_seed();
@@ -209,7 +211,7 @@ worldgen (THING *th, char *arg)
 	worldgen_show_sectors (th);
       worldgen_show_sectors (NULL);
       worldgen_generate_quests();
-     
+      
       do_purge (th, "all");
       set_up_teachers();
       set_up_map(NULL);
@@ -349,7 +351,7 @@ worldgen (THING *th, char *arg)
   
   worldgen_sectors[WORLDGEN_MAX/2][WORLDGEN_MAX/2] = ROOM_FIELD;
   
-  for (times = 1; times < 100; times++)    
+  for (times = 1; times < 300; times++)    
     {          
       for (x = 0; x < WORLDGEN_MAX; x++)
 	{
@@ -393,18 +395,29 @@ worldgen_check_autogen (void)
   FILE *f;
   int count;
   int times = 0;
+  char buf[STD_LEN];
   if ((f = wfopen ("autoworldgen", "r")) != NULL)
     {
       SBIT (server_flags, SERVER_AUTO_WORLDGEN);
       fclose (f);
-      while ((count = worldgen_num_areas()) < 12 || count > 30)
+      while ((count = worldgen_num_areas()) < 20)
 	{
-	  if (++times > 100)
+	  if (++times > 1000)
 	    break;
-	  worldgen (NULL, "10 10");
+	  sprintf (buf, "%d %d", nr (10,17), nr (10,17));
+	  worldgen (NULL, buf);	  
 	}
-      if (count >= 10 && count <= 30)
-	worldgen (NULL, "generate 300");
+      if (count >= 20)
+	{
+	  strcat (buf, " Worldgen Shape");
+	  log_it (buf);
+	  sprintf (buf, "generate %d", nr (200,1000));
+	  log_it (buf);
+	  worldgen (NULL, buf);
+	  /* Use these two lines to spam create/destroy the world. */
+	  reboot_ticks = 10;
+	  SBIT (server_flags, SERVER_SPEEDUP);
+	}
       else
 	{
 	  worldgen (NULL, "clear yes");
@@ -749,6 +762,9 @@ worldgen_generate_areas (int area_size)
 	    }
 	}
     }
+  
+  /* Generate demons and demon areas. */
+  worldgen_generate_demons (curr_underworld_vnum, area_size);
   return;
 }
 
@@ -760,18 +776,16 @@ void
 worldgen_generate_area_levels (void)
 {
   int x, y, i, count, j;
-  int times;
   int jumpsize;
+  int times = 0;
   int num_aligns = 0, curr_align;
   int num_choices, num_chose;
-  int num_areas_near, sum_area_levels;
   int min_x = WORLDGEN_MAX+1, max_x = -1;
   int min_y = WORLDGEN_MAX+1, max_y = -1;
-  bool changed_area_level = FALSE;
   char buf[STD_LEN];
   RACE *align;
   THING *room;
-  
+  bool changed_area_level;
   int gate_x[ALIGN_MAX];
   int gate_y[ALIGN_MAX];
   int my_x, my_y;
@@ -900,58 +914,54 @@ worldgen_generate_area_levels (void)
   if (max_y <= min_y)
     max_y = min_y + 2;;
   
-  jumpsize = 250/((max_x-min_x)+(max_y-min_y));
+  jumpsize = 350/((max_x-min_x)+(max_y-min_y));
 
-  /* Now loop 100x or until all areas have levels. */
+  /* Now loop until all areas have levels. */
   
-  for (times = 0; times < 100; times++)
+  while (++times < 1000)
     {
       changed_area_level = FALSE;
-      
       for (x = min_x; x <= max_x; x++)
 	{
 	  for (y = min_y; y <= max_y; y++)
 	    {
-	      if (worldgen_levels[x][y] != 0 ||
+	      if (worldgen_levels[x][y] <= 0 ||
 		  !worldgen_allowed[x][y] ||
 		  !worldgen_sectors[x][y])
 		continue;
 	      
-	      num_areas_near = 0;
-	      sum_area_levels = 0;
+	      /* This area has a level in it. Make all adjacent
+		 allowable areas have this level + jumpsize.. 
+		 set to negative so we only do one deeper pass
+		 at a time. */
 	      
-	      /* First check south connection. */
-	      if (y > 0 && worldgen_levels[x][y-1])
-		{
-		  num_areas_near++;
-		  sum_area_levels += worldgen_levels[x][y-1];
-		}
-	      /* Then check north connection. */
-	      else if (y < WORLDGEN_MAX - 1 && worldgen_levels[x][y+1])
-		{
-		  num_areas_near++;
-		  sum_area_levels += worldgen_levels[x][y+1];
-		}
-	      else /* Then try EW connections. */
-		{
-		  if (x < WORLDGEN_MAX - 1 && worldgen_levels[x+1][y])
-		    {
-		      num_areas_near++;
-		      sum_area_levels += worldgen_levels[x+1][y];
-		    }
-		  if (x > 0 && worldgen_levels[x-1][y])
-		    {
-		      num_areas_near++;
-		      sum_area_levels += worldgen_levels[x-1][y];
-		    }
-		}
+	      if (x > min_x && !worldgen_levels[x-1][y] &&
+		  worldgen_sectors[x-1][y])
+		worldgen_levels[x-1][y] = -(worldgen_levels[x][y]+jumpsize);
 	      
-	      if (num_areas_near < 1)
-		continue;
-	      /* Now set the value for this sector. */
+	      if (x < max_x && !worldgen_levels[x+1][y] &&
+		  worldgen_sectors[x+1][y])
+		worldgen_levels[x+1][y] = -(worldgen_levels[x][y]+jumpsize);
 	      
-	      worldgen_levels[x][y] = sum_area_levels/num_areas_near + jumpsize;
-	      changed_area_level = TRUE;
+	      if (y > min_y && !worldgen_levels[x][y-1] &&
+		  worldgen_sectors[x][y-1])
+		worldgen_levels[x][y-1] = -(worldgen_levels[x][y]+jumpsize);
+	      
+	      if (y < max_y && !worldgen_levels[x][y+1] &&
+		  worldgen_sectors[x][y+1])
+		worldgen_levels[x][y+1] = -(worldgen_levels[x][y]+jumpsize);
+	      
+	    }
+	}
+      for (x = min_x; x <= max_x; x++)
+	{
+	  for (y = min_y; y <= max_y; y++)
+	    {
+	      if (worldgen_levels[x][y] < 0)
+		{
+		  worldgen_levels[x][y] = -worldgen_levels[x][y];
+		  changed_area_level = TRUE;
+		}
 	    }
 	}
       if (!changed_area_level)
@@ -981,7 +991,7 @@ void
 worldgen_link_areas (void)
 {
   int x, y;
-  THING *area;
+  THING *above_area = NULL, *below_area = NULL;
   
   for (x = 0; x < WORLDGEN_MAX; x++)
     {
@@ -991,24 +1001,24 @@ worldgen_link_areas (void)
 	     link it to the other areas n and e of it. */
 	  
 	  if (worldgen_areas[x][y] &&
-	      (area = find_thing_num (worldgen_areas[x][y])) != NULL &&
-	      IS_AREA (area))
+	      (above_area = find_thing_num (worldgen_areas[x][y])) != NULL &&
+	      IS_AREA (above_area))
 	    {
-	      area->thing_flags |= TH_CHANGED;
-	      worldgen_add_exit (area, DIR_EAST, x, y, FALSE);
-	      worldgen_add_exit (area, DIR_NORTH, x, y, FALSE);
+	      above_area->thing_flags |= TH_CHANGED;
+	      worldgen_add_exit (above_area, DIR_EAST, x, y, FALSE);
+	      worldgen_add_exit (above_area, DIR_NORTH, x, y, FALSE);
 	    }
 	  
 	   if (worldgen_underworld[x][y] &&
-	      (area = find_thing_num (worldgen_underworld[x][y])) != NULL &&
-	      IS_AREA (area))
+	      (below_area = find_thing_num (worldgen_underworld[x][y])) != NULL &&
+	      IS_AREA (below_area))
 	     {
-	       area->thing_flags |= TH_CHANGED;
-	       worldgen_add_exit (area, DIR_EAST, x, y, TRUE);
-	       worldgen_add_exit (area, DIR_NORTH, x, y, TRUE);
+	       below_area->thing_flags |= TH_CHANGED;
+	       worldgen_add_exit (below_area, DIR_EAST, x, y, TRUE);
+	       worldgen_add_exit (below_area, DIR_NORTH, x, y, TRUE);
 	     }
-
-	   worldgen_link_top_to_underworld (x, y);
+	   
+	   worldgen_link_above_to_below (above_area, below_area);
 	}
     }
   return;
@@ -1016,7 +1026,7 @@ worldgen_link_areas (void)
 
 /* This links an area that's been worldgenned to another area 
    and the DIR_TO must be N or E. The underworld determines if
-   we are linking the top world or the underworld. */
+   we are linking the above world or the underworld. */
 
 void
 worldgen_add_exit (THING *area, int dir, int x, int y, bool underworld)
@@ -1161,83 +1171,70 @@ worldgen_add_exit (THING *area, int dir, int x, int y, bool underworld)
 
 
 
-/* This links the area in the topworld to the area in the underworld
+/* This links the area in the aboveworld to the area in the underworld
    below it. */
 
-/* It tries to link underground rooms on top to only underground rooms
+/* It tries to link underground rooms on above to only underground rooms
    on the bottom. If not possible, then it goes for nonwater nonroad
    rooms. */
 
 
 void
-worldgen_link_top_to_underworld (int x, int y)
+worldgen_link_above_to_below (THING *above_area, THING *below_area)
 {
-  THING *top_area, *underworld_area;
-  THING *top_room, *underworld_room = NULL;
+
+  THING *above_room, *below_room = NULL;
   VALUE *exit;
   int count;
 
-  
-  if (x < 0 || x >= WORLDGEN_MAX || y <0 || y >= WORLDGEN_MAX ||
-      !worldgen_areas[x][y] || !worldgen_underworld[x][y])
+  if (!above_area || !IS_AREA (above_area) || !below_area ||
+      !IS_AREA (below_area))
     return;
-  
-  if ((top_area = find_thing_num (worldgen_areas[x][y])) == NULL ||
-      (underworld_area = find_thing_num (worldgen_underworld[x][y])) == NULL)
-    return;
-  
-  if ((top_room = find_random_room 
-       (top_area, FALSE, ROOM_UNDERGROUND, BADROOM_BITS)) == NULL)
+
+  for (count = 0; count < 100; count++)
     {
-      for (count = 0; count < 30; count++)
-	{
-	  if ((top_room = find_random_room 
-	       (top_area, FALSE, ROOM_UNDERGROUND, BADROOM_BITS)) != NULL &&
-	      !IS_ROOM_SET (top_room, ROOM_EASYMOVE) &&
-	      (exit = FNV (top_room, DIR_DOWN+1)) == NULL &&
-	      (exit = FNV (top_room, DIR_UP+1)) == NULL)
-	    break;
-	}
-      if (!top_room)
-	return;
+      if ((above_room = find_random_room 
+	       (above_area, FALSE, ROOM_UNDERGROUND, BADROOM_BITS | ROOM_EASYMOVE)) != NULL &&
+	  (exit = FNV (above_room, DIR_DOWN+1)) == NULL)
+	break;
     }
+  if (!above_room)
+    return;
   
   for (count = 0; count < 100; count++)
     {
-      if ((underworld_room = find_random_room 
-	   (underworld_area, FALSE, ROOM_UNDERGROUND, BADROOM_BITS)) != NULL &&
-	  !IS_ROOM_SET (underworld_room, ROOM_EASYMOVE) &&
-	  (exit = FNV (underworld_room, DIR_DOWN+1)) == NULL &&
-	  (exit = FNV (underworld_room, DIR_UP+1)) == NULL)
+      if ((below_room = find_random_room 
+	   (below_area, FALSE, ROOM_UNDERGROUND, BADROOM_BITS | ROOM_EASYMOVE)) != NULL &&
+	  (exit = FNV (below_room, DIR_UP+1)) == NULL)
 	break;
     }
-  if (!underworld_room)
+  if (!below_room)
     return;
-
-  /* Now mark the areas for saving and link the rooms. */
-  top_area->thing_flags |= TH_CHANGED;
-  underworld_area->thing_flags |= TH_CHANGED;
   
-  if ((exit = FNV (top_room, DIR_DOWN + 1)) == NULL)
+  /* Now mark the areas for saving and link the rooms. */
+  above_area->thing_flags |= TH_CHANGED;
+  below_area->thing_flags |= TH_CHANGED;
+  
+  if ((exit = FNV (above_room, DIR_DOWN + 1)) == NULL)
     {
       exit = new_value();
       exit->type = DIR_DOWN + 1;
-      add_value (top_room, exit);
+      add_value (above_room, exit);
     }
-  exit->val[0] = underworld_room->vnum;
+  exit->val[0] = below_room->vnum;
 
-   if ((exit = FNV (underworld_room, DIR_UP + 1)) == NULL)
+   if ((exit = FNV (below_room, DIR_UP + 1)) == NULL)
     {
       exit = new_value();
       exit->type = DIR_UP + 1;
-      add_value (underworld_room, exit);
+      add_value (below_room, exit);
     }
-   exit->val[0] = top_room->vnum;
+   exit->val[0] = above_room->vnum;
 
    /* Maybe make this a secret door. */
 
    if (nr (1,7) == 3)
-     place_secret_door (top_room, DIR_DOWN, generate_secret_door_name());
+     place_secret_door (above_room, DIR_DOWN, generate_secret_door_name());
 
    return;
 }
@@ -1397,14 +1394,18 @@ worldgen_society_seed (void)
   
   for (soc = society_list; soc; soc = soc->next)
     {
-      soc->room_start = 0;
-      soc->room_end = 0;
-      if (!IS_SET (soc->society_flags, SOCIETY_DESTRUCTIBLE) &&
-	  (society_flags = flagbits (soc->flags, FLAG_ROOM1)) != 0)
+      if (soc->generated_from != DEMON_SOCIGEN_VNUM)
+	{
+	  soc->room_start = 0;
+	  soc->room_end = 0;
+	}
+      if ((society_flags = flagbits (soc->flags, FLAG_ROOM1)) != 0)
 	base_society_count++;
 
+      /* Set them up with some resources. */
+      
       for (i = 0; i < RAW_MAX; i++)
-	soc->raw_curr[i] = 0;
+	soc->raw_curr[i] = RAW_TAX_AMOUNT * 5;
     }
   
   if (base_society_count < 1)
@@ -1416,22 +1417,17 @@ worldgen_society_seed (void)
 
   /* Have decided to start with 1 of each society only. */
   
-  /*  total_times = (area_count/base_society_count)*2/3; */
+  total_times = MID (1, (area_count/base_society_count)*2/3, 2); 
   
-  if (total_times < 1)
-    total_times = 1;
-
   for (times = 0; times < total_times; times++)
     {
       for (soc = society_list; soc; soc = soc->next)
 	{
-	  if (IS_SET (soc->society_flags, SOCIETY_DESTRUCTIBLE))
-	    continue;
-	  
 	  if ((society_flags = flagbits (soc->flags, FLAG_ROOM1)) == 0)
 	    continue;
 	  
-	  
+	  if (soc->generated_from == DEMON_SOCIGEN_VNUM)
+	    continue;
 	  
 	  num_choices = 0;
 	  num_chose = 0;
@@ -1444,7 +1440,7 @@ worldgen_society_seed (void)
 		  if (IS_AREA (area) &&
 		      IS_ROOM_SET (area, society_flags) &&
 		      !IS_MARKED(area) && area->level >= 
-		      MAX(20, soc->level/2))
+		      MID(20, soc->level/4,100))
 		    {
 		      if (count == 0)
 			num_choices++;
@@ -1472,28 +1468,28 @@ worldgen_society_seed (void)
 	    {
 	      for (room = area->cont; room; room = room->next_cont)
 		{
-		  if (IS_ROOM (room) &&
-		      IS_ROOM_SET (room, society_flags) &&
-		      ((room->vnum - area->vnum) < area->mv/10))
+		  if (IS_ROOM (room) && 
+		      !IS_ROOM_SET (room, BADROOM_BITS &~society_flags) &&
+		      (room->vnum - area->vnum) < area->mv/10)
 		    {
 		      if (count == 0)
-		    num_choices++;
-		  else if (--num_chose < 1)
+			num_choices++;
+		      else if (--num_chose < 1)
+			break;
+		    }
+		}
+	      
+	      if (count == 0)
+		{
+		  if (num_choices < 1)
 		    break;
+		  else
+		    num_chose = nr (1, num_choices);
 		}
 	    }
 	  
-	  if (count == 0)
-	    {
-	      if (num_choices < 1)
-		break;
-	      else
-		num_chose = nr (1, num_choices);
-	    }
-	}
-      
-      /* If this society hasn't been planted anywhere, then
-	 plant it, otherwise copy it, and plant a new copy. */
+	  /* If this society hasn't been planted anywhere, then
+	     plant it, otherwise copy it, and plant a new copy. */
 	  
 	  if (soc->room_start == 0)
 	    curr_soc = soc;
@@ -1650,7 +1646,7 @@ worldgen_link_align_outposts (void)
 	  !IS_ROOM (room) ||
 	  (outpost_area = find_area_in (room->vnum)) == NULL)
 	continue;
-      
+      outpost_area->thing_flags |= TH_CHANGED;
       num_choices = 0;
       num_chose = 0;
       for (count = 0; count < 2; count++)
@@ -1679,7 +1675,7 @@ worldgen_link_align_outposts (void)
 
       if (!area)
 	continue;
-      
+      area->thing_flags |= TH_CHANGED;
       count = 0;
       
       if ((world_room = find_room_on_area_edge 
@@ -1691,7 +1687,6 @@ worldgen_link_align_outposts (void)
 	  continue;
 	}
       /* Now world room and outpost room exist, so link them. */
-
       if ((exit = FNV (room, DIR_NORTH+1)) == NULL)
 	{
 	  exit = new_value();
@@ -1754,6 +1749,8 @@ worldgen_sectors_attached (void)
 	    return FALSE;
 	}
     }
+
+  
   return TRUE;
 }
 
@@ -2037,3 +2034,188 @@ clear_player_worldgen_quests (THING *th)
   return;
 }
       
+
+/* This generates areas for demons to live in down below the underworld
+   and it generates the demons, too. */
+
+void
+worldgen_generate_demons (int curr_vnum, int area_size)
+{
+  int times, max_underworld_level = 0, max_times;
+  int tier; /* Caste tier for generating names. */
+  THING *above_area = NULL, *below_area = NULL, *area;
+  THING *proto, *thg;
+  char buf[STD_LEN];
+  char demon_names[STD_LEN];
+  char demon_name[STD_LEN];
+  char proto_desc[STD_LEN*10];
+  char *t;
+  int caste;
+  int curr_size, curr_level;
+  int extra_room_flags= 0;
+  bool name_is_ok = FALSE;
+  VALUE *val;
+  SOCIETY *soc;
+  /* First find the max level for an underworld area. This is where
+     we will link the demonic realms below it. */
+
+  for (area = the_world->cont; area; area = area->next_cont)
+    {
+      if (area->vnum >= WORLDGEN_START_VNUM &&
+	  area->vnum <= WORLDGEN_END_VNUM &&
+	  IS_AREA (area) &&
+	  IS_ROOM_SET (area, ROOM_UNDERGROUND) &&
+	  LEVEL(area) >= max_underworld_level)
+	{
+	  above_area = area;
+	  max_underworld_level = area->level;
+	}
+    }
+  area_size = (area_size/50 + 1)*50;
+  if (!above_area)
+    return;
+  
+  max_times = nr (4,6);
+  curr_level = max_underworld_level;
+  /* Now create each area. */
+  for (times = 0; times < max_times; times++)
+    {
+      curr_level += max_underworld_level/5;
+      curr_size = nr (area_size*2/3, area_size*3/2);
+      sprintf (buf, "%d %d underground %d",
+	       curr_vnum,
+	       curr_size,
+	       curr_level);
+      areagen (NULL, buf);
+      /* If the area was made, fix it up some. */
+      if ((below_area = find_thing_num (curr_vnum)) != NULL &&
+	  IS_AREA (below_area))
+	{
+	  curr_vnum += curr_size;
+	  /* Add the extra room flags to make things more and more
+	     difficult. */
+	  if (times == max_times - 1)
+	    extra_room_flags |= ROOM_ASTRAL;
+	  else if (times == max_times - 2)
+	    extra_room_flags |= ROOM_EARTHY;
+	  else if (times == max_times - 3)
+	    extra_room_flags |= ROOM_FIERY;
+	  else if (times == max_times - 4)
+	    extra_room_flags |= ROOM_WATERY;
+	  
+	  if (extra_room_flags)
+	    {
+	      for (thg = below_area->cont; thg; thg = thg->next_cont)
+		{
+		  /* Replace all rooms w/same name with hellish rooms. */
+		  if (IS_ROOM (thg))
+		    {
+		      if (!str_cmp (NAME(thg), NAME(below_area)))
+			{
+			  
+			  add_flagval (thg, FLAG_ROOM1, extra_room_flags);
+			  free_str (thg->short_desc);
+			  thg->short_desc = new_str ("The Pits of Hell");
+			}
+		    }
+		  /* Mobs get extra protections. */
+		  else if (!IS_SET (thg->thing_flags, TH_NO_FIGHT))
+		    {
+		      if (IS_SET (extra_room_flags, ROOM_WATERY))
+			add_flagval (thg, FLAG_AFF, AFF_WATER_BREATH);
+		      if (IS_SET (extra_room_flags, ROOM_EARTHY))
+			add_flagval (thg, FLAG_AFF, AFF_FOGGY);
+		      if (IS_SET (extra_room_flags, ROOM_AIRY))
+			add_flagval (thg, FLAG_AFF, AFF_FLYING);
+		      if (IS_SET (extra_room_flags, ROOM_ASTRAL))
+			add_flagval (thg, FLAG_AFF, AFF_PROTECT);
+		      if (IS_SET (extra_room_flags, ROOM_FIERY))
+			add_flagval (thg, FLAG_PROT, AFF_FIRE);
+		    }
+		}
+	    }
+	  
+	  free_str (below_area->short_desc);
+	  below_area->short_desc = new_str ("The Pits of Hell");
+	  /* Now link the areas. */
+	  worldgen_link_above_to_below (above_area, below_area);
+	  above_area = below_area;
+	}
+    }
+  /* NOTE THAT THE BELOW AREA WILL BE USED BELOW TO CREATE THE PLACE
+     WHERE THE DEMON SOCIETY STARTS! */
+
+  /* Now generate the demon society. */
+
+  proto = new_thing();
+  proto->level = 350;
+  proto->name = new_str ("Demon Demons Demonic");
+  proto->sex = SEX_NEUTER;
+  add_flagval (proto, FLAG_PROT, ~0);
+  add_flagval (proto, FLAG_AFF, AFF_FLYING | AFF_WATER_BREATH | AFF_FOGGY);
+  add_flagval (proto, FLAG_DET, ~0);
+  add_flagval (proto, FLAG_ACT1, ACT_AGGRESSIVE | ACT_FASTHUNT);
+  add_flagval (proto, FLAG_MOB, MOB_DEMON);
+  add_flagval (proto, FLAG_SOCIETY, SOCIETY_NORESOURCES | SOCIETY_NOSLEEP | SOCIETY_NONAMES);
+  add_flagval (proto, FLAG_ROOM1, BADROOM_BITS);
+  proto->align = 0;
+  proto->vnum = DEMON_SOCIGEN_VNUM;
+  proto->height = nr (300,600);
+  proto->weight = nr (10000, 20000);
+  
+  /* Give special attack names. */
+  val = new_value();
+  val->type = VAL_WEAPON;
+  set_value_word (val, "claw claw bite strike");
+  add_value (proto, val);
+  
+  *proto_desc = '\0';
+  for (caste = 0; caste < CASTE_MAX &&
+	 caste1_flags[caste].flagval != 0; caste++)
+    {
+      sprintf (demon_names, "Caste %s", caste1_flags[caste].app);
+      
+      /* Make all of the demonic tier names. */
+      for (tier = 0; tier < 10; tier++)
+	{
+	  strcat (demon_names, " ");
+	  do
+	    {
+	      name_is_ok = FALSE;
+	      strcpy (demon_name, create_society_name (NULL));
+	      
+	      /* Name must be long enough. */
+	      if (strlen (demon_name) < 6)
+		continue;
+	      
+	      /* Name must have a strange letter or a symbol in it. */
+	      for (t = demon_name; *t; t++)
+		{
+		  if (!isalpha (*t))
+		    name_is_ok = TRUE;
+		  if (must_be_near_vowel (*t))
+		    name_is_ok = TRUE;
+		}
+	    }
+	  while (!name_is_ok);
+	  *demon_name = UC (*demon_name);
+	  strcat (demon_names, demon_name);
+	  
+	}
+      strcat (demon_names, "\n\r");
+      strcat (proto_desc, demon_names);
+    }
+  proto->desc = new_str (proto_desc);
+  soc = generate_society (proto);
+  free_thing (proto);
+  
+  if (soc)
+    {
+      soc->room_start = below_area->vnum + 1;
+      soc->room_end = below_area->vnum + below_area->mv;
+      /* Make this area pop a LOT of randpop mobs. Help those
+	 demons grow by giving them something to kill. :) */
+      add_reset (below_area, MOB_RANDPOP_VNUM, 100, 400, 1);
+    }
+  return;
+}

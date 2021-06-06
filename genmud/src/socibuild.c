@@ -35,7 +35,7 @@ static char *burn_message[BURN_MESSAGE_MAX] =
 
 
 void
-society_builder_activity (THING *th)
+do_build (THING *th, char* arg)
 {
   VALUE *soc, *build, *worst_build_val = NULL, *exit, *rev_exit;
   SOCIETY *society;
@@ -44,153 +44,204 @@ society_builder_activity (THING *th)
   int worst_rank = SOCIETY_BUILD_TIERS, dir, i;
   int worst_fire = 0;
   
-  if (!th || !th->in || !IS_ROOM (th->in) ||
-      (soc = FNV (th, VAL_SOCIETY)) == NULL ||
-      !IS_SET (soc->val[2], CASTE_BUILDER) ||
-      (society = find_society_num (soc->val[0])) == NULL)
+  if (!th || !th->in || !IS_ROOM (th->in))
     return;
   
-  
-  clear_bfs_list();
-  undo_marked(th->in);
-  add_bfs (NULL, th->in, REALDIR_MAX);
-  
-  
-  /* Search all rooms nearby. */
-  while (bfs_curr && bfs_curr->depth < 3)
+  /* Nonpcs have to go through this whole mess of searching for a 
+     correct room to build. */
+  if (!IS_PC (th))
     {
-      /* In each room */
-      if ((room = bfs_curr->room) != NULL &&
-	  IS_ROOM (room))
+      if ((soc = FNV (th, VAL_SOCIETY)) == NULL ||
+	  !IS_SET (soc->val[2], CASTE_BUILDER) ||
+	  (society = find_society_num (soc->val[0])) == NULL)
+	return;
+  
+      clear_bfs_list();
+      undo_marked(th->in);
+      add_bfs (NULL, th->in, REALDIR_MAX);
+      
+  
+      /* Search all rooms nearby. */
+      while (bfs_curr && bfs_curr->depth < 3)
 	{
-	  /* If the room is a city room */
-	  if ((build = FNV (room, VAL_BUILD)) != NULL)
+	  /* In each room */
+	  if ((room = bfs_curr->room) != NULL &&
+	      IS_ROOM (room))
 	    {
-	      /* See if it belongs to the society and if it's the worst
+	      /* If the room is a city room */
+	      if ((build = FNV (room, VAL_BUILD)) != NULL)
+		{
+		  /* See if it belongs to the society and if it's the worst
 		 room of the bunch so far. */
-	      if (build->val[0] == soc->val[0] &&
-		  (build->val[1] < worst_rank ||
-		   build->val[4] > worst_fire))
-		{
-		  worst_room = room;
-		  worst_rank = build->val[1];
-		  worst_build_val = build;
-		  if (build->val[4] > worst_fire)
-		    worst_fire = build->val[4];
+		  if (build->val[0] == soc->val[0] &&
+		      (build->val[1] < worst_rank ||
+		       build->val[4] > worst_fire))
+		    {
+		      worst_room = room;
+		      worst_rank = build->val[1];
+		      worst_build_val = build;
+		      if (build->val[4] > worst_fire)
+			worst_fire = build->val[4];
+		    }
 		}
 	    }
-	}
-      
-      /* Add more rooms if needed. */
-      
-      for (dir = 0; dir < REALDIR_MAX; dir++)
-	{
-	  if ((exit = FNV (room, dir + 1)) != NULL &&
-	      (nroom = find_thing_num (exit->val[0])) != NULL &&
-	      is_track_room (nroom, th->move_flags))
-	    add_bfs (bfs_curr, nroom, dir);
-	}
-      bfs_curr = bfs_curr->next;
-    }
-  clear_bfs_list();
-  
-  /* If there's nothing to build. Once in a while go to a random location
-     within the society area. */
-  
-  if (!worst_room || !worst_build_val ||
-      worst_build_val->val[1] > SOCIETY_BUILD_TIERS)
-    {
-      if (nr (1,40) == 3 && !is_hunting (th) &&
-	  (room = find_thing_num (nr(society->room_start, society->room_end)))  != NULL &&
-	  IS_ROOM (room))
-	{
-	  start_hunting_room (th, room->vnum, HUNT_HEALING);
-	  if (!hunt_thing (th, 0))
-	    stop_hunting (th, FALSE);
-	}
-      return;
-    }
-  
-  /* Else we do have a worst room. */
-  
-  if (worst_room == th->in)
-    {
-      
-      /* If there's a fire here...*/
-      
-      if (worst_build_val->val[4] > 0)
-	{
-	  worst_build_val->val[4] -= MIN (5, worst_build_val->val[4]);
 	  
-	  if (worst_build_val->val[4] == 0)
+	  /* Add more rooms if needed. */
+	  
+	  for (dir = 0; dir < REALDIR_MAX; dir++)
 	    {
-	      if (IS_ROOM_SET (worst_room, ROOM_FIERY))
-		{
-		  act ("$E@1n put@s out the $9fire$e!$7", th, NULL, NULL, NULL, TO_ALL);
-		  remove_flagval (worst_room, FLAG_ROOM1, ROOM_FIERY);
-		}
+	      if ((exit = FNV (room, dir + 1)) != NULL &&
+		  (nroom = find_thing_num (exit->val[0])) != NULL &&
+		  is_track_room (nroom, th->move_flags))
+		add_bfs (bfs_curr, nroom, dir);
 	    }
-	  else
+	  bfs_curr = bfs_curr->next;
+	}
+      clear_bfs_list();
+      
+      /* If there's nothing to build. Once in a while go to a random location
+	 within the society area. */
+      
+      if (!worst_room || !worst_build_val ||
+	  worst_build_val->val[1] > SOCIETY_BUILD_TIERS)
+	{
+	  if (nr (1,40) == 3 && !is_hunting (th) &&
+	      (room = find_thing_num (nr(society->room_start, society->room_end)))  != NULL &&
+	      IS_ROOM (room))
 	    {
-	      act ("@1n work@s on putting out the fire!", th, NULL, NULL, NULL, TO_ALL);
+	      start_hunting_room (th, room->vnum, HUNT_HEALING);
+	      if (!hunt_thing (th, 0))
+		stop_hunting (th, FALSE);
 	    }
 	  return;
 	}
-		  
+      /* Otherwise the worst room is not this room, so go to it. */
+      if (worst_room && worst_room != th->in)
+	{
+	  start_hunting_room (th, worst_room->vnum, HUNT_HEALING);
+	  if (!hunt_thing (th, 0))
+	    stop_hunting (th, FALSE);
+	  return;
+	}
+    }
+  else
+    {
+      if (guild_rank (th, GUILD_TINKER) < 4)
+	{
+	  stt ("Only experienced tinkers can help to build cities!\n\r", th);
+	  return;
+	}
+      worst_room = th->in;
 
+      /* Make sure this is a valid room to build in. */
+      
+      if ((worst_build_val = FNV (th->in, VAL_BUILD)) == NULL ||
+	  (worst_build_val->val[4] == 0 &&
+	   worst_build_val->val[1] == SOCIETY_BUILD_TIERS))
+	{
+	  stt ("You can't build anything here.\n\r", th);
+	  return;
+	}
+      
+      /* Make sure a friendly society owns this room. */
+      if ((society = find_society_num (worst_build_val->val[0])) == NULL ||
+	  DIFF_ALIGN (society->align, th->align))
+	{
+	  stt ("This city doesn't belong to an ally!\n\r", th);
+	  return;
+	}
 
-      act ("@1n work@s on constructing something.", th, NULL, NULL, NULL, TO_ALL);
-      if (++worst_build_val->val[2] >= SOCIETY_BUILD_REPEAT)
+      /* So for pc's the room is here and its only partially built 
+	 and the society it's being built for is an ally of the player. */
+      
+    }
+  /* Make sure worst room is this room. */
+
+  if (worst_room != th->in)
+    return;
+  
+  
+  /* If there's a fire here...*/
+  
+  if (worst_build_val->val[4] > 0)
+    {
+      worst_build_val->val[4] -= MIN (5, worst_build_val->val[4]);
+      
+      if (worst_build_val->val[4] == 0)
+	{
+	  if (IS_ROOM_SET (worst_room, ROOM_FIERY))
+	    {
+	      act ("$E@1n put@s out the $9fire$e!$7", th, NULL, NULL, NULL, TO_ALL);
+	      remove_flagval (worst_room, FLAG_ROOM1, ROOM_FIERY);
+	    }
+	}
+      else
+	{
+	  act ("@1n work@s on putting out the fire!", th, NULL, NULL, NULL, TO_ALL);
+	}
+      society_somebody_give_reward (th, nr (10,20));
+      if (IS_PC (th))
+	th->pc->wait += 30;
+      return;
+    }
+  
+  
+
+  act ("@1n work@s on constructing something.", th, NULL, NULL, NULL, TO_ALL);
+  if (worst_build_val->val[1] < SOCIETY_BUILD_TIERS)
+    {
+      worst_build_val->val[2]++;
+      if (worst_build_val->val[2] >= SOCIETY_BUILD_REPEAT)
 	{
 	  worst_build_val->val[1]++;
 	  worst_build_val->val[2] = 0;
 	}
-      if (worst_room->in && IS_AREA (worst_room->in))
-	worst_room->in->thing_flags |= TH_CHANGED;
-      
-      /* Now deal with gates/walls. If you get to the top tier, you place 
-	 walls around the city if the room has a boundary with another
-	 area and isn't a guard post. */
-      
-      /* See if the room is a guard post. If it is, don't put walls
-	 up. */
-      
-      for (i = 0; i < NUM_GUARD_POSTS; i++)
-	if (society->guard_post[i] == worst_room->vnum)
-	  return;
-      
-      /* Otherwise DO put walls up. */
-      
-      for (dir = 0; dir < REALDIR_MAX; dir++)
-	{
-	  /* A wall gets put up if the exit leads outside of the
-	     society area and the room isn't a guard post. */
-
-	  if ((exit = FNV (worst_room, dir + 1)) != NULL &&
-	      (room = find_thing_num (exit->val[0])) != NULL &&
-	      IS_ROOM (room) &&
-	      (room->vnum < society->room_start ||
-	       room->vnum > (society->room_end)))
-	    {
-	      //exit->val[1] |= EX_WALL;
-	      
-	      /* Put the wall going the other way now, too. */
-
-	      if ((rev_exit = FNV (room, RDIR(dir) + 1)) != NULL &&
-		  rev_exit->val[0] >= society->room_start &&
-		  rev_exit->val[0] <= society->room_end)
-		/*rev_exit->val[1] |= EX_WALL*/;
-	    }
-	}
-      
-      return;
+      society_somebody_give_reward (th, nr (10,20));
     }
   
-  /* Otherwise the worst room is not this room, so go to it. */
+  if (worst_room->in && IS_AREA (worst_room->in))
+    worst_room->in->thing_flags |= TH_CHANGED;
   
-  start_hunting_room (th, worst_room->vnum, HUNT_HEALING);
-  if (!hunt_thing (th, 0))
-    stop_hunting (th, FALSE);
+  
+  /* Reward the player. */
+  
+
+  if (IS_PC (th))
+    th->pc->wait += 30;
+  /* Now deal with gates/walls. If you get to the top tier, you place 
+     walls around the city if the room has a boundary with another
+     area and isn't a guard post. */
+      
+  /* See if the room is a guard post. If it is, don't put walls
+     up. */
+  
+  for (i = 0; i < NUM_GUARD_POSTS; i++)
+    if (society->guard_post[i] == worst_room->vnum)	
+      return;
+  
+  /* Otherwise DO put walls up. */
+  
+  for (dir = 0; dir < REALDIR_MAX; dir++)
+    {
+      /* A wall gets put up if the exit leads outside of the
+	 society area and the room isn't a guard post. */
+      
+      if ((exit = FNV (worst_room, dir + 1)) != NULL &&
+	  (room = find_thing_num (exit->val[0])) != NULL &&
+	  IS_ROOM (room) &&
+	  (room->vnum < society->room_start ||
+	   room->vnum > (society->room_end)))
+	{
+	  //exit->val[1] |= EX_WALL;
+	  
+	  /* Put the wall going the other way now, too. */
+	  
+	  if ((rev_exit = FNV (room, RDIR(dir) + 1)) != NULL &&
+	      rev_exit->val[0] >= society->room_start &&
+	      rev_exit->val[0] <= society->room_end)
+	    /*rev_exit->val[1] |= EX_WALL*/;
+	}
+    }  
   return;
 }
 
@@ -289,7 +340,7 @@ show_build_name (THING *target)
       return buf;
     }
 
-  /* Now set up the name and info. */
+  /* Now set up the name and info.  */
   
   if (soc->adj && *soc->adj)
     sprintf (socinamebuf, "%s ", soc->adj);
@@ -658,7 +709,7 @@ setup_caste_house (SOCIETY *soc, int caste_flags)
       if ((room = find_thing_num (vnum2)) != NULL)
 	RBIT (room->thing_flags, TH_MARKED);
     }
-
+  
   
   if (num_choices == 0)
     return;
@@ -673,8 +724,9 @@ setup_caste_house (SOCIETY *soc, int caste_flags)
   
   /* Small dfs here. */
   
-
-  setup_caste_house_rooms (room, soc, caste_flags, REALDIR_MAX, 3);
+  if (IS_SET (caste_flags, CASTE_WIZARD | CASTE_HEALER))
+    add_flagval (room, FLAG_ROOM1, ROOM_EXTRAMANA | ROOM_EXTRAHEAL);
+  setup_caste_house_rooms (room, soc, caste_flags, REALDIR_MAX, 4);
   
   return;
 
@@ -699,7 +751,7 @@ setup_caste_house_rooms (THING *room, SOCIETY *soc, int caste_flags, int dir_fro
       build->val[0] != soc->vnum ||
       build->val[3] != 0)
     return;
-
+  
   /* If there's an adjacent caste house of another type, 
      we want to stop making this chouse. Only do this AFTER the first
      room has been set down. */
@@ -718,7 +770,7 @@ setup_caste_house_rooms (THING *room, SOCIETY *soc, int caste_flags, int dir_fro
 	    return;
 	}
     }
-	    
+  
   build->val[3] = caste_flags;
 
 
@@ -778,16 +830,15 @@ void
 update_built_room (THING *room)
 {
   SOCIETY *soc, *soc2;
-  VALUE *build, *build2, *exit, *exit2;
+  VALUE *build, *exit, *build2, *exit2;
   bool decay = FALSE;
   THING *room2;
-  FLAG *flg;
 
   if (!room || !IS_ROOM (room) ||
       (build = FNV (room, VAL_BUILD)) == NULL)
     return;
 
- 
+  
 
   /* Val4 is how burnt the room is. It can be undone with 
      repairs from builders. */
@@ -797,25 +848,6 @@ update_built_room (THING *room)
       build->val[4]++;
     }
   
-  /* Now check for fire spreading. */
-  
-  if (nr (1,12) == 7 &&
-      IS_ROOM_SET (room, ROOM_FIERY))
-    {
-      if ((exit = FNV (room, nr (1, REALDIR_MAX))) != NULL &&
-	  (room2 = find_thing_num (exit->val[0])) != NULL &&
-	  IS_ROOM (room2) &&
-	  (build2 = FNV (room2, VAL_BUILD)) != NULL)
-	{
-	  flg = new_flag();
-	  flg->type = FLAG_ROOM1;
-	  flg->from = 2000;
-	  flg->val = ROOM_FIERY;
-	  flg->timer = nr (15, 40);
-	  aff_update (flg, room);
-	  set_up_map_room (room);
-	}
-    }
   /* The room decays if the society goes away. */
   
   if ((soc = find_society_num (build->val[0])) == NULL ||
@@ -852,7 +884,10 @@ update_built_room (THING *room)
   /* After a long time, remove the building anyway. */
   
   if (build->val[1] > SOCIETY_BUILD_OVERGROWN)
-    remove_value (room, build);
+    {
+      remove_flagval (room, FLAG_ROOM1, ROOM_EXTRAMANA | ROOM_EXTRAHEAL);
+      remove_value (room, build);
+    }
   
   
   /* In a decaying city, the walls go down when the city becomes
@@ -1011,6 +1046,9 @@ do_raze (THING *th, char *arg)
   act ("@1n raze@s the city!", th, NULL, NULL, NULL, TO_ALL);
   if (IS_PC (th))
     th->pc->wait += 50;
+
+  society_somebody_give_reward (th, 20);
+  
   return;
 }
   

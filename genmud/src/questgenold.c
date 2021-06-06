@@ -197,7 +197,9 @@ questgen_fedex_single_area (THING *area)
 void
 questgen_generate (THING *start_area, THING *end_area, int quest_type)
 {
-  
+  THING *proto = NULL;
+  int open_vnum;
+  bool found_questmob_slot = FALSE;
   /* Thing that hands out the quest. */
   THING *quest_giver = NULL;
   /* The mob that will pop the item that the quest giver wants. */
@@ -244,9 +246,38 @@ questgen_generate (THING *start_area, THING *end_area, int quest_type)
 	  (quest_item = find_quest_thing (end_area, quest_mob, QUEST_THING_ITEM)) == NULL)
 	return;
       
-      add_reset (quest_room, quest_mob->vnum, 100, 1, 1);
-      add_reset (quest_room, quest_item->vnum, 10, 1, 2);
-      generate_setup_script (quest_giver, quest_mob, quest_room, quest_item);
+      /* Copy quest mob to a new number. */
+      for (open_vnum = start_area->vnum + start_area->mv + 1; 
+	   open_vnum < start_area->vnum + start_area->max_mv; open_vnum++)
+	{
+	  if ((proto = find_thing_num (open_vnum)) == NULL)
+	    {
+	      if ((proto = new_thing ()) == NULL)
+		break;
+	      found_questmob_slot = TRUE;
+	      copy_thing (quest_mob, proto);
+	      proto->vnum = open_vnum;
+	      proto->thing_flags = MOB_SETUP_FLAGS | TH_NO_TALK;
+	      proto->name = new_str (quest_mob->name);
+	      proto->short_desc = new_str (quest_mob->short_desc);
+	      proto->long_desc = new_str (quest_mob->long_desc);
+	      proto->desc = new_str (quest_mob->desc);
+	      proto->type = new_str (quest_mob->type);
+	      copy_resets (quest_mob, proto);	   
+	      proto->in = NULL;
+	      proto->next_cont = NULL;
+	      proto->prev_cont = NULL;
+	      proto->cont = NULL;
+	      thing_to (proto, start_area);
+	      add_thing_to_list (proto);
+	      add_reset (quest_room, proto->vnum, 100, 1, 1);
+	      add_reset (proto, quest_item->vnum, 100, 1, 1);
+	      break;
+	    }
+	}
+      if (!found_questmob_slot)
+	return;
+      generate_setup_script (quest_giver, proto, quest_room, quest_item);
       generate_given_script (quest_giver, quest_item);
       return;
     }

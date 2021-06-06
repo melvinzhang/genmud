@@ -410,12 +410,12 @@ thing_from (THING *th)
 void
 thing_to (THING *th, THING *to)
 {
-  THING *newloc, *is_in;
+  THING *prev, *is_in;
   if (!th  || !to)
     return;
   if (th->in)
     thing_from (th); 
-
+  
   if (th == to)
     { 
       if (th->vnum != 2)
@@ -425,6 +425,8 @@ thing_to (THING *th, THING *to)
     }
   is_in = to;
   th->in = to;
+  th->prev_cont = NULL;
+  th->next_cont = NULL;
   while (is_in && !IS_AREA (is_in))
     {
       is_in->carry_weight = MAX (0, is_in->carry_weight + (th->weight + th->carry_weight));
@@ -460,33 +462,32 @@ thing_to (THING *th, THING *to)
 	}
       else
 	{ /* Otherwise, to->cont is before the proper slot, so
-	     we find the place...newloc that will go BEFORE where
+	     we find the place...prev that will go BEFORE where
 	     we want th to go in the list. */
 	  bool found = FALSE;
-	  for (newloc = to->cont; newloc; newloc = newloc->next_cont)
+	  for (prev = to->cont; prev; prev = prev->next_cont)
 	    {
-	      if (!newloc->next_cont ||
-		  !IS_WORN (newloc->next_cont) ||
+	      if (!prev->next_cont ||
+		  !IS_WORN (prev->next_cont) ||
 		  (IS_WORN (th) && 
-		   (newloc->next_cont->wear_loc > th->wear_loc ||
-		    (newloc->next_cont->wear_loc == th->wear_loc &&
-		     newloc->next_cont->wear_num > th->wear_num))))
+		   (prev->next_cont->wear_loc > th->wear_loc ||
+		    (prev->next_cont->wear_loc == th->wear_loc &&
+		     prev->next_cont->wear_num > th->wear_num))))
 		{
-		  th->next_cont = newloc->next_cont;
-		  th->prev_cont = newloc;
-		  if (newloc->next_cont)
-		    newloc->next_cont->prev_cont = th;
-		  newloc->next_cont = th;
+		  th->next_cont = prev->next_cont;
+		  th->prev_cont = prev;
+		  if (prev->next_cont)
+		    prev->next_cont->prev_cont = th;
+		  prev->next_cont = th;
 		  found = TRUE;
 		  break;
 		}
 	    }
-	  if (!found)
-	    log_it ("THING_FROM_ERROR: Thing not found???\n");
 	}
     }
   else
-    { /* Don't order the rooms in the wilderness area since so
+    { 
+      /* Don't order the rooms in the wilderness area since so
 	 many of them get created and destroyed so often. */
       if (!to->cont || to->cont->vnum > th->vnum 
 #ifdef USE_WILDERNESS
@@ -502,20 +503,21 @@ thing_to (THING *th, THING *to)
 	}
       else
 	{
-	  for (newloc = to->cont; newloc; newloc = newloc->next_cont)
+	  for (prev = to->cont; prev; prev = prev->next_cont)
 	    {
-	      if (!newloc->next_cont || newloc->next_cont->vnum > th->vnum)
+	      if (!prev->next_cont || prev->next_cont->vnum > th->vnum)
 		{
-		  th->prev_cont = newloc;
-		  th->next_cont = newloc->next_cont;
-		  if (newloc->next_cont)
-		    newloc->next_cont->prev_cont = th;
-		  newloc->next_cont = th;			 		  
+		  th->prev_cont = prev;
+		  th->next_cont = prev->next_cont;
+		  if (prev->next_cont)
+		    prev->next_cont->prev_cont = th;
+		  prev->next_cont = th;
 		  break;
 		}
 	    }
 	}
     }
+  
   /* Update pc->in_vnum and tracking */
   
   if (IS_PC (th))
@@ -1044,7 +1046,7 @@ do_give (THING *th, char *arg)
 	coin_type = -1;
       arg = f_word (arg, arg2);
       if (!str_cmp (arg2, "to"))
-	arg = f_word (arg, arg2);      
+	arg = f_word (arg, arg2);
     }
   
   else if (!str_prefix ("all", arg1))
@@ -1142,7 +1144,7 @@ do_give (THING *th, char *arg)
 	  if (move_thing (th, mover, th, end_in ))
 	    {
 	      act ("@1n give@s @2n to @3n.", th, mover, end_in, NULL, TO_ALL);
-	      society_raw_move (th, mover, end_in);
+	      society_item_move (th, mover, end_in);
 	    }
 	}
       write_playerfile (th);
@@ -1152,8 +1154,9 @@ do_give (THING *th, char *arg)
   if (!move_thing (th, mover, th, end_in))
     return;
   act ("@1n give@s @2n to @3n.", th, mover, end_in, NULL, TO_ALL);
-  society_raw_move (th, mover, end_in);  
+  society_item_move (th, mover, end_in);  
   write_playerfile (th);
+  return;
 }
 
 
@@ -1306,7 +1309,7 @@ do_put (THING *th, char *arg)
 	  if (move_thing (th, mover, th, end_in ))
 	    {
 	      act ("@1n put@s @2n into @3n.", th, mover, end_in, NULL, TO_ALL);
-	      society_raw_move (th, mover, end_in);
+	      society_item_move (th, mover, end_in);
 	    }
 	}
       write_playerfile (th);
@@ -1316,8 +1319,9 @@ do_put (THING *th, char *arg)
   if (!move_thing (th, mover, th, end_in))
     return;
   act ("@1n put@s @2n into @3n.", th, mover, end_in, NULL, TO_ALL); 
-  society_raw_move (th, mover, end_in);
+  society_item_move (th, mover, end_in);
   write_playerfile (th);
+  return;
 }
 
 
@@ -2194,7 +2198,7 @@ do_open (THING *th, char *arg)
       return;
     }
   if (obj)
-    sprintf (doorname, "%s", obj->short_desc);
+    sprintf (doorname, "%s", NAME(obj));
   else
     sprintf (doorname, "The %s", 
 	     (door->word && door->word[0] ? door->word : "door"));
@@ -2272,7 +2276,7 @@ do_close (THING *th, char *arg)
       return;
     }
   if (obj)
-    sprintf (doorname, "%s", obj->short_desc);
+    sprintf (doorname, "%s", NAME(obj));
   else
     sprintf (doorname, "The %s", 
 	     (door->word && door->word[0] ? door->word : "door"));
@@ -2351,7 +2355,7 @@ do_pick (THING *th, char *arg)
     }
   
   if (obj)
-    sprintf (doorname, "%s", obj->short_desc);
+    sprintf (doorname, "%s", NAME(obj));
   else
     sprintf (doorname, "The %s", 
 	     (door->word && door->word[0] ? door->word : "door"));
@@ -2419,7 +2423,7 @@ do_break (THING *th, char *arg)
     dam = -dam + 2;  
 
   if (obj)
-    sprintf (doorname, "%s", obj->short_desc);
+    sprintf (doorname, "%s",  NAME(obj));
   else
     sprintf (doorname, "The %s", 
 	     (door->word && door->word[0] ? door->word : "door"));
@@ -2503,7 +2507,7 @@ do_lock (THING *th, char *arg)
       return;
     }
   if (obj)
-    sprintf (doorname, "%s", obj->short_desc);
+    sprintf (doorname, "%s", NAME(obj));
   else
     sprintf (doorname, "The %s", 
 	     (door->word && door->word[0] ? door->word : "door"));
@@ -2578,7 +2582,7 @@ do_unlock (THING *th, char *arg)
       return;
     }
   if (obj)
-    sprintf (doorname, "%s", obj->short_desc);
+    sprintf (doorname, "%s", NAME(obj));
   else
     sprintf (doorname, "The %s", 
 	     (door->word && door->word[0] ? door->word : "door"));
@@ -3346,7 +3350,7 @@ do_visible (THING *th, char *arg)
       return;
     }
   
-  afftype_remove (th, 0, FLAG_AFF, AFF_INVIS | AFF_HIDDEN | AFF_DARK | AFF_SNEAK | AFF_CHAMELEON);
+  remove_flagval (th, FLAG_AFF, AFF_INVIS | AFF_HIDDEN | AFF_DARK | AFF_SNEAK | AFF_CHAMELEON);
   stt ("You become visible\n\r", th);
   return;
 }
@@ -3524,19 +3528,19 @@ find_new_patrol_location (THING *th)
        socval->val[3] == WARRIOR_SENTRY) &&
       !IS_SET (actbits, ACT_KILL_OPP)))
     return;
-
+  
   /* Patrolling society members either look for a new patrol location,
      or they go home after a while. */
 
   if (socval && IS_SET (socval->val[2], BATTLE_CASTES) &&
-      socval->val[3] == WARRIOR_PATROL)
+      (socval->val[3] == WARRIOR_PATROL || socval->val[3] == WARRIOR_GUARD))
     {
       SOCIETY *society;
       THING *room, *area = NULL;
       
       if ((society = find_society_in (th)) == NULL)
 	return;
-      
+      socval->val[3] = WARRIOR_PATROL;
       if (socval->val[4] >= MAX_WAYPOINTS)
 	area = find_area_in (society->room_start);
       else if (th->in && th->in->in && IS_AREA (th->in->in))
@@ -3595,7 +3599,7 @@ find_new_patrol_location (THING *th)
     return;
 
   start_hunting_room (th, room->vnum, HUNT_PATROL);
-  if (!hunt_thing (th, 50))
+  if (!hunt_thing (th, 40))
     stop_hunting (th, TRUE);
   
   return;

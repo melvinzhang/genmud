@@ -26,6 +26,7 @@ const char *rumor_names[RUMOR_TYPE_MAX] =
     "assist",
     "reinforce",
     "relic raid",
+    "abandon",
   };
 
 
@@ -72,7 +73,7 @@ free_rumor (RUMOR *rumor)
   
   rumor->prev = NULL;
   rumor->hours = 0;
-  rumor->from = 0;
+  rumor->who = 0;
   rumor->to = 0;
   rumor->type = 0;
   rumor->vnum = 0;
@@ -86,11 +87,11 @@ free_rumor (RUMOR *rumor)
 void
 add_rumor (int type, int from, int to, int hours, int vnum)
 {
-  SOCIETY *soc = NULL, *soc2 = NULL, *soc3;
+  SOCIETY *soc = NULL, *soc2 = NULL, *soc3 = NULL;
   RACE *align = NULL;
   THING *area = NULL;
   RUMOR *rumor;
-
+  
   if (type < 0 || type >= RUMOR_TYPE_MAX || hours < 0)
     return;
   
@@ -100,12 +101,18 @@ add_rumor (int type, int from, int to, int hours, int vnum)
   if ((soc = find_society_num (from)) == NULL)
     return;
   
+  /* Defeat an abandon rumors let the whole align know. */
+  
+  if (type == RUMOR_DEFEAT || type == RUMOR_ABANDON)
+    align = find_align (NULL, from);
+  
+  
   /* If it's a raid, the raid must target a victim. */
   
   if (type == RUMOR_RAID &&
       (soc2 = find_society_num (to)) == NULL)
     return;
-     
+  
   /* If it's a switch alignment, the target alignment must exist and
      be nonzero. */
   
@@ -115,9 +122,11 @@ add_rumor (int type, int from, int to, int hours, int vnum)
      return;
   
   /* If it's a patrol or a settle, it must occur in a real area -- not the
-     start area. */
+     start area. If it's an abandon, we know where they left, but we
+     don't know where they're going. */
   
-  if ((type == RUMOR_SETTLE || type == RUMOR_PATROL) &&
+  if ((type == RUMOR_SETTLE || type == RUMOR_PATROL ||
+       type == RUMOR_ABANDON) &&
       ((area = find_thing_num (to)) == NULL ||
        !IS_AREA (area) || area == the_world->cont))
     return;
@@ -129,7 +138,7 @@ add_rumor (int type, int from, int to, int hours, int vnum)
   
   rumor = new_rumor();
   
-  rumor->from = from;
+  rumor->who = from;
   rumor->type = type;
   rumor->to = to;
   rumor->hours = hours;
@@ -176,6 +185,20 @@ add_rumor_to_society (SOCIETY *soc, int vnum)
     (1 << vnum  % 32);
   return;
 }
+
+/* This clears the rumor_history.dat file. */
+
+void
+clear_rumor_history (void)
+{
+  char buf[STD_LEN];
+  sprintf (buf, "\\rm %srumor_history.dat", WLD_DIR);
+  system(buf);
+  rumor_count = 0;
+  top_rumor = 0;
+  return;
+}
+
 
 /* This returns a rumor type based on the word given for the rumor name. 
    returns RUMOR_TYPE_MAX if it's an error. */
@@ -253,7 +276,7 @@ write_rumors (void)
 	{
 	  fprintf (f, "%s %d %d %d %d\n",
 		   rumor_names[rumor->type],
-		   rumor->from, 
+		   rumor->who, 
 		   rumor->to, 
 		   rumor->hours, 
 		   rumor->vnum);
@@ -434,39 +457,37 @@ send_mortal_rumor (THING *th)
   VALUE *socval;
   RACE *align;
   SOCIETY *soc = NULL, *soc2;
-  int mob_choices = 0, mob_chose = 0, choice = 0;
+  int count;
+  int mob_choices = 0, mob_chose = 0;
   char buf[STD_LEN];
   
   /* If a mortal wants to get a rumor...first find a mob
      that can give rumors. It must be able to talk and
      it must be of the same alignment as the player. */
-  
-  for (mob = th->in->cont; mob; mob = mob->next_cont)
-    {
-      if (!CAN_TALK (mob) || !CAN_MOVE (mob) ||
-	  DIFF_ALIGN (th->align, mob->align) ||
-	  IS_PC (mob))
-	continue;      
-      mob_choices++;
-    }
-  
-  if (mob_choices < 1)
-    {
-      stt ("No one here wants to trade information.\n\r", th);
-      return;
-    }
-  
-  mob_chose = nr (1, mob_choices);
-  
-  for (mob = th->in->cont; mob; mob = mob->next_cont)
-    {
-      if (!CAN_TALK (mob) || !CAN_MOVE (mob) ||
-	  DIFF_ALIGN (th->align, mob->align) ||
-	  IS_PC (mob))
-	continue;
-      
-      if (++choice == mob_chose)
-	break;
+
+  for (count = 0; count < 2; count++)
+    {      
+      for (mob = th->in->cont; mob; mob = mob->next_cont)
+	{
+	  if (!CAN_TALK (mob) || !CAN_MOVE (mob) ||
+	      DIFF_ALIGN (th->align, mob->align) ||
+	      IS_PC (mob) || mob->position <= POSITION_SLEEPING)
+	    continue;      
+	  if (count == 0)
+	    mob_choices++;
+	  else if (--mob_chose < 1)
+	    break;
+	}
+      if (count == 0)
+	{
+	  if (mob_choices < 1)
+	    {
+	      stt ("No one here wants to trade information.\n\r", th);
+	      return;
+	    }
+	  
+	  mob_chose = nr (1, mob_choices);
+	}
     }
   
   if (!mob)
@@ -496,11 +517,11 @@ send_mortal_rumor (THING *th)
       (soc = find_society_num (socval->val[0])) != NULL &&
       mob->align > 0 && got_kidnapped_message (th, mob))
     return;
-
+  
   if ( nr (1,32) == 4 && socval && soc &&
-      (align = find_align (NULL, soc->align)) != NULL &&
-      (soc2 = find_society_num (align->most_hated_society)) != NULL &&
-      (soc2->align == 0 || DIFF_ALIGN (soc2->align, th->align)) &&
+       (align = find_align (NULL, soc->align)) != NULL &&
+       (soc2 = find_society_num (align->most_hated_society)) != NULL &&
+       (soc2->align == 0 || DIFF_ALIGN (soc2->align, th->align)) &&
        (area = find_area_in (soc2->room_start)) != NULL)
     {
       sprintf (buf, "The %s could really use your help. The %s of %s have been attacking us a lot lately and we need your help to stop them!\n\r",
@@ -508,6 +529,7 @@ send_mortal_rumor (THING *th)
       stt (buf, th);
       return;
     }
+  
   if (nr (1,3) != 2)
     do_say (mob, show_random_rumor_message(soc));
   else
@@ -541,13 +563,13 @@ show_rumor (RUMOR *rumor, bool is_admin)
   
   if (rumor->type == RUMOR_ASSIST)
     {
-      if ((align = find_align (NULL, rumor->from)) == NULL ||
+      if ((align = find_align (NULL, rumor->who)) == NULL ||
 	  (soc = find_society_num (rumor->to)) == NULL ||
 	  (to_area = find_area_in (soc->room_start)) == NULL)
 	{
 	  if (is_admin)
-	    sprintf (buf, "Bad Rumor: Type: %d From: %d To: %d ",
-		     rumor->type, rumor->from, rumor->to);
+	    sprintf (buf, "Bad Rumor: Type: %d Who: %d To: %d ",
+		     rumor->type, rumor->who, rumor->to);
 	  else
 	    sprintf (buf, "Nothing happened ");
 	}
@@ -560,13 +582,13 @@ show_rumor (RUMOR *rumor, bool is_admin)
     }
 
   
-  if ((soc = find_society_num (rumor->from)) == NULL ||
+  if ((soc = find_society_num (rumor->who)) == NULL ||
       (oldarea = find_area_in (soc->room_start)) == NULL ||
       !IS_AREA (oldarea))
     {
       if (is_admin)
-	sprintf (buf, "Bad Rumor: Type: %d From: %d To: %d ",
-		 rumor->type, rumor->from, rumor->to);
+	sprintf (buf, "Bad Rumor: Type: %d Who: %d To: %d ",
+		 rumor->type, rumor->who, rumor->to);
       else
 	sprintf (buf, "Nothing happened ");
       return buf;
@@ -582,8 +604,8 @@ show_rumor (RUMOR *rumor, bool is_admin)
 	  !IS_AREA (to_area))
 	{
 	  if (is_admin)
-	    sprintf (buf, "Bad Rumor: Type: %d From: %d To: %d ",
-		     rumor->type, rumor->from, rumor->to);
+	    sprintf (buf, "Bad Rumor: Type: %d Who: %d To: %d ",
+		     rumor->type, rumor->who, rumor->to);
 	  else
 	    sprintf (buf, "Nothing happened ");
 	}
@@ -598,14 +620,14 @@ show_rumor (RUMOR *rumor, bool is_admin)
   
   if (rumor->type == RUMOR_RELIC_RAID)
     {
-      if ((soc = find_society_num (rumor->from)) == NULL ||
+      if ((soc = find_society_num (rumor->who)) == NULL ||
 	  (align = find_align (NULL, rumor->to)) == NULL ||
 	  (to_area = find_area_in (align->relic_ascend_room)) == NULL ||
 	  (oldarea = find_area_in (soc->room_start)) == NULL)
 	{  
 	  if (is_admin)
-	    sprintf (buf, "Bad Rumor: Type: %d From: %d To: %d ",
-		     rumor->type, rumor->from, rumor->to);
+	    sprintf (buf, "Bad Rumor: Type: %d Who: %d To: %d ",
+		     rumor->type, rumor->who, rumor->to);
 	  else
 	    sprintf (buf, "Nothing happened ");
 	}
@@ -627,14 +649,32 @@ show_rumor (RUMOR *rumor, bool is_admin)
 	       NAME(oldarea),
 	       rumor_names[rumor->type]);
     }
+
+  if (rumor->type == RUMOR_ABANDON)
+    {
+      if ((area = find_thing_num (rumor->to)) == NULL)
+	{
+	   
+	  if (is_admin)
+	    sprintf (buf, "Bad Rumor: Type: %d Who: %d To: %d ",
+		     rumor->type, rumor->who, rumor->to);
+	  else
+	    sprintf (buf, "Nothing happened ");
+	}
+      
+      sprintf (buf, "The %s%s%s %sed %s ",
+	       soc->adj, (*soc->adj? " " : ""), soc->pname,
+	       rumor_names[rumor->type],
+	       NAME (area));
+    }
   
   if (rumor->type == RUMOR_SWITCH)
     {
       if ((align = find_align (NULL, rumor->to)) == NULL)
 	{
 	  if (is_admin)
-	    sprintf (buf, "Bad Rumor: Type: %d From: %d To: %d ",
-		     rumor->type, rumor->from, rumor->to);
+	    sprintf (buf, "Bad Rumor: Type: %d Who: %d To: %d ",
+		     rumor->type, rumor->who, rumor->to);
 	  else
 	    sprintf (buf, "Nothing happened ");
 	}
@@ -650,8 +690,8 @@ show_rumor (RUMOR *rumor, bool is_admin)
 	   !IS_AREA (area) || area == the_world->cont))
 	{
 	  if (is_admin)
-	    sprintf (buf, "Bad Rumor: Type: %d From: %d To: %d ",
-		     rumor->type, rumor->from, rumor->to);
+	    sprintf (buf, "Bad Rumor: Type: %d Who: %d To: %d ",
+		     rumor->type, rumor->who, rumor->to);
 	  else
 	    sprintf (buf, "Nothing happened ");
 	}
@@ -840,17 +880,12 @@ show_random_rumor_message(SOCIETY *soc)
   static char buf[STD_LEN];
   RUMOR *rumor;
   
-  int rumor_choices = 0, rumor_chose = 0, choice = 0, num, count;
+  int rumor_choices = 0, rumor_chose = 0, num, count, choice = 0;
   int rumor_mod_vnum;
   
-  
-  if (rumor_choices < 1)
-    return no_rumor_message();
-  
- 
-  
-  /* If no society given then just choose any old rumor. */
-  if (!soc)
+  /* If no society given then just choose any old rumor. Or if the random
+     number comes up since rumors don't propogate too well. */
+  if (!soc || nr (1,8) == 3)
     {   
       for (count = 0; count < 2; count++)
 	{
@@ -869,7 +904,7 @@ show_random_rumor_message(SOCIETY *soc)
 	    }
 	}
     }
-  else /* Society mob so only give rumors for things we know about. */
+  else  /* Society mob so only give rumors for things we know about. */
     {
       for (count = 0; count < 2; count++)
 	{	  
@@ -881,7 +916,7 @@ show_random_rumor_message(SOCIETY *soc)
 		{
 		  if (count == 0)
 		    rumor_choices++;
-		  else if (++choice == rumor_chose)
+		  else if (--rumor_chose < 1)
 		    break;
 		}
 	    }
@@ -893,8 +928,44 @@ show_random_rumor_message(SOCIETY *soc)
 	    }
 	}
     }
-      
-  if (!rumor || nr (1,6) != 2)
+  
+  /* Try for raw material rumor. */
+  if (nr (1,5) == 3 && soc)
+    {
+      int raw_choices = 0;
+      int raw_chose = RAW_MAX;
+      int i;
+      for (count = 0; count < 2; count++)
+	{
+	  for (i = 1; i < RAW_MAX; i++)
+	    {
+	      if (soc->raw_want[i] ||
+		  soc->raw_curr[i] < RAW_TAX_AMOUNT/2)
+		{
+		  if (count == 0)
+		    raw_choices++;
+		  else if (--raw_chose < 1)
+		    break;
+		}
+	    }
+	  if (count == 0)
+	    {
+	      if (raw_choices == 0)
+		break;
+	      raw_chose = nr (1, raw_choices);
+	    }
+	}
+      /* Found an appropriate raw we need... */
+      if (i >= 0 && i < RAW_MAX)
+	{
+	  return show_raw_need_message ("we", i);
+	}
+    }
+  
+  
+  
+  
+  if (!rumor)
     return no_rumor_message();
   
   num = nr (1,5);
@@ -910,7 +981,7 @@ show_random_rumor_message(SOCIETY *soc)
     strcat (buf, "It seems that ");
   else if (num == 5)
     strcat (buf, "It's been going around that ");
-    
+  
   strcat (buf, show_rumor (rumor, FALSE));
   strcat (buf, show_rumor_time (rumor, FALSE));
   return buf;
@@ -927,7 +998,7 @@ show_random_quest_message (int align_num)
   THING *area;
   int i;
   static char buf[STD_LEN];
-  int num, rawtype = RAW_MAX;
+  int rawtype = RAW_MAX;
   int num_choices = 0, num_chose = 0, choice = 0;
 
   /* This is the name of the alignment or the society and area the
@@ -969,7 +1040,7 @@ show_random_quest_message (int align_num)
 	return no_rumor_message ();
       
       rawtype = i;
-      sprintf (namebuf, "the %s ", align->name);
+      sprintf (namebuf, "the %s", align->name);
     }
   else
     {
@@ -1030,12 +1101,20 @@ show_random_quest_message (int align_num)
 	return no_rumor_message();
       
       rawtype = i;      
-      sprintf (namebuf, "the %s of %s ", soc->pname, NAME (area));
+      sprintf (namebuf, "the %s of %s", soc->pname, NAME (area));
     }
   
   
+  return show_raw_need_message (namebuf, rawtype);
+}
+
+char *
+show_raw_need_message (char *namebuf, int rawtype)
+{
+  static char buf[STD_LEN];
+  int num;
   num = nr (1,5);
-  
+  buf[0] = '\0';
   if (num == 1)
     strcat (buf, "");
   else if (num == 2)
@@ -1051,7 +1130,7 @@ show_random_quest_message (int align_num)
   buf[0] = UC(buf[0]);
   
   num = nr (1,6);
-  
+  strcat (buf, " ");
   if (num == 1)
     strcat (buf, "need ");
   else if (num == 2)
@@ -1065,7 +1144,7 @@ show_random_quest_message (int align_num)
   else
     strcat (buf, "could use some ");
   
-  strcat (buf, gather_data[i].raw_name);
+  strcat (buf, gather_data[rawtype].raw_name);
   strcat (buf, ".\n\r");
   return buf;
 }
@@ -1099,7 +1178,8 @@ share_rumors (THING *th)
 	  (soc2 = find_society_num (socval2->val[0])) == NULL)
 	continue;
       
-      for (i = 0; i < 6; i++)
+      /* Pick some random blocks of rumors to share. */
+      for (i = 0; i < 10; i++)
 	{
 	  /* Pick which rumors to update...*/
 	  choice = nr (1, SOCIETY_RUMOR_ARRAY_SIZE)-1;

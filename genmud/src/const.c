@@ -371,6 +371,7 @@ const struct flag_data act1_flags[] =
   {"carnivore", " Carnivore", ACT_CARNIVORE, "Kills things weaker than it for food."},
   {"prisoner", " Prisoner", ACT_PRISONER, "This is a prisoner."},
   {"dummy", " Dummy", ACT_DUMMY, "This won't hit back in combat."},
+  {"deity", " Deity", ACT_DEITY, "Hunts and kills fast."}, 
   {"none", "none", 0, "nothing"},
 };
 
@@ -917,7 +918,7 @@ const struct gather_raw_data gather_data[] =
     { "", "", "", ""},
     { 0,0,0,0},
     0, FALSE, FALSE, ROOM_FIELD,
-    800, 4, {1,1}, {3,1}},
+    800, 4, {2,1}, {3,1}},
 
   { "harvest", "food", 30, 40,  /* Food 5 */
     {191, 0, 0, 0},

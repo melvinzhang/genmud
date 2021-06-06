@@ -302,7 +302,7 @@ add_elevations (THING *area)
   if (!area || !IS_AREA (area))
     return;
 
-  num_times = nr (2, 3+ area->mv/DETAIL_DENSITY);
+  num_times = nr (0, area->mv/DETAIL_DENSITY)/2;
   
  
   for (times = 0; times < num_times; times++)
@@ -1149,8 +1149,6 @@ make_catwalk (THING *branch_from, THING *branch_to, int dx, int dy)
       exit->type = RDIR(main_dir) + 1;
       exit->val[0] = curr_room->vnum;
     }
-  else
-    echo ("No catwalk end room?\n");
  
 
   /* Now add secret doors if necessary. */
@@ -1204,109 +1202,6 @@ check_loop_exits (THING *area, int num)
 	}
     }
   return;
-}
-
-/* This finds a generator object with a certain name inside of a 
-   certain generator area. */
-
-THING *
-find_gen_object (int area_vnum, char *typename)
-{
-  THING *obj, *area;
-  
-  if (area_vnum < GENERATOR_NOCREATE_VNUM_MIN ||
-      area_vnum >= GENERATOR_NOCREATE_VNUM_MAX ||
-      (area = find_thing_num (area_vnum)) == NULL ||
-      !IS_AREA (area) || !typename || !*typename)
-    return NULL;
-  
-  /* Find the object with the correct name. */
-  for (obj = area->cont; obj; obj = obj->next_cont)
-    {
-      if (is_named (obj, typename))
-	break;
-    }
-  
-  if (!obj || !obj->desc || !*obj->desc)
-    return NULL;
-  
-  return obj;
-}
-
-/*  This finds a descriptive word from the various lists of words
-   found in the objectgen area. type tells what kind of wordlist
-   we're trying to access, and the word gets placed into buf. 
-   The color is the return value that's the word with the color codes
-   around it. The color codes will probably be real ANSI codes but
-   they could be in the internal $0-F format. */
-
-
-char *
-find_gen_word (int area_vnum, char *typename, char *color)
-{
-  THING *obj;
-  int num_words = 0, num_chose = 0, count;
-  static char buf[STD_LEN];
-  char word[STD_LEN], *loc;
-  if (!typename || !*typename)
-    return NULL;
-  
-  buf[0] = '\0';
-  word[0] = '\0';
-  
-  if ((obj = find_gen_object (area_vnum, typename)) == NULL)
-    return buf;
-  
-
-  for (count = 0; count < 2; count++)
-    {
-      loc = obj->desc;
-      
-      do
-	{
-	  loc = f_word (loc, word);
-	  
-	  if (*word != '&' && *word)
-	    {
-	      if (count == 0)
-		num_words++;
-	      else if (--num_chose < 1)
-		break;
-	    }  /* *word == '&' so the next thing is a color code. */
-	  else if (*word == '&')
-	    {  /* Read past the color code. */
-	      loc = f_word (loc, word);
-	    }
-	}
-      while (*word || *loc);
-      
-      if (count == 0)
-	{
-	  if (num_words < 1)
-	    {
-	      *word = '\0';
-	      break;
-	    }
-	  else
-	    num_chose = nr (1, num_words);
-	}
-    }
-  
-  if (!*word)
-    return buf;
-  
-  /* Copy the word into the buffer. */
-
-  strcpy (buf, word);
-  /* If the next word was an '&' then get the color. */
-  if (*loc == '&' && color)
-    {
-      loc = f_word (loc, word);
-      f_word (loc, color);
-    }
-  if (area_vnum == AREAGEN_AREA_VNUM)
-    buf[0] = UC(buf[0]);
-  return buf;
 }
 
 /* This places a secret door with a certain name in a certain
@@ -1572,7 +1467,7 @@ add_guarded_mob (THING *room)
   free_str (person_proto->short_desc);
   person_proto->short_desc = new_str (fullname);
   
-  strcat (fullname, "is here.");
+  strcat (fullname, " is here.");
   free_str (person_proto->long_desc);
   person_proto->long_desc = new_str (fullname);
   person_proto->max_mv = nr (3,5);

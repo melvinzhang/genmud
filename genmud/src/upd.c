@@ -316,6 +316,10 @@ update_thing (THING *th)
 	    add_money (th, MAX (10, (LEVEL (th) * 10 - total_money (th))/10));
 	}
       
+      /* Sanity check fighting. */
+      if (th->position == POSITION_FIGHTING &&
+	  (!FIGHTING(th) || FIGHTING(th)->in != th->in))
+	th->position = POSITION_STANDING;
       
       actbits = flagbits (th->flags, FLAG_ACT1);
       
@@ -353,7 +357,7 @@ update_thing (THING *th)
 	  else if (nr (1,3) == 2)
 	    attack_stuff (th);
 	}  
-      if (nr (1,43) == 27)
+      if (nr (1,7) == 2)
 	find_eq_to_wear (th);
     }
   if (th->hp < 1 && CAN_FIGHT (th))
@@ -419,6 +423,8 @@ update_hour (void)
      make this as complex as you want :) */
   
   update_time_weather ();
+
+  create_disaster();
   
   if (nr (1,3) == 2)
     check_for_multiplaying ();
@@ -490,7 +496,12 @@ update_thing_hour (THING *th)
       (!IS_PC (th) || LEVEL (th) < MAX_LEVEL)
       && --th->timer < 1)
     {
-      if (IS_PC (th))
+      /* Don't let fighting things just poof...*/
+      if (FIGHTING (th))
+	{
+	  th->timer = 2;
+	}
+      else if (IS_PC (th))
 	{
 	  write_playerfile (th);
 	  if (th->pc->no_quit < 1)
@@ -589,6 +600,30 @@ update_thing_hour (THING *th)
       /* Update city status. If the society that built a city here is gone,
 	 start to let the city decay. */
       update_built_room (th);
+
+      /* Now check for fire spreading. */
+      
+      if (nr (1,12) == 7 &&
+	  IS_ROOM_SET (th, ROOM_FIERY))
+	{
+	  VALUE *exit, *build;
+	  THING *room2;
+	  FLAG *flg;
+	  if ((exit = FNV (th, nr (1, REALDIR_MAX))) != NULL &&
+	      (room2 = find_thing_num (exit->val[0])) != NULL &&
+	      IS_ROOM (room2) &&
+	      ((build = FNV (room2, VAL_BUILD)) != NULL ||
+	       IS_ROOM_SET (room2, ROOM_FIELD | ROOM_FOREST | ROOM_ROUGH | ROOM_EASYMOVE)))
+	    {
+	      flg = new_flag();
+	      flg->type = FLAG_ROOM1;
+	      flg->from = 2000;
+	      flg->val = ROOM_FIERY;
+	      flg->timer = nr (10,20);
+	      aff_update (flg, room2);
+	      set_up_map_room (room2);
+	    }
+	}      
     }
   
   /* Remove flags that wear off. */
@@ -708,7 +743,7 @@ update_thing_hour (THING *th)
   
   /* This should replace the VAL_FEED code. */
   
-  if (nr (1,153) == 25)
+  if (nr (1,57) == 25)
     find_something_to_eat (th);
   
   
@@ -954,7 +989,7 @@ update_fast (THING *th)
 		      VALUE *downexit;
 		      stt ("\x1b[1;34mYou are DROWNING!\x1b[0;37m\n\r", th);
 		      act ("$C@1n is drowning!$7", th, NULL, NULL, NULL, TO_ROOM);
-		      if (damage (room, th, nr (10, 20), "drown"))
+		      if (damage (room, th, nr (5, 10), "drown"))
 			return;
 		      
 		      if ((downexit = FNV (th->in, VAL_EXIT_D)) != NULL &&
@@ -997,17 +1032,28 @@ update_fast (THING *th)
 			return;
 		    }
 		}
-	      if (IS_SET (roomflags, ROOM_FIERY))
+	      if (IS_SET (roomflags, ROOM_ASTRAL) &&
+		  !IS_AFF (th, AFF_PROTECT))
 		{
+		  act ("$9The $FAstral Winds $9batter @1n to pieces!$7", th, NULL, NULL, NULL, TO_ALL);
+		  
+		  if (damage (room, th, nr (10,30), "dissolve"))
+		    return;
+		}
+	      
+	      if (IS_SET (roomflags, ROOM_FIERY) &&
+		  !IS_PROT (th, AFF_FIRE))
+		{
+		  
 		  act ("$9@1n get@s burned to a crisp!$7", th, NULL, NULL, NULL, TO_ALL);
-		  if (damage (room, th, nr (10, 40), "flame"))
+		  if (damage (room, th, nr (3, 10), "flame"))
 		    return;
 		}
 	      if (IS_SET (roomflags, ROOM_EARTHY) &&
 		  !IS_SET (thflags, AFF_FOGGY))
 		{
 		  act ("$3The earth crushes @1n to a pulp!$7", th, NULL, NULL, NULL, TO_ALL);
-		  if (damage (room, th, nr (50, 200), "crush"))
+		  if (damage (room, th, nr (5,15), "crush"))
 		    return;
 		}	   
 	    }
@@ -1017,12 +1063,13 @@ update_fast (THING *th)
   if (th->in && th->in == room)
     {
       bool did_random_social = FALSE;
+      warnmob = NULL;
       for (mob = th->in->cont; mob; mob = mob->next_cont)
 	{
 	  if (CAN_FIGHT (mob) && nr (1,3) != 2)
 	    attack_stuff (mob);
 	  else if (nr (1,235) == 133 && CAN_TALK (mob) &&
-		   !did_random_social)
+		   !did_random_social && mob->position > POSITION_SLEEPING)
 	    {
 	      do_random_social (mob);
 	      did_random_social = TRUE;
@@ -1053,7 +1100,9 @@ find_something_to_eat (THING *th)
   THING *room, *nroom;
   int i, loops = 0;
   bool found_intelligent_here;
-  
+  int bonus_depth = 0;
+
+
   /* They tend to only pick on stupid things, but if forced into it,
      they can go after intelligent things if really hungry. */
   
@@ -1062,6 +1111,11 @@ find_something_to_eat (THING *th)
       !IS_ACT1_SET (th, ACT_CARNIVORE) ||
       LEVEL (th) < 15)
     return;
+
+  /* Once in a while, a carnivore moves out of its local hunting grounds
+     and goes after something farther away. */
+  if (nr (1,30) == 3)
+    bonus_depth = 20;
   
   undo_marked(th->in);
   clear_bfs_list();
@@ -1116,7 +1170,7 @@ find_something_to_eat (THING *th)
 		  for (i = 0; i < REALDIR_MAX; i++)
 		    {
 		      if ((nroom = FTR (room, i, th->move_flags)) != NULL &&
-			  bfs_curr->depth  < CARNIVORE_HUNT_DEPTH +nr(1,10))
+			  bfs_curr->depth  < CARNIVORE_HUNT_DEPTH+bonus_depth)
 			add_bfs (bfs_curr, nroom, i);	     
 		    }	  
 		}
@@ -1140,6 +1194,5 @@ find_something_to_eat (THING *th)
     }
   return;
 }
-
 
 

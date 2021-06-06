@@ -68,6 +68,40 @@ and fired so that the load gets balanced out. Commands that you
 can enter are in functions of the form do_xxxx and have to be
 added to int.c before they can be accessed.
 
+Also, to use the generation and simulation code do this.
+
+Type
+
+alias z worldgen 17 17
+alias x worldgen generate 700
+alias v worldgen clear yes
+alias zz speedup foozball
+
+Then type z and it should generate a map for you. If it doesn't
+type v and reboot. Then type z.
+
+After you type z a few times and see a map you like, type x.
+
+That will generate the world, although it will take a minute or
+two to do this probably. 
+
+Then type soci list
+Type zz
+
+This will speed up the game dramatically.
+
+Type soci count 
+
+a few times as the game speeds along and look at the increasing
+numbers. Typing soci <number> will let you edit a society.
+
+After a while, if you type rumors, you will see a list of rumors
+or events that societies generate as they do things. This is where
+the players will get information on quests by typing "news". When
+a player types news and a society member is in the room with them,
+they get a chance of hearing about something that the society
+knows or needs help with. 
+
 Enjoy.
 
 

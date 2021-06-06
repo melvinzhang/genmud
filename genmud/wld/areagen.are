@@ -2,9 +2,9 @@ THING 107100
 Name areagen.are`
 HpMv 0 10 5 400
 HWT 0 0
-Timer 4
+Timer 13
 Short The Areagen Area`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 28
 END_THING
 
@@ -331,6 +331,7 @@ Mountains
 Hills
 Heights
 Forests
+Glaciers
 `
 END_THING
 
@@ -353,8 +354,11 @@ END_THING
 THING 107122
 Name snow_patchnames`
 HWT 0 0
-Desc Ground
-Earth
+Desc 'Patch of Ground'
+'Piece of Ground'
+'Patch of Earth'
+'Piece of Earth'
+Patch
 `
 END_THING
 

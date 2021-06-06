@@ -1,10 +1,10 @@
 THING 107500
-Name provisionegen.are`
+Name provisiongen.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 18
+Timer 6
 Short The provision generators`
-ThFl 135307259
+ThFl 1089531
 Flag Area 0 0 28
 END_THING
 
@@ -18,7 +18,7 @@ bags and other provisions players might need.
 Short Provision Generators`
 MIW 1
 Symbol -`
-ThFl 134742507
+ThFl 524779
 END_THING
 
 THING 107506
@@ -58,6 +58,9 @@ THING 107508
 HWT 0 0
 ThFl 100934
 Val food 1 0 0 0 0 0 0 0 `
+EDESC format`
+'some kshort kname'
+`
 EDESC kname`
 carrots celery cabbage tomatoes lettuce broccoli cauliflower
 cucumbers sprouts potatoes okra onions
@@ -97,7 +100,21 @@ cryptic mystical mysterious
 `
 END_THING
 
-
+THING 107511
+HWT 0 0
+ThFl 100930
+Val i_exit 0 3 3 0 0 0 0 0 `
+EDESC klong`
+small large tiny huge giant
+`
+EDESC kshort`
+cloth leather ripped dirty clean woven brown gray
+`
+EDESC kname`
+sack bag backpack
+pouch
+`
+END_THING
 
 END_OF_AREA
 

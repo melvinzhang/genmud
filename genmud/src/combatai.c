@@ -126,7 +126,7 @@ combat_ai (THING *th)
   
   /* Flee if you're getting beaten. */
 
-  if (nr (1,6) > relative_power)
+  if (nr (1,6) > relative_power && th->hp < th->max_hp/3)
     {
       do_flee (th, "");
       return;
@@ -174,9 +174,9 @@ combat_ai (THING *th)
       (nr (1,12) == 3 || 
        fighting->hp < fighting->max_hp/3 ||
        relative_power >= nr (15,24)) &&
-      nr (1,2) == 2)
+      nr (1,6) == 2)
     {
-      if (nr (1,4) == 2)
+      if (nr (1,8) == 2)
 	do_tackle (th, "");
       else
 	do_bash (th, "");

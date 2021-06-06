@@ -21,7 +21,7 @@ generate_societies (THING *th)
   THING *genarea, *mobarea, *proto;
   char buf[STD_LEN];
   /* First check if there are any generated societies already. */
-
+  
   for (soc = society_list; soc; soc = soc->next)
     {
       if (soc->generated_from)
@@ -31,7 +31,7 @@ generate_societies (THING *th)
 	}
     }
 
-
+  
   if ((genarea = find_thing_num(SOCIETYGEN_AREA_VNUM)) == NULL ||
       !IS_AREA (genarea))
     {
@@ -73,7 +73,11 @@ generate_societies (THING *th)
       return;
     }
   
-
+  /* Now set all ungenned societies to align 0. */
+  
+  for (soc = society_list; soc; soc = soc->next)
+    soc->align = 0;
+  
   for (proto = genarea->cont; proto; proto = proto->next_cont)
     {
       if (IS_ROOM (proto))
@@ -94,7 +98,7 @@ generate_societies (THING *th)
    for the society's name and attributes. */
 
 
-void
+SOCIETY *
 generate_society (THING *proto)
 {
   SOCIETY *soc = NULL;
@@ -136,7 +140,7 @@ generate_society (THING *proto)
 
 
   if (!proto || !proto->name || !*proto->name)
-    return;
+    return NULL;
   
   /* Max level of proto has to be set to something decent. */
   if (LEVEL (proto) < 10)
@@ -260,7 +264,7 @@ generate_society (THING *proto)
 	  if ((mobarea = find_thing_num(SOCIETY_MOBGEN_AREA_VNUM)) == NULL ||
 	      !IS_AREA (mobarea))
 	    {
-	      return;
+	      return NULL;
 	    }
 	  
 	  /* Init current vnum to 1 spot past the rooms in the mob area. */
@@ -405,7 +409,9 @@ generate_society (THING *proto)
 		  strcpy (tierbuf, tiernames[tier]);
 		  
 		  /* tierbuf[0] = UC (tierbuf[0]); */
-		  if (!soc->aname || !*soc->aname || nr (1,2) == 1)
+		  if (!soc->aname || !*soc->aname || nr (1,2) == 1 ||
+		      proto->vnum == DEMON_SOCIGEN_VNUM ||
+		      proto->vnum == ORGANIZATION_SOCIGEN_VNUM)
 		    strcpy (socinamebuf, soc->name);
 		  else 
 		    strcpy (socinamebuf, soc->aname);
@@ -424,19 +430,30 @@ generate_society (THING *proto)
 		  mob->thing_flags = MOB_SETUP_FLAGS;
 		  thing_to (mob, mobarea);
 		  add_thing_to_list (mob);
-	      
+		  
 		  /* Calculate the level of the mob. */
 		  
 		  mob->level = (base_caste_level *
 				(caste_tiers[cnum]+current_tier_place))
 		    /(caste_tiers[cnum]);
+
+		  /* Leaders are MUCH tougher. */
+		  if (IS_SET (caste1_flags[cnum].flagval, CASTE_LEADER))
+		    {
+		      mob->level += mob->level/5;
+		      mob->max_hp = 20;
+		    }
 		  current_tier_place++;
 		  
 		  sprintf (buf, "%s %s", socinamebuf, tierbuf);
 		  free_str (mob->name);
 		  mob->name = new_str (buf);
-		  
-		  sprintf (buf, "%s %s %s", a_an (socinamebuf), socinamebuf, tierbuf);
+		  /* For demons, this is reversed. */
+
+		  if (proto->vnum == DEMON_SOCIGEN_VNUM)
+		    sprintf (buf, "%s %s %s", a_an (tierbuf), tierbuf, socinamebuf);
+		  else
+		    sprintf (buf, "%s %s %s", a_an (socinamebuf), socinamebuf, tierbuf);
 		  free_str (mob->short_desc);
 		  mob->short_desc = new_str (buf);
 		  
@@ -461,6 +478,11 @@ generate_society (THING *proto)
 		      mob->weight /= 10;
 		    }
 		  mob->sex = SEX_MALE;
+		  
+		  copy_values (proto, mob);
+		  /* Now add some money...*/
+
+		  add_money (mob, nr (LEVEL(mob),LEVEL(mob)*LEVEL(mob))/20);
 		  
 		}
 	      /* Give some buffer room after these things are made. */
@@ -488,13 +510,12 @@ generate_society (THING *proto)
 	  else if (IS_SET (caste_flags[cnum], BATTLE_CASTES))
 	    soc->base_chance[cnum] = nr (2,3);
 	  else
-	    soc->base_chance[cnum] = 1;
+	    soc->base_chance[cnum] = 3;
 	  soc->chance[cnum] = soc->base_chance[cnum];
 	  soc->max_pop[cnum] = 5;
 	  soc->curr_pop[cnum] = 0;
 	}
       
-      soc->recent_maxpop = 100;
       soc->align = proto->align;
       soc->generated_from = proto->vnum;
       soc->society_flags = society_flags;
@@ -505,7 +526,7 @@ generate_society (THING *proto)
     }
   while (*adjbuf);
   top_vnum = curr_vnum;
-  return;
+  return soc;
 }
   
   
@@ -667,11 +688,18 @@ generate_society_objects (SOCIETY *soc, int level, int curr_vnum)
 
   for (vnum = curr_vnum; vnum < max_vnum; vnum++)
     {
-      sprintf (sociname, "%s%s%s",
-	       (soc->adj && *soc->adj ? soc->adj : ""),
-	       (soc->adj && *soc->adj ? " " : ""),
-	       (soc->aname && *soc->aname && nr (1,2) == 1 ?
-		soc->aname : soc->name));
+      /* Don't let the organizations send the adjectives. */
+      if (soc->generated_from == ORGANIZATION_SOCIGEN_VNUM)
+	{
+	  sprintf (sociname, soc->name);
+	  possessive_form (sociname);
+	}
+      else	
+	sprintf (sociname, "%s%s%s",
+		 (soc->adj && *soc->adj ? soc->adj : ""),
+		 (soc->adj && *soc->adj ? " " : ""),
+		 (soc->aname && *soc->aname && nr (1,2) == 1 ?
+		  soc->aname : soc->name));
       
       objectgen (NULL, ITEM_WEAR_NONE, nr (level/3, level), vnum,
 		 sociname, NULL);

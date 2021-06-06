@@ -1790,8 +1790,8 @@ Pre_Name Healing`
 Guilds 0 0 4 0 0 0 0 0 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 27 0 0 0 
-Flag Spell 0 0 14
 Flag Hurt 0 0 179
+Flag Spell 0 0 14
 END_SPELL
 
 SPELL
@@ -2126,8 +2126,8 @@ Pre_Name Purification`
 Guilds 0 0 5 0 0 0 0 0 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 30 0 0 0 
-Flag Spell 0 0 14
 Flag Hurt 0 0 32763
+Flag Spell 0 0 14
 END_SPELL
 
 SPELL
@@ -2377,14 +2377,13 @@ Duration 1`
 Wear_Off The spell has worn off @1n.`
 Message $9Creeping Death!$7`
 Comp 0 0 0 0 0 
-Repeat 2 5 0
+Repeat 2 1 0
 Pre_Name Annihilate`
 Pre_Name Hammer of Hell`
 Guilds 0 5 4 0 0 0 4 0 4 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 
 Flag Hurt 0 0 16384
-Flag Spell 0 0 131072
 END_SPELL
 
 

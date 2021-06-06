@@ -2,10 +2,10 @@ THING 105200
 Name mobgen.are`
 HpMv 0 10 5 700
 HWT 0 0
-Timer 9
+Timer 13
 Short Mob Generators`
 type Lonath`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 28
 END_THING
 
@@ -393,8 +393,8 @@ HWT 5 20
 Short ice air fire earth`
 Long Small medium large spotted`
 ThFl 67745
-Val weapon 0 0 0 0 0 0 0 0 bite`
 Val money 50 0 0 0 0 0 0 0 `
+Val weapon 0 0 0 0 0 0 0 0 bite`
 Flag Det 0 0 4
 Flag Aff 0 0 524288
 Flag Mob 0 0 2
@@ -467,6 +467,17 @@ Short bronze stone gold iron steel diamond bone clay mist`
 Long Small large old creaking`
 ThFl 67745
 Val weapon 0 0 0 0 0 0 0 0 crush slap smack`
+END_THING
+
+THING 105406
+Name griffon hippogriff chimera cockatrice`
+Level 90
+HWT 80 4000
+Short Furry feathered brown green black gray white`
+Long Large small medium giant`
+ThFl 2209
+Flag Aff 0 0 524288
+Flag Act 0 0 1
 END_THING
 
 END_OF_AREA

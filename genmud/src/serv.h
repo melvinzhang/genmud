@@ -119,6 +119,7 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 
 #define PORT_NUMBER            3300
 #define STD_LEN                1000
+#define STRINGGEN_LEN          20000 /* Max size of stringen returns. */
 #define WRITEBUF_SIZE          20000
 #define END_STRING_CHAR        '`'
 #define HASH_SIZE              57129   /* Size of the index hashes. */
@@ -260,11 +261,11 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 #define AUCTION_DIVISOR        12   /* Obj->cost/this = auction fee. */
 #define WGT_MULT               10   /* Ratio of pebbles to stones. */
 #define NATSPELL_MAX            4   /* Natural spells known */
-#define MAP_MAXX               120   /* How wide maps can be */
+#define MAP_MAXX              120   /* How wide maps can be */
 #define MAP_MAXY               60    /* How tall maps can be */
 #define SMAP_MAXX              13   /* Small map size */
 #define SMAP_MAXY              11   /* Small map size */
-#define CARNIVORE_HUNT_DEPTH   15   /* Max depth a carnivore hunts on avg..*/
+#define CARNIVORE_HUNT_DEPTH   6   /* Max depth a carnivore hunts on avg..*/
 #define REMORT_ROOM            26   /* Room where you can remort. */
 #define MAX_REMORTS            10    /* Max number of remorts. */
 #define STATS_PER_REMORT       4     /* Stats per remort... */
@@ -298,8 +299,8 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 #define NUMERIC_STATS_SEEN     20      /* Level you see numeric stats. */
 #define BIGBUF                 150000  /* Size of big buffer. */
 #define CASTE_MAX              10      /* Max number of castes */
-#define MAX_HUNT_DEPTH         1500    /* Max depth hunting works... */
-#define MAX_SHORT_HUNT_DEPTH   100     /* Max depth you go on "short" hunts. */
+#define MAX_HUNT_DEPTH         3000    /* Max depth hunting works... */
+#define MAX_SHORT_HUNT_DEPTH   50      /* Max depth you go on "short" hunts. */
 #define HUNT_STRING_LEN        30      /* Max len of "hunting" strings. */
 #define MAX_GROUP_POINTS       16      /* Max power of a group */
 #define MAX_SCRIPT_DEPTH       5       /* Max depth of scripts. */
@@ -1070,6 +1071,7 @@ grep 					    them all visible to each
 #define ACT_CARNIVORE       0x00001000 /* Will hunt for food. */
 #define ACT_PRISONER        0x00002000 /* Prisoner will not fight. */
 #define ACT_DUMMY           0x00004000 /* For dummy mobs...don't hit back. */
+#define ACT_DEITY           0x00008000 /* Hunt/kill fast. */
 /**********************************************************************/
 /* Mob details flags...mostly used with combat and spell effectiveness.
    Alter mob1_flags in const.c if you alter these. */
@@ -2318,6 +2320,12 @@ extern int social_count;
 extern int scrollback_count;
 extern int edesc_count;
 
+/* These are used to find the average bfs size. */
+
+extern int bfs_times_count;
+extern int bfs_tracks_count;
+
+
 extern int last_thing_edit; /* This is the last time a thing was edited..
 			       used for autosave for unsaved areas. */
 extern VALUE *wt_info;
@@ -2527,6 +2535,10 @@ void update_fast (THING *);
 void update_auctions (void);
 void charge_message (THING *obj, VALUE *, THING *);
 void update_hour (void);
+void create_disaster (void);
+void fire_disaster (void);
+void flood_disaster (void);
+void snow_disaster (void);
 void update_png (void); /* This periodically updates the png. */
 void update_time_weather (void);
 void attack_stuff (THING *); /* Used to attack something in the room. */
@@ -2688,6 +2700,8 @@ THING *find_thing_me (THING *, char *); /* Not worn items. */
 THING *find_thing_worn (THING *, char *); /* Worn items. */
 THING *find_thing_in (THING *, char *);
 THING *find_thing_near (THING *, char *, int);
+/* Finds an enemy in a nearby room. */
+THING *find_enemy_nearby (THING *th, int max_depth);
 THING *find_thing_num (int num);
 THING *find_pc (THING *, char *);
 THING *find_area_in (int);
@@ -2833,6 +2847,25 @@ void show_stredit (THING *th, char *txt, bool);
 void new_stredit (THING *th, char **txt);
 void format_string (char **, char *);
 void paragraph_format (char **);
+/* This finds a generator object based on an area vnum and a typename.
+   Used inside of find_gen_word mostly, but also for making metal names. */
+
+THING *find_gen_object (int area_vnum, char *typename);
+/* This finds a descriptive word from one of the areas in the
+   generator section of the areas-- those between GENERATOR_NOCREATE_VNUM
+   MIN and MAX. If the word is not found or if no word in the desc
+   can be found, the original word is returned. */
+
+char *find_gen_word (int area_vnum, char *typename, char *color);
+/* This creates a string of text using generator words from the given area. */
+char *string_gen (char *txt, int area_vnum);
+
+/* This lists the ancient races and their alignments. */
+char *list_ancient_race_names (void);
+	
+/* This lists the "controller" deities and their alignments. */
+char *list_controller_deities (void);
+
 /* Returns true if we're editing this mort's description and the desc is
    too big somehow. */
 bool bad_pc_description (THING *, char *);
@@ -2861,6 +2894,7 @@ char *find_first_number (char *, int*);
 int find_dir (char *);
 bool is_named (THING *, char *);
 bool named_in (char *look_in, char *look_for);
+bool named_in_full_word (char *look_in, char *look_for);
 bool is_valid_shop_item (THING *item, VALUE *shop); /* Checks if this item can
 						  be bought/sold in this
 						  shop. */
@@ -2892,6 +2926,8 @@ void free_social (SOCIAL *);
 /* Clears all socials. */
 void clear_socials(void);
 void do_random_social (THING *);
+/* Do a social to a victim. If vict is NULL, then it's the novict social. */
+bool do_social_to (THING *th, THING *vict, char *arg);
 /* This is used to load the "score" in from score.dat. */
 
 void read_score (void);
@@ -3056,6 +3092,7 @@ void free_scrollback (SCROLLBACK *);
 
 void copy_flags (THING *, THING *);
 void copy_values (THING *, THING *);
+void copy_resets (THING *oldth, THING *newth);
 void copy_reset (RESET *oldr, RESET *newr);
 char *set_names_string (char *);
 void copy_value (VALUE *, VALUE *);
@@ -3072,6 +3109,7 @@ void wear_thing (THING *th, THING *obj);
 void remove_thing (THING *th, THING *obj, bool guarantee);
 THING *find_eq (THING *, int loc, int num); /* Finds eq on a thing */
 void find_eq_to_wear (THING *); /* Thing picks up eq to use. */
+int find_item_power (VALUE *); /* Finds armor/wpn power of an item. */
 int find_free_eq_slot (THING *, THING*); /* Finds a free slot for new eq... */
 int find_max_slots (THING *, int wloc); /* Finds max number of slots  */
 char *armor_name (int val); /* Returns a string telling how good the armor
@@ -3159,6 +3197,7 @@ int find_rating (THING *th);
 
 void do_rating (THING *, char *);
 void do_raze (THING *, char *);
+void do_build (THING *, char *);
 void do_topten (THING *, char *);
 void do_reply (THING *, char *);
 void do_rescue (THING *, char *);
@@ -3186,6 +3225,7 @@ void do_transfer (THING *, char *);
 void do_say (THING *, char *);
 void do_quit (THING *, char *);
 void do_delete (THING *, char *);
+void do_divine (THING *, char *);
 void do_description (THING *, char *);
 void do_delet (THING *, char *);
 void do_reboo (THING *, char *);
@@ -3548,7 +3588,15 @@ void undo_marked (THING *start_in); /* Removes marks from things... */
 
 #define is_hunting(a) (((a)&&(a)->in&&(a)->fgt&&(a)->fgt->hunting[0]?1:0))
 
- 
+/* Used for determining how to make names. */
+#define must_be_near_vowel(a) \
+(LC((a))=='j'|| \
+LC((a))=='q'|| \
+LC((a))=='v'|| \
+LC((a))=='x'|| \
+LC((a))=='y'|| \
+LC((a))=='z' ? TRUE:FALSE) 
+
 
 /* This sets up a file read and the file read loop and then does the error
    handling. */

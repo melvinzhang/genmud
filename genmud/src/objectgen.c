@@ -352,7 +352,8 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
     }
   else if (owner_name && *owner_name)
     {
-      strcpy (name[OBJECTGEN_NAME_OWNER], owner_name);
+      f_word (owner_name, name[OBJECTGEN_NAME_OWNER]);
+      capitalize_all_words (name[OBJECTGEN_NAME_OWNER]);
       num_names--;
     }
   
@@ -396,12 +397,12 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	}
     } 
       /* If there's a suffix, usually change the "A/An" into a "The" */
-  else if (*name[OBJECTGEN_NAME_SUFFIX] && nr (1,5) != 3)
+  else if (*name[OBJECTGEN_NAME_SUFFIX] && nr (1,5) == 3)
     {
       strcpy (name[OBJECTGEN_NAME_A_AN], "The");
       strcpy (colorname[OBJECTGEN_NAME_A_AN], "The");
     }
-  num_names += nr (0, level/125+1);
+  num_names += nr (1, level/125+1);
   if (num_names > 3)
     num_names = 3;
   
@@ -425,7 +426,7 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
       for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
 	{
 	  if (!IS_SET (names_used, (1 << i)) && 
-	      *name[i] &&--choice < 1)
+	      *name[i] && --choice < 1)
 	    break;
 	}
       SBIT (names_used, (1 << i));
@@ -474,9 +475,9 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
       
     }
   else
-    possessive_form (name[OBJECTGEN_NAME_OWNER]);
-  
-  
+    {
+      possessive_form (name[OBJECTGEN_NAME_OWNER]);
+    }
   return;
 }
   

@@ -447,6 +447,27 @@ society_edit (THING *th, char *arg)
       show_society (th, soc);
       return;
     }
+  else if (!str_cmp (arg1, "relic_hours"))
+    {
+      sprintf (buf, "Relic raid hours changed to %d.\n\r", atoi (arg));
+      soc->relic_raid_hours = atoi (arg);
+      show_society (th, soc);
+      return;
+    }
+  else if (!str_cmp (arg1, "relic_gather"))
+    {
+      sprintf (buf, "Relic raid gather point changed to %d.\n\r", atoi (arg));
+      soc->relic_raid_gather_point = atoi (arg);
+      show_society (th, soc);
+      return;
+    }
+  else if (!str_cmp (arg1, "relic_target"))
+    {
+      sprintf (buf, "Relic raid target changed to %d.\n\r", atoi (arg));
+      soc->relic_raid_target = atoi (arg);
+      show_society (th, soc);
+      return;
+    }
   else if (!str_cmp (arg1, "alert_rally_point"))
     {
       sprintf (buf, "Alert rally point changed to %d.\n\r", atoi (arg));
@@ -546,6 +567,9 @@ show_society (THING *th, SOCIETY *soc)
   stt (buf, th);
   sprintf (buf, "Alert: Current: %d  Last: %d  Hours: %d  RallyPt: %d\n\r",
 	   soc->alert, soc->last_alert, soc->alert_hours, soc->alert_rally_point);
+  stt (buf, th); 
+  sprintf (buf, "Relic Raid: Target: %d  Hours: %d  GatherPt: %d\n\r",
+	   soc->relic_raid_target, soc->relic_raid_hours, soc->relic_raid_gather_point);
   stt (buf, th);
   sprintf (buf, "Alife: Combat: %d  Growth: %d Home (%d,%d)\n\r",
 	   soc->alife_combat_bonus, soc->alife_growth_bonus,

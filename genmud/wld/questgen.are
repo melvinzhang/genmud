@@ -2,7 +2,7 @@ THING 109000
 Name questgen.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 12
+Timer 11
 Short Quest Text Area`
 type Lonath`
 ThFl 135307259

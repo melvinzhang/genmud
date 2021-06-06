@@ -186,7 +186,15 @@ update_time_weather (void)
       else if (nr (1,5) == 3)
 	{
 	  new_weather = WEATHER_RAINY;
-	  sprintf (buf, "The clouds get thicker, and it starts to rain.\n\r");
+	  if (wt_info->val[WVAL_TEMP] > 30)
+	    sprintf (buf, "The clouds get thicker, and it starts to rain.\n\r");
+	  else
+	    {
+	      sprintf (buf, "The clouds get thicker, and it starts to snow.\n\r");
+	      if (nr (1,10) == 2)
+		snow_disaster();
+	      
+	    }
 	}
       break;
     case WEATHER_RAINY:
@@ -208,14 +216,23 @@ update_time_weather (void)
       else if (nr (1,30) == 3)
 	{
 	  new_weather = WEATHER_STORMY;
-	  sprintf (buf, "The storm intensifies overhead! You should seek shelter!\n\r");
+	  if (wt_info->val[WVAL_TEMP] > 30)
+	    sprintf (buf, "The storm intensifies overhead! You should seek shelter!\n\r");
+	  else
+	    {
+	      sprintf (buf, "The snowstorm turns into a blizzard! You should seek shelter!\n\r");
+	      snow_disaster();
+	    }
 	}
       break;
     case WEATHER_STORMY:
       if (nr (1,6) == 2)
 	{
 	  new_weather = WEATHER_RAINY;
-	  sprintf (buf, "The storm abates, some, but it is still raining a great deal.\n\r");
+	  if (wt_info->val[WVAL_TEMP] > 30)
+	    sprintf (buf, "The storm abates, but it is still raining a great deal.\n\r");
+	  else
+	    sprintf (buf, "The storm, abates, but it is still snowing.\n\r");
 	}
       break;
     case WEATHER_FOGGY:
@@ -235,8 +252,7 @@ update_time_weather (void)
 	   wt_info->val[WVAL_WEATHER] == WEATHER_STORMY)
     wt_info->val[WVAL_TEMP] -= nr (1,3);
   
-       
-
+  
 
   if (new_weather == WEATHER_SUNNY || 
       new_weather == WEATHER_CLOUDY)
@@ -258,9 +274,13 @@ update_time_weather (void)
     }
   wt_info->val[WVAL_WEATHER] = new_weather;
   
-  /* Now down here, do some stuff with weather updates which I haven't
-     done yet. */
   
+  
+  /* If it's cold and stormy, make areas get snowed in. Cover all
+     road/field/forest/rough rooms with snow in all nondesert nonswamp
+     areas. */
+  
+
   write_time_weather ();
   return;
 }
@@ -303,12 +323,12 @@ check_weather_effects (THING *th)
   temp = find_room_temperature (th->in) + th->pc->warmth;
   
   
-  if (temp > 89)
+  if (temp > 89 && !IS_ROOM_SET (th->in, ROOM_SNOW | ROOM_WATERY))
     {
       stt ("You sure are HOT!\n\r", th);
       th->pc->cond[COND_THIRST] -= nr (1,3);
     }
-  else if (temp < 25)
+  else if (temp < 25 && !IS_ROOM_SET (th->in, ROOM_INSIDE | ROOM_FIERY | ROOM_EARTHY))
     {
       stt ("You sure are COLD!\n\r", th);
       if (th->hp > 3)
@@ -355,7 +375,7 @@ find_room_temperature (THING *room)
       else if (temp > 60)
 	temp -= 10;
     }
-
+  
   /* Inside tends towards 65 degrees strongly. */
   if (IS_SET (areaflags | roomflags, ROOM_INSIDE))
     {

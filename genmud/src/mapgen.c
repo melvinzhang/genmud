@@ -41,7 +41,7 @@ new_mapgen (void)
   else
     {
       mapgen_count++;
-      new_mapgen = (MAPGEN *) malloc (sizeof (MAPGEN));
+      new_mapgen = (MAPGEN *) mallok (sizeof (MAPGEN));
     }
   
   /* Clear out the data. */

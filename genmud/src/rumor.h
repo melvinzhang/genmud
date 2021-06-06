@@ -17,7 +17,8 @@
 #define RUMOR_REINFORCE  6  /* A society sends reinforcements to another. */
 #define RUMOR_RELIC_RAID 7  /* A society tries to raid a relic room of
 			       a different alignment. */
-#define RUMOR_TYPE_MAX   8
+#define RUMOR_ABANDON    8  /* Run away and settle in a new location. */
+#define RUMOR_TYPE_MAX   9
 
 #define RUMOR_HOURS_UNTIL_DELETE 300 /* How many hours rumors stay in
 				    existence before they start
@@ -30,7 +31,7 @@
 
 struct rumor_data
 {
-  int from;          /* What society caused the event to happen. */
+  int who;          /* What society caused the event to happen. */
   int to;            /* What the society acted upon. */
   RUMOR *next;
   RUMOR *prev;
@@ -84,7 +85,9 @@ char *show_random_quest_message(int); /* Pick a quest (resource) needed
 					 by an align/society and tell
 					 the player about it. */
 
-
+/* Returns a message saying that the society/align named name needs a
+   rawtype of type rawtype. */
+char *show_raw_need_message (char *name, int rawtype);
 /* This finds if a mort gets a rumor and sends the message to the mort. */
 
 void send_mortal_rumor (THING *); 
@@ -99,6 +102,9 @@ void share_rumors (THING *);
 void add_rumor_to_society (SOCIETY *, int vnum);
 
 
+/* This clears the rumor history file. */
+
+void clear_rumor_history (void);
 
 
 

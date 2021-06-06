@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include "serv.h"
 #include "track.h"
+#include "society.h"
 #include "worldgen.h"
 
 void
@@ -499,6 +500,8 @@ kill_exp (THING *killer, THING *vict)
 		  
 		  update_trophies (rth, vict, num_points, lev_helpers);
 		  update_kde (rth, KDE_UPDATE_PK);
+		  if (DIFF_ALIGN (rth->align, vict->align))
+		    society_somebody_give_reward (rth, LEVEL(vict)/5);
 		}
 	    }
 	}

@@ -57,3 +57,7 @@ void add_detail_resets (THING *area, THING *to, THING *detail_thing, int depth);
    proper name if needed. */
 
 void generate_detail_name (THING *proto, THING *target);
+
+/* This appends the word detail to a room name. */
+
+void append_detail_to_room_name (THING *room);

@@ -138,6 +138,8 @@ int lowest_vnum = 200000000;
 int top_clan[CLAN_MAX];
 int alliance[ALIGN_MAX];
 int top_spell = 0;
+int bfs_times_count = 1;
+int bfs_tracks_count = 0;
 int before_trig = TRIG_MOVING | TRIG_MOVED | TRIG_TAKEN_FROM | TRIG_LEAVE | TRIG_TAKEN;
 int after_trig = TRIG_GIVEN | TRIG_DROPPED | TRIG_GET | TRIG_ENTER | TRIG_ARRIVE;
 char *nonstr;
@@ -491,9 +493,11 @@ read_area (char *filename)
   add_events_to_thing (new_area);
   new_area->timer = nr (10, 20);
   /* Now make a new area thing referencing it and put the area into the world*/
-
+  
   FILE_READ_LOOP
     {
+      bool found_newthing = FALSE;
+      THING *newthingcheck;
       newthing = NULL; 
       FKEY_START;
       FKEY ("THING")
@@ -504,7 +508,23 @@ read_area (char *filename)
 	     and they check if a nonroom is inside of an area
 	     (i.e. if the thing is a prototype or not...so that
 	     those things don't get events. */
+	  
 	  thing_to (newthing, new_area);
+	 
+	  found_newthing = FALSE;
+	  for (newthingcheck = new_area->cont;
+	       newthingcheck; newthingcheck = newthingcheck->next_cont)
+	    {
+	      if (newthingcheck->vnum == newthing->vnum)
+		{
+		  found_newthing =TRUE;
+		  break;
+		}
+	    }
+	  if (!found_newthing)
+	    {
+	      fprintf (stderr, "NT %d\n", newthing->vnum);
+	    }
 	  add_thing_to_list (newthing);
 	}
       FKEY ("END_OF_AREA")

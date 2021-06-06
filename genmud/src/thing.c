@@ -104,10 +104,10 @@ new_thing (void)
   newthing->short_desc = nonstr;
   newthing->long_desc = nonstr;
   newthing->type = nonstr;
+  newthing->desc = nonstr;
   newthing->wear_pos = ITEM_WEAR_NONE;
   newthing->wear_loc = ITEM_WEAR_NONE;
   newthing->wear_num = ITEM_WEAR_NONE;
-  newthing->desc = nonstr;
   newthing->max_hp = 10;
   newthing->position = POSITION_STANDING;
   return (newthing);
@@ -585,7 +585,56 @@ find_thing_near (THING *th, char *arg, int range)
   return NULL;
 }
 
+/* This finds an enemy nearby...not necessarily in LOS range. */
 
+THING *
+find_enemy_nearby (THING *th, int max_depth)
+{
+  THING *enemy = NULL, *room, *nroom;
+  int i, dir, start_dir;
+
+  if (!th || !th->in)
+    return NULL;
+  
+  if (max_depth < 0)
+    max_depth = 0;
+  clear_bfs_list();
+  undo_marked (th->in);
+  add_bfs (NULL, th->in, REALDIR_MAX);
+  
+  while (bfs_curr)
+    { 
+      if ((room = bfs_curr->room) != NULL && IS_ROOM (room))
+	{
+	  for (enemy = room->cont; enemy; enemy = enemy->next_cont)
+	    {
+	      if (is_enemy (th, enemy))
+		break;
+	    }
+	}
+      if (enemy)
+	break;
+      
+      if (bfs_curr->depth > max_depth)
+	break;
+      start_dir = nr (0, REALDIR_MAX - 1);
+      for (i = 0; i < REALDIR_MAX; i++)
+	{
+	  dir = (i + start_dir) % REALDIR_MAX;
+	  if ((nroom = FTR (room, dir, th->move_flags)) != NULL)
+	    add_bfs (bfs_curr, nroom, dir);
+	}
+      bfs_curr = bfs_curr->next;
+    }
+  clear_bfs_list();
+  
+  if (enemy && is_enemy (th, enemy))
+    return enemy;
+  return NULL;
+}
+	      
+      
+  
 
 /* This searches for something either in the same place as the thing,
    or inside of the thing. */
@@ -1698,7 +1747,7 @@ do_sacrifice (THING *th, char *arg)
 	      act ("$F@1n tries to sacrifice @3n but the gods grant @3n mercy and send @3m home!$7", th, NULL, vict, NULL, TO_ALL);
 	      stt ("You have been spared by the gods!\n\r", vict);
 	      thing_to (vict, find_thing_num (vict->align + 100));
-	      afftype_remove (vict, 0, FLAG_PC1, PC_FREEZE);
+	      remove_flagval (vict, FLAG_PC1, PC_FREEZE);
 	    }
 	  else
 	    {
@@ -1947,7 +1996,7 @@ add_thing_to_list (THING *th)
     return;
   
   
-
+  
   if(!thing_hash[num] || 
      !thing_hash[num]->in  || !IS_AREA (thing_hash[num]->in))
     {

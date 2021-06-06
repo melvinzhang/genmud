@@ -10,7 +10,8 @@ mobdescgen.are
 socigen.are
 castegen.are
 areagen.are
-provisionegen.are
+provisiongen.are
+objgen.are
 organizations.are
 questgen.are
 historygen.are

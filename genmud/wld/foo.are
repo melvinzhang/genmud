@@ -1,0 +1,2219 @@
+THING 1200000
+Name dihhecundqz.are`
+Level 80
+HpMv 0 10 280 350
+HWT 0 0
+Timer 12
+Short The Warrens Of Gloom`
+Long Something moves close by.`
+type Lonath`
+ThFl 1089531
+Flag Room 0 0 4096
+Reset 1200295 100 1 1
+Reset 1200304 100 1 1
+Reset 1200310 100 1 1
+Reset 1200313 100 1 1
+Reset 1200314 100 1 1
+Reset 278 50 93 1
+END_THING
+
+THING 1200001
+Name north_edge`
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol -`
+ThFl 524779
+Val u_exit 200201 0 0 0 0 0 0 0 `
+Val e_exit 1200002 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200002
+Name north_edge`
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol -`
+ThFl 524779
+Val u_exit 200183 0 0 0 0 0 0 0 `
+Val e_exit 1200003 0 0 0 0 0 0 0 `
+Val w_exit 1200001 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200003
+Name north_edge`
+HWT 0 0
+Color 10
+Short A Fungus Dale`
+Symbol ,`
+ThFl 524779
+Val u_exit 200165 0 0 0 0 0 0 0 `
+Val s_exit 1200007 0 0 0 0 0 0 0 `
+Val e_exit 1200004 0 0 0 0 0 0 0 `
+Val w_exit 1200002 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200004
+Name north_edge`
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol +`
+ThFl 524779
+Val build 9 0 0 2 0 0 0 0 `
+Val s_exit 1200008 0 0 0 0 0 0 0 `
+Val e_exit 1200005 0 0 0 0 0 0 0 `
+Val w_exit 1200003 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200005
+Name north_edge`
+HWT 0 0
+Color 10
+Short A Fungus Dale`
+Symbol ,`
+ThFl 524779
+Val build 9 0 0 2 0 0 0 0 `
+Val u_exit 200202 0 0 0 0 0 0 0 `
+Val s_exit 1200009 0 0 0 0 0 0 0 `
+Val e_exit 1200006 0 0 0 0 0 0 0 `
+Val w_exit 1200004 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200006
+Name north_edge`
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol \`
+ThFl 524779
+Val build 9 0 0 2 0 0 0 0 `
+Val u_exit 200183 0 0 0 0 0 0 0 `
+Val s_exit 1200010 0 0 0 0 0 0 0 `
+Val w_exit 1200005 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200007
+HWT 0 0
+Color 10
+Short A Fungus Dale`
+Symbol ,`
+ThFl 524779
+Val build 9 0 9 0 0 0 0 0 `
+Val s_exit 1200014 0 0 0 0 0 0 0 `
+Val n_exit 1200003 0 0 0 0 0 0 0 `
+Val e_exit 1200008 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200008
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol +`
+ThFl 524779
+Val build 9 0 0 2 0 0 0 0 `
+Val s_exit 1200015 0 0 0 0 0 0 0 `
+Val n_exit 1200004 0 0 0 0 0 0 0 `
+Val e_exit 1200009 0 0 0 0 0 0 0 `
+Val w_exit 1200007 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200009
+HWT 0 0
+Color 10
+Short A Fungus Dale`
+Symbol ,`
+ThFl 524779
+Val build 9 0 0 2 0 0 0 0 `
+Val u_exit 200183 0 0 0 0 0 0 0 `
+Val s_exit 1200016 0 0 0 0 0 0 0 `
+Val n_exit 1200005 0 0 0 0 0 0 0 `
+Val e_exit 1200010 0 0 0 0 0 0 0 `
+Val w_exit 1200008 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200010
+HWT 0 0
+Color 10
+Short A Fungus Dale`
+Symbol ,`
+ThFl 524779
+Val build 9 0 0 2 0 0 0 0 `
+Val u_exit 200183 0 0 0 0 0 0 0 `
+Val s_exit 1200017 0 0 0 0 0 0 0 `
+Val n_exit 1200006 0 0 0 0 0 0 0 `
+Val w_exit 1200009 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200011
+HWT 0 0
+Color 12
+Short A Clean Underground River`
+Symbol #`
+ThFl 524779
+Val s_exit 1200019 0 0 0 0 0 0 0 `
+Val e_exit 1200012 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200012
+HWT 0 0
+Color 12
+Short A Clean Underground River`
+Symbol #`
+ThFl 524779
+Val e_exit 1200130 0 0 0 0 0 0 0 `
+Val w_exit 1200011 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200013
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol +`
+ThFl 524779
+Val build 9 1 0 0 0 0 0 0 `
+Val s_exit 1200020 0 0 0 0 0 0 0 `
+Val e_exit 1200014 0 0 0 0 0 0 0 `
+Val w_exit 1200012 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200014
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol +`
+ThFl 524779
+Val build 9 1 0 2 0 0 0 0 `
+Val n_exit 1200007 0 0 0 0 0 0 0 `
+Val e_exit 1200015 0 0 0 0 0 0 0 `
+Val w_exit 1200013 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200015
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol +`
+ThFl 524779
+Val build 9 0 0 2 0 0 0 0 `
+Val n_exit 1200008 0 0 0 0 0 0 0 `
+Val e_exit 1200016 0 0 0 0 0 0 0 `
+Val w_exit 1200014 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200016
+HWT 0 0
+Color 10
+Short A Fungus Dale`
+Symbol ,`
+ThFl 524779
+Val build 9 0 0 2 0 0 0 0 `
+Val u_exit 200145 0 0 0 0 0 0 0 `
+Val n_exit 1200009 0 0 0 0 0 0 0 `
+Val e_exit 1200017 0 0 0 0 0 0 0 `
+Val w_exit 1200015 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+Reset 1200291 100 1 1
+END_THING
+
+THING 1200017
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol /`
+ThFl 524779
+Val build 9 0 0 2 0 0 0 0 `
+Val n_exit 1200010 0 0 0 0 0 0 0 `
+Val w_exit 1200016 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200018
+HWT 0 0
+Color 12
+Short A Clean Underground River`
+Symbol #`
+ThFl 524779
+Val s_exit 1200131 0 0 0 0 0 0 0 `
+Val e_exit 1200019 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200019
+HWT 0 0
+Color 12
+Short A Clean Underground River`
+Symbol #`
+ThFl 524779
+Val s_exit 1200132 0 0 0 0 0 0 0 `
+Val n_exit 1200011 0 0 0 0 0 0 0 `
+Val w_exit 1200018 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200020
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol |`
+ThFl 524779
+Val build 9 1 0 16 0 0 0 0 `
+Val s_exit 1200025 0 0 0 0 0 0 0 `
+Val n_exit 1200013 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+Reset 1200286 100 1 1
+END_THING
+
+THING 1200021
+Name west_edge`
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol -`
+ThFl 524779
+Val build 9 0 0 4 0 0 0 0 `
+Val e_exit 1200022 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200022
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol +`
+ThFl 524779
+Val build 9 0 1 4 0 0 0 0 `
+Val n_exit 1200018 0 0 0 0 0 0 0 `
+Val e_exit 1200023 0 0 0 0 0 0 0 `
+Val w_exit 1200021 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200023
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol +`
+ThFl 524779
+Val build 9 1 0 4 0 0 0 0 `
+Val s_exit 1200026 0 0 0 0 0 0 0 `
+Val n_exit 1200019 0 0 0 0 0 0 0 `
+Val e_exit 1200024 0 0 0 0 0 0 0 `
+Val w_exit 1200022 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200024
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol +`
+ThFl 524779
+Val build 9 1 0 4 0 0 0 0 `
+Val s_exit 1200027 0 0 0 0 0 0 0 `
+Val e_exit 1200025 0 0 0 0 0 0 0 `
+Val w_exit 1200023 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200025
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol {`
+ThFl 524779
+Val build 9 1 0 16 0 0 0 0 `
+Val s_exit 1200028 0 0 0 0 0 0 0 `
+Val n_exit 1200020 0 0 0 0 0 0 0 `
+Val w_exit 1200024 0 0 0 0 0 0 0 `
+Flag Room 0 0 37632
+END_THING
+
+THING 1200026
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol \`
+ThFl 524779
+Val build 9 2 0 4 0 0 0 0 `
+Val n_exit 1200023 0 0 0 0 0 0 0 `
+Val e_exit 1200027 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200027
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol +`
+ThFl 524779
+Val build 9 1 0 4 0 0 0 0 `
+Val n_exit 1200024 0 0 0 0 0 0 0 `
+Val e_exit 1200028 0 0 0 0 0 0 0 `
+Val w_exit 1200026 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200028
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol +`
+ThFl 524779
+Val build 9 1 0 0 0 0 0 0 `
+Val n_exit 1200025 0 0 0 0 0 0 0 `
+Val e_exit 1200029 0 0 0 0 0 0 0 `
+Val w_exit 1200027 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200029
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol +`
+ThFl 524779
+Val build 9 2 0 8 0 0 0 0 `
+Val s_exit 1200035 0 0 0 0 0 0 0 `
+Val e_exit 1200030 0 0 0 0 0 0 0 `
+Val w_exit 1200028 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200030
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol -`
+ThFl 524779
+Val build 9 2 0 0 0 0 0 0 `
+Val e_exit 1200031 0 0 0 0 0 0 0 `
+Val w_exit 1200029 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200031
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol +`
+ThFl 524779
+Val build 9 2 0 512 0 0 0 0 `
+Val s_exit 1200036 0 0 0 0 0 0 0 `
+Val e_exit 1200032 0 0 0 0 0 0 0 `
+Val w_exit 1200030 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200032
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol \`
+ThFl 524779
+Val build 9 1 0 512 0 0 0 0 `
+Val u_exit 200182 0 0 0 0 0 0 0 `
+Val s_exit 1200037 0 0 0 0 0 0 0 `
+Val w_exit 1200031 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200033
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol -`
+ThFl 524779
+Val build 9 0 0 0 0 0 0 0 `
+Val u_exit 200164 0 0 0 0 0 0 0 `
+Val e_exit 1200034 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200034
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol \`
+ThFl 524779
+Val build 9 0 0 0 0 0 0 0 `
+Val u_exit 200201 0 0 0 0 0 0 0 `
+Val s_exit 1200039 0 0 0 0 0 0 0 `
+Val w_exit 1200033 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200035
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol |`
+ThFl 524779
+Val build 9 2 0 8 0 0 0 0 `
+Val s_exit 1200043 0 0 0 0 0 0 0 `
+Val n_exit 1200029 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200036
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol }`
+ThFl 524779
+Val build 9 2 0 512 0 0 0 0 `
+Val s_exit 1200044 0 0 0 0 0 0 0 `
+Val n_exit 1200031 0 0 0 0 0 0 0 `
+Val e_exit 1200037 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200037
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol +`
+ThFl 524779
+Val build 9 1 0 512 0 0 0 0 `
+Val s_exit 1200045 0 0 0 0 0 0 0 `
+Val n_exit 1200032 0 0 0 0 0 0 0 `
+Val e_exit 1200038 0 0 0 0 0 0 0 `
+Val w_exit 1200036 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200038
+Name detail`
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol \`
+ThFl 524779
+Val build 9 0 0 0 0 0 0 0 `
+Val u_exit 200145 0 0 0 0 0 0 0 `
+Val s_exit 1200046 0 0 0 0 0 0 0 `
+Val w_exit 1200037 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200039
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol }`
+ThFl 524779
+Val build 9 0 0 1 0 0 0 0 `
+Val s_exit 1200049 0 0 0 0 0 0 0 `
+Val n_exit 1200034 0 0 0 0 0 0 0 `
+Val e_exit 1200040 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200040
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol \`
+ThFl 524779
+Val build 9 0 0 1 0 0 0 0 `
+Val s_exit 1200050 0 0 0 0 0 0 0 `
+Val u_exit 1200041 0 0 0 0 0 0 0 `
+Val w_exit 1200039 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200041
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol -`
+ThFl 524779
+Val build 9 0 0 0 0 0 0 0 `
+Val u_exit 200183 0 0 0 0 0 0 0 `
+Val d_exit 1200040 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200042
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol -`
+ThFl 524779
+Val build 9 1 0 8 0 0 0 0 `
+Val u_exit 200164 0 0 0 0 0 0 0 `
+Val e_exit 1200043 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200043
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol /`
+ThFl 524779
+Val build 9 2 0 8 0 0 0 0 `
+Val u_exit 200181 0 0 0 0 0 0 0 `
+Val n_exit 1200035 0 0 0 0 0 0 0 `
+Val w_exit 1200042 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200044
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol }`
+ThFl 524779
+Val build 9 1 0 512 0 0 0 0 `
+Val s_exit 1200051 0 0 0 0 0 0 0 `
+Val n_exit 1200036 0 0 0 0 0 0 0 `
+Val e_exit 1200045 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200045
+Name detail`
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol +`
+ThFl 524779
+Val build 9 0 6 512 0 0 0 0 `
+Val u_exit 200202 0 0 0 0 0 0 0 `
+Val s_exit 1200052 0 0 0 0 0 0 0 `
+Val n_exit 1200037 0 0 0 0 0 0 0 `
+Val e_exit 1200046 0 0 0 0 0 0 0 `
+Val w_exit 1200044 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200046
+Name detail`
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol +`
+ThFl 524779
+Val build 9 0 0 512 0 0 0 0 `
+Val u_exit 200241 0 0 0 0 0 0 0 `
+Val n_exit 1200038 0 0 0 0 0 0 0 `
+Val e_exit 1200047 0 0 0 0 0 0 0 `
+Val w_exit 1200045 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+Reset 1200282 100 1 1
+Reset 1200281 100 1 1
+END_THING
+
+THING 1200047
+Name detail`
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol \`
+ThFl 524779
+Val build 9 0 1 0 0 0 0 0 `
+Val s_exit 1200053 0 0 0 0 0 0 0 `
+Val w_exit 1200046 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200048
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol /`
+ThFl 524779
+Val build 9 0 0 1 0 0 0 0 `
+Val u_exit 200164 7 7 50 50 0 0 0 LostArch`
+Val s_exit 1200055 0 0 0 0 0 0 0 `
+Val e_exit 1200049 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200049
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol +`
+ThFl 524779
+Val build 9 0 0 1 0 0 0 0 `
+Val n_exit 1200039 0 0 0 0 0 0 0 `
+Val e_exit 1200050 0 0 0 0 0 0 0 `
+Val w_exit 1200048 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200050
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol /`
+ThFl 524779
+Val build 9 0 0 0 0 0 0 0 `
+Val u_exit 200164 0 0 0 0 0 0 0 `
+Val n_exit 1200040 0 0 0 0 0 0 0 `
+Val w_exit 1200049 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200051
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol }`
+ThFl 524779
+Val build 9 0 7 512 0 0 0 0 `
+Val s_exit 1200056 0 0 0 0 0 0 0 `
+Val n_exit 1200044 0 0 0 0 0 0 0 `
+Val e_exit 1200052 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200052
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol {`
+ThFl 524779
+Val build 9 0 0 512 0 0 0 0 `
+Val s_exit 1200057 0 0 0 0 0 0 0 `
+Val n_exit 1200045 0 0 0 0 0 0 0 `
+Val w_exit 1200051 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200053
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol }`
+ThFl 524779
+Val build 9 1 0 1 0 0 0 0 `
+Val s_exit 1200059 0 0 0 0 0 0 0 `
+Val n_exit 1200047 0 0 0 0 0 0 0 `
+Val e_exit 1200054 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200054
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol +`
+ThFl 524779
+Val build 9 0 0 1 0 0 0 0 `
+Val u_exit 200201 0 0 0 0 0 0 0 `
+Val s_exit 1200060 0 0 0 0 0 0 0 `
+Val e_exit 1200055 0 0 0 0 0 0 0 `
+Val w_exit 1200053 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200055
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol {`
+ThFl 524779
+Val build 9 0 0 1 0 0 0 0 `
+Val u_exit 200241 0 0 0 0 0 0 0 `
+Val s_exit 1200061 0 0 0 0 0 0 0 `
+Val n_exit 1200048 0 0 0 0 0 0 0 `
+Val w_exit 1200054 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200056
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol }`
+ThFl 524779
+Val build 9 0 0 512 0 0 0 0 `
+Val s_exit 1200071 0 0 0 0 0 0 0 `
+Val n_exit 1200051 0 0 0 0 0 0 0 `
+Val e_exit 1200057 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200057
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol +`
+ThFl 524779
+Val build 9 0 0 512 0 0 0 0 `
+Val s_exit 1200072 0 0 0 0 0 0 0 `
+Val n_exit 1200052 0 0 0 0 0 0 0 `
+Val e_exit 1200058 0 0 0 0 0 0 0 `
+Val w_exit 1200056 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200058
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol -`
+ThFl 524779
+Val build 9 1 0 512 0 0 0 0 `
+Val e_exit 1200059 0 0 0 0 0 0 0 `
+Val w_exit 1200057 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200059
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol +`
+ThFl 524779
+Val build 9 1 0 0 0 0 0 0 `
+Val s_exit 1200073 0 0 0 0 0 0 0 `
+Val n_exit 1200053 0 0 0 0 0 0 0 `
+Val e_exit 1200060 0 0 0 0 0 0 0 `
+Val w_exit 1200058 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200060
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol +`
+ThFl 524779
+Val build 9 0 0 1 0 0 0 0 `
+Val s_exit 1200074 0 0 0 0 0 0 0 `
+Val n_exit 1200054 0 0 0 0 0 0 0 `
+Val e_exit 1200061 0 0 0 0 0 0 0 `
+Val w_exit 1200059 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200061
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol +`
+ThFl 524779
+Val build 9 0 0 1 0 0 0 0 `
+Val s_exit 1200075 0 0 0 0 0 0 0 `
+Val n_exit 1200055 0 0 0 0 0 0 0 `
+Val e_exit 1200062 0 0 0 0 0 0 0 `
+Val w_exit 1200060 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200062
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol +`
+ThFl 524779
+Val build 9 0 0 1 0 0 0 0 `
+Val s_exit 1200076 0 0 0 0 0 0 0 `
+Val e_exit 1200063 0 0 0 0 0 0 0 `
+Val w_exit 1200061 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200063
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol -`
+ThFl 524779
+Val build 9 0 0 0 0 0 0 0 `
+Val e_exit 1200064 0 0 0 0 0 0 0 `
+Val w_exit 1200062 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200064
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol \`
+ThFl 524779
+Val build 9 0 0 0 0 0 0 0 `
+Val s_exit 1200077 0 0 0 0 0 0 0 `
+Val w_exit 1200063 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200065
+HWT 0 0
+Color 2
+Short A Mushroom Wooded Area`
+Symbol *`
+ThFl 524779
+Val build 9 0 0 0 0 0 0 0 `
+Val s_exit 1200079 0 0 0 0 0 0 0 `
+Val e_exit 1200066 0 0 0 0 0 0 0 `
+Flag Room 0 0 135168
+END_THING
+
+THING 1200066
+HWT 0 0
+Color 2
+Short A Mushroom Wooded Area`
+Symbol *`
+ThFl 524779
+Val build 9 0 0 32 0 0 0 0 `
+Val s_exit 1200080 0 0 0 0 0 0 0 `
+Val e_exit 1200067 0 0 0 0 0 0 0 `
+Val w_exit 1200065 0 0 0 0 0 0 0 `
+Flag Room 0 0 135168
+END_THING
+
+THING 1200067
+HWT 0 0
+Color 6
+Short A Tall Bridge Across A Small Underground Deep`
+Symbol -`
+ThFl 524779
+Val build 9 0 0 32 0 0 0 0 `
+Val e_exit 1200068 0 0 0 0 0 0 0 `
+Val w_exit 1200066 0 0 0 0 0 0 0 `
+Flag Room 0 0 37632
+END_THING
+
+THING 1200068
+HWT 0 0
+Color 6
+Short A Tall Bridge Across A Small Underground Deep`
+Symbol -`
+ThFl 524779
+Val build 9 0 0 32 0 0 0 0 `
+Val e_exit 1200069 0 0 0 0 0 0 0 `
+Val w_exit 1200067 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200069
+HWT 0 0
+Color 6
+Short A Tall Bridge Across A Small Underground Deep`
+Symbol -`
+ThFl 524779
+Val build 9 0 0 0 0 0 0 0 `
+Val e_exit 1200070 0 0 0 0 0 0 0 `
+Val w_exit 1200068 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200070
+HWT 0 0
+Color 2
+Short A Mushroom Wooded Area`
+Symbol *`
+ThFl 524779
+Val build 9 0 0 0 0 0 0 0 `
+Val s_exit 1200081 0 0 0 0 0 0 0 `
+Val e_exit 1200071 0 0 0 0 0 0 0 `
+Val w_exit 1200069 0 0 0 0 0 0 0 `
+Flag Room 0 0 135168
+END_THING
+
+THING 1200071
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol +`
+ThFl 524779
+Val build 9 0 0 0 0 0 0 0 `
+Val s_exit 1200082 0 0 0 0 0 0 0 `
+Val n_exit 1200056 0 0 0 0 0 0 0 `
+Val e_exit 1200072 0 0 0 0 0 0 0 `
+Val w_exit 1200070 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200072
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol {`
+ThFl 524779
+Val build 9 0 0 0 0 0 0 0 `
+Val u_exit 200202 0 0 0 0 0 0 0 `
+Val s_exit 1200083 0 0 0 0 0 0 0 `
+Val n_exit 1200057 0 0 0 0 0 0 0 `
+Val w_exit 1200071 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200073
+HWT 0 0
+Color 10
+Short A Fungus Field`
+Symbol ,`
+ThFl 524779
+Val build 9 0 0 1 0 0 0 0 `
+Val s_exit 1200085 0 0 0 0 0 0 0 `
+Val n_exit 1200059 0 0 0 0 0 0 0 `
+Val e_exit 1200074 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200074
+HWT 0 0
+Color 10
+Short A Fungus Field`
+Symbol ,`
+ThFl 524779
+Val build 9 0 0 1 0 0 0 0 `
+Val u_exit 200182 0 0 0 0 0 0 0 `
+Val n_exit 1200060 0 0 0 0 0 0 0 `
+Val e_exit 1200075 0 0 0 0 0 0 0 `
+Val w_exit 1200073 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200075
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol +`
+ThFl 524779
+Val build 9 0 0 1 0 0 0 0 `
+Val s_exit 1200086 0 0 0 0 0 0 0 `
+Val n_exit 1200061 0 0 0 0 0 0 0 `
+Val e_exit 1200076 0 0 0 0 0 0 0 `
+Val w_exit 1200074 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200076
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol {`
+ThFl 524779
+Val build 9 0 0 1 0 0 0 0 `
+Val u_exit 200181 0 0 0 0 0 0 0 `
+Val s_exit 1200087 0 0 0 0 0 0 0 `
+Val n_exit 1200062 0 0 0 0 0 0 0 `
+Val w_exit 1200075 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200077
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol \`
+ThFl 524779
+Val n_exit 1200064 0 0 0 0 0 0 0 `
+Val e_exit 1200078 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200078
+Name east_edge`
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol +`
+ThFl 524779
+Val e_exit 1200467 0 0 0 0 0 0 0 `
+Val s_exit 1200088 0 0 0 0 0 0 0 `
+Val w_exit 1200077 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+Reset 1200290 100 1 1
+END_THING
+
+THING 1200079
+HWT 0 0
+Color 2
+Short A Mushroom Wooded Area`
+Symbol *`
+ThFl 524779
+Val n_exit 1200065 0 0 0 0 0 0 0 `
+Val e_exit 1200080 0 0 0 0 0 0 0 `
+Flag Room 0 0 135168
+END_THING
+
+THING 1200080
+HWT 0 0
+Color 12
+Short A Murmuring Underground River`
+Symbol #`
+ThFl 524779
+Val s_exit 1200089 0 0 0 0 0 0 0 `
+Val n_exit 1200066 0 0 0 0 0 0 0 `
+Val w_exit 1200079 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200081
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol }`
+ThFl 524779
+Val s_exit 1200092 0 0 0 0 0 0 0 `
+Val n_exit 1200070 0 0 0 0 0 0 0 `
+Val e_exit 1200082 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200082
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol +`
+ThFl 524779
+Val n_exit 1200071 0 0 0 0 0 0 0 `
+Val e_exit 1200083 0 0 0 0 0 0 0 `
+Val w_exit 1200081 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200083
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol +`
+ThFl 524779
+Val s_exit 1200093 0 0 0 0 0 0 0 `
+Val n_exit 1200072 0 0 0 0 0 0 0 `
+Val e_exit 1200084 0 0 0 0 0 0 0 `
+Val w_exit 1200082 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200084
+HWT 0 0
+Color 6
+Short A Broken Road`
+Symbol -`
+ThFl 524779
+Val e_exit 1200085 0 0 0 0 0 0 0 `
+Val w_exit 1200083 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+Reset 1200309 100 1 1
+END_THING
+
+THING 1200085
+HWT 0 0
+Color 6
+Short A Broken Road`
+Symbol {`
+ThFl 524779
+Val s_exit 1200094 0 0 0 0 0 0 0 `
+Val n_exit 1200073 0 0 0 0 0 0 0 `
+Val w_exit 1200084 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+Reset 1200283 100 1 1
+END_THING
+
+THING 1200086
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol }`
+ThFl 524779
+Val u_exit 200145 0 0 0 0 0 0 0 `
+Val s_exit 1200096 0 0 0 0 0 0 0 `
+Val n_exit 1200075 0 0 0 0 0 0 0 `
+Val e_exit 1200087 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200087
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol {`
+ThFl 524779
+Val u_exit 200182 0 0 0 0 0 0 0 `
+Val s_exit 1200097 0 0 0 0 0 0 0 `
+Val n_exit 1200076 0 0 0 0 0 0 0 `
+Val w_exit 1200086 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200088
+Name east_edge`
+HWT 0 0
+Color 6
+Short A Broken Highway`
+Symbol }`
+ThFl 524779
+Val e_exit 1200484 0 0 0 0 0 0 0 `
+Val s_exit 1200100 0 0 0 0 0 0 0 `
+Val n_exit 1200078 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200089
+HWT 0 0
+Color 12
+Short A Trickling Underground Lake`
+Symbol #`
+ThFl 524779
+Val n_exit 1200080 0 0 0 0 0 0 0 `
+Val e_exit 1200090 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200090
+HWT 0 0
+Color 12
+Short A Trickling Underground Lake`
+Symbol #`
+ThFl 524779
+Val s_exit 1200101 0 0 0 0 0 0 0 `
+Val e_exit 1200091 0 0 0 0 0 0 0 `
+Val w_exit 1200089 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200091
+HWT 0 0
+Color 12
+Short A Trickling Underground Lake`
+Symbol #`
+ThFl 524779
+Val s_exit 1200102 0 0 0 0 0 0 0 `
+Val w_exit 1200090 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200092
+HWT 0 0
+Color 10
+Short A Mushroom Dale`
+Symbol ,`
+ThFl 524779
+Val u_exit 200257 7 7 50 50 0 0 0 MoldyBoulder`
+Val s_exit 1200103 0 0 0 0 0 0 0 `
+Val n_exit 1200081 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200093
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol |`
+ThFl 524779
+Val s_exit 1200105 0 0 0 0 0 0 0 `
+Val n_exit 1200083 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200094
+HWT 0 0
+Color 6
+Short A Broken Road`
+Symbol \`
+ThFl 524779
+Val n_exit 1200085 0 0 0 0 0 0 0 `
+Val e_exit 1200095 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200095
+HWT 0 0
+Color 6
+Short A Broken Road`
+Symbol +`
+ThFl 524779
+Val s_exit 1200107 0 0 0 0 0 0 0 `
+Val e_exit 1200096 0 0 0 0 0 0 0 `
+Val w_exit 1200094 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+Reset 1200299 100 1 1
+END_THING
+
+THING 1200096
+HWT 0 0
+Color 6
+Short A Broken Road`
+Symbol +`
+ThFl 524779
+Val n_exit 1200086 0 0 0 0 0 0 0 `
+Val e_exit 1200097 0 0 0 0 0 0 0 `
+Val w_exit 1200095 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200097
+HWT 0 0
+Color 6
+Short A Broken Road`
+Symbol +`
+ThFl 524779
+Val n_exit 1200087 0 0 0 0 0 0 0 `
+Val e_exit 1200098 0 0 0 0 0 0 0 `
+Val w_exit 1200096 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200098
+HWT 0 0
+Color 6
+Short A Broken Road`
+Symbol -`
+ThFl 524779
+Val e_exit 1200099 0 0 0 0 0 0 0 `
+Val w_exit 1200097 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200099
+HWT 0 0
+Color 6
+Short A Broken Road`
+Symbol +`
+ThFl 524779
+Val s_exit 1200108 0 0 0 0 0 0 0 `
+Val e_exit 1200100 0 0 0 0 0 0 0 `
+Val w_exit 1200098 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200100
+Name east_edge`
+HWT 0 0
+Color 6
+Short A Broken Road`
+Symbol +`
+ThFl 524779
+Val e_exit 1200503 0 0 0 0 0 0 0 `
+Val n_exit 1200088 0 0 0 0 0 0 0 `
+Val w_exit 1200099 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200101
+HWT 0 0
+Color 12
+Short A Trickling Underground Lake`
+Symbol #`
+ThFl 524779
+Val s_exit 1200110 0 0 0 0 0 0 0 `
+Val n_exit 1200090 0 0 0 0 0 0 0 `
+Val e_exit 1200102 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200102
+HWT 0 0
+Color 12
+Short A Trickling Underground Lake`
+Symbol #`
+ThFl 524779
+Val s_exit 1200111 0 0 0 0 0 0 0 `
+Val n_exit 1200091 0 0 0 0 0 0 0 `
+Val w_exit 1200101 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200103
+HWT 0 0
+Color 12
+Short A Babbling Subterranean Pond`
+Symbol #`
+ThFl 524779
+Val s_exit 1200113 0 0 0 0 0 0 0 `
+Val n_exit 1200092 0 0 0 0 0 0 0 `
+Val e_exit 1200104 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200104
+HWT 0 0
+Color 12
+Short A Babbling Subterranean Pond`
+Symbol #`
+ThFl 524779
+Val e_exit 1200133 0 0 0 0 0 0 0 `
+Val w_exit 1200103 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200105
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol +`
+ThFl 524779
+Val s_exit 1200114 0 0 0 0 0 0 0 `
+Val n_exit 1200093 0 0 0 0 0 0 0 `
+Val e_exit 1200106 0 0 0 0 0 0 0 `
+Val w_exit 1200104 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200106
+HWT 0 0
+Color 2
+Short A Fungus Group Of Trees`
+Symbol *`
+ThFl 524779
+Val w_exit 1200105 0 0 0 0 0 0 0 `
+Flag Room 0 0 135168
+END_THING
+
+THING 1200107
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol |`
+ThFl 524779
+Val u_exit 200164 0 0 0 0 0 0 0 `
+Val n_exit 1200095 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200108
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol |`
+ThFl 524779
+Val n_exit 1200099 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200109
+HWT 0 0
+Color 12
+Short A Trickling Underground Lake`
+Symbol #`
+ThFl 524779
+Val s_exit 1200115 0 0 0 0 0 0 0 `
+Val e_exit 1200110 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200110
+HWT 0 0
+Color 12
+Short A Trickling Underground Lake`
+Symbol #`
+ThFl 524779
+Val s_exit 1200134 0 0 0 0 0 0 0 `
+Val n_exit 1200101 0 0 0 0 0 0 0 `
+Val e_exit 1200111 0 0 0 0 0 0 0 `
+Val w_exit 1200109 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200111
+HWT 0 0
+Color 12
+Short A Trickling Underground Lake`
+Symbol #`
+ThFl 524779
+Val s_exit 1200117 0 0 0 0 0 0 0 `
+Val n_exit 1200102 0 0 0 0 0 0 0 `
+Val e_exit 1200112 0 0 0 0 0 0 0 `
+Val w_exit 1200110 0 0 0 0 0 0 0 `
+Flag Room 0 0 4098
+END_THING
+
+THING 1200112
+HWT 0 0
+Color 10
+Short A Mushroom Dale`
+Symbol ,`
+ThFl 524779
+Val s_exit 1200118 0 0 0 0 0 0 0 `
+Val e_exit 1200113 0 0 0 0 0 0 0 `
+Val w_exit 1200111 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200113
+HWT 0 0
+Color 10
+Short A Mushroom Dale`
+Symbol ,`
+ThFl 524779
+Val s_exit 1200119 0 0 0 0 0 0 0 `
+Val n_exit 1200103 0 0 0 0 0 0 0 `
+Val w_exit 1200112 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200114
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol |`
+ThFl 524779
+Val s_exit 1200121 0 0 0 0 0 0 0 `
+Val n_exit 1200105 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200115
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol \`
+ThFl 524779
+Val n_exit 1200109 0 0 0 0 0 0 0 `
+Val e_exit 1200116 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200116
+HWT 0 0
+Color 6
+Short A Weathered Raised walkway Across A Trickling Underground Lake`
+Symbol +`
+ThFl 524779
+Val s_exit 1200122 0 0 0 0 0 0 0 `
+Val n_exit 1200110 0 0 0 0 0 0 0 `
+Val e_exit 1200117 0 0 0 0 0 0 0 `
+Val w_exit 1200115 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200117
+HWT 0 0
+Color 10
+Short A Mushroom Dale`
+Symbol ,`
+ThFl 524779
+Val s_exit 1200123 0 0 0 0 0 0 0 `
+Val n_exit 1200111 0 0 0 0 0 0 0 `
+Val e_exit 1200118 0 0 0 0 0 0 0 `
+Val w_exit 1200116 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200118
+HWT 0 0
+Color 10
+Short A Mushroom Dale`
+Symbol ,`
+ThFl 524779
+Val u_exit 200183 0 0 0 0 0 0 0 `
+Val n_exit 1200112 0 0 0 0 0 0 0 `
+Val e_exit 1200119 0 0 0 0 0 0 0 `
+Val w_exit 1200117 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200119
+HWT 0 0
+Color 10
+Short A Mushroom Dale`
+Symbol ,`
+ThFl 524779
+Val u_exit 200182 0 0 0 0 0 0 0 `
+Val n_exit 1200113 0 0 0 0 0 0 0 `
+Val e_exit 1200120 0 0 0 0 0 0 0 `
+Val w_exit 1200118 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200120
+HWT 0 0
+Color 10
+Short A Mushroom Dale`
+Symbol ,`
+ThFl 524779
+Val u_exit 200165 0 0 0 0 0 0 0 `
+Val s_exit 1200124 0 0 0 0 0 0 0 `
+Val e_exit 1200121 0 0 0 0 0 0 0 `
+Val w_exit 1200119 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200121
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol {`
+ThFl 524779
+Val s_exit 1200125 0 0 0 0 0 0 0 `
+Val n_exit 1200114 0 0 0 0 0 0 0 `
+Val w_exit 1200120 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200122
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol \`
+ThFl 524779
+Val n_exit 1200116 0 0 0 0 0 0 0 `
+Val e_exit 1200123 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200123
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol /`
+ThFl 524779
+Val u_exit 200241 0 0 0 0 0 0 0 `
+Val n_exit 1200117 0 0 0 0 0 0 0 `
+Val w_exit 1200122 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200124
+HWT 0 0
+Color 10
+Short A Mushroom Dale`
+Symbol ,`
+ThFl 524779
+Val n_exit 1200120 0 0 0 0 0 0 0 `
+Val e_exit 1200125 0 0 0 0 0 0 0 `
+Flag Room 0 0 266240
+END_THING
+
+THING 1200125
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol {`
+ThFl 524779
+Val s_exit 1200126 0 0 0 0 0 0 0 `
+Val n_exit 1200121 0 0 0 0 0 0 0 `
+Val w_exit 1200124 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200126
+Name south_edge`
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol \`
+ThFl 524779
+Val n_exit 1200125 0 0 0 0 0 0 0 `
+Val e_exit 1200127 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200127
+Name south_edge`
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol -`
+ThFl 524779
+Val e_exit 1200128 0 0 0 0 0 0 0 `
+Val w_exit 1200126 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200128
+Name south_edge`
+HWT 0 0
+Color 6
+Short A Well-used Road`
+Symbol -`
+ThFl 524779
+Val e_exit 1200129 0 0 0 0 0 0 0 `
+Val w_exit 1200127 0 0 0 0 0 0 0 `
+Flag Room 0 0 36864
+END_THING
+
+THING 1200129
+Name south_edge`
+HWT 0 0
+Color 8
+Short The Warrens Of Gloom`
+Symbol -`
+ThFl 524779
+Val u_exit 200165 0 0 0 0 0 0 0 `
+Val w_exit 1200128 0 0 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200130
+HWT 0 0
+Color 12
+Short Under A Well-used Road`
+Symbol #`
+ThFl 524779
+Val u_exit 1200013 0 0 0 0 0 0 0 `
+Val w_exit 1200012 0 0 0 0 0 0 0 `
+Flag Room 0 0 536870914
+END_THING
+
+THING 1200131
+HWT 0 0
+Color 12
+Short Underneath A Broken Highway`
+Symbol #`
+ThFl 524779
+Val e_exit 1200132 0 0 0 0 0 0 0 `
+Val u_exit 1200022 0 0 0 0 0 0 0 `
+Val n_exit 1200018 0 0 0 0 0 0 0 `
+Flag Room 0 0 536870914
+END_THING
+
+THING 1200132
+HWT 0 0
+Color 12
+Short Underneath A Broken Highway`
+Symbol #`
+ThFl 524779
+Val w_exit 1200131 0 0 0 0 0 0 0 `
+Val u_exit 1200023 0 0 0 0 0 0 0 `
+Val n_exit 1200019 0 0 0 0 0 0 0 `
+Flag Room 0 0 536870914
+END_THING
+
+THING 1200133
+HWT 0 0
+Color 12
+Short Underneath A Well-used Road`
+Symbol #`
+ThFl 524779
+Val u_exit 1200105 0 0 0 0 0 0 0 `
+Val w_exit 1200104 0 0 0 0 0 0 0 `
+Flag Room 0 0 536870914
+END_THING
+
+THING 1200134
+HWT 0 0
+Color 12
+Short Underneath A Weathered Raised walkway Across A Trickling Underground Lake`
+Symbol #`
+ThFl 524779
+Val u_exit 1200116 0 0 0 0 0 0 0 `
+Val n_exit 1200110 0 0 0 0 0 0 0 `
+Flag Room 0 0 536870914
+END_THING
+
+THING 1200281
+Name flitting leprechaun`
+Level 94
+HWT 0 0
+Short a flitting leprechaun`
+MIW 1
+Long There is a flitting leprechaun here.`
+ThFl 2209
+Flag Det 0 0 5
+END_THING
+
+THING 1200282
+Name happy nymph`
+Level 73
+HWT 0 0
+Short a happy nymph`
+MIW 1
+Long There appears to be a happy nymph here.`
+ThFl 2209
+Flag Det 0 0 5
+END_THING
+
+THING 1200283
+Name Itwoh Forest Gnome guard`
+Level 71
+HWT 0 0
+Short Itwoh the Forest Gnome guard`
+MIW 1
+Long Itwoh the Forest Gnome guard is here.`
+Sex 2
+ThFl 2209
+Val money 6 1 3 0 0 0 0 0 `
+Flag Room 0 0 4096
+Reset 279 20 3 1
+Reset 1200284 20 1 1
+Reset 1200285 25 1 1
+END_THING
+
+THING 1200284
+Name druidic beryl vambraces`
+Level 60
+HWT 30 16
+Cost 3600
+Short a pair of druidic $Bberyl$7 vambraces`
+Wear arms`
+Long A pair of druidic $Bberyl$7 vambraces has been abandoned here.`
+ThFl 100934
+Val armor 0 0 8 0 0 0 -1 0 `
+Flag mv 0 0 7
+END_THING
+
+THING 1200285
+Name turquoise onyx short sword`
+Level 51
+HWT 29 81
+Cost 2601
+Short a $Ftur$Equoise$7$7-encrusted $8onyx$7 short sword`
+Wear wield`
+Long A $Ftur$Equoise$7$7-encrusted $8onyx$7 short sword has been left here.`
+ThFl 100934
+Val weapon 3 8 0 0 0 0 0 0 `
+Flag hp 0 0 7
+END_THING
+
+THING 1200286
+Name Uwew Mountain Troll bard`
+Level 62
+HWT 0 0
+Short Uwew the Mountain Troll bard`
+MIW 1
+Long Uwew the Mountain Troll bard is here.`
+Sex 2
+ThFl 2209
+Val money 0 1 1 0 0 0 0 0 `
+Flag Room 0 0 4096
+Reset 271 20 5 1
+Reset 279 20 3 1
+Reset 1200287 16 1 1
+Reset 1200288 18 1 1
+Reset 1200289 11 1 1
+END_THING
+
+THING 1200287
+Name azure boots brilliance`
+Level 69
+HWT 12 16
+Cost 4761
+Short some $Cazure$7 boots of brilliance`
+Wear feet`
+Long Some $Cazure$7 boots of brilliance was left here by somebody.`
+ThFl 100934
+Val armor 0 0 0 9 0 0 1 0 `
+Flag Obj 0 0 4
+Flag mv 0 0 11
+Flag hp 0 0 7
+END_THING
+
+THING 1200288
+Name zircon war greaves`
+Level 65
+HWT 15 16
+Cost 4225
+Short a pair of $Fzircon$7 war greaves`
+Wear legs`
+Long A pair of $Fzircon$7 war greaves was left here by somebody.`
+ThFl 100934
+Val armor 0 0 0 9 0 0 -2 0 `
+Flag defense 0 0 5
+END_THING
+
+THING 1200289
+Name dark gray breastplate stability`
+Level 78
+HWT 12 55
+Cost 6084
+Short a $8dark gray$7 breastplate of stability`
+Wear body`
+Long You notice that a $8dark gray$7 breastplate of stability was left here by somebody.`
+ThFl 100934
+Val armor 0 9 0 0 0 0 1 0 `
+Flag gf_attack 0 0 3
+Flag hp 0 0 7
+END_THING
+
+THING 1200290
+Name Bubi novitiate`
+Level 72
+HWT 0 0
+Short Bubi the novitiate`
+MIW 1
+Long Bubi the novitiate is here.`
+Sex 1
+ThFl 2209
+Val money 2 6 4 0 0 0 0 0 `
+Val cast 0 75 39 42 87 0 86 0 `
+Flag Room 0 0 4096
+Reset 277 6 1 1
+Reset 279 20 3 1
+END_THING
+
+THING 1200291
+Name Sand Ogre dabbler`
+Level 80
+HWT 0 0
+Short a Sand Ogre dabbler`
+MIW 1
+Long A Sand Ogre dabbler is here.`
+Sex 2
+ThFl 2209
+Val money 2 6 1 0 0 0 0 0 `
+Val cast 0 0 0 83 0 0 0 0 `
+Flag Det 0 0 4
+Flag Room 0 0 4096
+Reset 1200292 18 1 1
+Reset 1200293 18 1 1
+Reset 1200294 11 1 1
+END_THING
+
+THING 1200292
+Name gauntlets interpretation`
+Level 65
+HWT 29 16
+Cost 4225
+Short some gauntlets of interpretation`
+Wear hands`
+Long Some gauntlets of interpretation was left here by somebody.`
+ThFl 100934
+Val armor 0 0 9 0 0 0 0 0 `
+Flag gf_attack 0 0 3
+Flag hp 0 0 1
+END_THING
+
+THING 1200293
+Name dark obsidian war axe`
+Level 64
+HWT 27 94
+Cost 4096
+Short The $8dark$7 $8obsidian$7 war axe`
+Wear wield`
+Long The $8dark$7 $8obsidian$7 war axe is lying here.`
+ThFl 100934
+Val weapon 4 11 0 0 0 0 0 0 `
+Flag gf_defense 0 0 5
+END_THING
+
+THING 1200294
+Name arcane titanium trinket`
+Level 78
+HWT 7 10
+Cost 18252
+Short an arcane $Ftitanium$7 trinket`
+Wear ankle`
+Long An arcane $Ftitanium$7 trinket has been abandoned here.`
+ThFl 100934
+Val armor 0 0 0 6 0 0 0 0 `
+Flag Obj 0 0 32768
+Flag sp_resist 0 0 1
+Flag hp 0 0 2
+END_THING
+
+THING 1200295
+Name Agnes Fire Giant robber`
+Level 70
+HWT 0 0
+Short Agnes the Fire Giant robber`
+MIW 1
+Long Agnes the Fire Giant robber is here.`
+Sex 1
+ThFl 2209
+Val money 1 3 4 0 0 0 0 0 `
+Flag Act 0 0 1
+Flag Aff 0 0 16
+Flag Room 0 0 4096
+Reset 270 30 2 1
+Reset 1200296 10 1 1
+Reset 1200297 30 1 1
+Reset 1200298 23 1 1
+END_THING
+
+THING 1200296
+Name damaged club resonance`
+Level 80
+HWT 28 110
+Cost 6400
+Short The damaged club of resonance`
+Wear wield`
+Long The damaged club of resonance is here.`
+ThFl 100934
+Val weapon 4 11 2 0 0 0 0 0 `
+Flag Obj 0 0 1
+Flag hp 0 0 6
+END_THING
+
+THING 1200297
+Name platinum headgear confusion`
+Level 40
+HWT 23 14
+Cost 1600
+Short a $Fplatinum$7 headgear of confusion`
+Wear head`
+Long A $Fplatinum$7 headgear of confusion is on the ground.`
+ThFl 100934
+Val armor 7 0 0 0 0 0 -2 0 `
+END_THING
+
+THING 1200298
+Name amber lens`
+Level 55
+HWT 15 15
+Cost 3025
+Short a pair of $Bamber$7 lens`
+Wear eyes`
+Long A pair of $Bamber$7 lens was left here by somebody.`
+ThFl 100934
+Val armor 8 0 0 0 0 0 3 0 `
+Flag armor 0 0 8
+END_THING
+
+THING 1200299
+Name Desert Barbarian bard`
+Level 76
+HWT 0 0
+Short a Desert Barbarian bard`
+MIW 1
+Long A Desert Barbarian bard is here.`
+Sex 2
+ThFl 2209
+Val money 7 8 2 0 0 0 0 0 `
+Flag Room 0 0 4096
+Reset 270 30 2 1
+Reset 1200300 2 1 1
+Reset 1200301 24 1 1
+Reset 1200302 4 1 1
+Reset 1200303 5 1 1
+END_THING
+
+THING 1200300
+Name trinket domination`
+Level 96
+HWT 10 3
+Cost 36864
+Short a trinket of domination`
+Wear neck`
+Long A trinket of domination was left here.`
+ThFl 100934
+Val armor 6 0 0 0 0 0 3 0 `
+Flag Obj 0 0 32768
+Flag spirit_power 0 0 1
+Flag mv 0 0 5
+END_THING
+
+THING 1200301
+Name whitestone dagger power`
+Level 53
+HWT 33 83
+Cost 2809
+Short a $Fwhitestone$7 dagger of power`
+Wear wield`
+Long You see a $Fwhitestone$7 dagger of power was left here.`
+ThFl 100934
+Val weapon 4 10 1 0 0 0 0 0 `
+Flag armor 0 0 3
+END_THING
+
+THING 1200302
+Name enchanted cap bone`
+Level 93
+HWT 11 19
+Cost 8649
+Short an enchanted cap of bone`
+Wear head`
+Long You notice an enchanted cap of bone has been left here.`
+ThFl 100934
+Val armor 10 0 0 0 0 0 5 0 `
+Flag Obj 0 0 1
+Flag water_power 0 0 3
+Flag armor 0 0 6
+END_THING
+
+THING 1200303
+Name spinel floating orb`
+Level 90
+HWT 2 6
+Cost 40500
+Short a $Dspinel$7 floating orb`
+Wear floating`
+Long A $Dspinel$7 floating orb is on the ground.`
+ThFl 100934
+Val armor 6 0 0 0 0 0 1 0 `
+Flag hp 0 0 10
+END_THING
+
+THING 1200304
+Name Desert Barbarian apprentice`
+Level 50
+HWT 0 0
+Short a Desert Barbarian apprentice`
+MIW 1
+Long A Desert Barbarian apprentice is here.`
+Sex 1
+ThFl 2209
+Val money 2 6 1 0 0 0 0 0 `
+Flag Room 0 0 4096
+Reset 279 20 3 1
+Reset 1200305 21 1 1
+Reset 1200306 33 1 1
+Reset 1200307 16 1 1
+Reset 1200308 30 1 1
+END_THING
+
+THING 1200305
+Name stone long staff the unicorn`
+Level 59
+HWT 36 89
+Cost 3481
+Short a stone long staff of the unicorn`
+Wear wield`
+Long A stone long staff of the unicorn has been abandoned here.`
+ThFl 100934
+Val weapon 3 13 2 0 0 0 0 0 `
+Flag Obj 0 0 4
+Flag armor 0 0 11
+END_THING
+
+THING 1200306
+Name corundum locket the elders`
+Level 35
+HWT 4 2
+Cost 4900
+Short The $9corundum$7 locket of the elders`
+Wear neck`
+Long The $9corundum$7 locket of the elders was left here.`
+ThFl 100934
+Val armor 4 0 0 0 0 0 -2 0 `
+Flag mv 0 0 3
+END_THING
+
+THING 1200307
+Name luminous cloak`
+Level 68
+HWT 15 16
+Cost 4624
+Short a luminous cloak`
+Wear about`
+Long A luminous cloak was left here.`
+ThFl 100934
+Val armor 4 9 4 4 0 0 -1 0 `
+Flag Obj 0 0 4
+Flag armor 0 0 9
+Flag mv 0 0 8
+END_THING
+
+THING 1200308
+Name silver breastplate fury`
+Level 41
+HWT 18 48
+Cost 1681
+Short a $Fsilver$7 breastplate of fury`
+Wear body`
+Long You see that a $Fsilver$7 breastplate of fury has been left here.`
+ThFl 100934
+Val armor 0 7 0 0 0 0 2 0 `
+Flag mv 0 0 3
+END_THING
+
+THING 1200309
+Name Dufu Gray Slaan nomad`
+Level 59
+HWT 0 0
+Short Dufu the Gray Slaan nomad`
+MIW 1
+Long Dufu the Gray Slaan nomad is here.`
+Sex 2
+ThFl 2209
+Val money 6 9 2 0 0 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200310
+Name Hehe Buckawn pilferer`
+Level 86
+HWT 0 0
+Short Hehe the Buckawn pilferer`
+MIW 1
+Long Hehe the Buckawn pilferer is here.`
+Sex 2
+ThFl 2209
+Val money 4 9 2 0 0 0 0 0 `
+Flag Det 0 0 4
+Flag Aff 0 0 18
+Flag Room 0 0 4096
+Reset 1200311 11 1 1
+Reset 1200312 10 1 1
+END_THING
+
+THING 1200311
+Name violet bloodstone claw`
+Level 78
+HWT 21 108
+Cost 6084
+Short The $5violet$7 $9bloodstone$7 claw`
+Wear wield`
+Long The $5violet$7 $9bloodstone$7 claw is on the ground.`
+ThFl 100934
+Val weapon 4 13 0 0 0 0 0 0 `
+Flag gf_attack 0 0 4
+Flag mv 0 0 11
+Flag hp 0 0 8
+END_THING
+
+THING 1200312
+Name freezing eyepatch the defiler`
+Level 81
+HWT 21 18
+Cost 6561
+Short a freezing eyepatch of the defiler`
+Wear eyes`
+Long You see that a freezing eyepatch of the defiler has been abandoned here.`
+ThFl 100934
+Val armor 10 0 0 0 0 0 3 0 `
+Flag Obj 0 0 4
+Flag gf_attack 0 0 6
+Flag mv 0 0 11
+Flag hp 0 0 9
+END_THING
+
+THING 1200313
+Name Gray Troglodyte wizard`
+Level 59
+HWT 0 0
+Short a Gray Troglodyte wizard`
+MIW 1
+Long A Gray Troglodyte wizard is here.`
+Sex 2
+ThFl 2209
+Val money 9 3 3 0 0 0 0 0 `
+Val cast 0 0 200 0 15 0 0 0 `
+Flag Room 0 0 4096
+END_THING
+
+THING 1200314
+Name Biim Red Slaan courier`
+Level 47
+HWT 0 0
+Short Biim the Red Slaan courier`
+MIW 1
+Long Biim the Red Slaan courier is here.`
+Sex 1
+ThFl 2209
+Val money 9 4 1 0 0 0 0 0 `
+Flag Room 0 0 4096
+Reset 270 30 2 1
+Reset 1200315 32 1 1
+END_THING
+
+THING 1200315
+Name dark red battle hammer the master`
+Level 36
+HWT 21 66
+Cost 1296
+Short a $1dark red$7 battle hammer of the master`
+Wear wield`
+Long You notice that a $1dark red$7 battle hammer of the master has been abandoned here.`
+ThFl 100934
+Val weapon 3 8 2 0 0 0 0 0 `
+Flag Obj 0 0 1
+Flag mv 0 0 4
+END_THING
+
+END_OF_AREA
+

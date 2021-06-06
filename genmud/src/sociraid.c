@@ -63,7 +63,8 @@ update_raiding (SOCIETY *soc, int raid_target)
 	  (SOCIETY_RAID_CHANCE/2))
 	return;
       
-      if (nr (1,512) == 432 && relic_raid (soc))
+      /* Small chance to raid an align homeland. */
+      if (nr (1,51) == 43 && relic_raid_start (soc))
 	return;
       
       /* Make sure we have enough members to raid. */
@@ -604,18 +605,23 @@ mark_adjacent_areas (THING *area_arg)
    alignment. */
 
 bool
-relic_raid (SOCIETY *soc)
+relic_raid_start (SOCIETY *soc)
 {
   THING *room = NULL, *mob;
   int choices = 0;
   int num_choices = 0, num_chose = 0, choice = 0, count, i;
   RACE *align;
-  char buf[STD_LEN];
   RAID *raid;
+  char buf[STD_LEN];
   /* If no society exists bail out. Also bail out most of the time on
      general principles. */
   
-  if (!soc)
+  if (!soc || soc->relic_raid_hours > 0)
+    return FALSE;
+
+  /* Society must be big enough. */
+
+  if (soc->population < soc->population_cap*2/3)
     return FALSE;
   
   /* Find something to attempt to track the room we want. */
@@ -643,6 +649,9 @@ relic_raid (SOCIETY *soc)
   
   stop_hunting (mob, TRUE);
   
+  if (!mob->in || !IS_ROOM (mob->in))
+    return FALSE;
+
   /* The bits with the proper alignments should be set. */
 
   /* Now find the number of bits set in the choices integer. I should
@@ -678,6 +687,30 @@ relic_raid (SOCIETY *soc)
       !IS_ROOM (room))
     return FALSE;
   
+  /* Set up the relic raid gathering point now. */
+
+  soc->relic_raid_hours = 10;
+  soc->relic_raid_gather_point = mob->in->vnum;
+  soc->relic_raid_target = align->relic_ascend_room;
+  
+  if (soc->relic_raid_gather_point == 0)
+    {
+      soc->relic_raid_hours = 0;
+      soc->relic_raid_target = 0;
+      return FALSE;
+    }
+  
+  for (i = 0; i < ALIGN_MAX; i++)
+    {
+      if (align_info[i] &&
+	  align_info[i]->relic_ascend_room == soc->relic_raid_target)
+	{
+	  align = align_info[i];
+	  break;
+	}
+    }
+  
+  /* Set up the raid. */
   raid = new_raid();
   raid->vnum = find_open_raid_vnum ();
   add_raid_to_list(raid);
@@ -689,10 +722,14 @@ relic_raid (SOCIETY *soc)
   raid->victim_power_lost = 0;
   for (i = 0; i < NUM_GUARD_POSTS; i++)
     raid->post[i] = 0;
-  raid->post[0] = align->relic_ascend_room;
+  raid->post[0] = soc->relic_raid_target;
+  
   add_rumor (RUMOR_RELIC_RAID, soc->vnum, align->vnum, 0, 0);
-  sprintf (buf, "battle nosent end raid vnum %d  %dattr v:society:4 %d attr v:society:3 %d", align->relic_ascend_room, align->relic_ascend_room,	   
-	   WARRIOR_HUNTER, raid->vnum);
+  sprintf (buf, "battle nosent home end raid vnum %d %d  attr v:society:3 %d attr v:society:4 %d", align->relic_ascend_room, 
+	   align->relic_ascend_room, WARRIOR_HUNTER, raid->vnum);
   society_do_activity (soc, 100, buf);
+  soc->relic_raid_hours = 100;
+  soc->relic_raid_gather_point = 0;
+  soc->relic_raid_target = 0;
   return TRUE;
 }

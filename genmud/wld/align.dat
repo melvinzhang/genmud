@@ -26,7 +26,7 @@ Goals 50
 Relic 1001 0 1018
 Parts 0 0 0 0 
 HWT 0 0 0 0
-RawCurr 0 0 0 0 0 0 0 0 
+RawCurr 124500 118220 123197 113226 108724 99962 99909 103743 
 RawWant 0 0 0 0 0 0 0 0 
 END_ALIGN
 ALIGN
@@ -37,11 +37,11 @@ RegenBonus 0 0 0
 NatSpells 0 0 0 0 
 AscendFrom 0
 HatedSociety 0
-Goals 50
+Goals 63
 Relic 1051 0 1068
 Parts 0 0 0 0 
 HWT 0 0 0 0
-RawCurr 0 0 0 0 0 0 0 0 
+RawCurr 124500 125304 125953 100103 130006 119088 133721 99947 
 RawWant 0 0 0 0 0 0 0 0 
 END_ALIGN
 

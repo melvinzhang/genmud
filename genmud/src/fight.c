@@ -8,6 +8,7 @@
 #include "society.h"
 #include "track.h"
 #include "event.h"
+#include "historygen.h"
 #ifdef USE_WILDERNESS
 #include "wildalife.h"
 #endif
@@ -25,9 +26,12 @@ update_combat (THING *th)
       return;
     }
 
-  if (FIGHTING(th) && (FIGHTING(th)->in != th->in))
-    stop_fighting (th);
-  
+  if (FIGHTING(th))
+    {
+      if ((FIGHTING(th)->in != th->in))
+	stop_fighting (th);
+    }
+    
   /* Remove any residual following/riding etc... */
   
   if (fgt->following && !fgt->following->in)
@@ -86,7 +90,6 @@ update_combat (THING *th)
     {
       hunt_thing (th, 0);
     }
-  
   if (FIGHTING (th) && th->in)
     {
       if (!IS_PC (th))
@@ -191,7 +194,8 @@ multi_hit (THING *th, THING *vict)
      th->position < POSITION_FIGHTING ||
       th->position == POSITION_CASTING ||
       IS_HURT (th, AFF_PARALYZE) ||
-      IS_ACT1_SET (th, ACT_DUMMY))
+      IS_ACT1_SET (th, ACT_DUMMY) ||
+      IS_SET (vict->thing_flags, TH_NO_FIGHT))
     return;
   
   if (!CONSID)
@@ -1038,6 +1042,7 @@ damage (THING *th, THING *vict, int dam, char *word)
   DAMAGE *damg = NULL;
   THING *obj;
   RACE *align;
+  SOCIETY *society;
   int reduced = 0;
   int flags;
   int th_hurt, vict_hurt; /* Hurt flags for th and vict. */
@@ -1053,6 +1058,7 @@ damage (THING *th, THING *vict, int dam, char *word)
       act ("A wave of peaceful energy stop@s @1n from attacking @3n.", th, NULL, vict, NULL, TO_ALL);
       return FALSE;
     }
+  start_fighting (th, vict);
   
   /* Deal with relics and permadeath for pc's */
   
@@ -1069,7 +1075,7 @@ damage (THING *th, THING *vict, int dam, char *word)
   /* Raiders do more damage. */
   else if ((soc = FNV (th, VAL_SOCIETY)) != NULL)
     {
-      if (IS_SET (soc->val[1], BATTLE_CASTES) &&
+      if (IS_SET (soc->val[2], BATTLE_CASTES) &&
 	  soc->val[4] > 0)
 	dam += dam/3;
     }
@@ -1085,14 +1091,22 @@ damage (THING *th, THING *vict, int dam, char *word)
 	dam += dam*(align->relic_amt+align->power_bonus)/100;
     }
   
-  /* Defenders take less damage. */
-  else if ((soc = FNV (vict, VAL_SOCIETY)) != NULL &&
-	   (build = FNV (vict->in, VAL_BUILD)) != NULL &&
-	   soc->val[0] == build->val[0] &&
-	   build->val[1] > 0 && build->val[1] <= SOCIETY_BUILD_TIERS)
-    {
-      dam -= (dam*5*build->val[1])/100;
-    }
+  /* People in a room of a society ally get combat bonuses. */
+  if ((build = FNV (th->in, VAL_BUILD)) != NULL &&
+      (society = find_society_num (build->val[0])) != NULL &&
+      (((th->align > 0 && !DIFF_ALIGN (th->align, society->align)) ||
+	((soc = FNV (th, VAL_SOCIETY)) != NULL &&
+	soc->val[0] == build->val[0]))))
+    dam += (dam*6*build->val[1])/100;
+  
+  /* Defensive bonus for built up cities. */
+  if ((build = FNV (vict->in, VAL_BUILD)) != NULL &&
+      (society = find_society_num (build->val[0])) != NULL &&
+      (((vict->align > 0 && !DIFF_ALIGN (vict->align, society->align)) ||
+	((soc = FNV (vict, VAL_SOCIETY)) != NULL &&
+	soc->val[0] == build->val[0]))))
+    dam -= (dam*5*build->val[1])/100;
+  
   
   
   /* Get the hurt bits for th and vict. */
@@ -1118,7 +1132,7 @@ damage (THING *th, THING *vict, int dam, char *word)
   if (!IS_SET (th->thing_flags, TH_IS_ROOM | TH_IS_AREA | TH_NO_FIGHT) && 
       th->max_hp > 0)
     dam -= dam * ((th->max_hp - th->hp) * 2/3)/th->max_hp;
-  
+      
 
   /* A society member inside of a built up area absorbs damage. */
   
@@ -1376,6 +1390,11 @@ start_fighting (THING *att, THING *vict)
 	att->pc->no_quit = MAX(att->pc->no_quit, NO_QUIT_PK);
       else
         att->pc->no_quit = MAX(att->pc->no_quit, NO_QUIT_REG);
+      /* If you start fighting a society mob, you get your align_hate
+	 level going up. */
+      if (vict->align < ALIGN_MAX &&
+	  (find_society_in (vict) != NULL))
+	att->pc->align_hate[vict->align]++;
     }
   if (IS_PC (vict) && LEVEL (vict) < BLD_LEVEL)
     {   
@@ -1388,11 +1407,12 @@ start_fighting (THING *att, THING *vict)
   
   if (IS_AFF (att, AFF_CHAMELEON))
     {
-      afftype_remove (att, 0, FLAG_AFF, AFF_CHAMELEON);
+      remove_flagval (att, FLAG_AFF, AFF_CHAMELEON);
       act ("$A@1n $Bcome@s back from the $Ae$Bn$Av$Bi$Ar$Bo$An$Bm$Ae$Bn$At$B!$7", att, NULL, NULL, NULL, TO_ALL);
     }
-  if (IS_DET (vict, AFF_SLEEP))
-    afftype_remove (vict, 0, FLAG_HURT, AFF_SLEEP);
+  
+  remove_flagval (vict, FLAG_HURT, AFF_SLEEP);
+  
   
   if (!FIGHTING (att))
     {
@@ -1810,7 +1830,7 @@ get_killed (THING *vict, THING *killer)
   /* Deal with society problems when something gets killed. */
 
   society_get_killed (killer, vict);
-
+  
   /* Maybe some  stuff on bg/arena here? for later? */
   
   if (IS_PC (vict)) /* PERMADEATH!!!!! :) */
@@ -1970,12 +1990,16 @@ make_corpse (THING *vict, THING *killer)
      since "dragon corpse" is the first item in the room. */
   
   sprintf (buf, "\x1b[0;31mthe corpse of \x1b[1;31m%s\x1b[0;37m", NAME (vict));
+  if (strlen (buf) > 200)
+    strcpy (buf, "a corpse");
   free_str (corpse->short_desc);
   corpse->short_desc = nonstr;
   corpse->short_desc = new_str (buf);
   free_str (corpse->long_desc);
   corpse->long_desc = nonstr;
-  sprintf (buf, "\x1b[0;31mThe corpse of \x1b[1;31m%s\x1b[0;31m is lying here.\x1b[0;37m", NAME(vict));
+  sprintf (buf, "\x1b[0;31mThe corpse of \x1b[1;31m%s\x1b[0;31m is lying here.\x1b[0;37m", NAME(vict)); 
+  if (strlen (buf) > 300)
+    strcpy (buf, "A corpse is here.");
   corpse->long_desc = new_str (buf);
   if (killer)
     corpse->type = new_str (NAME(killer));
@@ -3235,9 +3259,10 @@ is_enemy (THING *th, THING *vict)
   int actbits = 0;
   bool align_hate_attack = FALSE;
   if (!th || !vict || !th->in || !vict->in || IS_PC (th) || th == vict ||
+      IS_SET (vict->thing_flags, TH_NO_FIGHT) ||
       (IS_PC (vict) && IS_PC1_SET (vict, PC_HOLYWALK | PC_HOLYPEACE)))
     return FALSE;
-
+  
   if (IS_PC (vict) && th->align < ALIGN_MAX &&
       vict->pc->align_hate[th->align] >= ALIGN_HATE_ATTACK)
     align_hate_attack = TRUE;
@@ -3258,7 +3283,8 @@ is_enemy (THING *th, THING *vict)
   if (IS_SET (actbits, ACT_KILL_OPP) &&
       (DIFF_ALIGN (th->align, vict->align) ||
        align_hate_attack) &&
-      (IS_PC (vict) || vict->align > 0))
+      (IS_PC (vict) || vict->align > 0 ||
+       CAN_TALK (vict)))
     return TRUE;
   
   /* If th is in a society and its in the proper caste, and if
@@ -3274,7 +3300,7 @@ is_enemy (THING *th, THING *vict)
       ((IS_SET (socval->val[2], BATTLE_CASTES) &&
 	IS_SET (soc->society_flags, SOCIETY_AGGRESSIVE)) ||
        ((IS_SET (soc->society_flags, SOCIETY_XENOPHOBIC) &&
-	 socval->val[2]) &&
+	 socval->val[2] != CASTE_CHILDREN) &&
 	vict->in->vnum >= soc->room_start &&
 	vict->in->vnum <= (soc->room_end))))
     {

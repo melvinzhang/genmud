@@ -309,10 +309,6 @@ areagen (THING *th, char *arg)
 	  if (map->num_rooms < min_num_rooms ||
 	      map->num_rooms > max_num_rooms)
 	    {
-	      sprintf (buf, "Mapgen parts: %d size: %d need %d-%d\n",
-		       num_map_parts,
-		       map->num_rooms, min_num_rooms, max_num_rooms);
-	      /* echo (buf); */
 	      free_mapgen (map);
 	      map = NULL;
 	    }
@@ -1033,7 +1029,6 @@ add_lakes (THING *area)
       
       if (sector_type == ROOM_DESERT)
 	{	  	  
-	  
 	  strcpy (prefixname, find_gen_word (AREAGEN_AREA_VNUM, "watery_prefixes", NULL));
 	  strcpy (typename, find_gen_word (AREAGEN_AREA_VNUM, "oasis_names", NULL));
 	  sprintf (name, "%s %s%s",
@@ -1114,7 +1109,7 @@ add_lake (THING *room, char *name, int sector_type, int curr_depth,
     return;
   
   free_str (room->short_desc);
-  room->short_desc = new_str (name);
+  room->short_desc = new_str (name);  
   add_flagval (room, FLAG_ROOM1, ROOM_WATERY);
   if (sector_type != ROOM_UNDERGROUND)
     remove_flagval (room, FLAG_ROOM1, sector_type);
@@ -1174,7 +1169,7 @@ add_adjacent_oasis_rooms (THING *room, int sector_type)
 		       fieldprefix,
 		       (nr (1,2) == 2 ? "Patch of Grass" : "Field"));
 	      free_str (nroom->short_desc);
-	      nroom->short_desc = new_str (name);
+	      nroom->short_desc = new_str (name); 
 	      add_flagval (nroom, FLAG_ROOM1, ROOM_FOREST);
 	      remove_flagval (nroom, FLAG_ROOM1, ROOM_DESERT);
 	    }
@@ -1386,7 +1381,7 @@ add_stream (THING *room, char *name, int sector_type, int depth, int dir)
     }
        
   free_str (room->short_desc);
-  room->short_desc = new_str (name);
+  room->short_desc = new_str (name); 
   add_flagval (room, FLAG_ROOM1, ROOM_WATERY);
   if (sector_type != ROOM_UNDERGROUND)
     remove_flagval (room, FLAG_ROOM1, sector_type);
@@ -1705,7 +1700,7 @@ add_sector_patch (THING *room, char *name, int sector_type, int patch_type,
       (!IS_SET (room_flags, ROOM_WATERY) || sector_type == ROOM_WATERY))
     {
       free_str (room->short_desc);
-      room->short_desc = new_str(name);
+      room->short_desc = new_str(name); 
       if (sector_type != patch_type)
 	{
 	  add_flagval (room, FLAG_ROOM1, patch_type);

@@ -81,7 +81,7 @@ void worldgen_add_exit (THING *area, int dir_to, int x, int y,  bool underwld);
 /* This puts a link between the area in the top world and the
    area in the underworld below it. */
 
-void worldgen_link_top_to_underworld (int x, int y);
+void worldgen_link_above_to_below (THING *top_area, THING *bottom_area);
 
 /* This seeds the world with societies that have room flags as part of
    their definition and which aren't destructible. */
@@ -123,3 +123,7 @@ void worldgen_check_autogen (void);
    below level..*/
 
 int worldgen_num_areas (void);
+
+/* This generates demons and demon areas. */
+
+void worldgen_generate_demons (int curr_underworld_vnum, int area_size);

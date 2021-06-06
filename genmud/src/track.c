@@ -318,26 +318,31 @@ new_bfs (void)
   newbfs->dir = DIR_MAX;*/
   return newbfs;
 }
-
 void
 clear_bfs_list (void)
 {
   BFS *bfs, *bfsn;
-  
   if (bfs_list)
     {
+      bfs_times_count++;
       for (bfs = bfs_list; bfs ; bfs = bfsn)
 	{
 	  bfsn = bfs->next;
 	  if (bfs->room)
 	    RBIT (bfs->room->thing_flags, TH_MARKED);
 	  bfs->next = bfs_free; 
-	  bfs_free = bfs;	  
+	  bfs_free = bfs;	
+	  bfs_tracks_count++;
 	}
     }
   bfs_curr = NULL;
   bfs_list = NULL;
   bfs_last = NULL;
+  if (bfs_times_count >= 100000)
+    {
+      bfs_times_count /= 10;
+      bfs_tracks_count /= 10;
+    }
 }
 
 
@@ -450,13 +455,18 @@ hunt_thing (THING *th, int max_depth)
     {
       max_depth = MAX_HUNT_DEPTH;
     }
-
+  
+  
   if (max_depth >= MAX_SHORT_HUNT_DEPTH &&
       th->fgt->hunting_type != HUNT_RAID &&
       th->fgt->hunting_type != HUNT_SETTLE &&
       th->fgt->hunting_type != HUNT_KILL)
     max_depth = MAX_SHORT_HUNT_DEPTH;
   
+  /* Most of the time cap the max hunt depth at MAX_HUNT_DEPTH. */
+  if (max_depth > MAX_HUNT_DEPTH &&
+      nr (1,15) != 3)
+    max_depth = MAX_HUNT_DEPTH;
   
   if ((soc = FNV (th, VAL_SOCIETY)) != NULL)
     {
@@ -1148,6 +1158,7 @@ set_up_move_flags (THING *th)
   else
     {
       int move_bits = flagbits (th->flags, FLAG_AFF);
+      int prot_bits = flagbits (th->flags, FLAG_PROT);
       th->move_flags = 0;
       if (IS_SET (move_bits, AFF_FOGGY))
 	th->move_flags |= ROOM_EARTHY;
@@ -1157,7 +1168,12 @@ set_up_move_flags (THING *th)
 	th->move_flags |= ROOM_UNDERWATER | ROOM_WATERY;
       if (IS_SET (move_bits, AFF_HASTE) && !IS_PC (th))
 	th->move_flags |= ROOM_MOUNTAIN;
+      if (IS_SET (prot_bits, AFF_FIRE))
+	th->move_flags |= ROOM_FIERY;
+      if (IS_AFF (th, AFF_PROTECT))
+	th->move_flags |= ROOM_ASTRAL;
     }
+
   return;
 }
 
@@ -1296,10 +1312,10 @@ attack_stuff (THING *th)
   int num_choices, num_chose, choice, times, count;
   VALUE *socval = NULL, *vsocval = NULL, *build;
   SOCIETY *society = NULL, *esociety = NULL;
-  bool capture_now = FALSE;
+  bool capture_now = TRUE;
   char buf[STD_LEN];
   if (!CAN_FIGHT (th) || FIGHTING (th) || 
-      nr (1,3) != 2 || IS_PC (th) ||
+      nr (1,4) == 2 || IS_PC (th) ||
       (room = th->in) == NULL || th->position < POSITION_STANDING ||
       IS_ACT1_SET (th, ACT_PRISONER))
     return;
@@ -1375,11 +1391,12 @@ attack_stuff (THING *th)
   
   if (vict)
     {
+      /* See if the victim has been captured. */
       if ((vsocval = FNV (vict, VAL_SOCIETY)) != NULL)
 	esociety = find_society_num (vsocval->val[5]);
       else
 	esociety = NULL;
-
+      
       /* If this thing is a prisoner of an ally (or this thing's
 	 society) don't attack it. If it's not in our city but it's
 	 our prisoner, bring it back to the city. */
@@ -1398,7 +1415,7 @@ attack_stuff (THING *th)
 	      if (is_enemy (th, vict->fgt->following))
 		{
 		  SBIT(server_flags, SERVER_BEING_ATTACKED_YELL);
-		  start_fighting (th, (nr(0,1)?vict:vict->fgt->following));
+		  start_fighting (th, FOLLOWING(vict));
 		  sprintf(buf, "yell Help! %s is escaping with %s!",
 			  NAME(vict), NAME(vict->fgt->following));
 		  interpret (th, buf);
@@ -1406,16 +1423,17 @@ attack_stuff (THING *th)
 		}
 	      return;
 	    }
-	  /* If we're in our homeland, then ignore this thing. */
-	  if (th->in->vnum >= society->room_start &&
-	      th->in->vnum <= society->room_end)
-	    return;
 	  
-	  capture_now = TRUE;
+	  /* If we're in our homeland, then ignore this thing. */
+	  else if (th->in->vnum >= society->room_start &&
+	      th->in->vnum <= society->room_end)
+	    capture_now = FALSE;
+	  
 	}
       
       /* Take a prisoner. */
       if ((capture_now || nr (1,CAPTURE_CHANCE) == CAPTURE_CHANCE/2) &&
+	  nr (1,50) == 3 &&
 	  LEVEL (th) >= LEVEL(vict)/2 && !FIGHTING (vict) &&
 	  socval && CAN_TALK (th) &&
 	  socval->val[3] == WARRIOR_HUNTER &&
@@ -1460,7 +1478,7 @@ attack_stuff (THING *th)
    keep the rooms inside of a certain area or not. */
 
 void
-mark_track_room (THING *room, THING *area)
+mark_track_room (THING *room, THING *area, int goodroom_bits)
 {
   THING *nroom;
   int dir;
@@ -1471,8 +1489,11 @@ mark_track_room (THING *room, THING *area)
   SBIT (room->thing_flags, TH_MARKED);
   
   for (dir = 0; dir < REALDIR_MAX; dir++)
-    if ((nroom = FTR (room, dir, 0)) != NULL)
-      mark_track_room (nroom, area);
+    {
+      if ((nroom = find_track_room (room, dir, goodroom_bits)) != NULL)
+	mark_track_room (nroom, area, goodroom_bits);
+    }
+  return;
 }
 
 

@@ -155,7 +155,6 @@ read_thing (FILE *f)
 	case 'E':	  
 	  if (!str_cmp (word, "END_THING"))
 	    { 
-	     
 	      return th;
 	    }
 	  if (!str_cmp (word, "EDESC"))

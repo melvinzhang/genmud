@@ -143,7 +143,7 @@ void move_through_portal (THING *, THING *);
    the area is specified then all subsequent rooms must be in
    the same area as that. Otherwise the rooms can be anywhere. */
 
-void mark_track_room (THING *room, THING *area);
+void mark_track_room (THING *room, THING *area, int goodroom_bits);
 
 
 

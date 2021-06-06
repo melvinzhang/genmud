@@ -13,6 +13,7 @@
 
 
 
+
 /* This makes a society member do something. */
 
 void
@@ -28,7 +29,6 @@ society_activity (THING *th)
 
   if (update_prisoner_status (th))
     return;
-  
   
 
   /* Society things sleep at night unless they're guarding a guardpost. */
@@ -50,7 +50,7 @@ society_activity (THING *th)
   
   /* Hurt things look for help. */
   
-  if (th->hp < th->max_hp * 2/5)
+  if (th->hp < th->max_hp/3)
     {
       if (!is_hunting (th) || th->hp < th->max_hp/4)
 	{
@@ -104,20 +104,20 @@ society_activity (THING *th)
 		    }		  
 		}
 	    }
-	  if (!is_hunting (th))
+	  if (!is_hunting (th) && soc->val[3] != WARRIOR_HUNTER)
 	    soc->val[3] = WARRIOR_GUARD;
 	}
-      else if (!is_hunting (th) && nr (1,80) == 3)
+      else if (!is_hunting (th) && nr (1,20) == 2)
 	find_new_patrol_location (th);
       if (!IS_SET (flags, CASTE_WIZARD | CASTE_HEALER))
 	return;
     }
-
+  
   /* Necros raise the dead. */
 
   if (IS_SET (flags, CASTE_WIZARD | CASTE_HEALER) &&
       IS_SET (rsoc->society_flags, SOCIETY_NECRO_GENERATE) &&
-      nr (1,15) ==  2 &&
+      nr (1,30) ==  2 &&
       society_necro_generate (th))
     return;
     
@@ -154,7 +154,7 @@ society_activity (THING *th)
 	}
     }
   
-
+  
   if (IS_SET (flags, CASTE_WORKER) && 
       !IS_SET (rsoc->society_flags, SOCIETY_NORESOURCES))
     society_worker_activity (th);
@@ -169,7 +169,7 @@ society_activity (THING *th)
 	 fairly useful outside of societies. */
       
       if (IS_SET (flags, CASTE_BUILDER))
-	society_builder_activity (th);
+	do_build (th, "");
       
       /* Shopkeepers want to get items to sell. They know what
 	 they want since if people try to buy something and
@@ -262,44 +262,149 @@ society_gather (THING *th)
 
 
 /* This function updates the society resources if a raw material 
-   was given to a builder in a society. */
+   was given to a builder in a society. It also checks if you give a
+   useful item to a society member. */
 
 void
-society_raw_move (THING *th, THING *mover, THING *builder)
+society_item_move (THING *th, THING *item, THING *society_member)
 {
   SOCIETY *society;
-  VALUE *raw, *socval;
+  VALUE *raw, *socval, *val;
+  int reward = 0;
   RACE *align;
   
   /* Do some sanity checking and setup to get all of the
      necessary variables. */
 
-  if (mover == NULL || th == NULL || builder == NULL ||
-      (raw = FNV (mover, VAL_RAW)) == NULL ||
-      (socval = FNV (builder, VAL_SOCIETY)) == NULL ||
-      !IS_SET (socval->val[2], CASTE_BUILDER) ||
-      (society = find_society_num (socval->val[0])) == NULL ||
-      raw->val[0] <= RAW_NONE || raw->val[0] >= RAW_MAX)
+  if (item == NULL || th == NULL || society_member == NULL ||
+      !IS_PC (th) || DIFF_ALIGN (th->align, society_member->align) ||
+      (socval = FNV (society_member, VAL_SOCIETY)) == NULL ||
+      (society = find_society_num (socval->val[0])) == NULL )
     return;
   
+  /* Move a raw material. It works if you give the item to anyone
+     except a child and a military person. */
+  if ((raw = FNV (item, VAL_RAW)) != NULL &&
+      IS_SET (socval->val[2], ~(BATTLE_CASTES | CASTE_CHILDREN)))
+    {  
+      if (raw->val[0] == RAW_MINERAL)
+	society->raw_curr[raw->val[0]] += (raw->val[1] + 1) * 
+	  SOCIETY_RAW_POWER;
+      else
+	society->raw_curr[raw->val[0]]+= SOCIETY_RAW_POWER;
+      reward = 1;
+
+      /* If the society or align needs this, give more of a reward. */
+
+      /* Now give the bonus if any. */
+      if (((society->raw_want[raw->val[0]] > 0 ||
+	    society->raw_curr[raw->val[0]] <= RAW_TAX_AMOUNT) ||
+	   ((align = FALIGN (th)) != NULL &&
+	    (align->raw_curr[raw->val[0]] <= RAW_TAX_AMOUNT ||
+	     align->raw_want[raw->val[0]] > 0))))
+	reward = 8;
+
+
+      society_give_reward (society_member, th, reward);
+      /* This gets freed so builders don't have tens of thousands
+	 of objects on them constantly. */
+      free_thing (item);
+      return;
+    }
   
-  if (raw->val[0] == RAW_MINERAL)
-    society->raw_curr[raw->val[0]] += (raw->val[1] + 1) * SOCIETY_RAW_POWER;
-  else
-    society->raw_curr[raw->val[0]]+= SOCIETY_RAW_POWER;
+  /* Move a weapon or armor that a society battle member (or other
+     nonchild) may need. If you give the item to a nonbattle person, it's
+     worth less of a reward. */
   
-  
-  if (IS_PC (th) && !DIFF_ALIGN (th->align, society->align) &&
-      ((society->raw_want[raw->val[0]] > 0 ||
-	society->raw_curr[raw->val[0]] <= RAW_TAX_AMOUNT) ||
-       ((align = FALIGN (th)) != NULL &&
-	(align->raw_curr[raw->val[0]] <= RAW_TAX_AMOUNT ||
-	 align->raw_want[raw->val[0]] > 0))))
-    th->pc->quest_points++;
-  
-  free_thing (mover);
+  if (((val = FNV (item, VAL_WEAPON)) != NULL ||
+       (val = FNV (item, VAL_ARMOR)) != NULL) &&
+      IS_SET (socval->val[2], ~CASTE_CHILDREN))
+    {
+      reward = find_item_power (val);
+      if (find_free_eq_slot (th, item) == -1)
+        reward /= 3;
+      if (!IS_SET (socval->val[2], BATTLE_CASTES))
+	reward /= 2;
+      if (reward < 1)
+	reward = 1;
+      society_give_reward (society_member, th, reward);
+      return;
+    }
+  return;
 }
+
+/* This makes somebody in the room give the player a reward. */
+
+void
+society_somebody_give_reward (THING *receiver, int reward)
+{
+  THING *person;
+  int num_choices = 0, num_chose = 0, count;
+  VALUE *socval;
+
+  if (!receiver || !IS_PC (receiver) || !receiver->in ||
+      reward <= 0)
+    return;
+  for (count = 0; count < 2; count++)
+    {
+      for (person = receiver->in->cont; person; person = person->next_cont)
+	{
+	  if ((socval = FNV (person, VAL_SOCIETY)) == NULL ||
+	      DIFF_ALIGN (person->align, receiver->align) ||
+	      IS_SET (socval->val[2], CASTE_CHILDREN) ||
+	      person->position <= POSITION_SLEEPING)
+	    continue;
+	  
+	  if (count == 0)
+	    num_choices++;
+	  else if (--num_chose < 1)
+	    break;
+	}
+      if (count == 0)
+	{
+	  if (num_choices < 1)
+	    return;
+	  num_chose = nr (1, num_choices);
+	}
+    }
   
+  if (person && (socval = FNV (person, VAL_SOCIETY)) != NULL &&
+      !DIFF_ALIGN (receiver->align, person->align))
+    society_give_reward (person, receiver, reward);
+  return;
+}
+
+/* This gives a reward of money, exp and maybe quest points to a person
+   who does something good for a society member. */
+
+void
+society_give_reward (THING *giver, THING *receiver, int reward)
+{
+  char buf[STD_LEN];
+  
+  if (!giver || !receiver || !IS_PC (receiver) ||
+      (find_society_in (giver) == NULL) ||
+      DIFF_ALIGN (giver->align, receiver->align) || 
+      giver->position <= POSITION_SLEEPING)
+    return;
+  
+  sprintf (buf, "Thank you %s.", NAME (receiver));
+  do_say (giver, buf);
+  /* Cap the reward. */
+  reward = MID (1, reward, 1000);
+  
+  /* First add the exp. */
+  add_exp (receiver, reward*100);
+  
+  add_money (receiver, reward);
+  act ("@1n give@s some money to @3f.", giver, NULL, receiver, NULL, TO_ALL);
+  
+  receiver->pc->quest_points += reward/10;
+  if (reward < 10 && nr (1,10) <= reward)
+    receiver->pc->quest_points++;
+  return;
+}
+    
 
 
 
@@ -381,7 +486,7 @@ find_gather_location (THING *th)
 	  
 	  if (bfs_curr->depth > RAW_GATHER_DEPTH ||
 	      num_room_choices >= RAW_GATHER_ROOM_CHOICES ||
-	      (bfs_curr->depth >= RAW_GATHER_DEPTH/3 &&
+	      (bfs_curr->depth >= RAW_GATHER_DEPTH/5 &&
 	       num_room_choices > 0))
 	    break;
 	  
@@ -487,7 +592,8 @@ society_worker_activity (THING *th)
     {
       if ((soc2 = FNV (builder, VAL_SOCIETY)) != NULL &&
 	  soc2->val[0] == soc->val[0] &&
-	  IS_SET (soc2->val[2], CASTE_BUILDER))
+	  IS_SET (soc2->val[2], CASTE_BUILDER) &&
+	  builder->position > POSITION_SLEEPING)
 	break;
     }
   
@@ -741,7 +847,8 @@ increase_max_pop (SOCIETY *soc)
   max_pop = society_max_pop (soc);
 
   
-  max_times = nr (1,4);
+  max_times = nr (SOCIETY_MAXPOP_INCREASE_TRIES/2,
+		  SOCIETY_MAXPOP_INCREASE_TRIES);
   
   for (times = 0; times < max_times; times++)
     {
@@ -974,6 +1081,10 @@ make_new_member (SOCIETY *soc)
       align_info[soc->align]->ave_pct <= 30)
     num_times++;
   
+  if (IS_SET (soc->society_flags, SOCIETY_FASTGROW))
+    num_times *= 2;
+      
+
   /* Make a new society member. Check in caste 1, check for pct, 
      check for population room, check for prototype, check for room to
      goto, and check if the thing is made. */
@@ -991,7 +1102,7 @@ make_new_member (SOCIETY *soc)
 	  (proto->max_mv == 0 ||
 	   proto->mv < proto->max_mv) &&
 	  ((room = find_thing_num (nr (soc->room_start, soc->room_end))) != NULL) &&
-	  IS_ROOM (room) && 
+	  IS_ROOM (room) &&
 	  !IS_ROOM_SET (room, BADROOM_BITS) &&
 	  /* This is to make powerful mobs pop more slowly. Like crap mobs
 	     like elves pop fast, but dragons pop slow. If the level of
@@ -1330,6 +1441,8 @@ find_upgrades_wanted (SOCIETY *soc)
   soc->population_cap = (POP_BEFORE_SETTLE*POP_LEVEL_MULTIPLIER)/(start_member_level);
   if (soc->population_cap < POP_BEFORE_SETTLE/2)
     soc->population_cap = POP_BEFORE_SETTLE/2;
+  if (IS_SET (soc->society_flags, SOCIETY_FASTGROW))
+    soc->population_cap *= 2;
   if (!IS_SET (soc->goals, BUILD_MEMBER) &&
       (nr (1, soc->population_cap) > soc->population ||
        nr (1,30) == 15)) /* small chance to increase pop at any level. */
@@ -2080,6 +2193,7 @@ settle_new_society (SOCIETY *soc)
   char buf[STD_LEN];
   int i, max_room_num = 0, room_num, count, vnum;
   bool settle_adjacent = FALSE;
+  int society_badroom_bits;
   
   if (!soc)
     return;
@@ -2092,11 +2206,10 @@ settle_new_society (SOCIETY *soc)
   
 
   if (!IS_SET (soc->society_flags, SOCIETY_SETTLER) ||
-      soc->population < nr (soc->population_cap/2, 
-			    soc->population_cap) ||
-      soc->settle_hours > 0 || nr (1,23) != 7)
+    soc->population < nr (soc->population_cap/3, 
+			  soc->population_cap) || 
+      soc->settle_hours > 0 || nr (1,7) != 3)
     return;
-  
   
   if ((oldarea = find_area_in (soc->room_start)) == NULL)
     return;
@@ -2157,10 +2270,12 @@ settle_new_society (SOCIETY *soc)
   
   /* Find the maximum room number in the area. Usually rooms are filled
      from the front...so this SHOULD be a good measure. */
+  
+  society_badroom_bits = flagbits (soc->flags, FLAG_ROOM1);
 
   for (room = ar->cont; room; room = room->next_cont)
     {
-      if (IS_ROOM (room) && !IS_ROOM_SET (room, BADROOM_BITS))
+      if (IS_ROOM (room) && !IS_ROOM_SET (room, BADROOM_BITS & ~society_badroom_bits))
 	max_room_num = room->vnum;
     }
   
@@ -2188,7 +2303,7 @@ settle_new_society (SOCIETY *soc)
     return;
   
   undo_marked (room);
-  mark_track_room (room, room->in);
+  mark_track_room (room, room->in, society_badroom_bits);
   
   /* Now see how many rooms we have that are connected to the original
      room and in the same area. */
@@ -2248,9 +2363,11 @@ society_can_settle_in_area (SOCIETY *soc, THING *ar)
   SOCIETY *soc2;
   THING *ar2, *oldarea;
   int soc_in_area = 0;
+  int society_badroom_bits;
+
+
   
-  
-  if (!soc || !ar || !IS_AREA (ar) || IS_ROOM_SET (ar, BADROOM_BITS))
+  if (!soc || !ar || !IS_AREA (ar))
     return FALSE;
   
   
@@ -2259,12 +2376,13 @@ society_can_settle_in_area (SOCIETY *soc, THING *ar)
   if (ar->align > 0 && DIFF_ALIGN (ar->align, soc->align))
     return FALSE;
   
+  society_badroom_bits = flagbits (soc->flags, FLAG_ROOM1);
   /* Make sure that the society starts in an old area. Don't let it settle
      in its own starting area. */
   if ((oldarea = find_area_in (soc->room_start)) == NULL ||
       oldarea == ar ||
       IS_AREA_SET (ar, AREA_NOSETTLE) ||
-      IS_ROOM_SET (ar, BADROOM_BITS)) /* Cannot settle in certain areas. */
+      IS_ROOM_SET (ar, BADROOM_BITS & ~society_badroom_bits)) /* Cannot settle in certain areas. */
     return FALSE;
   
   /* Now there are more rules. You don't settle in an area where there
@@ -2292,7 +2410,7 @@ society_can_settle_in_area (SOCIETY *soc, THING *ar)
 	}
     }
   
-  if (soc_in_area > 1)
+  if (soc_in_area > 4)
     return FALSE;
   return TRUE;
 }
@@ -2607,7 +2725,7 @@ void
 settle_new_society_now (THING *th)
 {
   SOCIETY *oldsoc, *newsoc;
-  int i, room_count, start_room_vnum;
+  int i, room_count, start_room_vnum, max_room_vnum = 0;
   THING *room;
   VALUE *socval;
   char buf[STD_LEN];
@@ -2628,31 +2746,14 @@ settle_new_society_now (THING *th)
   
   start_room_vnum = th->in->vnum;
   
-  /* Mark all rooms in the area connected to our room. */
-  
-  undo_marked (th->in);
-  mark_track_room (th->in, th->in->in);
-  
-  /* See how many rooms after the start room we picked are connected. */
-  
-  for (room_count = 0; 
-       room_count < MAX (10, (oldsoc->room_end - oldsoc->room_start)); 
-       room_count++)
+
+  for (room = th->in->in->cont; room; room = room->next_cont)
     {
-      if ((room = find_thing_num (room_count + start_room_vnum)) == NULL ||
-	  !IS_ROOM (room) || !IS_MARKED (room))
-	break;
+      if (IS_ROOM (room) && room->vnum > max_room_vnum)
+	max_room_vnum = room->vnum;
     }
-  if (room_count > 100)
-    room_count = 100;
-  undo_marked (th->in);
-  
-  /* If there aren't enough rooms close by, don't settle here. */
-  
-  if (room_count < MAX (10, (oldsoc->room_end - oldsoc->room_start)/2))
-    return;
-  
-  
+
+  room_count = (max_room_vnum - start_room_vnum) * 4/5;
  
   /* Divide the raw materials and "quality" in half. */
   
@@ -2680,6 +2781,8 @@ settle_new_society_now (THING *th)
   newsoc->settle_hours = SOCIETY_SETTLE_HOURS;
   oldsoc->alert /= 2;
   newsoc->alert /= 2;
+  newsoc->recent_maxpop /= 2;
+  oldsoc->recent_maxpop /= 2;
   /* Allow the societies to keep this flag because they will not
      generally settle more than 1 area away from them, so the
      overexpansion is lessened. */
@@ -3023,6 +3126,9 @@ society_do_activity (SOCIETY *soc, int percent, char *arg)
 		    (ignore_sentinels && IS_ACT1_SET (th, ACT_SENTINEL | ACT_PRISONER)))) ||
 		  /* Check if we have to be in a raid. */
 		  (raid_number > 0 && socval->val[4] != raid_number) ||
+		  /* See if you need to be in a particular room or not. */
+		  (room_start_in && 
+		   (!th->in || th->in->vnum != room_start_in)) ||
 		  /* Check if you must be in the home area. */
 		  (be_in_home_area &&
 		   (!IS_ROOM(in_room) || 
@@ -3102,10 +3208,10 @@ find_sleeping_room (THING *th)
       (soc = find_society_in (th)) == NULL || 
       IS_ACT1_SET (th, ACT_PRISONER))
     return;
-    
   
-  caste_flags = socval->val[1];
-
+  
+  caste_flags = socval->val[2];
+  
   /* Check if the old room is ok, otherwise find a new room. */
   
   /* Checks if the current sleeping room is ok. */
@@ -3204,9 +3310,11 @@ update_prisoner_status (THING *th)
     {
       if (!CAN_MOVE (other) || !CAN_FIGHT (other) || other == th)
 	continue;
-      if (DIFF_ALIGN (other->align, th->align) ||
+      if ((DIFF_ALIGN (other->align, th->align) ||
 	  (th->align == 0 && 
-	   (other_soc = find_society_in (other)) != th_soc))
+	   (other_soc = find_society_in (other)) != th_soc)) &&
+	  /* Other prisoners don't cause problems. */
+	  !IS_ACT1_SET (other, ACT_PRISONER))
 	enemies_in_room++;
       else if (IS_PC (other))
 	{
@@ -3264,13 +3372,17 @@ update_prisoner_status (THING *th)
       if (th->in->vnum >= th_soc->room_start &&
 	  th->in->vnum <= th_soc->room_end)
 	{
-	  do_say (th, "Thank you for saving me. Your reward is here.\n\r");
-	  act ("@1n drop@s some coins.", th, NULL, NULL, NULL, TO_ALL);
-	  add_money (th->in, nr (500,2000)); 
+	  /* Give a reward to all persons of the correct alignment in
+	     the room. Hopefully players will use this to plevel newbies
+	     "safely". :) */
+	  THING *person;
+	  for (person = th->in->cont; person; person = person->next_cont)
+	    society_give_reward (th, person, LEVEL(th)*5);
+	  
 	  if (th->fgt && th->fgt->following)
 	    th->fgt->following = NULL;
 	  socval->val[5] = 0;
-	  afftype_remove (th, 0, FLAG_ACT1, ACT_PRISONER);
+	  remove_flagval (th, FLAG_ACT1, ACT_PRISONER);
 	  return TRUE;
 	}
       
@@ -3312,7 +3424,7 @@ update_prisoner_status (THING *th)
 	  build->val[0] == socval->val[0])
 	{
 	  socval->val[5] = 0;
-	  afftype_remove (th, 0, FLAG_ACT1, ACT_PRISONER);
+	  remove_flagval (th, FLAG_ACT1, ACT_PRISONER);
 	}
     }
   

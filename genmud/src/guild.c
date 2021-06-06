@@ -124,7 +124,6 @@ do_guild (THING *th, char *arg)
   if (!str_cmp (arg, "remove"))
     {
       SPELL *spl;
-      echo ("Moo\n\r");
       if (th->pc->guild[type] < 1)
 	{
 	  stt ("You aren't in this guild!\n\r", th);

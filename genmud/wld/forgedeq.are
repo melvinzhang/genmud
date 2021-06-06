@@ -2,10 +2,10 @@ THING 100000
 Name forgedeq.are`
 HpMv 0 10 5 1000
 HWT 0 0
-Timer 15
+Timer 8
 Short The Forged Eq Area`
 type Lonath`
-ThFl 1048576
+ThFl 135266304
 Flag Area 0 0 28
 END_THING
 
@@ -15,7 +15,6 @@ Level 10
 HWT 0 4
 Cost 28
 Short a $Bbrass$7 chunk`
-Wear wield`
 Long A $Bbrass$7 chunk is here.`
 ThFl 100934
 Val raw 1 0 0 0 0 0 0 0 `
@@ -27,7 +26,6 @@ Level 20
 HWT 0 6
 Cost 114
 Short a $9copper$7 chunk`
-Wear wield`
 Long A $9copper$7 chunk is here.`
 ThFl 100934
 Val raw 1 1 0 0 0 0 0 0 `
@@ -39,7 +37,6 @@ Level 30
 HWT 0 8
 Cost 257
 Short an $8iron$7 chunk`
-Wear wield`
 Long An $8iron$7 chunk is here.`
 ThFl 100934
 Val raw 1 2 0 0 0 0 0 0 `
@@ -51,7 +48,6 @@ Level 40
 HWT 0 10
 Cost 457
 Short a $Fsteel$7 chunk`
-Wear wield`
 Long A $Fsteel$7 chunk is here.`
 ThFl 100934
 Val raw 1 3 0 0 0 0 0 0 `
@@ -63,7 +59,6 @@ Level 50
 HWT 0 12
 Cost 714
 Short a $Fsilver$7 chunk`
-Wear wield`
 Long A $Fsilver$7 chunk is here.`
 ThFl 100934
 Val raw 1 4 0 0 0 0 0 0 `
@@ -75,7 +70,6 @@ Level 60
 HWT 0 14
 Cost 1028
 Short a $Bgold$7 chunk`
-Wear wield`
 Long A $Bgold$7 chunk is here.`
 ThFl 100934
 Val raw 1 5 0 0 0 0 0 0 `
@@ -87,7 +81,6 @@ Level 70
 HWT 0 16
 Cost 1400
 Short a $Fplatinum$7 chunk`
-Wear wield`
 Long A $Fplatinum$7 chunk is here.`
 ThFl 100934
 Val raw 1 6 0 0 0 0 0 0 `
@@ -99,7 +92,6 @@ Level 80
 HWT 0 16
 Cost 1828
 Short an $8obsidian$7 chunk`
-Wear wield`
 Long An $8obsidian$7 chunk is here.`
 ThFl 100934
 Val raw 1 7 0 0 0 0 0 0 `
@@ -111,7 +103,6 @@ Level 90
 HWT 0 14
 Cost 2314
 Short a $Emithril$7 chunk`
-Wear wield`
 Long A $Emithril$7 chunk is here.`
 ThFl 100934
 Val raw 1 8 0 0 0 0 0 0 `
@@ -123,7 +114,6 @@ Level 100
 HWT 0 12
 Cost 2857
 Short an $Dadamantium$7 chunk`
-Wear wield`
 Long An $Dadamantium$7 chunk is here.`
 ThFl 100934
 Val raw 1 9 0 0 0 0 0 0 `

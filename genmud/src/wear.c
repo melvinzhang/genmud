@@ -142,15 +142,22 @@ wear_thing (THING *th, THING *obj)
 
   if (armor)
     {
-     
-      for (i = 0; i < MIN (PARTS_MAX, NUM_VALS); i++)
+      
+      if (IS_PC (th))
 	{
-	  num = (obj->max_hp > 0 ? armor->val[i]*obj->hp/obj->max_hp :
-		 armor->val[i]);
-	  if (IS_PC (th))
-	    th->pc->armor[i] += num;
-	  else
-	    th->armor += num;
+	  for (i = 0; i < PARTS_MAX; i++)
+	    {
+	      
+	      num = (obj->max_hp > 0 ? armor->val[i]*obj->hp/obj->max_hp :
+		     armor->val[i]);
+	      if (IS_PC (th))
+		th->pc->armor[i] += num;
+	    }
+	}
+      else
+	{
+	  for (i = 0; i < PARTS_MAX; i++)
+	    th->armor += armor->val[i]*ARMOR_DIVISOR/3;
 	}
     }
   
@@ -339,15 +346,20 @@ remove_thing (THING *th, THING *obj, bool guaranteed)
   
   if ((armor = FNV (obj, VAL_ARMOR)) != NULL)
     {
-      
-      for (i = 0; i < MIN (PARTS_MAX, NUM_VALS); i++)
+      if (IS_PC (th))
 	{
-	  num = (obj->max_hp > 0 ? armor->val[i]*obj->hp/obj->max_hp :
-		 armor->val[i]);
-	  if (IS_PC (th))
-	    th->pc->armor[i] -= num;
-	  else
-	    th->armor -= num;
+	  for (i = 0; i < PARTS_MAX; i++)
+	    {
+	      num = (obj->max_hp > 0 ? armor->val[i]*obj->hp/obj->max_hp :
+		     armor->val[i]);
+	      if (IS_PC (th))
+		th->pc->armor[i] -= num;
+	    }
+	}
+      else
+	{
+	  for (i = 0; i < PARTS_MAX; i++)
+	    th->armor -= armor->val[i]*ARMOR_DIVISOR/3;
 	}
     }
   
@@ -614,8 +626,8 @@ do_draw (THING *th, char *arg)
 void
 find_eq_to_wear (THING *th)
 {
-  THING *obj, *objn, *equip;
-  int i, armorsum = 0, weaponsum = 0, curr_armorsum, curr_weaponsum;
+  THING *obj, *objn, *equip = NULL;
+  int armorsum = 0, weaponsum = 0, curr_armorsum, curr_weaponsum;
   bool found_corpse = FALSE, new_is_better = FALSE;
   VALUE *armor, *weapon = NULL, *curr_armor, *curr_weapon, *money;
   VALUE *raw = NULL, *socval = NULL, *shopval;
@@ -638,10 +650,36 @@ find_eq_to_wear (THING *th)
     is_worker = TRUE;
   else if (nr (1,164) == 37)
     {
+      do_wear (th, "all");
       do_drop (th, "all");
+      do_get (th, "all coins");
       return;
     }
-  
+  if (nr (1,25) == 13)
+    {
+      do_wear (th, "all");
+      return;
+    }
+  else if (nr (1,35) == 18)
+    {
+      do_get (th, "all");
+      return;
+    }
+  else if (nr (1,23) == 2)
+    {
+  /* Remove nonwpn/nonarmor items. */
+      
+      for (obj = th->cont; obj; obj = objn)
+	{
+	  objn = obj->next_cont;
+	  if (obj->wear_loc != ITEM_WEAR_NONE &&
+	      (armor = FNV (obj, VAL_ARMOR)) == NULL &&
+	      (weapon = FNV (obj, VAL_WEAPON)) == NULL)
+	    remove_thing (th, obj, TRUE);
+	}
+      return;
+    }
+	 
   if ((money = FNV (th->in, VAL_MONEY)) != NULL &&
       nr (1,8) == 3)
     {
@@ -697,17 +735,11 @@ find_eq_to_wear (THING *th)
 
 	  armorsum = 0;
 	  if (armor)
-	    {
-	      for (i = 0; i < PARTS_MAX; i++)
-		armorsum += armor->val[i];
-	    }
-
-	  /* Add up weapon power. */
+	    armorsum = find_item_power (armor);
 	  
+	  weaponsum = 0;
 	  if (weapon)
-	    {
-	      weaponsum = weapon->val[0] + weapon->val[1];
-	    }
+	    weaponsum = find_item_power (weapon);
 	  
 	  /* If the armor and weapon values aren't high enough, don't
 	     consider this equipment. If the item isn't a raw material
@@ -717,7 +749,7 @@ find_eq_to_wear (THING *th)
 	  
 	  if (!new_is_better && 
 	      (!armor || armorsum < 2) &&
-	      (!weapon || weaponsum < 14))
+	      (!weapon || weaponsum < 12))
 	    continue;
 	  
 	       
@@ -742,9 +774,7 @@ find_eq_to_wear (THING *th)
 		  
 		  if (armor && (curr_armor = FNV (equip, VAL_ARMOR)) != NULL)
 		    {
-		      curr_armorsum = 0;
-		      for (i = 0; i < PARTS_MAX; i++)
-			curr_armorsum += curr_armor->val[i];
+		      curr_armorsum = find_item_power (curr_armor);
 		      
 		      if (curr_armorsum < armorsum)
 			{
@@ -756,7 +786,8 @@ find_eq_to_wear (THING *th)
 		  if (weapon && obj->wear_pos == ITEM_WEAR_WIELD &&
 		      (curr_weapon = FNV (equip, VAL_WEAPON)) != NULL)
 		    {
-		      curr_weaponsum = curr_weapon->val[0]+curr_weapon->val[1];
+		      curr_weaponsum = find_item_power (curr_weapon);
+		      
 		      if (curr_weaponsum < weaponsum)
 			{
 			  new_is_better = TRUE;
@@ -772,6 +803,11 @@ find_eq_to_wear (THING *th)
 	}
       if (new_is_better && obj)
 	{
+	  if (equip && equip->wear_loc == obj->wear_loc)
+	    {
+	      act ("@1n remove@s @3n.", th, NULL, equip, NULL, TO_ALL);
+	      remove_thing (th, equip, TRUE);
+	    }
 	  if (obj->in != th &&
 	      (move_thing (th, obj, obj->in, th)))
 	    {
@@ -789,8 +825,30 @@ find_eq_to_wear (THING *th)
 }
 
 
+/* This function takes a value of a certain type and returns
+   the "power" of the item of that type. */
 
+int
+find_item_power (VALUE *val)
+{
+  int i;
 
+  if (!val)
+    return 0;
+  
+  if (val->type == VAL_WEAPON)
+    return val->val[0]+val->val[1];
+
+  if (val->type == VAL_ARMOR)
+    {
+      int power = 0;
+      for (i = 0; i < PARTS_MAX; i++)
+	power += val->val[i];
+      return power;
+    }
+  return 0;
+}
+	
 
 
 

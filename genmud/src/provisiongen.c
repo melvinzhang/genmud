@@ -51,6 +51,7 @@ generate_provisions (THING *th)
   min_vnum = load_area->vnum + load_area->mv + 1;
   max_vnum = load_area->vnum + load_area->max_mv -1;
   curr_vnum = min_vnum;
+  load_area->thing_flags |= TH_CHANGED;
   
   for (proto = proto_area->cont; proto; proto = proto->next_cont)
     {
@@ -62,7 +63,7 @@ generate_provisions (THING *th)
       
       /* Make sure that the object has a value of the correct type.
 	 These values don't need to be filled in, just need to exist. */
-      if (!IS_SET (proto->thing_flags, TH_NO_CONTAIN) &&
+      if (IS_SET (proto->thing_flags, TH_NO_CONTAIN) &&
 	  (!val ||
 	   (val->type != VAL_FOOD && 
 	    val->type != VAL_DRINK &&
@@ -96,8 +97,8 @@ generate_provisions (THING *th)
 	    obj->thing_flags = OBJ_SETUP_FLAGS;
 	  
 	  obj->vnum = curr_vnum;
-	  obj->wear_pos = ITEM_WEAR_WIELD;
-	  obj->level = nr (10,150);
+	  obj->wear_pos = ITEM_WEAR_NONE;
+	  obj->level = nr (10,30);
 	  name_times = 0;
 	  do
 	    {	      
@@ -105,7 +106,7 @@ generate_provisions (THING *th)
 	      generate_detail_name (proto, obj);
 	      
 	      /* Check the new name vs old names. */
-	      for (old_obj = proto_area->cont; old_obj; old_obj = old_obj->next_cont)
+	      for (old_obj = load_area->cont; old_obj; old_obj = old_obj->next_cont)
 		{
 		  if (!str_cmp (obj->short_desc, old_obj->short_desc))
 		    {

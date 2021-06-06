@@ -29,6 +29,7 @@ static struct timeval curr_time;
 static struct sockaddr_in listen_address;
 static fd_set input_set;
 int times_through_loop = 0;
+static pthread_mutex_t read_mut = PTHREAD_MUTEX_INITIALIZER;
 
 /* All this function does is 1.  Set up the socket on the correct port.
    2. Load a database and 3. Run the server loop. Then it will clean up
@@ -62,7 +63,7 @@ init_socket (void)
       (setsockopt (listen_socket, SOL_SOCKET, SO_REUSEADDR, (char *) &reuse, sizeof (reuse)) < 0) ||
       ((bind (listen_socket, (struct sockaddr *) &listen_address, sizeof (listen_address))) < 0) ||
       (fcntl (listen_socket, F_SETFL, (fcntl (listen_socket, F_GETFL, 0) | O_NONBLOCK)) < 0) ||
-      (listen (listen_socket, 5) < 0))
+      (listen (listen_socket, 25) < 0))
     {
       log_it ("Socket Failed!\n\r");
       close (listen_socket);
@@ -132,7 +133,7 @@ run_server (void)
 	}
       else if (max_players > 2) /* Do not allow speedup with players. */
 	RBIT (server_flags, SERVER_SPEEDUP);
-
+      
       
     }
 
@@ -160,7 +161,8 @@ read_in_from_network (void*pointer)
 {
   struct timeval wait_time;
   FILE_DESC *fd, *fd_next;
-
+  
+  
   while (1)
     {
       FD_ZERO (&input_set);
@@ -196,14 +198,17 @@ read_in_from_network (void*pointer)
        returns true and we set the flag for the game to read this stuff,
        and we wait for the game to update this. */
       if (get_input ())
-	SBIT (server_flags, SERVER_READ_DATA);
+	{
+	  pthread_mutex_lock (&read_mut);
       /* Do not continue the loop until all data has been handled by
 	 the server. */
       
-      if (IS_SET (server_flags, SERVER_READ_DATA))
-	{
-	  while (IS_SET (server_flags, SERVER_READ_DATA))
-	    usleep (20000);  
+	  /* Only give a second lag time of the reading gets
+	     funked somehow. This ++count < 50 can be dangerous but
+	     once in a while it seems to hang so i wanted to put this
+	     in. Be careful with it. threads suck. Move along. */
+	  while (pthread_mutex_trylock (&read_mut) == EBUSY)
+	    usleep (20000);
 	}
       else
 	usleep (20000);
@@ -340,7 +345,7 @@ process_input (void)
 	}
     }
   prev_command[0] = '\0';
-  RBIT (server_flags, SERVER_READ_DATA);
+  pthread_mutex_unlock (&read_mut);
   return;
 }
 

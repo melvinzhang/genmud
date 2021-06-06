@@ -4,11 +4,11 @@ HpMv 0 10 25 50
 HWT 0 0
 Align 2
 Cost 100
-Timer 7
+Timer 18
 Short The Good Outpost`
 Long The Good Outpost comes to life again.`
 type Lonath`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 12
 END_THING
 
@@ -16,12 +16,12 @@ THING 1051
 HWT 0 0
 Align 2
 Color 7
-Desc The whitie outpost serves as shelter from the dangers of the world. 
+Desc The good outpost serves as shelter from the dangers of the world. 
 `
 Short The Relic Room`
 MIW 1
 Symbol |`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1052 0 0 0 0 0 0 0 `
 Reset 1090 100 1 1
 Reset 1081 10 5 1
@@ -35,7 +35,7 @@ Desc 1051`
 Short The Sanctuary`
 MIW 1
 Symbol |`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1053 0 0 0 0 0 0 0 `
 Val s_exit 1051 0 0 0 0 0 0 0 `
 Reset 1081 10 5 1
@@ -67,7 +67,7 @@ Desc 1051`
 Short A Training Alcove`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val w_exit 1053 0 0 0 0 0 0 0 `
 Reset 1087 100 1 1
 Reset 1081 10 5 1
@@ -81,7 +81,7 @@ Desc 1051`
 Short A Training Alcove`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val e_exit 1053 0 0 0 0 0 0 0 `
 Reset 1086 100 1 1
 Reset 1081 10 5 1
@@ -95,7 +95,7 @@ Desc 1051`
 Short A Training Alcove`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val d_exit 1053 0 0 0 0 0 0 0 `
 Reset 1088 100 1 1
 Reset 1081 10 5 1
@@ -109,7 +109,7 @@ Desc 1051`
 Short A Training Alcove`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val d_exit 1069 3 3 50 50 0 0 0 trapdoor`
 Val u_exit 1053 0 0 0 0 0 0 0 `
 Reset 1089 100 1 1
@@ -142,7 +142,7 @@ Desc 1051`
 Short A Shop Alcove`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val w_exit 1058 0 0 0 0 0 0 0 `
 Reset 1083 100 1 1
 Reset 1081 10 5 1
@@ -156,7 +156,7 @@ Desc 1051`
 Short A Shop Alcove`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val e_exit 1058 0 0 0 0 0 0 0 `
 Reset 1082 100 1 1
 Reset 1081 10 5 1
@@ -170,7 +170,7 @@ Desc 1051`
 Short A Shop Alcove`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val d_exit 1058 0 0 0 0 0 0 0 `
 Reset 1084 100 1 1
 Reset 1081 10 5 1
@@ -184,7 +184,7 @@ Desc 1051`
 Short A Shop Alcove`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val u_exit 1058 0 0 0 0 0 0 0 `
 Reset 1085 100 1 1
 Reset 1081 10 5 1
@@ -197,7 +197,7 @@ Desc 1051`
 Short The Gatehouse`
 MIW 1
 Symbol +`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1068 0 0 0 0 0 0 0 `
 Val d_exit 1067 0 0 0 0 0 0 0 `
 Val u_exit 1066 0 0 0 0 0 0 0 `
@@ -215,7 +215,7 @@ Desc 1051`
 Short A Guard Post`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val w_exit 1063 0 0 0 0 0 0 0 `
 Reset 1081 10 5 1
 END_THING
@@ -241,7 +241,7 @@ Desc 1051`
 Short A Guard Post`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val d_exit 1063 0 0 0 0 0 0 0 `
 Reset 1081 10 5 1
 END_THING
@@ -254,7 +254,7 @@ Desc 1051`
 Short A Guard Post`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val u_exit 1063 0 0 0 0 0 0 0 `
 Reset 1081 10 5 1
 END_THING
@@ -268,7 +268,7 @@ Short The Outpost Entrance`
 MIW 1
 Symbol |`
 ThFl 524779
-Val n_exit 200163 0 0 0 0 0 0 0 `
+Val n_exit 200307 0 0 0 0 0 0 0 `
 Val s_exit 1063 0 0 0 0 0 0 0 `
 END_THING
 
@@ -280,7 +280,7 @@ Desc You can learn to fight in relative safety here.
 Short The Training Hall`
 MIW 1
 Symbol }`
-ThFl 524779
+ThFl 134742507
 Val e_exit 1072 0 0 0 0 0 0 0 `
 Val n_exit 1074 0 0 0 0 0 0 0 `
 Val s_exit 1070 0 0 0 0 0 0 0 `
@@ -297,7 +297,7 @@ Desc 1069`
 Short The Training Hall`
 MIW 1
 Symbol \`
-ThFl 524779
+ThFl 134742507
 Val e_exit 1071 0 0 0 0 0 0 0 `
 Val n_exit 1069 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
@@ -312,7 +312,7 @@ Desc 1069`
 Short The Training Hall`
 MIW 1
 Symbol /`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1072 0 0 0 0 0 0 0 `
 Val w_exit 1070 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
@@ -327,7 +327,7 @@ Desc 1069`
 Short The Training Hall`
 MIW 1
 Symbol {`
-ThFl 524779
+ThFl 134742507
 Val w_exit 1069 0 0 0 0 0 0 0 `
 Val n_exit 1073 0 0 0 0 0 0 0 `
 Val s_exit 1071 0 0 0 0 0 0 0 `
@@ -343,7 +343,7 @@ Desc 1069`
 Short The Training Hall`
 MIW 1
 Symbol \`
-ThFl 524779
+ThFl 134742507
 Val w_exit 1074 0 0 0 0 0 0 0 `
 Val s_exit 1072 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
@@ -358,7 +358,7 @@ Desc 1069`
 Short The Training Hall`
 MIW 1
 Symbol /`
-ThFl 524779
+ThFl 134742507
 Val s_exit 1069 0 0 0 0 0 0 0 `
 Val e_exit 1073 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
@@ -367,8 +367,8 @@ Reset 1092 50 5 1
 END_THING
 
 THING 1081
-Name buffed guard whitie`
-Level 120
+Name buffed guard good`
+Level 100
 HpMult 30
 HWT 100 5000
 Align 2
@@ -531,8 +531,8 @@ Long A small target dummy is here.`
 ThFl 2209
 Val money 100 0 0 0 0 0 0 0 `
 Flag Act 0 0 16640
-Reset 270 50 2 1
-Reset 271 50 4 1
+Reset 270 20 1 1
+Reset 271 20 3 1
 END_THING
 
 THING 1092
@@ -544,8 +544,8 @@ Long A large target dummy is here.`
 ThFl 2209
 Val money 300 0 0 0 0 0 0 0 `
 Flag Act 0 0 16640
-Reset 270 50 2 1
-Reset 271 50 4 1
+Reset 270 20 1 1
+Reset 20 3 1 1
 END_THING
 
 END_OF_AREA

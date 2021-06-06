@@ -2,10 +2,10 @@ THING 108000
 Name objgen.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 2
+Timer 11
 Short The Object Gen Area`
 type Lonath`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 28
 END_THING
 
@@ -30,45 +30,22 @@ Freezing Hot Pure Holy Unholy Corrupted Emblazoned Heraldric Sparkling
 Sparking Coruscating Translucent Shadowy Glistening Abyssal Ornate Amazing
 Enchanted Etched Focused Crafted Harmonious Discordant Fine Great
 Glimmering Polished Howling Exquisite Tempered Elemental Primal Righteous
-Peerless Worked Dusty Frosted Faded Worn Pitted Magnificent 
-Twilight
-Eldritch
-Icy
-Frigid
-Soft
-Frost
-Ragged
-Braided
-Wizards
-Gleaming
-Glinting
-Decorated
-Dirty
-Bloodstained
-Bloody
-Screaming
-Furious
-Reinforced
-Rugged
-Cold
-Feral
-Fierce
-Flayed
-Finespun
-Hardened
-Honorable
-Imbued
-Luminous
-Luminescent
-Lupine
-Matchless
-Mischevous
-Radiant
-Radiating
-Softened
-Raw
-Refined
-Totemic
+Peerless Worked Dusty Frosted Faded Worn Pitted Magnificent Twilight
+Eldritch Icy Frigid Soft Frost Ragged Braided Wizards Gleaming Glinting
+Decorated Dirty Bloodstained Bloody Screaming Furious Reinforced Rugged
+Cold Feral Fierce Flayed Finespun Hardened Honorable Imbued Luminous
+Luminescent Lupine Matchless Mischevous Radiant Radiating Softened Raw
+Refined Totemic Imperial Fathomless Sinister Silvered Gilded Spectral
+Ghostly Rich Well-Designed Druidic Hierophantic Lucky Runic Juggernaut
+Infernal Adorned Wicked Grand Aged Shaped Twisted Arcane Warshadow
+Glimmerspirit Darkened Regal Sturdy Spider Wolf Mottled Scarred Blackthorn
+Thorned Resonant Lavish Splendid Dread Valorous Ensorcelled Crested 
+Embossed
+Beaded
+Forged
+Deathshadow
+Marvelous
+Stupendous
 `
 Short Descriptive name.`
 MIW 1
@@ -102,6 +79,7 @@ Magenta & $DMagenta$7
 Azure & $CAzure$7
 Crimson & $1Crimson$7
 Rainbow & $AR$Ea$Ci$Fn$9b$Bo$Dw$7
+Dark & $8Dark$7
 `
 Short Descriptive name.`
 END_THING
@@ -131,6 +109,7 @@ Amber & $BAmber$7
 Zircon & $FZircon$7
 Iolite & $EIolite$7
 Citrine & $ACitrine$7
+Bloodstone & $9Bloodstone$7
 `
 Short Descriptive name.`
 END_THING
@@ -153,6 +132,12 @@ Adamantium & $DAdamantium$7
 Bronze & $3Bronze$7
 Titanium & $FTitanium$7
 Chain
+Rock
+Stone
+Scalemail
+Truemail
+Truesilver & $FTruesilver$7
+Ivory & $FIvory$7
 `
 Short Descriptive name.`
 END_THING
@@ -256,6 +241,28 @@ Fury
 Rapture
 'the Totem'
 Enrapturement
+'the Depths'
+'the Unicorn'
+'the Dragon'
+'the Demon'
+Luck
+Mana
+Grandeur
+Dweomers
+Dweomercraft
+'the Arcane'
+'the Spider'
+'the Wolf'
+Night
+'the Night'
+'the Day'
+Day
+Regalia
+Melding
+Dislocation
+Resonance
+'the Deranged'
+Misdirection
 `
 Short Descriptive name.`
 END_THING

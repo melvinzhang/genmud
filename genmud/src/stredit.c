@@ -582,6 +582,7 @@ send_page (THING *th)
 
 /* This takes a string and edits it into paragraphs with indentations
    and double enters marking spaces between paragraphs. */
+
 void
 paragraph_format (char **text)
 {

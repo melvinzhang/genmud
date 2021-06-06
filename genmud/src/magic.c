@@ -6,7 +6,7 @@
 #include <time.h>
 #include "serv.h"
 #include "event.h"
-
+#include "society.h"
 
 /* Quick note about gems and mana from spells. The way it works is this.
    
@@ -868,13 +868,17 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
       targn = targ->next_cont;
       
       
-      if (spl->target_type == TAR_OFFENSIVE && 
-	  (!CAN_FIGHT (targ) || IS_ROOM (targ) || 
-	   is_friend (th, targ) || targ == th ||
-	   (!IS_PC (th) && !IS_PC (targ) && area &&
-	    !DIFF_ALIGN (th->align, targ->align))))
-	continue;
-      
+      if (spl->target_type == TAR_OFFENSIVE)
+	{
+	  if (!CAN_FIGHT (targ) || IS_ROOM (targ) || 
+	      is_friend (th, targ) || targ == th ||
+	      (!IS_PC (th) && !IS_PC (targ) && area &&
+	       !DIFF_ALIGN (th->align, targ->align)))
+	    continue;
+	  if (IS_PC (targ) && LEVEL(targ) >= BLD_LEVEL &&
+	      IS_PC1_SET (targ, PC_HOLYWALK | PC_HOLYPEACE))
+	    continue;
+	}
 	  
       if (!DIFF_ALIGN (th->align, targ->align) && IS_PC (targ) &&
 	  ((spl->target_type == TAR_OFFENSIVE && area) ||
@@ -902,22 +906,7 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
       /* Spell reflect works once, then it's gone. */
 
       if (IS_AFF (targ, AFF_REFLECT))
-	{
-	  FLAG *aff, *affn;
-	  targ = th;
-	  for (aff = targ->flags; aff != NULL; aff = affn)
-	    {
-	      affn = aff->next;
-	      if (aff->type == FLAG_AFF &&
-		  IS_SET (aff->val, AFF_REFLECT))
-		{
-		  if (aff->timer > 0)
-		    aff_from (aff, targ);
-		  else
-		    RBIT (aff->val, AFF_REFLECT);
-		}
-	    }
-	}
+	remove_flagval (targ, FLAG_AFF, AFF_REFLECT);
 
       /* Message uses "caster" instead of "th" so that you see
 	 "A flaming longsword burns Bob" as opposed to "Fred burns Bob" */
@@ -1231,12 +1220,16 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
 		    }
 		  if (IS_SET (spell_bits, SPELL_HEALS))
 		    {
+		      if (targ->hp < targ->max_hp)
+			society_give_reward (targ, th, damg);
 		      targ->hp += damg;
 		      if (targ->hp > targ->max_hp)
 			targ->hp = targ->max_hp;
 		    }
 		  if (IS_SET (spell_bits, SPELL_REFRESH))
 		    {
+		      if (targ->hp < targ->max_hp)
+			society_give_reward (targ, th, damg);
 		      targ->mv += damg;
 		      if (targ->mv > targ->max_mv)
 			targ->mv = targ->max_mv;

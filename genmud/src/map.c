@@ -31,7 +31,7 @@ const char pixmap_symbols[PIXMAP_MAX][4] =
     "12,",
     "02*",
     "05^",
-    "17%",
+    "17&",
     "13:",
     "06+",
     "16@",
@@ -112,7 +112,7 @@ set_up_map_room (THING *room)
   if (IS_SET (flags, ROOM_EARTHY))
     {
       room->color = 11;
-      room->symbol = '%'; 
+      room->symbol = '&'; 
       room->kde_pixmap = PIXMAP_DEFAULT;
     }
   else if (IS_SET (flags, ROOM_WATERY))
@@ -339,11 +339,14 @@ map_dir_room (THING *start_in, int dir)
 void
 do_map (THING *th, char *arg)
 {
-  if (!th || !th->in)
+  if (!th || !th->in || !IS_PC (th))
     return;
   
   undo_marked (th->in);
-  create_map (th, th->in, MAP_MAXX, MAP_MAXY);
+  if (str_cmp (arg, "large"))
+    create_map (th, th->in, 75, th->pc->pagelen);
+  else
+    create_map (th, th->in, MAP_MAXX, MAP_MAXY);
   /* sprintf (buf, "\x1b[1;%dr\x1b[%d;1f", IS_PC (th) ? th->pc->pagelen : 24,
      IS_PC (th) ? th->pc->pagelen : 24);
      stt (buf, th); */

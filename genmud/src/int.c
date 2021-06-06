@@ -66,7 +66,7 @@ interpret (THING *th, char *arg)
 	}
     }
   
-  afftype_remove (th, 0, FLAG_AFF, AFF_HIDDEN);
+  remove_flagval (th, FLAG_AFF, AFF_HIDDEN);
   for (chan = channel_list; chan; chan = chan->next)
     {
       /* If the word only has one letter, we check if the interpreter
@@ -268,6 +268,7 @@ init_command_list (void)
   add_command ("mythology", do_mythology, 0, FALSE);
   add_command ("get", do_get, 0, FALSE);
   add_command ("drop", do_drop, 0, FALSE);
+  add_command ("divine", do_divine, 0, FALSE);
   add_command ("memory", do_memory, MAX_LEVEL, FALSE);
   add_command ("enter", do_enter, 0, FALSE);
   add_command ("levels", do_levels, 0, FALSE);
@@ -360,6 +361,7 @@ init_command_list (void)
   add_command ("restore", do_restore, MAX_LEVEL, FALSE);
   add_command ("rest", do_rest, 0, FALSE);
   add_command ("unlearn", do_unlearn, 0, FALSE);
+  add_command ("build", do_build, 0, FALSE);
   add_command ("meditate", do_meditate, 0, FALSE);
   add_command ("zedit", do_zedit, 0, FALSE);
   add_command ("unstore", do_unstore, 0, FALSE);

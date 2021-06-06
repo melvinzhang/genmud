@@ -244,7 +244,7 @@ society_get_killed (THING *killer, THING *vict)
   if (IS_PC (killer) && align_info[killer->align] != NULL &&
       vsoc->vnum == align_info[killer->align]->most_hated_society)
     {
-      killer->pc->quest_points += LEVEL(vict)/75 + 1;
+      killer->pc->quest_points += LEVEL(vict)/25 + 1;
       if (killer->pc->align_hate[killer->align] > 0)
 	killer->pc->align_hate[killer->align] -= 
 	  MIN (killer->pc->align_hate[killer->align], LEVEL(vict)/75+1);
@@ -257,7 +257,8 @@ society_get_killed (THING *killer, THING *vict)
   if (DIFF_ALIGN (killer->align, vsoc->align) ||
       (killer->align == 0 && vsoc->align == 0))
     {
-      
+
+    		  
       /* If a society member kills another in a different
 	 society, when the victim dies on "home soil", 
 	 transfer a few raw materials to the killer society 

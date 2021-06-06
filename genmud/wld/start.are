@@ -3,11 +3,11 @@ Name start.are`
 HpMv 0 1 109 998
 HWT 0 0
 Cost 100
-Timer 12
+Timer 7
 Short the start area`
 Long A cold wind blows by...`
 type Lonath`
-ThFl 537919488
+ThFl 672137216
 Flag Area 0 0 28
 END_THING
 
@@ -43,7 +43,7 @@ HpMult 0
 HWT 0 0
 Color 8
 Desc This is my room. :)
-It has a toilet and a tapestry in it.
+It has a tapestry in it.
 `
 Short Lonath's Room`
 MIW 1
@@ -52,13 +52,7 @@ Symbol -`
 ThFl 524779
 Flag Room 0 0 1
 EDESC tapestry`
-This large wall-hanging depicts Lonath in battle with the forces of PortalWhoreness!
-`
-EDESC potty toilet`
-This is where Lonath relaxes with his list of people who are naughty, and
-people who are really naughty. Nobody here is nice. It's very clean
-because he can aim and he uses those little wipey things that keep the
-stink and whatnot from building up too much.
+This large wall-hanging depicts great battles between the forces of good and evil.
 `
 END_THING
 
@@ -225,7 +219,7 @@ Flag Room 0 0 16781312
 END_THING
 
 THING 100
-Name recall room`
+Name neutral_recall`
 HpMult 0
 HWT 0 0
 Color 8
@@ -238,29 +232,29 @@ Flag Room 0 0 1
 END_THING
 
 THING 101
-Name darkie_recall`
+Name evil_recall`
 HpMult 0
 HWT 0 0
 Color 8
-Short The Darkie Recall Room`
+Short The Evil Recall Room`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Flag Room 0 0 1
 Reset 251 100 1 1
 END_THING
 
 THING 102
-Name whitie_recall`
+Name good_recall`
 HpMult 0
 HWT 0 0
 Color 8
 Desc The Recall Room
 `
-Short The Whitie Recall Room`
+Short The Good Recall Room`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Flag Room 0 0 1
 Reset 252 100 1 1
 END_THING
@@ -1478,7 +1472,7 @@ HWT 0 0
 Short the mob randpop`
 Long The mob randpop is here.`
 ThFl 100934
-Val randpop 101100 988 2 1000 0 0 0 0 `
+Val randpop 101100 1274 2 1000 0 0 0 0 `
 END_THING
 
 THING 279
@@ -1487,7 +1481,7 @@ HWT 0 0
 Short The provision pop`
 Long The provision po pis here.`
 ThFl 101063
-Val randpop 125006 195 1 0 0 0 0 0 `
+Val randpop 125006 249 1 0 0 0 0 0 `
 END_THING
 
 THING 300
@@ -2408,6 +2402,7 @@ END_THING
 THING 701
 Name corpse`
 HWT 0 0
+Timer 10
 Short a corpse`
 ThFl 100934
 Val replaceby 710 1 1 0 0 0 0 0 `
@@ -2516,7 +2511,7 @@ END_THING
 THING 710
 Name pile bones`
 HWT 0 0
-Timer 10
+Timer 30
 Short a pile of bones`
 Long A pile of bones is here.`
 ThFl 100934
@@ -2602,7 +2597,6 @@ Name flower daisy`
 Level 20
 HWT 10 3
 Short a daisy`
-Wear wield`
 Long A daisy pokes up out of the ground.`
 ThFl 100934
 Val raw 4 0 0 0 0 0 0 0 `
@@ -2613,7 +2607,6 @@ Name flower carnation`
 Level 20
 HWT 10 3
 Short a carnation`
-Wear wield`
 Long A carnation is here.`
 ThFl 100934
 Val raw 4 0 0 0 0 0 0 0 `
@@ -2624,7 +2617,6 @@ Name flower lavendar`
 Level 20
 HWT 10 3
 Short a lavendar`
-Wear wield`
 Long A lavendar is here.`
 ThFl 100934
 Val raw 4 0 0 0 0 0 0 0 `
@@ -2635,7 +2627,6 @@ Name flower bluebell`
 Level 20
 HWT 10 3
 Short a bluebell`
-Wear wield`
 Long A bluebell is here.`
 ThFl 100934
 Val raw 4 0 0 0 0 0 0 0 `

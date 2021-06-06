@@ -12,14 +12,6 @@ static char consonants[NUM_CONSONANTS+1] = "bcdfghjklmnpqrstvwxyz";
 /* These are consonants that must be near a vowel, not a consonant due
    to being too hard to pronounce otherwise. */
 
-#define must_be_near_vowel(a) \
-(LC((a))=='j'|| \
-LC((a))=='q'|| \
-LC((a))=='v'|| \
-LC((a))=='x'|| \
-LC((a))=='y'|| \
-LC((a))=='z' ? TRUE:FALSE) 
-
 char *
 create_society_name (VALUE *socval)
 {
@@ -113,7 +105,7 @@ create_society_name (VALUE *socval)
 		  if (must_be_near_vowel(c))
 		    {
 		      /* Many times this letter is discarded to repick. */
-		      if (nr (1,3) != 2)
+		      if (nr (1,10) != 2)
 			letter_ok = FALSE;
 		      /* Make sure it's after a vowel. */
 		      if (!*syll)
@@ -238,6 +230,10 @@ create_society_name (VALUE *socval)
       strcat (nospacerbuf, "h");
     }
   
+  /* Could be dangerous...no 2 letter names anymore. */
+  if (strlen (namebuf) < 3)
+    strcpy (namebuf, create_society_name (socval));
+	    
   if (!contains_bad_word (nospacerbuf))
     {
       namebuf[0] = UC(namebuf[0]);
@@ -247,7 +243,7 @@ create_society_name (VALUE *socval)
 	  bad words is so small, that it shouldn't make a difference
 	  in practice. */
     create_society_name (socval);
-
+  
   return namebuf;
 }
 
@@ -272,12 +268,13 @@ setup_society_name (THING *th)
       (soc = find_society_num (socval->val[0])) == NULL)
     return;
   
-  /* So the socval exists. Set up the name. */
-
-  sprintf (namebuf, "%s %s %s",
-	   th->proto->name,
-	   socval->word,
-	   (soc->adj && *soc->adj ? soc->adj : ""));
+  /* So the socval exists. Set up the name.  */
+  
+  sprintf (namebuf, "%s %s", th->proto->name, socval->word);
+  if (soc->adj && *soc->adj && 
+      soc->generated_from != ORGANIZATION_SOCIGEN_VNUM )    
+    sprintf (namebuf + strlen(namebuf), " %s", soc->adj);
+  
   free_str (th->name);
   th->name = new_str (namebuf);
   
@@ -292,7 +289,8 @@ setup_society_name (THING *th)
   strcpy (namebuf, socval->word);
   strcat (namebuf, " the ");
   /* Add adjectives if necessary! */
-  if (soc->adj && *soc->adj)
+  if (soc->adj && *soc->adj 
+      && soc->generated_from != ORGANIZATION_SOCIGEN_VNUM )
     {
       strcat (namebuf, soc->adj);
       strcat (namebuf, " ");
@@ -312,7 +310,7 @@ setup_society_name (THING *th)
   strcpy (namebuf, socval->word);
   strcat (namebuf, " the ");
   /* Add adjectives if necessary! */
-  if (soc->adj && *soc->adj)
+  if (soc->adj && *soc->adj && soc->generated_from != ORGANIZATION_SOCIGEN_VNUM)
     {
       strcat (namebuf, soc->adj);
       strcat (namebuf, " ");
