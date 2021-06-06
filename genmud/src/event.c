@@ -46,6 +46,7 @@ new_event (void)
   newevent->arg = nonstr;
   newevent->th = NULL;
   newevent->attacker = NULL;
+  RBIT (newevent->flags, EVENT_DEAD);
   return newevent;
 }
 
@@ -54,7 +55,7 @@ new_event (void)
 void
 free_event (EVENT *event)
 {
-  if (!event)
+  if (!event || IS_SET (event->flags, EVENT_DEAD))
     return;
   
   /* These are used to update the event list if the event we're using
@@ -67,14 +68,16 @@ free_event (EVENT *event)
     current_event = NULL;
   if (event == next_current_event)
     next_current_event = next_current_event->next;
-
-
+  
+  
   
   event_from_thing (event);
   event_from_list (event);
   free_str (event->arg);
   event->arg = nonstr;
-  bzero (event, sizeof (EVENT));
+  event->th = NULL;
+  event->flags = EVENT_DEAD;
+  event->times_left = 0;
   event->next = event_free;
   event_free = event;
   return;
@@ -338,9 +341,9 @@ update_events (void)
 	     then add it back into the list at the new spot. */
 	  if (current_event)
 	    {
-	      if (IS_SET (current_event->flags, EVENT_REPEAT) ||
-		  --current_event->times_left > 0)
-		{
+	      if ((IS_SET (current_event->flags, EVENT_REPEAT) ||
+		   --current_event->times_left > 0))
+	      {
 		  
 		  /* Haste and slow affect the speed at which events
 		     are reset. This may be changed to haste/slow as
@@ -375,9 +378,11 @@ update_events (void)
 void
 exec_event (EVENT *event)
 {
+  THING *th;
   if (!event)
     return;
   
+  th = event->th;
   if (IS_SET (event->flags, EVENT_COMMAND))
     do_command_event (event);
   else if (IS_SET (event->flags, EVENT_DAMAGE))
@@ -389,8 +394,11 @@ exec_event (EVENT *event)
       else
 	(*event->callback) ();
     }
-  /* If this was a thing event and the thing gets nuked...*/
-  if (event->th && !event->th->in)
+  /* If this was a thing event and the thing gets nuked...
+     Make sure this is for the thing BEFORE the event. If it gets
+     killed, it may not be in there anymore (As the events will all
+     be cleared). */
+  if (th && !th->in)
     {
       RBIT (event->flags, EVENT_REPEAT);
       event->times_left = 0;

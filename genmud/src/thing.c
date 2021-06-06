@@ -1596,10 +1596,11 @@ void
 do_make (THING *th, char *arg)
 {
   int vnum = 0, num_made = 1, i;
-  THING *made, *going_to;
+  THING *made, *going_to, *base_item = NULL;
   char arg1[STD_LEN];
   char buf[STD_LEN];
-  if (!IS_PC (th) || LEVEL (th) < BLD_LEVEL)
+  VALUE *rnd = NULL;
+  if (!th || !IS_PC (th) || LEVEL (th) < BLD_LEVEL)
     {
       stt ("Huh?\n\r", th);
       return;
@@ -1631,14 +1632,20 @@ do_make (THING *th, char *arg)
       stt (buf, th);
       return;
     }
-
+  
+  if ((base_item = find_thing_num (vnum)) != NULL)
+    rnd = FNV (base_item, VAL_RANDPOP);
+  
 
   for (i = 0; i < num_made; i++)
     {
+      if (rnd)
+	vnum = calculate_randpop_vnum (rnd, LEVEL(th));
+      
       if ((made = create_thing (vnum)) == NULL)
 	{
-	  stt ("That thing does not exist to make!\n\r", th);
-	  return;
+	  stt ("That thing doesn't exist and cannot be made.\n\r", th);
+	  continue;
 	}
       
       going_to = th;

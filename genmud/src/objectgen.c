@@ -274,7 +274,7 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	}
     }
   strcat (longname, realfullname);
-  strcat (longname, " ");
+  strcat (longname, "\x1b[0;36m ");
   
   switch (nr (1,8))
     {

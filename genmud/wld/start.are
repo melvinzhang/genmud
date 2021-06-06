@@ -3,7 +3,7 @@ Name start.are`
 HpMv 0 1 109 998
 HWT 0 0
 Cost 100
-Timer 13
+Timer 6
 Short the start area`
 Long A cold wind blows by...`
 type Lonath`
@@ -66,7 +66,7 @@ Short The Remort Room`
 MIW 1
 Symbol -`
 ThFl 524779
-Val d_exit 1206803 0 0 0 0 0 0 0 `
+Val u_exit 1211451 0 0 0 0 0 0 0 `
 END_THING
 
 THING 27
@@ -78,7 +78,7 @@ Wear chest`
 MIW 1
 Symbol -`
 ThFl 524779
-Val e_exit 1231729 0 0 0 0 0 0 0 `
+Val u_exit 1231262 0 0 0 0 0 0 0 `
 END_THING
 
 THING 40
@@ -218,6 +218,286 @@ MIW 1
 Symbol -`
 ThFl 524779
 Flag Room 0 0 16781312
+END_THING
+
+THING 60
+HWT 0 0
+Color 5
+Desc The battleground. Enjoy. 
+`
+Short The Battleground`
+MIW 1
+Symbol |`
+ThFl 524779
+Val s_exit 61 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 61
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol |`
+ThFl 524779
+Val s_exit 62 0 0 0 0 0 0 0 `
+Val n_exit 60 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 62
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol {`
+ThFl 524779
+Val s_exit 65 0 0 0 0 0 0 0 `
+Val w_exit 63 0 0 0 0 0 0 0 `
+Val n_exit 61 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 63
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol /`
+ThFl 524779
+Val s_exit 64 0 0 0 0 0 0 0 `
+Val e_exit 62 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 64
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol }`
+ThFl 524779
+Val s_exit 66 0 0 0 0 0 0 0 `
+Val e_exit 65 0 0 0 0 0 0 0 `
+Val n_exit 63 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 65
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol /`
+ThFl 524779
+Val n_exit 62 0 0 0 0 0 0 0 `
+Val w_exit 64 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 66
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol {`
+ThFl 524779
+Val w_exit 73 0 0 0 0 0 0 0 `
+Val s_exit 67 0 0 0 0 0 0 0 `
+Val n_exit 64 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 67
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol \`
+ThFl 524779
+Val e_exit 68 0 0 0 0 0 0 0 `
+Val n_exit 66 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 68
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol \`
+ThFl 524779
+Val s_exit 80 0 0 0 0 0 0 0 `
+Val w_exit 67 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 69
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol +`
+ThFl 524779
+Val w_exit 80 0 0 0 0 0 0 0 `
+Val e_exit 72 0 0 0 0 0 0 0 `
+Val s_exit 70 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 70
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol \`
+ThFl 524779
+Val e_exit 71 0 0 0 0 0 0 0 `
+Val n_exit 69 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 71
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol /`
+ThFl 524779
+Val n_exit 72 0 0 0 0 0 0 0 `
+Val w_exit 70 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 72
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol \`
+ThFl 524779
+Val s_exit 71 0 0 0 0 0 0 0 `
+Val w_exit 69 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 73
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol -`
+ThFl 524779
+Val w_exit 74 0 0 0 0 0 0 0 `
+Val e_exit 66 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 74
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol +`
+ThFl 524779
+Val s_exit 79 0 0 0 0 0 0 0 `
+Val w_exit 77 0 0 0 0 0 0 0 `
+Val n_exit 75 0 0 0 0 0 0 0 `
+Val e_exit 73 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 75
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol \`
+ThFl 524779
+Val w_exit 76 0 0 0 0 0 0 0 `
+Val s_exit 74 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 76
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol /`
+ThFl 524779
+Val s_exit 77 0 0 0 0 0 0 0 `
+Val e_exit 75 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 77
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol }`
+ThFl 524779
+Val e_exit 74 0 0 0 0 0 0 0 `
+Val s_exit 78 0 0 0 0 0 0 0 `
+Val n_exit 76 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 78
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol \`
+ThFl 524779
+Val e_exit 79 0 0 0 0 0 0 0 `
+Val n_exit 77 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 79
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol /`
+ThFl 524779
+Val n_exit 74 0 0 0 0 0 0 0 `
+Val w_exit 78 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
+END_THING
+
+THING 80
+HWT 0 0
+Color 5
+Desc 60`
+Short The Battleground`
+MIW 1
+Symbol \`
+ThFl 524779
+Val n_exit 68 0 0 0 0 0 0 0 `
+Val e_exit 69 0 0 0 0 0 0 0 `
+Flag Room 0 0 16842752
 END_THING
 
 THING 100
@@ -1383,7 +1663,15 @@ HWT 0 0
 Short The provision pop`
 Long The provision po pis here.`
 ThFl 101063
-Val randpop 125006 229 1 0 0 0 0 0 `
+Val randpop 125006 262 1 0 0 0 0 0 `
+END_THING
+
+THING 280
+Name randpop randpop`
+HWT 0 0
+Short The randpop item`
+ThFl 100934
+Val randpop 270 10 1 0 0 0 0 0 `
 END_THING
 
 THING 300
@@ -1469,8 +1757,8 @@ Short a knife`
 Wear wield`
 Long A knife is here.`
 ThFl 100934
-Val tool 6 0 0 0 0 0 0 0 `
 Val weapon 1 2 0 0 0 0 0 0 `
+Val tool 6 0 0 0 0 0 0 0 `
 END_THING
 
 THING 356

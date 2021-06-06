@@ -2038,6 +2038,21 @@ Stats 0 0 0 0 0 0 0
 END_SPELL
 
 SPELL
+Name Total Protection`
+Gen 0 2 10 0 38 65 10 6 0
+Duration 5`
+Wear_Off The spell has worn off @1n.`
+Comp 0 0 0 0 0 
+Repeat 0 0 0
+Pre_Name Sanctuary`
+Pre_Name Warding`
+Guilds 0 0 4 0 0 0 0 3 3 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
+Flag Aff 0 0 262144
+END_SPELL
+
+SPELL
 Name Death Cloud`
 Gen 0 0 39 9 88 66 33 5 0
 Ndam death`

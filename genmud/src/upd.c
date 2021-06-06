@@ -259,6 +259,8 @@ update_thing (THING *th)
 	  th->mv--;
 	  if (nr (1,20) == 3)
 	    act ("$9@1n bleed@s profusely from wounds that will not close.$7", th, NULL, NULL, NULL, TO_ALL);	    
+	  if (th->in && IS_ROOM (th->in)) 
+	    th->in->hp |= BLOOD_POOL;
 	}
     }
   

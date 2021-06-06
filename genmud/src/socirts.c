@@ -24,8 +24,9 @@ society_activity (THING *th)
   int flags, guard_count, postnum;
   SPELL *spl;
   SOCIETY *rsoc;
-
-
+  
+  if(!th || !th->in)
+    return;
   
   /* First deal with prisoners. */
 
@@ -138,6 +139,9 @@ society_activity (THING *th)
 	  if (in_same_society (th, vict) && 
 	      vict->hp < vict->max_hp *9/10 &&
 	      nr (1,2) == 1 && 
+	      vict != th &&
+	      /* Ok, healing curative spells go from 20-28...bad
+		 hack. */
 	      (spl = find_spell (NULL, nr (20, 28)))  != NULL &&
 	      spl->level <= th->level)
 	    {
@@ -1129,6 +1133,7 @@ set_new_member_stats (THING *newmem, SOCIETY *soc)
       create_society_name (socval);
       setup_society_name (newmem);
     }
+  add_flagval (newmem, FLAG_DET, AFF_DARK);
   for (flag = soc->flags; flag; flag = flag->next)
     add_flagval (newmem, flag->type, flag->val);
   update_society_population_thing (newmem, TRUE);
@@ -1248,7 +1253,7 @@ weaken_society (SOCIETY *soc)
 	{
 	  /* Need to check quality/(level/4) > curr/pop_cap, but since
 	     divides suck, do this as a product. */
-	  if (soc->quality *soc->population_cap > curr_pop*soc->level/4 &&
+	  if (soc->quality *soc->population_cap > curr_pop*soc->level/10 &&
 	      nr (1,5) == 3)
 	    {
 	      soc->quality--;
@@ -1572,26 +1577,37 @@ find_society_member_nearby (THING *th, int caste_flags, int max_depth)
   return vict;
 }
 
-/* This attempts to increase a tier in the society by one unit. This
-   gives the society access to more powerful units, so it's kind of
-   like having "technology". It returns false if the society can't
-   increase its tiers anymore, and true if it can. */
+/* Attempts to raise the max tier a society has in a certain
+   area. It works when the caste in question becomes 
+   populated enough (relative to its expected size) 
+   to allow for a tier increase. */
 
 bool
 increase_tier (SOCIETY *soc)
 {
   int pass, choice = 0, i;
-
+  int sum_advance_chances = 0;
+  int caste_pop_needed;
+  
   if (!soc)
     return FALSE;
+  
+  for (i = 0; i < CASTE_MAX; i++)
+    sum_advance_chances += soc->chance[i];
+  
+  if (sum_advance_chances < 1)
+    sum_advance_chances = 1;
   
   for (pass = 0; pass < 2; pass++)
     {
       for (i = 0; i < CASTE_MAX; i++)
 	{
+	  caste_pop_needed = soc->population_cap*soc->chance[i]/(sum_advance_chances*3);
+	  if (caste_pop_needed < 2*(soc->curr_tier[i]+1))
+	    caste_pop_needed = 2*(soc->curr_tier[i]+1);
 	  if (soc->start[i] > 0 &&
 	      soc->max_tier[i] > 0 &&
-	      soc->max_pop[i] >= 5 * (soc->curr_tier[i] + 1) &&
+	      soc->curr_pop[i] >= caste_pop_needed &&
 	      soc->curr_tier[i] < soc->max_tier[i])
 	    {
 	      if (pass == 0)
@@ -2419,7 +2435,7 @@ update_patrols (SOCIETY *soc)
   int total_warriors;
   char buf[STD_LEN];
   
-  if (!soc || nr (1,375) != 47 ||
+  if (!soc || nr (1,120) != 47 ||
       (total_warriors = find_num_members (soc, BATTLE_CASTES)) < soc->population_cap/3 ||
       (oldarea = find_area_in (soc->room_start)) == NULL)
     return;
@@ -2428,11 +2444,11 @@ update_patrols (SOCIETY *soc)
      room in it. */
 
   if ((area = find_random_area(0)) == NULL ||
-      area == oldarea || ALIGN(area) == 0 ||
+      area == oldarea || ALIGN(area) > 0 ||
       (room = find_random_room (area, FALSE, 0, BADROOM_BITS)) == NULL ||
       !IS_ROOM (room))
     return;
-
+  
   /* Find a battle mob in our society zone not doing anything,
      and see if it can get to the desired room. */
   

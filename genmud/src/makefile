@@ -1,3 +1,6 @@
+CFLAGS = -c -Wall -pedantic -O2
+
+
 OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 	boot.o chan.o clan.o consid.o const.o color.o  combatai.o \
 	create.o dam.o detailgen.o \
@@ -20,7 +23,6 @@ OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 
 CC = gcc
 
-CFLAGS = -c -O2 -Wall -pedantic
 
 LFLAGS = -lpthread -lcrypt
 

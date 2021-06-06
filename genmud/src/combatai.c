@@ -27,7 +27,7 @@ combat_ai (THING *th)
      tactics. */
   
   if ((fighting = FIGHTING (th)) == NULL || nr(1,3) != 2 || !th->in ||
-      th->position != POSITION_FIGHTING || IS_PC (th) ||
+      th->position != POSITION_FIGHTING || IS_PC (th) || 
       !CAN_TALK (th) || IS_ACT1_SET (th, ACT_DUMMY))
     return;
   

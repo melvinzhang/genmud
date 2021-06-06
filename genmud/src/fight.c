@@ -707,7 +707,7 @@ one_hit (THING *th, THING *vict, THING *weapon, int special)
     dam = nr (1, 1 + LEVEL (th)/ 10);
   
   /* If you are a PC, you can't do more than double your basedam damage */
-
+  
   basedam = dam;
   if (!IS_PC (th))
     {
@@ -804,9 +804,9 @@ one_hit (THING *th, THING *vict, THING *weapon, int special)
   if ((resist_bits = flagbits (vict->flags, FLAG_AFF)) != 0)
     {
       if (IS_SET (resist_bits, AFF_SANCT))
-	resistance += nr (14, 31);
+	resistance += nr (25, 42);
       if (IS_SET (resist_bits, AFF_PROTECT))
-	resistance += nr (27, 53);
+	resistance += nr (45, 68);
       if (DIFF_ALIGN (th->align, vict->align) &&
 	  IS_SET (resist_bits, AFF_PROT_ALIGN))
 	resistance += nr (8, 27);
@@ -1051,7 +1051,7 @@ damage (THING *th, THING *vict, int dam, char *word)
   int th_hurt, vict_hurt; /* Hurt flags for th and vict. */
   
   if (!th || !vict || !th->in || !vict->in)
-    return FALSE;
+    return TRUE;
   
   /* Check to see if combat can occur here or not. */
 
@@ -1092,14 +1092,15 @@ damage (THING *th, THING *vict, int dam, char *word)
 	    ((soc = FNV (th, VAL_SOCIETY)) != NULL &&
 	     soc->val[0] == build->val[0]))))
 	dam += (dam*2*build->val[1])/100;
-
+      
       if ((tsoc = find_society_num (soc->val[0])) != NULL)
-	dam += dam*tsoc->morale/(2*MAX_MORALE);
-
-      if (IS_SET (tsoc->society_flags, SOCIETY_OVERLORD))
-	dam += dam/5;
+	{
+	  dam += dam*tsoc->morale/(2*MAX_MORALE);
+	  
+	  if (IS_SET (tsoc->society_flags, SOCIETY_OVERLORD))
+	    dam += dam/5;
+	}
     }
-  
   if (IS_PC (vict))
     { 
       flags = flagbits (vict->flags, FLAG_PC1);
@@ -1121,11 +1122,12 @@ damage (THING *th, THING *vict, int dam, char *word)
 	    (soc->val[0] == build->val[0]))))
 	dam -= (dam*3*build->val[1])/100;
       if ((vsoc = find_society_num (soc->val[0])) != NULL)
-	dam -= dam*vsoc->morale/(2*MAX_MORALE);
-      if (IS_SET (vsoc->society_flags, SOCIETY_OVERLORD))
-	dam -= dam/6;
-    }
-  
+	{
+	  dam -= dam*vsoc->morale/(2*MAX_MORALE);
+	  if (IS_SET (vsoc->society_flags, SOCIETY_OVERLORD))
+	    dam -= dam/6;
+	}
+    }  
   
   
   /* Get the hurt bits for th and vict. */
@@ -1163,7 +1165,6 @@ damage (THING *th, THING *vict, int dam, char *word)
       return FALSE;
     }
   
-  start_fighting (th, vict);
 
   /* Powershields absorb damage. */
 
@@ -1693,7 +1694,7 @@ do_bash (THING *th, char *arg)
       if (damage (th, vict, nr (get_stat (th, STAT_STR)/3, get_stat (th, STAT_STR)), "smash"))
         return;
     }
-   
+  
   vict->fgt->bashlag = 6 + nr (0, smash_num);
   th->fgt->delay = 6 - nr (0, smash_num);
   if (!FIGHTING(vict) )
@@ -3348,6 +3349,7 @@ is_enemy (THING *th, THING *vict)
 	vict->in->vnum >= soc->room_start &&
 	vict->in->vnum <= (soc->room_end))))
     {
+      
       /* At this point, we know that the thing may try to attack,
 	 depending on what the status of the victim */
       
@@ -3356,8 +3358,8 @@ is_enemy (THING *th, THING *vict)
       
       if ((vsocval = FNV (vict, VAL_SOCIETY)) != NULL &&
 	  IS_ACT1_SET (vict, ACT_PRISONER) &&
-	  !FOLLOWING (vict) && /* If vict is following...all bets are off. */
 	  (esoc = find_society_num (vsocval->val[5])) != NULL &&
+	  /* If vict is following...all bets are off. */
 	  (esoc == soc ||
 	   (soc->align > 0 && 
 	    !DIFF_ALIGN (esoc->align, soc->align))) &&

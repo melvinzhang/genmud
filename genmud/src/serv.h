@@ -156,8 +156,8 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 
 /* These constants are used with the battleground. */
 
-#define BG_MIN_VNUM            30     /* Min vnum of battleground. */
-#define BG_MAX_VNUM            50     /* Max vnum of battleground. */
+#define BG_MIN_VNUM            60     /* Min vnum of battleground. */
+#define BG_MAX_VNUM            80     /* Max vnum of battleground. */
 #define BG_SETUP_HOURS         10     /* Number of hours to set up for bg. */
 #define BG_MAX_PRIZE           10     /* Max number of bg prizes. */
 

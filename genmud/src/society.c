@@ -1196,6 +1196,11 @@ update_society_members (SOCIETY *soc)
 		{
 		  
 		  if ((new_cnum = find_caste_from_percent (soc, FALSE, all_warriors)) != -1 &&
+		      /* Keep the builder population low... */
+		      (!IS_SET (soc->cflags[new_cnum], CASTE_BUILDER) ||
+		       soc->curr_pop[new_cnum] == 0 ||
+		       nr (1,15) == 3) &&
+		       
 		      soc->curr_pop[new_cnum] < soc->max_pop[new_cnum] &&
 		      (proto = find_thing_num (soc->start[new_cnum])) != NULL &&
 		      CAN_MOVE(proto) && CAN_FIGHT(proto))
@@ -1276,7 +1281,9 @@ update_society_members (SOCIETY *soc)
 	      
 	      /* Bonus for getting beat up. */
 	      
-	      newmem->level += soc->level_bonus + soc->quality * 3;
+	      if (newmem->proto)
+	      newmem->level = newmem->proto->level + 
+		soc->level_bonus + soc->quality;
 	      
 	      /* Do we want to add in costs here? or not? */
 	      

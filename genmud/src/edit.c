@@ -870,7 +870,7 @@ edit (THING *th, char *arg)
       case 'E':
 	/* Extra descriptions...add auto on name and add descs after that. */
 	
-	if (named_in ("eds edesc extra extra_description exdesc", arg1) &&
+	if (named_in ("eds edesc", arg1) &&
 	    strlen (arg1) > 1)
 	  {
 	    EDESC *eds;
@@ -2977,10 +2977,15 @@ calculate_randpop_vnum (VALUE *rnd, int level)
 {
   int rcount, rank = 0;
   int rsvnum = 0;
-  
+  THING *newitem;
+  VALUE *new_rnd;
+  static int depth = 0;
+
+
   if (!rnd || (rnd->type != VAL_RANDPOP &&
 	       rnd->type != VAL_REPLACEBY))
     return 0;
+
   
   for (rcount = 0; rcount < rnd->val[2] - 1; rcount++)
     {
@@ -3030,6 +3035,21 @@ calculate_randpop_vnum (VALUE *rnd, int level)
     rsvnum = rnd->val[0] + nr (0, rnd->val[1] - 1) +
       rnd->val[1] * rank;
   
+  /* Here's another level. If this new vnum exists and if it's also
+     a randpop item, we go down another level and attempt to create
+     THAT randpop item. Taken from AO idea of "categories" of items --
+     slasher vs wpn vs item... */
+  
+  if (depth < 10 &&
+      (newitem = find_thing_num (rsvnum)) != NULL &&
+      ((new_rnd = FNV (newitem, VAL_RANDPOP)) != NULL ||
+       (new_rnd = FNV (newitem, VAL_REPLACEBY)) != NULL))
+    {
+      depth++;
+      rsvnum = calculate_randpop_vnum (new_rnd, level);
+      depth--;
+    }
+
   return rsvnum;
 }
   

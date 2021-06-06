@@ -433,7 +433,12 @@ show_condition (THING *th, bool long_descr)
   objflags = flagbits (th->flags, FLAG_OBJ1);
   if (!th || th->max_hp < 1)
     return "";
-  num = MID (0, th->hp * (CONDITIONS-1)/th->max_hp, CONDITIONS-1);
+  if (th->hp >= 200000000 && th->max_hp >= 200000000)
+    {
+      num = MID (0, (th->hp/30) * (CONDITIONS-1)/(th->max_hp/30), CONDITIONS-1);
+    }
+  else
+   num = MID (0, th->hp * (CONDITIONS-1)/th->max_hp, CONDITIONS-1);
   
   if (long_descr)
     {

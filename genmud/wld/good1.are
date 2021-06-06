@@ -4,7 +4,7 @@ HpMv 0 10 25 50
 HWT 0 0
 Align 2
 Cost 100
-Timer 5
+Timer 9
 Short The Good Outpost`
 Long The Good Outpost comes to life again.`
 type Lonath`
@@ -52,7 +52,7 @@ Desc 1051`
 Short The Training Hall`
 MIW 1
 Symbol +`
-ThFl 524779
+ThFl 134742507
 Val s_exit 1052 0 0 0 0 0 0 0 `
 Val e_exit 1054 0 0 0 0 0 0 0 `
 Val w_exit 1055 0 0 0 0 0 0 0 `
@@ -132,7 +132,7 @@ Desc 1051`
 Short Shopkeepers' Square`
 MIW 1
 Symbol +`
-ThFl 524779
+ThFl 134742507
 Val s_exit 1053 0 0 0 0 0 0 0 `
 Val e_exit 1059 0 0 0 0 0 0 0 `
 Val w_exit 1060 0 0 0 0 0 0 0 `
@@ -257,7 +257,7 @@ Desc 1051`
 Short A Guard Post`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val d_exit 1063 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Reset 1081 10 5 1
@@ -287,7 +287,7 @@ MIW 1
 Symbol |`
 ThFl 524779
 Val s_exit 1063 0 0 0 0 0 0 0 `
-Val n_exit 202542 0 0 0 0 0 0 0 `
+Val n_exit 205882 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 END_THING
 

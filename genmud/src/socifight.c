@@ -246,7 +246,7 @@ society_get_killed (THING *killer, THING *vict)
   /* Update killed_by within the society. */
 
   if (killer->align < ALIGN_MAX && (IS_PC (killer) || ksoc))
-    vsoc->killed_by[killer->align]+= LEVEL(vict)/75 + 1;
+    vsoc->killed_by[killer->align] += LEVEL(vict)/75 + 1;
   
   
 

@@ -48,7 +48,7 @@ struct _event_data
 #define EVENT_DAMAGE     0x00000002  /* Special damage event. */
 #define EVENT_COMMAND    0x00000004  /* Special command event. */
 #define EVENT_TRACK      0x00000008  /* Special track events. */
-
+#define EVENT_DEAD       0x00000010  /* Dead event--don't execute. */
 
 
 /* Variables associated with events. */

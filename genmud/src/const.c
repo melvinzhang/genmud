@@ -1231,12 +1231,12 @@ int newbie_items[NUM_NEWBIE_ITEMS] =
 
 const struct _build_data build_data[BUILD_MAX] =
 {
-  {"member", BUILD_MEMBER, {5, 5, 5, 5, 15, 20, 15, 10}},
-  {"maxpop", BUILD_MAXPOP, {10, 20, 20, 20, 10, 20, 10, 10}},
+  {"member", BUILD_MEMBER, {5, 5, 5, 5, 5, 10, 10, 10}},
+  {"maxpop", BUILD_MAXPOP, {5, 10, 10, 10, 5, 10, 10, 10}},
   {"quality", BUILD_QUALITY, {50, 50, 30, 20, 50, 40, 45, 50}},
-  {"tier", BUILD_TIER, {20, 30, 30, 30, 20, 15, 10, 10}},
-  {"warrior", BUILD_WARRIOR, {1, 1, 1, 1, 1, 1, 1, 1}},
-  {"worker", BUILD_WORKER, {1, 1, 1, 1, 1, 1, 1, 1}},  
+  {"tier", BUILD_TIER, {200, 30, 30, 30, 20, 15, 10, 10}},
+  {"warrior", BUILD_WARRIOR, {2, 2, 2, 2, 2, 2, 2, 2}},
+  {"worker", BUILD_WORKER, {2, 2, 2, 2, 2, 2, 2, 2}},  
 };
 
 

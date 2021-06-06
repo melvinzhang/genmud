@@ -604,7 +604,7 @@ show_society (THING *th, SOCIETY *soc)
 	   soc->alife_home_x, soc->alife_home_y);
   stt (buf, th);
   buf[0] = '\0';
-  sprintf (buf, "Kills: ");
+  sprintf (buf, "Kills : ");
   for (i = 0; i < ALIGN_MAX; i++)
     {
       if (align_info[i])
@@ -615,13 +615,14 @@ show_society (THING *th, SOCIETY *soc)
 	}
     }
   strcat (buf, "\n\r");
-  sprintf (buf, "Kills: ");
+  stt (buf, th);
+  sprintf (buf, "Killed: ");
   for (i = 0; i < ALIGN_MAX; i++)
     {
       if (align_info[i])
 	{
 	  sprintf (buf2, "%d: %d  ",
-		   i, soc->kills[i]);
+		   i, soc->killed_by[i]);
 	  strcat (buf, buf2);
 	}
     }

@@ -199,13 +199,18 @@ remove_newbie_area_aggros (void)
 {
   THING *area, *mob;
   RESET *rst;
-
+  
   for (area = the_world->cont; area; area = area->next_cont)
     {
       if (area->vnum < WORLDGEN_START_VNUM ||
 	  area->vnum > WORLDGEN_END_VNUM ||
-	  LEVEL (area) >= 60)
+	  LEVEL (area) >= 40)
 	continue;
+      
+
+      /* Remove aggros and remove society settling here so that
+	 players never have to face "invasions" that close to home. */
+      add_flagval (area, FLAG_AREA, AREA_NOSETTLE);
       
       for (mob = area->cont; mob; mob = mob->next_cont)
 	{

@@ -1442,7 +1442,8 @@ worldgen_society_seed (void)
 		  if (IS_AREA (area) &&
 		      IS_ROOM_SET (area, society_flags) &&
 		      !IS_MARKED(area) && area->level >= 
-		      MID(20, soc->level/4,100))
+		      MID(20, soc->level/4,100) &&
+		      !IS_AREA_SET (area, AREA_NOSETTLE))
 		    {
 		      if (count == 0)
 			num_choices++;
