@@ -11,6 +11,7 @@
 #include "mapgen.h"
 #include "rumor.h"
 #include "event.h"
+#include "worldgen.h"
 #ifdef USE_WILDERNESS
 #include "wildalife.h"
 #endif
@@ -106,6 +107,8 @@ weather_names[weat] : "sunny"));
       stt (buf, th);
       do_society (th, "count");
       do_areas (th, "count");
+      sprintf (buf, "\x1b[1;36m%d\x1b[0;37m words and phrases are used to generate the world.\n\r", find_num_gen_words(the_world));
+      stt (buf, th);
     }
   sprintf (buf, "There have been %d players max online since the last reboot.\n\r", max_players);
   stt (buf, th);

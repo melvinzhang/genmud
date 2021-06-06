@@ -137,7 +137,8 @@ void worldgen_generate_demons (int curr_underworld_vnum, int area_size);
 
 /* This removes aggros from newbie areas so players have a half a 
    chance. */
-void remove_newbie_area_aggros (void);
+
+void setup_newbie_areas (void);
 
 
 /* This creates and places guildmasters around the world. Newbie
@@ -156,3 +157,8 @@ void add_guildmaster_to_area (THING *area, int guild, int rank);
 /* This links special rooms to the world like implant/remort rooms. */
 
 void worldgen_link_special_room (int special_room_vnum);
+
+
+/* This finds the number of generator words there are in the world. */
+
+int find_num_gen_words (THING *);

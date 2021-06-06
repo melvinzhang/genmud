@@ -64,7 +64,7 @@ society_activity (THING *th)
     {
       if (!is_hunting (th) || th->hp < th->max_hp/4)
 	{
-	  if ((healer = find_society_member_nearby (th, CASTE_HEALER, 20)) != NULL)
+	  if ((healer = find_society_member_nearby (th, CASTE_HEALER, 10)) != NULL)
 	    {
 	      start_hunting (th, KEY (healer), HUNT_HEALING);
 	      return;
@@ -132,7 +132,7 @@ society_activity (THING *th)
     
   /* Healers heal... */
   
-  if (IS_SET (flags, CASTE_HEALER))
+  if (IS_SET (flags, CASTE_HEALER) && nr (1,12) == 7)
     {
       for (vict = th->in->cont; vict; vict = vict->next_cont)
 	{
@@ -153,7 +153,7 @@ society_activity (THING *th)
 	return;
     }
   
-  if (IS_SET (flags, CASTE_WIZARD))
+  if (IS_SET (flags, CASTE_WIZARD) && nr (1,12) == 5)
     {
       if (is_hunting (th) && th->fgt->hunting_type == HUNT_KILL && nr (1,2) == 1 &&
 	  (vict = find_thing_near (th, th->fgt->hunting, LEVEL (th)/30)) != NULL &&
@@ -528,7 +528,7 @@ find_dropoff_location (THING *th)
       (society = find_society_num (soc->val[0])) == NULL)
     return;
   if ((num_builder = find_num_members (society, CASTE_BUILDER)) < 1 ||
-      (builder = find_society_member_nearby (th, CASTE_BUILDER, 0)) == NULL)
+      (builder = find_society_member_nearby (th, CASTE_BUILDER, nr(20,100))) == NULL)
     {
       stop_hunting (th, TRUE);
     }

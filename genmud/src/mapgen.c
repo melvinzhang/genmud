@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <math.h>
 #include "serv.h"
 #include "mapgen.h"
 
@@ -287,7 +288,6 @@ mapgen_generate (char *arg)
   bool x_big = FALSE; /* Is the dx > the dy? */ 
   MAPGEN *map = NULL;     /* The new mapgen data.*/
   
-  
 
   /* A matrix of the squares that have been used. */
   
@@ -453,11 +453,13 @@ mapgen_generate (char *arg)
   
   
   
-  total_len = ABS(dx) + ABS(dy); /* This should not be 0. */
+  total_len = ABS(dx)+ABS(dy); /* This should not be 0. */
  
   if (total_len == 0)
     return NULL;
   
+  
+
   x_len = dx*len/total_len;
   y_len = dy*len/total_len;
   
@@ -593,17 +595,16 @@ mapgen_generate (char *arg)
       
       /* Now "fatten the line" */
        
-
+      curr_width = MAX (1, last_width); 
       if (fuzziness > 0)
 	curr_width += nr (0,fuzziness) - nr (0,fuzziness);
-      curr_width = MAX (1, last_width);
+      
       if (curr_width > width && nr (1,3) == 2)
 	curr_width--;
       if (curr_width < width && nr (1,3) == 2)
 	curr_width++;
       if (curr_width < width/2 && last_width < width/2)
-	curr_width++;
-      
+	    curr_width++;
       if (curr_width - last_width > 2)
 	curr_width = last_width + 2;
       else if (last_width - curr_width > 2)

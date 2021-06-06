@@ -2385,14 +2385,16 @@ do_tfind (THING *th, char *arg)
 {
   char arg1[STD_LEN];
   char buf[STD_LEN];
-  char name[STD_LEN];
+  char name[TFIND_NAME_MAX][STD_LEN];
   char padbuf[STD_LEN];
   char first_name[STD_LEN];
+  bool found_name = TRUE;
   bool mob = FALSE, room = FALSE, obj = FALSE, found = FALSE, are = FALSE, nodesc = FALSE, noval = FALSE;
   int lvnum = -1, uvnum = -1, i, valnum = VAL_MAX, pad;
   THING *ar, *vict, *area = NULL;
   VALUE *val;
-  name[0] = '\0';
+  for (i = 0; i < TFIND_NAME_MAX; i++)
+    name[i][0] = '\0';
   
   if (arg[0] == '\0')
     {
@@ -2444,15 +2446,33 @@ do_tfind (THING *th, char *arg)
 	      /* If the value name isn't found, then assume it's a 
 		 name we look for. */
 	      if (valnum == VAL_MAX)
-		strcpy (name, arg1);
+		{
+		  for (i = 0; i < TFIND_NAME_MAX; i++)
+		    {
+		      if (!*name[i])
+			{			
+			  strcpy (name[i], arg1);
+			  break;
+			}
+		    }
+		}
 	    }
 	  else /* We have a value. Read in the name. */
-	    strcpy (name, arg1); 	  
+	    {
+	      for (i = 0; i < TFIND_NAME_MAX; i++)
+		{
+		  if (!*name[i])
+		    {			
+		      strcpy (name[i], arg1);
+		      break;
+		    }
+		}
+	    }
 	}
     }
   if (lvnum > uvnum)
     {
-      stt ("tfind <mob/obj/room> or <low_num> <up_num> or <value_name> or <name>\n\r", th);
+      stt ("tfind <mob/obj/room> or <low_num> <up_num> or <value_name> or <names>\n\r", th);
       return;
     }
   if (are)
@@ -2484,10 +2504,23 @@ do_tfind (THING *th, char *arg)
 	      (valnum != VAL_MAX &&
 	       ((val = FNV (vict, valnum)) == NULL ||
 	       (valnum == VAL_WEAPON && 
-		vict->wear_pos != ITEM_WEAR_WIELD))) ||
-	      (name[0] && !is_named (vict, name)))
+		vict->wear_pos != ITEM_WEAR_WIELD))))
 	    continue;
 	  
+	  found_name = TRUE;
+	  
+	  for (i = 0; i < TFIND_NAME_MAX; i++)
+	    {
+	      if (*name[i] && !is_named (vict, name[i]))
+		{
+		  found_name = FALSE;
+		  break;
+		}
+	    }
+	  if (!found_name)
+	    continue;
+
+
 	  found = TRUE;
 	  pad = 50 - strlen_color (NAME (vict));
 	  if (pad < 0)

@@ -2,19 +2,33 @@ HELP MORT
 Key WORLDMAP WORLD_MAP`
 Admin `
 Text World Map:
-                $5^$F*               $7
-            $5^$A,$B,$5^$F*$F*$F*$F*$2*            $7
-           $5^$5^$2*$A,$A,$A,$F*$F*$F*$5^$5^           $7
-           $B,     $9@$5^$F*$A,$2*           $7
-           $B,   $2*$C#  $F*$5^            $7
-               $A,$2#   $B,            $7
-             $2*$2*$2#$A,$A,$5^ $5^$B,           $7
-             $A,$2*  $B,$5^$5^$B,$B,$5^          $7
-                 $B,  $5^$5^$5^          $7
-                $B,$B,$5^ $A,$2*           $7
-               $2#$C# $2* $A,            $7
-              $2#$C#$C#$2#$2#$5^$2*            $7
-              $A,$2# $C#$C# $A@            $7
+            $A,$A,$2*$F*$F*$5^$5^$B,$5^            $7
+          $5^$B,$B,$B,$5^ $5^$5^$5^$F*$F*$F*$F*          $7
+        $A, $2*$5^ $5^$5^$B,$5^$A,$A,$2*$2*$2*$A,          $7
+       $2#$A,$2*$2*$5^$B,$B,$B,$B,$2#$A,  $2*$2*           $7
+       $A,$A,$A,$A,$F*$2* $2*$A,$2#$A,$5^$A,$2*            $7
+     $5^$5^$2* $2*$2#$C#  $5^$2*$5^$5^$2*     $F*$5^$B,      $7
+     $F*$F*$2*$2*$2#$2#$C#  $5^$A,$A,$2*$C#$2#$2#$5^$B,$5^$5^$5^$2*      $7
+      $5^$B,$5^$5^         $2#$C#$A,$5^$F*$B,$B,$B,$A,     $7
+      $5^$B,$2#        $5^$5^$A,$C#$2#$C#$F*$5^$B,$5^$A,     $7
+         $A,       $5^$B,$5^$2*$A,$2#  $2*$2*$2*     $7
+      $A,  $2#$2#$A,      $2*$2*$2#$A,$A,$2#$5^$A,$2*$2*     $7
+      $A,  $2*$2#$A,$2*$2*$2#$A,  $2*$A,$A,$2*$2*$2#$B,$B, $2*$B,$5^   $7
+      $2*$2#$2#$5^$2#$2#$5^$5^$2#$2*$A, $2*$2#$B,$5^$2*$2*$5^$B,$B,$5^$5^$B,   $7
+      $A,$2*$2*$A,$A,$2# $5^$A,$A,$A,$A,$A,   $2*$A,$5^$B,$5^$C#$C#$C#   $7
+       $A@  $2*$2*$A,$A,$2#$A,$2#$A,    $A,$2*$A,$A,  $C#$2#   $7
+       $2*$2*$2*$A,$A,$A,$2#$2*$2*$2#     $2*$2*         $7
+          $2#   $2#$2*$5^    $5^$A,$2*         $7
+          $2*   $A,$5^$B,                $7
+           $2*$2*$B,$B,$B,                 $7
+         $C#$2*$2*  $B,                  $7
+         $C#$C#$2*$2* $9@                  $7
+         $2#$A,$A,$2*                    $7
+       $5^ $A,$A,$2*$2*$2*                   $7
+       $A,$A,$2*$A,$2*$2*$2#$F*                  $7
+         $A,$A,$A,$2*$C#$2#                  $7
+          $A,$A,$5^ $2*$2*                 $7
+            $B,$2#$A,$A,                 $7
 
 
 Evil outpost: $9@$7.   Good outpost: $A@$7.   
@@ -108,25 +122,26 @@ END_HELP
 HELP MORT
 Key HISTORY BACKSTORY`
 Admin `
-Text As I remember the forgotten days fading into history, I cannot help a
-great sense of extreme sorrow about how the past is lost. It was the time
-when the harmonious gods followed Ernespo the Neutral deity of Warriors,
-Atimec the Evil god of Silence, Fate and The Sky and Foorir the Good god
-of Artists and Poetry. the Ancient Neutral Uc-nosa, the Mighty Evil Tobuse
-and the Powerful Good Of-sefa preserved harmony at the behest of the gods.
+Text As I recollect the ancient epochs so far back, I cannot keep myself from
+becoming unending regret with regard to how much we could learn from them.
+It was the age when the peaceful gods followed Legmop the Neutral god of
+History and Sneakiness, Agfop the Evil god of Fortune and Hamiwik the Good
+deity of Dreams, The Tides and Thought. the Mighty Neutral Lonnemo, the
+Mighty Evil Lalhami and the Ancient Good Pasgeco kept justice at the
+behest of the gods.
 
 
-But the breaking came. The many civilizations of the world were destroyed,
-and the nations such as the Sand Ogre were forced from their villages.
-Many battles were fought and the Mighty Tobuse and the other ancient races
-were brought low by the turmoil. And thus did the power of the deities
-become weaker. This was what the Demons had hoped for as they surged into
-the world, but were cast back to the Pits wiping out many nations.
+But the world was sundered. The brotherhood of races of the world were
+ground to dust, and the societies such as the halfling were cast out from
+their houses. Many sieges were fought and the mighty lalhami and the other
+ancient races were unable to stop the wars. And thus did the power of the
+deities retreat. This is what the Demons had waited eons for as they
+poured into the world, but were cast back to the Pits at a terrible cost.
 
 
-The societies fell into dark ages, and the nations stayed withering for
-many eras. But now, the Demons are gaining strength. The races are broken
-and disorganized and squabbling among themselves. They must be brought
+The societies slid into ruin, and things has remained unmoving for many
+eras. But now, the Demons are expanding. The races are broken and
+disorganized and squabbling among themselves. They must be brought
 together to fight the demons in this Testing Battle for Destiny Testing
 
 
@@ -4360,6 +4375,8 @@ craft: Used internally to keep track of crafted items.
      v2 = made from proto, what is the prototype for the item that 
           makes this thing.
 
+daily_cycle: Used internally to make mobs walk from their home to
+     work and back again during the day.
 
 `
 SeeAlso `

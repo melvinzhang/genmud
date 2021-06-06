@@ -221,7 +221,7 @@ worldgen (THING *th, char *arg)
       set_up_teachers();
       worldgen_place_guildmasters ();
       set_up_map(NULL);
-      remove_newbie_area_aggros ();
+      setup_newbie_areas ();
       reset_world();
       RBIT (server_flags, SERVER_WORLDGEN);
       end_memory = find_total_memory_used();
@@ -725,8 +725,10 @@ worldgen_generate_areas (int area_size)
 		    strcat (dirbuf, "e");
 		  if (x > 0 && worldgen_sectors[x-1][y])
 		    strcat (dirbuf, "w");
-		  if (strlen(dirbuf) == FLATDIR_MAX)
+		  if (strlen(dirbuf) == FLATDIR_MAX || 
+		      level_this_area == WORLDGEN_OUTPOST_GATE_AREA_LEVEL)
 		    dirbuf[0] = '\0';
+		  
 		  
 		  if (curr_top_vnum + area_size < 
 		      WORLDGEN_UNDERWORLD_START_VNUM)
@@ -1953,8 +1955,9 @@ worldgen_clear_player_items(void)
   while ((currentry = readdir (dir_file)) != NULL)
     {
       strcpy (name, currentry->d_name);
-      for (thg = thing_hash[PLAYER_VNUM % HASH_SIZE]; thg; thg = thg->next)
+      for (thg = thing_hash[PLAYER_VNUM % HASH_SIZE]; thg; thg = thgn)
 	{
+	  thgn = thg->next;
 	  if (!str_cmp (NAME(thg), name))
 	    break;
 	}

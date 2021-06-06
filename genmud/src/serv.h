@@ -277,6 +277,7 @@ avg..*/
 #define STATS_PER_REMORT       4     /* Stats per remort... */
 #define CONDITIONS             11    /* The number of condition ranks things
 					have. */
+#define TFIND_NAME_MAX         3     /* Max number of tfind names. */
 #define NUM_NEWBIE_ITEMS       20    /* Max number of newbie items. */
 #define NUM_VALS               7      /* Size of value data when it is
 					 created. Leave >= 6. Or else. */
@@ -325,7 +326,7 @@ avg..*/
 					  align is losing. */
 #define MAX_TEACHER            10      /* Up to 10 teacher locs per skill */
 #define AREA_MAX               1000    /* Can have up to 1000 areas. */
-#define RACE_ASCENDED_STATS    170     /* If the race max stats are more
+#define RACE_ASCENDED_STATS    195     /* If the race max stats are more
 					  than this, it's an ascend race. */
 #define MAX_DISEASE_SYMPTOMS   20      /* Number of disease symptoms. */
 
@@ -769,8 +770,11 @@ grep 					    them all visible to each
 				   characters. */
 #define VAL_DIMENSION        49 /* Dimensions of an object. */
 #define VAL_CRAFT            50 /* Crafted items data. */
-#define VAL_MAX              51 /* Total number of values. */
+#define VAL_DAILY_CYCLE      51 /* This thing goes through a daily cycle. */
+#define VAL_MAX              52 /* Total number of values. */
   
+  
+
 /* IF YOU ALTER THESE VAL_FOO THINGS YOU MUST ALTER value_list[] IN CONST.C */
 
 /**********************************************************************/
@@ -2998,7 +3002,9 @@ void read_pbase (void);
 void write_pbase (void);
 void check_pbase (THING *); /* Checks if a thing is added to pbase 
 				   and updates. */
-
+void calc_max_remort (THING *);  /* Calculates max remort in pbase atm. */
+/* Get the exp bonus multiplier for this player. */
+int find_remort_bonus_multiplier (THING *);
 /**********************************************************************/
 /* These are functions used with siteban info.                        */
 /**********************************************************************/

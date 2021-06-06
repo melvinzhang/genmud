@@ -5,6 +5,14 @@
 #define STRONG_RANDPOP_MOB_MINLEVEL   70
 
 
+/* The various parts of a mobgen name. */
+#define MOBGEN_NAME_A_AN         0
+#define MOBGEN_NAME_PROPER       1
+#define MOBGEN_NAME_ADJECTIVE    2
+#define MOBGEN_NAME_SOCIETY      3
+#define MOBGEN_NAME_JOB          4
+#define MOBGEN_NAME_MAX          5
+
 /* These are for generating regular mobs within an area. */
 
 void areagen_generate_persons (THING *area);

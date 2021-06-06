@@ -1,10 +1,11 @@
-CFLAGS = -c -Wall -pedantic -pg -g
+CFLAGS = -c -Wall -pedantic -O2
 
 
 OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 	boot.o chan.o citygen.o \
 	clan.o consid.o const.o color.o  combatai.o \
-	craft.o create.o dam.o detailgen.o \
+	craft.o create.o \
+	dam.o detailgen.o \
 	disaster.o edit.o event.o fight.o \
 	fileio.o follow.o \
 	guild.o help.o historygen.o implant.o info.o \

@@ -410,6 +410,7 @@ read_server (void)
   set_up_teachers();
   sanity_check_vars();
   worldgen_check_autogen();
+  calc_max_remort(NULL);
   RBIT (server_flags, SERVER_BOOTUP);
   return;
 }
@@ -957,6 +958,8 @@ shutdown_server (void)
       write_notes ();
     }
   SBIT (server_flags, SERVER_REBOOTING);
+  close (listen_socket);
+  listen_socket = 0;
   return;
 }
 

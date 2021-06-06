@@ -2,10 +2,10 @@ THING 104000
 Name areadetails.are`
 HpMv 0 10 400 1000
 HWT 0 0
-Timer 15
+Timer 17
 Short Area Details Area`
 type Lonath`
-ThFl 135307259
+ThFl 1089531
 Flag Area 0 0 28
 END_THING
 

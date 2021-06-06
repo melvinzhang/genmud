@@ -2,10 +2,10 @@ THING 105900
 Name mobdescgen.are`
 HpMv 0 10 5 100
 HWT 0 0
-Timer 10
+Timer 16
 Short Mobgen Desc Generators`
 type Lonath`
-ThFl 135307259
+ThFl 1089531
 Flag Area 0 0 28
 END_THING
 
@@ -19,7 +19,7 @@ random mobs are created.
 Short Mob Long Description Generators`
 MIW 1
 Symbol -`
-ThFl 134742507
+ThFl 524779
 END_THING
 
 THING 105906
@@ -180,6 +180,50 @@ here
 'around here'
 'near you'
 'right here'
+`
+END_THING
+
+THING 105916
+Name mob_adjective`
+HWT 0 0
+Desc tired
+old
+young
+energetic
+weary
+wary
+cautious
+observant
+watchful
+calm
+stoic
+steady
+nervous
+smiling
+happy
+frowning
+unhappy
+quiet
+harried
+'worn out'
+guarded
+reserved
+wizened
+wise
+ancient
+haggard
+unkempt
+smelly
+dirty
+smiling
+frowning
+grimacing
+shady
+honest
+upstanding
+trustworthy
+whistling
+humming
 `
 END_THING
 

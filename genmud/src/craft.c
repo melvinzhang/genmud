@@ -69,7 +69,7 @@ generate_craft_items (THING *th)
   VALUE *craft, *craft2;
   VALUE *replace_by; /* Used for making items revert to previous
 			states. */
-  THING *obj2, *made_from_item;
+  THING *obj2, *made_from_item = NULL;
   
   if ((proto_area = find_thing_num (CRAFTGEN_AREA_VNUM)) == NULL)
     {
@@ -742,11 +742,11 @@ check_craft_materials (THING *th, THING *item, THING *base_item, EDESC *process,
 
   /* Since an item may be made in several ways, allow more than 
      one process and loop through them checking each one. */
-  THING *use_obj, *in_obj, *base_obj, *load_area, *use_objn, *made_item;
+  THING *use_obj = NULL, *in_obj, *base_obj, *load_area, *use_objn, *made_item;
   int num_needed, num_found;
   int min_num_to_make = 1, max_num_to_make = 1, num_to_make = 1;
   int use_obj_vnum;
-  int pass;
+  int pass = 0;
   int i;
   int room_bit;
   bool room_is_ok = TRUE;

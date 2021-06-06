@@ -2,10 +2,10 @@ THING 107100
 Name areagen.are`
 HpMv 0 10 5 400
 HWT 0 0
-Timer 11
+Timer 14
 Short The Areagen Area`
 type Lonath`
-ThFl 135307259
+ThFl 1089531
 Flag Area 0 0 28
 END_THING
 
@@ -380,6 +380,7 @@ Grotto
 Caves
 Caves
 Ways
+Tombs
 `
 END_THING
 
@@ -1003,6 +1004,10 @@ Desc 'the banks of'
 ''
 'the side of'
 'the edge of'
+'bank of'
+'banks of'
+'the shore of'
+'the shoreline by'
 `
 END_THING
 

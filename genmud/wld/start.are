@@ -3,11 +3,11 @@ Name start.are`
 HpMv 0 1 109 998
 HWT 0 0
 Cost 100
-Timer 17
+Timer 4
 Short the start area`
 Long A cold wind blows by...`
 type Lonath`
-ThFl 672137216
+ThFl 537919488
 Flag Area 0 0 28
 END_THING
 
@@ -50,7 +50,7 @@ MIW 1
 Long Lonath's Room is Here.`
 Symbol #`
 ThFl 524779
-Flag Room 0 0 17825792
+Flag Room 0 0 17825793
 EDESC tapestry`
 This large wall-hanging depicts great battles between the forces of good and evil.
 `
@@ -66,7 +66,7 @@ Short The Remort Room`
 MIW 1
 Symbol -`
 ThFl 524779
-Val d_exit 1216229 0 0 0 0 0 0 0 `
+Val w_exit 421256 0 0 0 0 0 0 0 `
 END_THING
 
 THING 27
@@ -78,6 +78,7 @@ Wear chest`
 MIW 1
 Symbol -`
 ThFl 524779
+Val d_exit 1335894 0 0 0 0 0 0 0 `
 END_THING
 
 THING 40
@@ -101,12 +102,12 @@ END_THING
 
 THING 42
 HWT 0 0
-Color 12
+Color 7
 Short Water`
 MIW 1
-Symbol #`
+Symbol -`
 ThFl 524779
-Flag Room 0 0 16777218
+Flag Det 0 0 16777218
 END_THING
 
 THING 43
@@ -240,8 +241,8 @@ Short The Battleground`
 MIW 1
 Symbol |`
 ThFl 524779
-Val s_exit 62 0 0 0 0 0 0 0 `
 Val n_exit 60 0 0 0 0 0 0 0 `
+Val s_exit 62 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -253,9 +254,9 @@ Short The Battleground`
 MIW 1
 Symbol {`
 ThFl 524779
-Val s_exit 65 0 0 0 0 0 0 0 `
-Val w_exit 63 0 0 0 0 0 0 0 `
 Val n_exit 61 0 0 0 0 0 0 0 `
+Val w_exit 63 0 0 0 0 0 0 0 `
+Val s_exit 65 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -267,8 +268,8 @@ Short The Battleground`
 MIW 1
 Symbol /`
 ThFl 524779
-Val s_exit 64 0 0 0 0 0 0 0 `
 Val e_exit 62 0 0 0 0 0 0 0 `
+Val s_exit 64 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -280,9 +281,9 @@ Short The Battleground`
 MIW 1
 Symbol }`
 ThFl 524779
-Val s_exit 66 0 0 0 0 0 0 0 `
-Val e_exit 65 0 0 0 0 0 0 0 `
 Val n_exit 63 0 0 0 0 0 0 0 `
+Val e_exit 65 0 0 0 0 0 0 0 `
+Val s_exit 66 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -294,8 +295,8 @@ Short The Battleground`
 MIW 1
 Symbol /`
 ThFl 524779
-Val n_exit 62 0 0 0 0 0 0 0 `
 Val w_exit 64 0 0 0 0 0 0 0 `
+Val n_exit 62 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -307,9 +308,9 @@ Short The Battleground`
 MIW 1
 Symbol {`
 ThFl 524779
-Val w_exit 73 0 0 0 0 0 0 0 `
-Val s_exit 67 0 0 0 0 0 0 0 `
 Val n_exit 64 0 0 0 0 0 0 0 `
+Val s_exit 67 0 0 0 0 0 0 0 `
+Val w_exit 73 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -321,8 +322,8 @@ Short The Battleground`
 MIW 1
 Symbol \`
 ThFl 524779
-Val e_exit 68 0 0 0 0 0 0 0 `
 Val n_exit 66 0 0 0 0 0 0 0 `
+Val e_exit 68 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -334,8 +335,8 @@ Short The Battleground`
 MIW 1
 Symbol \`
 ThFl 524779
-Val s_exit 80 0 0 0 0 0 0 0 `
 Val w_exit 67 0 0 0 0 0 0 0 `
+Val s_exit 80 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -347,9 +348,9 @@ Short The Battleground`
 MIW 1
 Symbol +`
 ThFl 524779
-Val w_exit 80 0 0 0 0 0 0 0 `
-Val e_exit 72 0 0 0 0 0 0 0 `
 Val s_exit 70 0 0 0 0 0 0 0 `
+Val e_exit 72 0 0 0 0 0 0 0 `
+Val w_exit 80 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -361,8 +362,8 @@ Short The Battleground`
 MIW 1
 Symbol \`
 ThFl 524779
-Val e_exit 71 0 0 0 0 0 0 0 `
 Val n_exit 69 0 0 0 0 0 0 0 `
+Val e_exit 71 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -374,8 +375,8 @@ Short The Battleground`
 MIW 1
 Symbol /`
 ThFl 524779
-Val n_exit 72 0 0 0 0 0 0 0 `
 Val w_exit 70 0 0 0 0 0 0 0 `
+Val n_exit 72 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -387,22 +388,22 @@ Short The Battleground`
 MIW 1
 Symbol \`
 ThFl 524779
-Val s_exit 71 0 0 0 0 0 0 0 `
 Val w_exit 69 0 0 0 0 0 0 0 `
+Val s_exit 71 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
 THING 73
 HWT 0 0
-Color 5
+Color 7
 Desc 60`
 Short The Battleground`
 MIW 1
 Symbol -`
 ThFl 524779
-Val w_exit 74 0 0 0 0 0 0 0 `
 Val e_exit 66 0 0 0 0 0 0 0 `
-Flag Room 0 0 16842752
+Val w_exit 74 0 0 0 0 0 0 0 `
+Flag Det 0 0 16842752
 END_THING
 
 THING 74
@@ -413,10 +414,10 @@ Short The Battleground`
 MIW 1
 Symbol +`
 ThFl 524779
-Val s_exit 79 0 0 0 0 0 0 0 `
-Val w_exit 77 0 0 0 0 0 0 0 `
-Val n_exit 75 0 0 0 0 0 0 0 `
 Val e_exit 73 0 0 0 0 0 0 0 `
+Val n_exit 75 0 0 0 0 0 0 0 `
+Val w_exit 77 0 0 0 0 0 0 0 `
+Val s_exit 79 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -428,22 +429,22 @@ Short The Battleground`
 MIW 1
 Symbol \`
 ThFl 524779
-Val w_exit 76 0 0 0 0 0 0 0 `
 Val s_exit 74 0 0 0 0 0 0 0 `
+Val w_exit 76 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
 THING 76
 HWT 0 0
-Color 5
+Color 7
 Desc 60`
 Short The Battleground`
 MIW 1
 Symbol /`
 ThFl 524779
-Val s_exit 77 0 0 0 0 0 0 0 `
 Val e_exit 75 0 0 0 0 0 0 0 `
-Flag Room 0 0 16842752
+Val s_exit 77 0 0 0 0 0 0 0 `
+Flag Det 0 0 16842752
 END_THING
 
 THING 77
@@ -454,9 +455,9 @@ Short The Battleground`
 MIW 1
 Symbol }`
 ThFl 524779
-Val e_exit 74 0 0 0 0 0 0 0 `
-Val s_exit 78 0 0 0 0 0 0 0 `
 Val n_exit 76 0 0 0 0 0 0 0 `
+Val s_exit 78 0 0 0 0 0 0 0 `
+Val e_exit 74 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -468,8 +469,8 @@ Short The Battleground`
 MIW 1
 Symbol \`
 ThFl 524779
-Val e_exit 79 0 0 0 0 0 0 0 `
 Val n_exit 77 0 0 0 0 0 0 0 `
+Val e_exit 79 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -481,8 +482,8 @@ Short The Battleground`
 MIW 1
 Symbol /`
 ThFl 524779
-Val n_exit 74 0 0 0 0 0 0 0 `
 Val w_exit 78 0 0 0 0 0 0 0 `
+Val n_exit 74 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -494,8 +495,8 @@ Short The Battleground`
 MIW 1
 Symbol \`
 ThFl 524779
-Val n_exit 68 0 0 0 0 0 0 0 `
 Val e_exit 69 0 0 0 0 0 0 0 `
+Val n_exit 68 0 0 0 0 0 0 0 `
 Flag Room 0 0 16842752
 END_THING
 
@@ -516,12 +517,12 @@ THING 101
 Name evil_recall`
 HpMult 0
 HWT 0 0
-Color 8
+Color 7
 Short The Evil Recall Room`
 MIW 1
 Symbol -`
-ThFl 134742507
-Flag Room 0 0 1
+ThFl 524779
+Flag Det 0 0 1
 Reset 251 100 1 1
 END_THING
 
@@ -535,7 +536,7 @@ Desc The Recall Room
 Short The Good Recall Room`
 MIW 1
 Symbol -`
-ThFl 134742507
+ThFl 524779
 Flag Room 0 0 1
 Reset 252 100 1 1
 END_THING
@@ -572,12 +573,12 @@ END_THING
 
 THING 106
 HWT 0 0
-Color 8
+Color 7
 Short The Recall Room`
 MIW 1
 Symbol -`
 ThFl 524779
-Flag Room 0 0 1
+Flag Det 0 0 1
 END_THING
 
 THING 107
@@ -602,12 +603,12 @@ END_THING
 
 THING 109
 HWT 0 0
-Color 8
+Color 7
 Short The Recall Room`
 MIW 1
 Symbol -`
 ThFl 524779
-Flag Room 0 0 1
+Flag Det 0 0 1
 END_THING
 
 THING 110
@@ -1002,7 +1003,7 @@ Wear wield`
 Long A spinel has been discarded here.`
 ThFl 100934
 Val gem 6 105 105 49 0 0 0 0 `
-Flag Obj 0 0 8192
+Flag Det 0 0 8192
 END_THING
 
 THING 142
@@ -1382,7 +1383,7 @@ Wear wield`
 Long A zythracite is here.`
 ThFl 100934
 Val gem 15 60 60 28 0 0 0 0 `
-Flag Obj 0 0 8192
+Flag Det 0 0 8192
 END_THING
 
 THING 173
@@ -1653,7 +1654,7 @@ HWT 0 0
 Short the mob randpop`
 Long The mob randpop is here.`
 ThFl 100934
-Val randpop 127100 1520 2 1000 0 0 0 0 `
+Val randpop 127100 1642 2 1000 0 0 0 0 `
 END_THING
 
 THING 279
@@ -1662,7 +1663,7 @@ HWT 0 0
 Short The provision pop`
 Long The provision po pis here.`
 ThFl 101063
-Val randpop 125006 247 1 0 0 0 0 0 `
+Val randpop 125006 227 1 0 0 0 0 0 `
 END_THING
 
 THING 280
@@ -1756,8 +1757,8 @@ Short a knife`
 Wear wield`
 Long A knife is here.`
 ThFl 100934
-Val weapon 1 2 0 0 0 0 0 0 `
 Val tool 6 0 0 0 0 0 0 0 `
+Val weapon 1 2 0 0 0 0 0 0 `
 END_THING
 
 THING 356

@@ -65,8 +65,8 @@
 #define SOCIETY_RAID_HOURS  250    /* Society must wait this long between
 				      raids. */
 
-#define SOCIETY_RAID_CHANCE  50    /* 1 out of this chance of raiding each
-				      hour that is has the resouces. */
+#define SOCIETY_RAID_CHANCE  400    /* 1 out of this chance of raiding each
+				      hour that is has the resources. */
 
 #define SOCIETY_RAID_ADJACENT_CHANCE 60 /* Will raid adjacent societies
 					   except 1 out of this many times. */

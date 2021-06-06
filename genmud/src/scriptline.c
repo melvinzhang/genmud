@@ -887,6 +887,7 @@ replace_one_value (SCRIPT_EVENT *script_event, char *arg, THING *thg, bool setti
 	      else
 		th->pc->remorts = do_operation (th->pc->remorts, op, amount);
 	      th->pc->remorts = MID (0, th->pc->remorts, MAX_REMORTS);
+	      calc_max_remort (th);
 	    }
 	  else if (!str_cmp ("rn", arg))
 	    {

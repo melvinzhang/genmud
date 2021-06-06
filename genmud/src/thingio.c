@@ -421,6 +421,14 @@ write_short_thing (FILE *f, THING *th, int nest)
   
   if (th->max_hp > 0)
     hp_pct = th->hp*100/th->max_hp;
+
+  /* If we're writing to a playerfile and this thing isn't in anything,
+     then it's a stored item. So, write STO at the front of the save
+     file. */
+  
+  if (IS_SET (server_flags, SERVER_WRITE_PFILE) && !th->in)
+    fprintf (f, "STO");
+
   fprintf (f, "TH %d %d %d %d %d %d %d %d %d %d %d\n",
 	   th->vnum, 
 	   nest, 
@@ -1469,9 +1477,9 @@ write_pcdata (FILE *f, THING *th)
     }
   for (i = 0; i < MAX_STORE; i++)
     {
-      if (pc->storage[i])
+      if (pc->storage[i] && pc->storage[i]->proto &&
+	  !IS_SET (pc->storage[i]->proto->thing_flags, TH_NUKE))
 	{
-	  fprintf (f, "STO");
 	  write_short_thing (f, pc->storage[i], 0);
 	}
     }

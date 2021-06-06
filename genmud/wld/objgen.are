@@ -2,10 +2,10 @@ THING 108000
 Name objgen.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 15
+Timer 11
 Short The Object Gen Area`
 type Lonath`
-ThFl 135307259
+ThFl 1089531
 Flag Area 0 0 28
 END_THING
 
@@ -46,6 +46,21 @@ Forged
 Deathshadow
 Marvelous
 Stupendous
+Dazzling
+studded
+Gossimer
+Bloodforge
+Charred
+Molten
+Molded
+Mystic
+Mystical
+Shiny
+Incandescent
+Charred
+Tattered
+Shadowed
+Whispering
 `
 Short Descriptive name.`
 MIW 1
@@ -80,6 +95,7 @@ Azure & $CAzure$7
 Crimson & $1Crimson$7
 Rainbow & $AR$Ea$Ci$Fn$9b$Bo$Dw$7
 Dark & $8Dark$7
+Ebon & $8Ebon$7
 `
 Short Descriptive name.`
 END_THING
@@ -110,6 +126,17 @@ Zircon & $FZircon$7
 Iolite & $EIolite$7
 Citrine & $ACitrine$7
 Bloodstone & $9Bloodstone$7
+Carnelian & $9Carnelian$7
+Agate & $BAgate$7
+Bloodstone & $1Bloodstone$7
+Opal & $8Opal$7
+Hematite & $9Hematite$7
+Jacinth & $CJacinth$7
+Jasper & $6Jasper$7
+Malachite & $DMalachite$7
+Onyx & $8Onyx$7
+Peridot & $5Peridot$7
+'Rose Quartz' & '$9Rose Quartz$7'
 `
 Short Descriptive name.`
 END_THING
@@ -138,6 +165,7 @@ Scalemail
 Truemail
 Truesilver & $FTruesilver$7
 Ivory & $FIvory$7
+Electrum & $EElectrum$7
 `
 Short Descriptive name.`
 END_THING
@@ -263,6 +291,8 @@ Dislocation
 Resonance
 'the Deranged'
 Misdirection
+Recovery
+'the Mystic'
 `
 Short Descriptive name.`
 END_THING
@@ -326,6 +356,8 @@ cap
 cap
 helm
 helmet
+headband
+coronet
 `
 END_THING
 
@@ -396,6 +428,8 @@ amulet
 charm
 neckguard
 locket
+gorget
+neckerchief
 `
 END_THING
 
@@ -443,6 +477,7 @@ tunic
 cape
 frock
 mantle
+shawl
 `
 END_THING
 
@@ -457,6 +492,7 @@ shoulderguard
 shoulderpad
 epaulet
 spaulder
+shawl
 `
 END_THING
 
@@ -488,6 +524,7 @@ bracelet
 bracelet
 bracelet
 manacle
+wristband
 `
 END_THING
 
@@ -514,6 +551,7 @@ gloves
 gauntlets
 gauntlets
 gauntlets
+handwraps
 `
 END_THING
 
@@ -537,6 +575,14 @@ Desc shield
 'tall shield'
 'kite shield'
 buckler
+shield
+shield
+shield
+shield
+buckler
+buckler
+targ
+targe
 `
 END_THING
 
@@ -560,6 +606,24 @@ tanto
 shard
 piercer
 stabber
+dagger
+dagger
+dagger
+dagger
+knife
+knife
+knife
+dagger
+knife
+dagger
+dagger
+harpoon
+javelin
+impaler
+fork
+spear
+stiletto
+sticker
 `
 END_THING
 
@@ -590,6 +654,7 @@ claymore
 battlesword
 slasher
 slicer
+tomahawk
 `
 END_THING
 
@@ -625,6 +690,14 @@ basher
 pounder
 smasher
 crusher
+scepter
+hammer
+club
+mace
+warhammer
+'war maul'
+'war mace'
+warclub
 `
 END_THING
 
@@ -680,6 +753,7 @@ pants
 'war greaves'
 'battle greaves'
 leggings
+kilt
 `
 END_THING
 
@@ -727,6 +801,8 @@ weave
 -inlaid
 -threaded
 -stitched
+-mesh
+mesh
 `
 END_THING
 
@@ -755,24 +831,28 @@ END_THING
 THING 108036
 Name metal_gen_names`
 HWT 0 0
-Desc Esimium & $1Es$9im$1ium$7
-Fanate
-Pepium & $EPepium$7
-Tabite & $2Ta$Dbi$2te$7
-Fowate
-Petium & $EPetium$7
-Ewedium & $CEwe$7dium$7
-Thewite & $1Th$Bew$1ite$7
-Sicium & $8Sic$Bium$7
-Pepate & $DPep$4ate$7
-Nitate & $ENi$Ata$Ete$7
-Fatium
-Oposium & $6Oposium$7
-Sinamate & $ESi$8nam$Eate$7
-Lilium
-Hebidium & $5Hebidium$7
-Imerium & $3Imerium$7
-Metite & $CMe$1ti$Cte$7
+Desc Pegite & $4Pe$2gi$4te$7
+Omcopite & $FOmcopite$7
+Rubite
+Lemium & $6Lemium$7
+Wusium & $8Wusium$7
+Eslasite & $1Esla$6site$7
+Larium & $2Larium$7
+Essitium
+Logium & $2Logium$7
+Pomorate
+Conelite & $DCone$Elite$7
+Aracium & $2Aracium$7
+Ifihium
+Rarate & $ARarate$7
+Wolium & $4Wolium$7
+Noutate
+Nacate & $3Na$6ca$3te$7
+Ralupium
+Aktipite & $BAk$9tip$Bite$7
+Cegate & $ACegate$7
+Hotesium
+Nenite & $ENenite$7
 `
 END_THING
 
@@ -834,6 +914,11 @@ Leather & $3Leather$7
 Leather & $3Leather$7
 Coral & $3Coral$7
 Limestone & $2Limestone$7
+Ceramic & $FCeramic$7
+Hickory
+Elm
+Oak
+Bark
 `
 Short Descriptive Name`
 END_THING
@@ -877,6 +962,8 @@ forest
 mind
 sight
 breath
+skull
+bone
 `
 END_THING
 

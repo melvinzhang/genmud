@@ -192,10 +192,12 @@ worldgen_generate_demons (int curr_vnum, int area_size)
 }
 
 
-/* This removes aggro monsters from lowlevel areas. */
+/* This removes aggro monsters from lowlevel areas. It also adds extra
+   standard eq pops to the monsters and lowers the hps on the monsters
+   so players stand a better chance at the beginning. */
 
 void
-remove_newbie_area_aggros (void)
+setup_newbie_areas (void)
 {
   THING *area, *mob;
   RESET *rst;
@@ -207,15 +209,26 @@ remove_newbie_area_aggros (void)
 	  LEVEL (area) >= WORLDGEN_AGGRO_AREA_MIN_LEVEL)
 	continue;
       
-
+      
       /* Remove aggros and remove society settling here so that
 	 players never have to face "invasions" that close to home. */
       add_flagval (area, FLAG_AREA, AREA_NOSETTLE);
       
       for (mob = area->cont; mob; mob = mob->next_cont)
 	{
+	  if (mob->max_hp > LEVEL(area)/5)
+	    mob->max_hp = LEVEL(area)/5;
+	  
 	  remove_flagval (mob, FLAG_ACT1, ACT_AGGRESSIVE | ACT_ANGRY);
+	  /* Add more armor/wpn pops to the talker mobs. */
+	  if (CAN_TALK (mob))
+	    {
+	      add_reset (mob, ARMOR_RANDPOP_VNUM, 50, 6, 1);
+	      add_reset (mob, WEAPON_RANDPOP_VNUM, 80, 1, 1);
+	    }
 	}
+      
+      
       
       /* Now add more "animal" resets to these areas so players have
 	 more stuff to kill. */
@@ -277,7 +290,10 @@ worldgen_place_guildmasters (void)
 	}
       
       if (!area)
-	continue;
+	{
+	  echo ("Failed to find app area.\n\r");
+	  continue;
+	}
       
       /* Now mark the areas adjacent to this new area. */
        
@@ -289,7 +305,6 @@ worldgen_place_guildmasters (void)
       /* Now pick an area at random -- not the outpost area. */
       
       RBIT (outpost_area->thing_flags, TH_MARKED);
-      
       /* Now for each guild pick an area and create a guildmaster
 	 in that area. */
       for (guildnum = 0; guildnum < GUILD_MAX; guildnum++)
@@ -366,11 +381,11 @@ worldgen_place_guildmasters (void)
 	       
       for (guildnum = 0; guildnum < GUILD_MAX; guildnum++)
 	{
+	  
 	  num_choices = 0;
 	  num_chose = 0;
-	  
 	  for (count = 0; count < 2; count++)
-	    {
+	    { 	      
 	      for (area = the_world->cont; area; area = area->next_cont)
 		{
 		  if (!IS_MARKED (area))
@@ -391,7 +406,10 @@ worldgen_place_guildmasters (void)
 	      if (count == 0)
 		{
 		  if (num_choices < 1)
-		    break;
+		    {
+		      echo ("Failed to find GM area\n\r");
+		      break;
+		    }
 		  else
 		    num_chose = nr (1, num_choices);
 		}
@@ -410,7 +428,7 @@ worldgen_place_guildmasters (void)
 void
 add_guildmaster_to_area (THING *area, int guild, int rank)
 {
-  THING *proto, *room;
+  THING *proto, *room = NULL;
   int vnum;
   int room_tries;
   char guildname[STD_LEN];
@@ -433,13 +451,18 @@ add_guildmaster_to_area (THING *area, int guild, int rank)
 
   for (room_tries = 0; room_tries < 20; room_tries++)
     {
-      if ((room = find_random_room (area, FALSE, flagbits (area->flags, FLAG_ROOM1), 0)) == NULL ||
+      if ((room = find_random_room (area, FALSE, 0, BADROOM_BITS)) == NULL ||
 	  (room_tries < 10 && room->resets))
 	continue;
+      break;
     }
-
+  
   if (!room)
-    return;
+    {
+      sprintf (sdesc, "Area: %d\n", area->vnum);
+      echo (sdesc);
+      return;
+    }
 
   SBIT (area->thing_flags, TH_CHANGED);
   proto = new_thing();
@@ -653,3 +676,52 @@ worldgen_link_special_room (int special_room_vnum)
   return;
 }
   
+/* This finds the total number of words used for generating 
+   the game by looking at each item in each of the generator areas. */
+
+int
+find_num_gen_words (THING *obj)
+{
+  THING *area, *th; 
+  int total = 0;   
+  EDESC *edesc;
+  if (!obj)
+    return 0;
+  /* Do search all areas. */
+  if (obj == the_world)
+    {  
+      for (area = the_world->cont; area; area = area->next_cont)
+	{
+	  if (area->vnum < GENERATOR_NOCREATE_VNUM_MIN ||
+	      area->vnum > GENERATOR_NOCREATE_VNUM_MAX)
+	    continue;
+	  
+	  if (!area->cont)
+	    continue;
+	  th = area->cont->next_cont;
+	  
+	  for (; th; th = th->next_cont)
+	    {
+	      total += find_num_gen_words (th);
+	    }
+	}
+      return total;
+    }
+
+  /* Add up the total number of words in each part of each 
+     thing. This isn't perfect due to phrases and &'s in name/colorname
+     strings, but it's close. */
+  
+  total += find_num_words (obj->name);
+  total += find_num_words (obj->short_desc);
+  total += find_num_words (obj->long_desc);
+  total += find_num_words (obj->desc);
+  total += find_num_words (obj->type);
+  
+  for (edesc = obj->edescs; edesc; edesc = edesc->next)
+    {
+      total += find_num_words (edesc->name);
+      total += find_num_words (edesc->desc);
+    }
+  return total;
+}

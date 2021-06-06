@@ -669,7 +669,7 @@ generate_deity (char *name, char *spheres, int align)
   proto->short_desc = new_str (buf);
   proto->long_desc = new_str ("A being of amazing and awesome power stands before you...");
   
-  sprintf (buf, "owner %s", name);
+  sprintf (buf, "owner \"%s\"", name);
   for (wearloc = ITEM_WEAR_NONE + 1; wearloc < ITEM_WEAR_MAX; wearloc++)
     {
       for (wearnum = 0; wearnum < wear_data[wearloc].how_many_worn; wearnum++)

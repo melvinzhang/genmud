@@ -308,7 +308,6 @@ void
 add_exp (THING *th, int amt)
 {
   int l;
-  
   if (amt < 1 || !th || !IS_PC (th) || LEVEL (th) >= BLD_LEVEL - 1)
     return;
   if ((l = th->level) < 1)
@@ -490,6 +489,7 @@ kill_exp (THING *killer, THING *vict)
 		    curr_exp = (((exp * LEVEL (rth))/top_level) * LEVEL (rth))/top_level;
 		  else
 		    curr_exp = exp;
+		  curr_exp *= find_remort_bonus_multiplier (rth);
 		  add_exp (rth, curr_exp);
 		  sprintf (buf, "You have gained %d experience for killing this creature, and %d experience for fighting.\n\r", curr_exp, rth->pc->fight_exp);
 		  stt (buf, rth);
@@ -1101,6 +1101,7 @@ do_remort (THING *th, char *arg)
     }
   /* Increase remort times. */
   th->pc->remorts++;
+  calc_max_remort(th);
   /* Add stat bonuses. */
   for (i = 0; i < STAT_MAX; i++)
     th->pc->stat[i] += totals[i];

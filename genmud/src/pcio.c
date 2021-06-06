@@ -1378,7 +1378,8 @@ read_playerfile (char *name)
   SBIT (server_flags, SERVER_READ_PFILE);
   thg = read_thing (f);
   RBIT (server_flags, SERVER_READ_PFILE);
-  
+  if (thg)
+    calc_max_remort (thg);
   fclose (f);
   return thg;
 }

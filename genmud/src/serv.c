@@ -64,7 +64,7 @@ init_socket (void)
       (setsockopt (listen_socket, SOL_SOCKET, SO_REUSEADDR, (char *) &reuse, sizeof (reuse)) < 0) ||
       ((bind (listen_socket, (struct sockaddr *) &listen_address, sizeof (listen_address))) < 0) ||
       (fcntl (listen_socket, F_SETFL, (fcntl (listen_socket, F_GETFL, 0) | O_NONBLOCK)) < 0) ||
-      (listen (listen_socket, 25) < 0))
+      (listen (listen_socket, 5) < 0))
     {
       log_it ("Socket Failed!\n\r");
       close (listen_socket);
@@ -191,7 +191,7 @@ read_in_from_network (void*pointer)
   FILE_DESC *fd, *fd_next;
   
   
-  while (1)
+  while (!IS_SET (server_flags, SERVER_REBOOTING))
     {
       FD_ZERO (&input_set);
       FD_SET (listen_socket, &input_set); 
@@ -241,6 +241,7 @@ read_in_from_network (void*pointer)
       else
 	usleep (20000);
     }
+  return NULL;
 }
 
 /* This gets input from the sockets. */

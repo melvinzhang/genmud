@@ -159,6 +159,7 @@ const char *value_list[VAL_MAX] =
   "package",
   "dimension",
   "craft",
+  "daily_cycle",
 };
 
 
@@ -633,11 +634,11 @@ const struct flag_data money_info[] =
 
 const char *weather_names[WEATHER_MAX] = 
 {
-  "Clear",
-  "Cloudy",
-  "Rainy", 
-  "Stormy",
-  "Foggy",
+  "clear",
+  "cloudy",
+  "rainy", 
+  "stormy",
+  "foggy",
 };
 
 const char *day_names[NUM_DAYS] = 

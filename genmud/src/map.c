@@ -459,20 +459,30 @@ draw_room (THING *room, int x, int y, int maxx, int maxy, bool use_ascii)
 }
 
 /* Recursively unset the marked flags on all of the rooms adjacent to
-   the starting room. */
+   the starting room. If it's an area, it unmarks all of its contents.  */
 
 void
-undo_marked (THING *room)
+undo_marked (THING *th)
 {
   VALUE *exit;
   int dir;
+  THING *room;
   THING *newroom;
   
-  if (!room || !IS_SET (room->thing_flags, TH_MARKED))
+  if (!th)
     return;
-  RBIT (room->thing_flags, TH_MARKED);
+  
+  if (IS_AREA (th))
+    {
+      for (room = th->cont; room; room = room->next_cont)
+	undo_marked (room);
+      return;
+    }
+  if (!IS_SET (th->thing_flags, TH_MARKED))
+    return;
+  RBIT (th->thing_flags, TH_MARKED);
   for (dir = 0; dir < REALDIR_MAX; dir++)
-    if ((exit = FNV (room, dir + 1)) != NULL &&
+    if ((exit = FNV (th, dir + 1)) != NULL &&
 	(newroom = find_thing_num (exit->val[0])) != NULL)
       undo_marked (newroom);
   return;

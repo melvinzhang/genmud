@@ -4,11 +4,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include<dirent.h>
 #include "serv.h"
 
 
 /* Btw, this isn't real security. It's just a few things to make
    twinks have a harder time screwing with the game. */
+
+static int max_remorts_found_in_pbase = 0;
 
 /* These create and destroy siteban data. */
 
@@ -593,4 +596,91 @@ num_nostore_items (THING *obj)
     num_nostore += num_nostore_items (cont);
   
   return num_nostore;
+}
+
+/* This finds the max remort in the game. */
+
+
+void
+calc_max_remort (THING *th)
+{
+  DIR *dir_file; /* Directory pointer. */
+  struct dirent *currentry; /* Ptr to current entry. */
+  THING *thg, *player, *thgn;
+  char name[STD_LEN];
+  int th_remorts = 0;
+  /* If a thing is passed to this function, then it updates if that
+     thing has more remorts than the current max, then returns,
+     otherwise it loops through all people. This is used when a player
+     remorts or ascends to update the status. */
+
+  if (th)
+    {
+      if (IS_PC (th) && LEVEL(th) <= BLD_LEVEL)
+	{
+	  th_remorts = th->pc->remorts;
+	  if (IS_PC1_SET (th, PC_ASCENDED))
+	    th_remorts = MAX_REMORTS;
+	}
+      
+      if (max_remorts_found_in_pbase < th_remorts)
+	max_remorts_found_in_pbase = th_remorts;
+      return;
+    }
+
+  /* This is the static variable that holds the remort data. It is
+     accessed through max_pc_remorts() function. */
+  
+  max_remorts_found_in_pbase = 0;
+  
+  /* Now open the player directory and clean up all playerfiles. */
+  
+  if ((dir_file = opendir (PLR_DIR)) == NULL)
+    {
+      log_it ("Couldn't open player directory for finding max remort!\n\r");
+      return;
+    }
+ 
+  /* Search all names in the directory. If they're online, just get their
+     data, and if they're offline, read in and get data, then write out. */
+     
+  while ((currentry = readdir (dir_file)) != NULL)
+    {
+      strcpy (name, currentry->d_name);
+      
+      for (thg = thing_hash[PLAYER_VNUM % HASH_SIZE]; thg; thg = thgn)
+	{
+	  thgn = thg->next;
+	  if (!str_cmp (NAME(thg), name))
+	    {
+	      calc_max_remort (thg);
+	      break;
+	    }
+	}
+      if (thg)
+	continue;
+      
+      if ((player = read_playerfile (name)) != NULL)
+	{
+	  calc_max_remort (player);
+	  free_thing (player);
+	}
+    }
+  closedir (dir_file); 
+  return;
+}
+  
+/* This finds the remort bonus multiplier for players who are
+   behind the leaders in the game. It's expected that this number will be
+   divided by 2 when it's finally used in the outside world. */
+int
+find_remort_bonus_multiplier (THING *th)
+{
+  int mult;
+  if (!th || !IS_PC (th) || IS_PC1_SET (th, PC_ASCENDED))
+    return 1;
+  mult = (max_remorts_found_in_pbase - th->pc->remorts - 1);
+  if (mult < 1 || mult > MAX_REMORTS)
+    mult = 1;
+  return mult;
 }

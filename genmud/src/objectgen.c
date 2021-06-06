@@ -90,6 +90,7 @@ static const char *objectgen_part_names[OBJECTGEN_NAME_MAX] =
     "society", 
     "type",   /* 8th slot, array[7]. Important to keep distinct. */
     "suffix",
+    "called",
   };
 
 
@@ -212,15 +213,12 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
       if (i == OBJECTGEN_NAME_A_AN ||
 	  !*name[i])
 	continue;
-      if (*fullname)
+      if (*fullname)    
 	strcat (fullname, " ");
       if (!*colorname[i] && *name[i])
 	strcpy (colorname[i], name[i]);
-      for (t = name[i]; *t; t++)
-	{
-	  if (*t == '\'' || *t == '\"')
-	    *t = '\0';
-	}
+      /* sprintf (fullname + strlen (fullname), "%s:  '%s'", objectgen_part_names[i], name[i]); */
+      
       t = name[i];
       do
 	{
@@ -233,6 +231,8 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	      if (t && *t)
 		strcat (fullname, " ");
 	    }
+	  else
+	    strcat (fullname, t);
 	}
       while (t && *t);
     }
@@ -258,15 +258,16 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	    }
 	}
     }
+
   /* Set up the short and long descs. */
   fullname[0] = '\0';
   for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
-    {
-      if (!*name[i] ||
+    { 
+      
+      if (!*name[i] || isspace(*name[i]) ||
 	  (i == OBJECTGEN_NAME_PREFIX && 
 	   put_prefix_at_end))
 	continue;
-   
       if (i == OBJECTGEN_NAME_METAL && *name[OBJECTGEN_NAME_GEM])
 	{
 	  if (obj->wear_pos == ITEM_WEAR_WIELD)
@@ -291,18 +292,23 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	strcat (fullname, " ");
       
       
-      if (i == OBJECTGEN_NAME_MAX-2) /* Suffix -- of life etc... */
+      if (i == OBJECTGEN_NAME_SUFFIX) /* Suffix -- of life etc... */
 	strcat (fullname, "of ");
       
-      if (i == OBJECTGEN_NAME_MAX -1) /* called 'soulstealer' */
+      if (i == OBJECTGEN_NAME_CALLED) /* called 'soulstealer' */
 	{
 	  sprintf (fullname + strlen (fullname), "%s '%s'",
 		   (nr (1,2) == 1 ? "called" : "named"),
 		   (*colorname[i] ? colorname[i] : name[i])); 
 	}
-      else
+      else 
 	{
-	  if (i == OBJECTGEN_NAME_SUFFIX &&
+	  /* Put a prefix and suffix at the end. If the suffix has the
+	     word "the" in it, we must remove it first and put it before
+	     the prefix, then do the suffix, otherwise we just do the 
+	     prefix/suffix normally. */
+	  
+	  if (i == OBJECTGEN_NAME_SUFFIX && 
 	      put_prefix_at_end)
 	    { 
 	      char word[STD_LEN], *secondword;
@@ -340,6 +346,7 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 		strcat (fullname, name[i]);
 	    }
 	}
+      
       /* Cloaks/leather/cloth/hide armor are metal-woven armor,
 	 not metal armor. Also add the woven look to a small percentage
 	 of nonweapons. */
@@ -577,7 +584,8 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 		 (char *) objectgen_part_names[i], colorname[i]));
      
     }
-
+  
+ 
   /* Now get the preset part names (if any) */
 
   if (names && *names)
@@ -587,17 +595,19 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
       while (arg && *arg)
 	{
 	  arg = f_word (arg, arg1);
-	  /* Find a part name if possible. */
+	 
+	  /* Find the part name here if possible... */
 	  if ((name_part = find_objectgen_part_name (arg1)) != OBJECTGEN_NAME_MAX)
-	    {
+	    { 
+	      
 	      arg = f_word (arg, arg1);
+	      
 	      /* If it exists, find the name associated with it. */
 	      if (*arg1)
 		{
 		  if (name_part == OBJECTGEN_NAME_OWNER)
-		    *arg1 = UC (*arg1);
+		    *arg1 = UC (*arg1);			 
 		  strcpy (name[name_part], arg1);
-		  
 		  /* Check if this name has colors associated with it. */
 		  if (*arg == '&' && isspace (*(arg+1)))
 		    {
@@ -606,6 +616,8 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 		      if (*arg1)
 			strcpy (colorname[name_part], arg1);
 		    }
+		  else
+		    strcpy (colorname[name_part], name[name_part]);
 		  /* Set this as one of the name parts we 
 		     MUST use. */
 		  name_parts_used |= (1 << name_part);
@@ -621,7 +633,8 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
   Breakdown: 70pct metal, 20pct animal, 10pct nonmetal. 
   Overridden if you require certain name parts to be used. */
   
-  if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_METAL)))
+  if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_METAL)) ||
+      wear_loc == ITEM_WEAR_WIELD)
     {
       *name[OBJECTGEN_NAME_NONMETAL] = '\0';
       *name[OBJECTGEN_NAME_ANIMAL] = '\0'; 
@@ -629,6 +642,13 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
       *colorname[OBJECTGEN_NAME_ANIMAL] = '\0';
       RBIT (name_parts_used, (1 << OBJECTGEN_NAME_NONMETAL) |
 	    (1 << OBJECTGEN_NAME_ANIMAL));
+      /* Check for "mail" items...since mail wpns is stupid. :P */
+      if (strstr (name[OBJECTGEN_NAME_METAL], "mail"))
+	{
+	  *name[OBJECTGEN_NAME_METAL] = '\0';
+	  *colorname[OBJECTGEN_NAME_METAL] = '\0';
+	  RBIT (name_parts_used, (1 << OBJECTGEN_NAME_METAL));
+	}
     }
   else if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_NONMETAL)))
     {
@@ -717,6 +737,7 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	strcpy (name[OBJECTGEN_NAME_TYPE], "armor");
     }
   
+
   
   /* Set names_used to have bits set for all nonnull names that won't
      be fixed. */
@@ -728,10 +749,11 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
     {
       /* Most of the time keep the name on the front, otherwise move
 	 it to the back where the suffix is. */
-      if (nr (1,6) != 2)
-	*name[OBJECTGEN_NAME_A_AN] = '\0';
-      else
-	{
+      
+       *name[OBJECTGEN_NAME_A_AN] = '\0';
+       
+       if (nr (1,6) == 2)
+	 {
 	  RBIT (names_used, (1 << OBJECTGEN_NAME_OWNER));
 	  SBIT (names_used, (1 << OBJECTGEN_NAME_SUFFIX));
 	  strcpy (name[OBJECTGEN_NAME_SUFFIX],
@@ -744,22 +766,26 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	  strcpy (colorname[OBJECTGEN_NAME_A_AN], "The");
 	}
     } 
-  /* If there's a suffix, usually change the "A/An" into a "The" */
-  else if (*name[OBJECTGEN_NAME_SUFFIX] && nr (1,5) == 3)
+  
+  
+
+  /* If there's a suffix, sometimes change the "A/An" into a "The" */
+  else if (*name[OBJECTGEN_NAME_SUFFIX] && nr (1,12) == 3)
     {
       strcpy (name[OBJECTGEN_NAME_A_AN], "The");
       strcpy (colorname[OBJECTGEN_NAME_A_AN], "The");
     }
-  names_left += nr (1, level/100+2);
-  if (names_left > 3)
-    names_left = 3;
-  
   num_names_used = 0;
   for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
     {
       if (IS_SET (names_used, (1 << i)))
 	num_names_used++;
     }
+  
+  names_left += nr (1, level/50+3);
+  if (num_names_used + names_left >= 5)
+    names_left = MAX(1, 5-num_names_used);
+  
   
   
   /* Choose from the remaining descriptive names. You only pick
@@ -809,6 +835,7 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
   
   
   *name[OBJECTGEN_NAME_A_AN] = '\0';
+  *colorname[OBJECTGEN_NAME_A_AN] = '\0';
   if (!*name[OBJECTGEN_NAME_OWNER])
     {
       if (LC (*t) == 's'  &&
@@ -837,6 +864,7 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
   else
     {
       possessive_form (name[OBJECTGEN_NAME_OWNER]);
+      possessive_form (colorname[OBJECTGEN_NAME_OWNER]);
     }
   return;
 }
@@ -1494,7 +1522,6 @@ objectgen_animal_part_name (int wear_loc, int weapon_type)
     }
   
   /* Now set up the name: animal_name(middle)part_name-suffix_name */
-  
  
   /* No space in middle. */
   if (nr (1,5) != 3 &&
@@ -1509,7 +1536,7 @@ objectgen_animal_part_name (int wear_loc, int weapon_type)
 	possessive_form (animal_name);
       sprintf (whole_name, "%s %s%s", animal_name, part_name, suffix_name);
     }
-    
+  
   return whole_name;
 }
 

@@ -179,7 +179,7 @@ areagen (THING *th, char *arg)
   top_vnum = MAX (top_vnum, start);
   add_thing_to_list (area);
   set_up_new_area(area, size);
-  area->mv = size*4/5;
+  area->mv = size*3/5;
   min_num_rooms = area->mv/3;
   max_num_rooms = area->mv*2/3;    
   area->max_mv = size;
@@ -310,7 +310,7 @@ areagen (THING *th, char *arg)
 	  curr_length = nr (length*5/4, length*3/2)/(num_map_parts);
 	  if (curr_length < 1)
 	    curr_length = 1;
-	  curr_width = size/(nr (curr_length, curr_length*3/2)*(num_map_parts));
+	  curr_width = size/(nr (curr_length/2, curr_length)*(num_map_parts));
 	  
 	  /* For regular areas, go to the old code. */
 	  if (go_dirs == 0)
@@ -564,13 +564,17 @@ areagen (THING *th, char *arg)
   add_secret_doors (area);
 
 
-  set_up_map(area);
 
   /* Now start adding some people mobs that will pop eq. */
   
   areagen_generate_persons (area);
   
- 
+  /* Now unmark all the rooms in the area. */
+
+  undo_marked (area);
+  
+  set_up_map(area);
+
   reset_thing (area, 0);
   return;
 }
@@ -1985,20 +1989,23 @@ fix_disconnected_sections (THING *area)
   VALUE *exit;
   int main_section_size = 0;
   int dir;
-  int pass;
   int depth;
   bool found_path = FALSE;
+  bool added_bridge = FALSE; /* Did we add a bridge at this depth? */
   if (!area)
     return;
   
-  /* Do this in several passes to try to get all areas connected. */
-  
-  for (pass = 0; pass < 10; pass++)
+ 
+      /* For each length search through all rooms */
+
+  for (depth = 1; depth < 10; depth++)
     {
+      /* Do this in several passes to try to get all areas connected. */
+      
       for (start_room = area->cont; start_room; start_room = start_room->next_cont)
 	{
 	  if (IS_ROOM (start_room) &&
-	  IS_ROOM_SET (start_room, ROOM_EASYMOVE))
+	      IS_ROOM_SET (start_room, ROOM_EASYMOVE))
 	    break;
 	}
       
@@ -2009,53 +2016,45 @@ fix_disconnected_sections (THING *area)
       
       /* Find the number of rooms marked in the main section of the map. */
       
-      for (room = area->cont; room; room = room->next_cont)
-	RBIT (room->thing_flags, TH_MARKED);
+      undo_marked (area);
       
       main_section_size = find_connected_rooms_size (start_room);
       
-      
-      /* For each length search through all rooms */
-
-      for (depth = 1; depth < MAX(5,pass); depth++)
+      added_bridge = FALSE;
+      for (room = area->cont; room; room = room->next_cont)
 	{
-	  for (room = area->cont; room; room = room->next_cont)
-	    {
-	      /* Any room that's not connected and isn't a badroom bit
-		 gets checked. */
-	      if (IS_ROOM (room) &&
-		  !IS_MARKED (room) &&
-		  !IS_ROOM_SET (room, BADROOM_BITS))
-		{ 	      
+	  /* Any room that's not connected and isn't a badroom bit
+	     gets checked. */
+	  if (IS_ROOM (room) &&
+	      !IS_MARKED (room) &&
+	      !IS_ROOM_SET (room, BADROOM_BITS))
+	    { 	      
 		  
-		  found_path = FALSE;
-		  /* See if there are any badrooms connected to this room. */
-		  for (dir = 0; dir < FLATDIR_MAX; dir++)
+	      found_path = FALSE;
+	      /* See if there are any badrooms connected to this room. */
+	      for (dir = 0; dir < FLATDIR_MAX; dir++)
+		{
+		  /* If we can make a path... */
+		  if ((exit = FNV (room, dir + 1)) != NULL &&
+		      (nroom = find_thing_num (exit->val[0])) != NULL &&
+		      found_path_through_badrooms (nroom, depth))
 		    {
-		      /* If we can make a path... */
-		      if ((exit = FNV (room, dir + 1)) != NULL &&
-			  (nroom = find_thing_num (exit->val[0])) != NULL &&
-			  found_path_through_badrooms (nroom, depth))
-			{
-			  
-			  found_path = TRUE;
-			  /* Mark everything we just connected. */
-			  find_connected_rooms_size (room);
-			  break;
-			}
+		      
+		      found_path = TRUE;
+		      /* Mark everything we just connected. */
+		      find_connected_rooms_size (room);
+		      added_bridge = TRUE;
+		      break;
 		    }
 		}
 	    }
 	}
+      if (added_bridge)
+	depth--;
     }
   
+  undo_marked (area);
   
-  
-  for (room = area->cont; room; room = room->next_cont)
-    {
-      
-      RBIT (room->thing_flags, TH_MARKED);
-    }
  return;
 }
 

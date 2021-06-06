@@ -310,6 +310,20 @@ multi_hit (THING *th, THING *vict)
       for (i = 0; i < num_hits && !has_killed; i++)
 	has_killed = one_hit (th, vict, th, SP_ATT_NONE); 
     }
+  if (!wpn && !IS_PC (th) && !has_killed && nr (1,65) == 42)
+    {
+      int mob_flags = flagbits (th->flags, FLAG_MOB);
+      FLAG *flg = NULL;
+      if (IS_SET (mob_flags, MOB_UNDEAD | MOB_DEMON) && nr (1,15) == 3)
+	{
+	  flg = new_flag();
+	  flg->type = FLAG_HURT;
+	  flg->val = AFF_DISEASE;
+	  flg->timer = nr (3,6);
+	  flg->from = 0;
+	  aff_update (flg, vict);
+	}
+    }
   return;
 }
 
@@ -1227,9 +1241,10 @@ if (!damg)
  
  if (IS_PC (th) && (!IS_PC (vict) || DIFF_ALIGN (th->align, vict->align)))
    {
-     int added = MIN (10 * LEVEL (th), dam *dam/2 + dam*3);
-      add_exp (th, added);
-      th->pc->fight_exp += added;
+     int added = MIN (10 * LEVEL (th), dam *dam/2 + dam*3)*
+       find_remort_bonus_multiplier (th);
+     add_exp (th, added);
+     th->pc->fight_exp += added;
     }
  
   if (vict->in && IS_ROOM (vict->in) &&

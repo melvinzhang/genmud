@@ -1581,7 +1581,7 @@ find_random_society_name (char name_type, int generated_from)
   SOCIETY *soc;
   int num_choices = 0, num_chose = 0, count = 0;
   static char retbuf[STD_LEN];
-  
+  char *t;
   
   retbuf[0] = '\0';
   for (count = 0; count < 2; count++)
@@ -1626,6 +1626,8 @@ find_random_society_name (char name_type, int generated_from)
     strcat (retbuf, soc->pname);
   else
     strcat (retbuf, soc->name);
+  for (t = retbuf; *t; t++)
+    *t = LC(*t);
   return retbuf;
 }
 

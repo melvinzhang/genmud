@@ -761,7 +761,8 @@ do_get (THING *th, char *arg)
 		 see the getter and who are guards. */
 	      if (IS_PC (guarder) || !CAN_FIGHT (guarder) ||
 		  !can_see (guarder, th) || IS_PC (mover) ||
-		  (guard = FNV (guarder, VAL_GUARD)) == NULL)
+		  (guard = FNV (guarder, VAL_GUARD)) == NULL ||
+		  guarder->position <= POSITION_SLEEPING)
 		continue;
 	      for (i = 1; i < 4; i++)
 		{

@@ -159,7 +159,7 @@ society_give_reward (THING *giver, THING *receiver, int reward_type, int reward)
   reward = MID (1, reward, REWARD_AMOUNT_MAX);
   
   /* First add the exp. */
-  add_exp (receiver, reward*REWARD_EXP_MULT);
+  add_exp (receiver, reward*REWARD_EXP_MULT *find_remort_bonus_multiplier(receiver));
   
   add_money (receiver, reward);
   act ("@1n give@s some money to @3f.", giver, NULL, receiver, NULL, TO_ALL);
