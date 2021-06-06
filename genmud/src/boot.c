@@ -159,6 +159,7 @@ int bg_maxlev = 0;      /* Max level for this bg. */
 int bg_money = 0;       /* Cash prize for bg. */
 THING *bg_prize[BG_MAX_PRIZE]; /* Prizes for the bg. */
 
+
 void
 init_variables (void)
 {
@@ -216,6 +217,7 @@ init_variables (void)
     bg_prize[i] = NULL;
   for (i = 0; i < AREA_MAX; i++)
     room_count[i] = 0;
+
   for (i = 0; i < PK_MAX; i++)
     {
       for (j = 0; j < PK_LISTSIZE; j++)
@@ -909,9 +911,9 @@ seg_handler (void)
   shutdown_server ();
   /* Wait for world state save. */
   do
-    usleep (50000);
+    sleep(1);
   while (IS_SET (server_flags, SERVER_SAVING_WORLD | SERVER_SAVING_AREAS) &&
-	 ++count < 200);
+	 ++count < 20);
   
   kill (getpid(), SIGSEGV);
   exit(SIGSEGV);
@@ -942,9 +944,6 @@ shutdown_server (void)
 	  fd->th = NULL;
 	  close_fd (fd);
 	}
-      while (IS_SET (server_flags, SERVER_SAVING_WORLD | SERVER_SAVING_AREAS) &&
-	     ++count < 50)
-	usleep (50000);
       init_write_thread();
       write_societies ();
       write_changed_areas(NULL);
@@ -956,6 +955,10 @@ shutdown_server (void)
       write_aligns ();
       write_notes ();
     }
+  do
+    sleep(1);
+  while (IS_SET (server_flags, SERVER_SAVING_WORLD | SERVER_SAVING_AREAS) &&
+	 ++count < 20);
   SBIT (server_flags, SERVER_REBOOTING);
   return;
 }

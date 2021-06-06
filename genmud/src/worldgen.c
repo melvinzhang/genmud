@@ -358,7 +358,7 @@ worldgen (THING *th, char *arg)
   
   worldgen_sectors[WORLDGEN_MAX/2][WORLDGEN_MAX/2] = ROOM_FIELD;
   
-  for (times = 1; times < 300; times++)    
+  while (1)
     {          
       for (x = 0; x < WORLDGEN_MAX; x++)
 	{
@@ -521,28 +521,50 @@ worldgen_add_sector (int x, int y)
   int new_x, new_y;
   int other_x, other_y;
   int curr_exits = 0;
+  int curr_corners = 0;
   
   /* Make sure that this is an area that's already been marked
      with a sector type so we can extend the sector outward. */
-  if (x < 0 || x >= WORLDGEN_MAX || y < 0 || y >= WORLDGEN_MAX ||
+  if (x <= 0 || x >= WORLDGEN_MAX - 1 || y <= 0 || y >= WORLDGEN_MAX - 1 ||
       !worldgen_allowed[x][y] || worldgen_sectors[x][y] == 0 ||
       worldgen_checked[x][y])
     return;
   
-  if (x > 0 && worldgen_sectors[x-1][y])
+  if (worldgen_sectors[x-1][y])
     curr_exits++;
-  if (y > 0 && worldgen_sectors[x][y-1])
+  if (worldgen_sectors[x][y-1])
     curr_exits++;
-  if (y < WORLDGEN_MAX -1 && worldgen_sectors[x][y+1])
+  if (worldgen_sectors[x][y+1])
     curr_exits++;
-  if (x < WORLDGEN_MAX -1 && worldgen_sectors[x-1][y])
+  if (worldgen_sectors[x-1][y])
     curr_exits++;
+  
+  if (worldgen_sectors[x-1][y-1])
+    curr_exits++;
+  if (worldgen_sectors[x+1][y-1])
+    curr_exits++;
+  if (worldgen_sectors[x+1][y+1])
+    curr_exits++;
+  if (worldgen_sectors[x-1][y+1])
+    curr_exits++;
+  
+  
 
-  if (curr_exits == 1 && nr (1,3) != 2)
+  if (curr_exits == 1 && nr (1,6) == 2)
     return;
-  if (curr_exits == 2 && nr (1,12) != 5)
+  if (curr_exits == 2 && nr (1,75) != 5)
     return;
-  if (curr_exits >= 3)
+  
+  if (curr_exits >= 3 && nr (1,1000) != 343)
+    return;
+  
+  if (curr_corners == 1 && nr (1,5) != 2)
+    return;
+  
+  if (curr_corners == 2 && nr (1,80) != 33)
+    return;
+  
+  if (curr_corners >= 3 && nr (1,1000) != 562)
     return;
   /*
   if (curr_exits == 3 && nr (1,43) != 2)

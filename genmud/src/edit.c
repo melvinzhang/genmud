@@ -1387,7 +1387,7 @@ edit (THING *th, char *arg)
 	      thg->name = new_str (arg);
 	    }
 	  free_str (thg->short_desc);
-	  thg->short_desc = new_str (capitalize (add_color(arg)));
+	  thg->short_desc = new_str (add_color(arg));
 	  stt ("Short desc changed.\n\r", th);
 	  show_edit (th);
 	  return;

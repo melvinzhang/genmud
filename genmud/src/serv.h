@@ -3279,6 +3279,7 @@ void do_rating (THING *, char *);
 void do_raze (THING *, char *);
 void do_citybuild (THING *, char *);
 void do_topten (THING *, char *);
+void do_thing (THING *, char *);
 void do_reply (THING *, char *);
 void do_rescue (THING *, char *);
 void do_guard (THING *, char *);

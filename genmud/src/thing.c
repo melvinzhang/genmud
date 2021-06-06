@@ -15,11 +15,13 @@
 #include "wilderness.h"
 #include "wildalife.h"
 #endif
+
+
+
+
 /* This function makes a new thing and sets up all the data note that
    this takes an argument which is a pointer to an index type. */
-
-
-
+	  
 THING *
 new_thing (void)
 {
@@ -135,7 +137,6 @@ free_thing (THING *th)
     return;
   
   
-
   if (th->fgt)
     {
       remove_fight (th); /* Also does free_fight () */
@@ -260,6 +261,10 @@ free_thing_final (THING *th, bool is_pc)
   TRACK *track;
   NEED *need, *needn;
   
+  if (!th)
+    return;
+
+
   /* Clean up all of the flags. */
   
   for (flg = th->flags; flg; flg = flgn)
@@ -1392,6 +1397,7 @@ create_thing (int vnum)
       vnum <= GENERATOR_NOCREATE_VNUM_MAX)
     return NULL;
   
+
   /* Check if there are too many of this thing around... We allow
      this to pass since we don't want to make crap items floating 
      around...the main thing is that we don't clone rooms or areas. */
@@ -1970,7 +1976,13 @@ replace_thing (THING *told, THING *tnew)
       set_up_thing (tnew);
     }
   
-  tnew->timer = told->timer;
+  /* When replacing items, if the old item had a timer, if the
+     old and new items have timers, just update the timer. */
+  if (told->timer > 0 && tnew->timer > 0)
+    tnew->timer = told->timer;
+  /* Otherwise, the new item gets its regular timer. */
+  else
+    tnew->timer = tnew->proto->timer;
   thing_to (tnew, told->in);
   free_thing (told);
   return TRUE;
@@ -2500,3 +2512,41 @@ new_room (int vnum)
   area->thing_flags |= TH_CHANGED;
   return room;
 }
+
+
+/* This is a diagnostic function admins can use to get info about
+   things. Add more diagnostics as you feel you need them. */
+
+void
+do_thing (THING *th, char *arg)
+{
+ 
+  
+  if (!th || LEVEL (th) < MAX_LEVEL || !IS_PC (th))
+    return;
+
+  if (!str_cmp (arg, "gap") || !str_cmp (arg, "made"))
+    {
+      int made = 0;
+      int vnum = 0;
+      THING *area, *proto;
+      char buf[STD_LEN];
+      for (area = the_world->cont; area; area = area->next_cont)
+	{
+	  for (proto = area->cont; proto; proto = proto->next_cont)
+	    {
+	      if (proto->mv > made)
+		{
+		  vnum = proto->vnum;
+		  made = proto->mv;
+		}
+	    }
+	}
+      
+      sprintf (buf, "Made %d of vnum %d.\n\r", made, vnum);
+      stt (buf, th);
+      return;
+    }
+}
+	
+		  

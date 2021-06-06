@@ -267,7 +267,7 @@ init_command_list (void)
   add_command ("inspire", do_inspire, 0, FALSE);
   add_command ("demoralize", do_demoralize, 0, FALSE);
   add_command ("channels", do_channels, 0, FALSE);
- 
+  add_command ("thing", do_thing, MAX_LEVEL, FALSE);
   add_command ("capture", do_capture, 0, FALSE);
   add_command ("craft", do_craft, 0, FALSE);
   add_command ("echo", do_echo, 0, FALSE);
