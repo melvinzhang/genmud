@@ -308,8 +308,10 @@ areagen (THING *th, char *arg)
 	{
 	  
 	  curr_length = nr (length*5/4, length*3/2)/(num_map_parts);
-	  if (curr_length < 1)
-	    curr_length = 1;
+	  if (curr_length < 4)
+	    curr_length = 4;
+	  if (num_map_parts < 1)
+	    num_map_parts = 1;
 	  curr_width = size/(nr (curr_length/2, curr_length)*(num_map_parts));
 	  
 	  /* For regular areas, go to the old code. */
@@ -1827,8 +1829,14 @@ generate_patch_name (int sector_type, int patch_type)
     }
   else
     {
+      char *t;
       sprintf (buf, "%s%s%s", undergroundname, prefixname, patchname);
-      sprintf (retbuf, "%s %s", a_an (buf), buf);
+      for (t = buf; *t; t++);
+      t--;
+      if (LC(*t) == 's')
+	sprintf (retbuf, "some %s", buf);
+      else
+	sprintf (retbuf, "%s %s", a_an (buf), buf);
     }
   capitalize_all_words (retbuf);
   return retbuf;
@@ -1845,7 +1853,7 @@ start_sector_patch (THING *area, int patch_type)
   char name[STD_LEN];
   int max_depth;
   int sector_type;
-  int num_choices = 0, num_chose = 0, choice = 0, count;
+  int num_choices = 0, num_chose = 0, count;
   
   if (!area || !IS_AREA (area) ||
       patch_type == 0)
@@ -1866,7 +1874,7 @@ start_sector_patch (THING *area, int patch_type)
 	    {
 	      if (count == 0)
 		num_choices++;
-	      else if (++choice == num_chose)
+	      else if (--num_chose < 1)
 		break;
 	    }
 	}

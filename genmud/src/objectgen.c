@@ -8,9 +8,13 @@
 #include "worldgen.h"
 #include "objectgen.h"
 
-/* These words used to make up objects are stored in area 108000, it's
-   the one referenced by OBJECTGEN_AREA_VNUM in serv.h. */
+/* This macro is used to remove certain words from the list of names
+   for an object. It's only useful inside of 
+   objectgen_generate_names. */
 
+#define del_obj_name(a) {*name[OBJECTGEN_NAME_ ## a ] = '\0'; \
+*colorname[OBJECTGEN_NAME_ ## a ] = '\0'; \
+RBIT (name_parts_used, (1 << OBJECTGEN_NAME_ ## a ));} 
 
 /* The first numbers are the ranks given to different afecst.
    The second numbers are the chances that certain affects appear 
@@ -505,7 +509,7 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 {
   int i;
   char *t;
-  int names_used, names_left = 0, num_names_used;
+  int names_left = 0, num_names_used;
 
   /* Used for setting up user preset nametypes using the names variable. */
   char arg1[STD_LEN], *arg;
@@ -636,47 +640,31 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
   if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_METAL)) ||
       wear_loc == ITEM_WEAR_WIELD)
     {
-      *name[OBJECTGEN_NAME_NONMETAL] = '\0';
-      *name[OBJECTGEN_NAME_ANIMAL] = '\0'; 
-      *colorname[OBJECTGEN_NAME_NONMETAL] = '\0';
-      *colorname[OBJECTGEN_NAME_ANIMAL] = '\0';
-      RBIT (name_parts_used, (1 << OBJECTGEN_NAME_NONMETAL) |
-	    (1 << OBJECTGEN_NAME_ANIMAL));
+      del_obj_name (NONMETAL);
+      del_obj_name (ANIMAL);
       /* Check for "mail" items...since mail wpns is stupid. :P */
       if (strstr (name[OBJECTGEN_NAME_METAL], "mail"))
 	{
-	  *name[OBJECTGEN_NAME_METAL] = '\0';
-	  *colorname[OBJECTGEN_NAME_METAL] = '\0';
-	  RBIT (name_parts_used, (1 << OBJECTGEN_NAME_METAL));
+	  del_obj_name(METAL);
 	}
     }
   else if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_NONMETAL)))
     {
-      *name[OBJECTGEN_NAME_METAL] = '\0';
-      *name[OBJECTGEN_NAME_ANIMAL] = '\0';
-      *colorname[OBJECTGEN_NAME_METAL] = '\0';
-      *colorname[OBJECTGEN_NAME_ANIMAL] = '\0';
-      RBIT (name_parts_used, (1 << OBJECTGEN_NAME_METAL) |
-	    (1 << OBJECTGEN_NAME_ANIMAL));
+      del_obj_name(METAL);
+      del_obj_name(ANIMAL);
     }
   else if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_ANIMAL)))
     {
-      *name[OBJECTGEN_NAME_NONMETAL] = '\0';
-      *name[OBJECTGEN_NAME_METAL] = '\0'; 
-      *colorname[OBJECTGEN_NAME_NONMETAL] = '\0';
-      *colorname[OBJECTGEN_NAME_METAL] = '\0';
-      RBIT (name_parts_used, (1 << OBJECTGEN_NAME_NONMETAL) |
-	    (1 << OBJECTGEN_NAME_METAL));
+      del_obj_name(NONMETAL);
+      del_obj_name(METAL);
     }
   else if ((nr (1,10) <= 7 ||
 	    (!*name[OBJECTGEN_NAME_NONMETAL] &&
 	     !*name[OBJECTGEN_NAME_ANIMAL])) && 
 	   *name[OBJECTGEN_NAME_METAL])
     {
-      *name[OBJECTGEN_NAME_NONMETAL] = '\0';
-      *name[OBJECTGEN_NAME_ANIMAL] = '\0'; 
-      *colorname[OBJECTGEN_NAME_NONMETAL] = '\0';
-      *colorname[OBJECTGEN_NAME_ANIMAL] = '\0';
+      del_obj_name (NONMETAL);
+      del_obj_name (ANIMAL);
     }      
   /* Allow animal names */ 
   else if (*name[OBJECTGEN_NAME_ANIMAL] &&
@@ -685,30 +673,22 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	    wear_loc <= ITEM_WEAR_NONE || wear_loc >= ITEM_WEAR_MAX ||
 	    wear_loc == ITEM_WEAR_BELT))
     {
-      *name[OBJECTGEN_NAME_NONMETAL] = '\0';
-      *name[OBJECTGEN_NAME_METAL] = '\0'; 
-      *colorname[OBJECTGEN_NAME_NONMETAL] = '\0';
-      *colorname[OBJECTGEN_NAME_METAL] = '\0';
+      del_obj_name (NONMETAL);
+      del_obj_name (METAL);
     }
   else
     {
-      *name[OBJECTGEN_NAME_METAL] = '\0';
-      *name[OBJECTGEN_NAME_ANIMAL] = '\0';
-      *colorname[OBJECTGEN_NAME_METAL] = '\0';
-      *colorname[OBJECTGEN_NAME_ANIMAL] = '\0';
+      del_obj_name (METAL);
+      del_obj_name (ANIMAL);
     }
   
   if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_CALLED)))
     {
-      *name[OBJECTGEN_NAME_SUFFIX] = '\0';
-      *colorname[OBJECTGEN_NAME_SUFFIX] = '\0';
-      RBIT (name_parts_used, (1 << OBJECTGEN_NAME_SUFFIX));
+      del_obj_name (SUFFIX);
     }
   else if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_SUFFIX)))
     {
-      *name[OBJECTGEN_NAME_CALLED] = '\0';
-      *colorname[OBJECTGEN_NAME_CALLED] = '\0';
-      RBIT (name_parts_used, (1 << OBJECTGEN_NAME_CALLED));
+      del_obj_name (CALLED);
     }
   
   
@@ -716,13 +696,11 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 
   else if (nr (1, 25) == 3 && *name[OBJECTGEN_NAME_CALLED])
     {
-      *name[OBJECTGEN_NAME_SUFFIX] = '\0';
-      *colorname[OBJECTGEN_NAME_SUFFIX] = '\0';
+      del_obj_name (SUFFIX);
     }
   else
     {
-      *name[OBJECTGEN_NAME_CALLED] = '\0';
-      *name[OBJECTGEN_NAME_CALLED] = '\0';
+      del_obj_name (CALLED);
     }
   
   
@@ -737,13 +715,25 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	strcpy (name[OBJECTGEN_NAME_TYPE], "armor");
     }
   
-
+  
+  /* Do some sanity checking. */
+  
+  if (IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_METAL)) &&
+      (!str_cmp (name[OBJECTGEN_NAME_PREFIX], "soft") ||
+       wear_loc == ITEM_WEAR_WIELD))
+    {
+      del_obj_name (PREFIX);
+    }
+  else if (!IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_METAL)) &&
+	   !str_cmp (name[OBJECTGEN_NAME_PREFIX], "rusty"))
+    {
+      del_obj_name(PREFIX);
+    }
   
   /* Set names_used to have bits set for all nonnull names that won't
      be fixed. */
   
-  names_used = ((1 << OBJECTGEN_NAME_TYPE) | (1 << OBJECTGEN_NAME_A_AN) |
-		name_parts_used);
+  name_parts_used |= ((1 << OBJECTGEN_NAME_TYPE) | (1 << OBJECTGEN_NAME_A_AN));
   
   if (*name[OBJECTGEN_NAME_OWNER])
     {
@@ -754,17 +744,15 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
        
        if (nr (1,6) == 2)
 	 {
-	  RBIT (names_used, (1 << OBJECTGEN_NAME_OWNER));
-	  SBIT (names_used, (1 << OBJECTGEN_NAME_SUFFIX));
+	   del_obj_name (OWNER);
+	  SBIT (name_parts_used, (1 << OBJECTGEN_NAME_SUFFIX));
 	  strcpy (name[OBJECTGEN_NAME_SUFFIX],
 		  name[OBJECTGEN_NAME_OWNER]);
 	  strcpy (colorname[OBJECTGEN_NAME_SUFFIX],
 		  colorname[OBJECTGEN_NAME_OWNER]);
-	  *name[OBJECTGEN_NAME_OWNER] = '\0';
-	  *colorname[OBJECTGEN_NAME_OWNER] = '\0';
 	  strcpy (name[OBJECTGEN_NAME_A_AN], "The");
 	  strcpy (colorname[OBJECTGEN_NAME_A_AN], "The");
-	}
+	 }
     } 
   
   
@@ -778,7 +766,7 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
   num_names_used = 0;
   for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
     {
-      if (IS_SET (names_used, (1 << i)))
+      if (IS_SET (name_parts_used, (1 << i)))
 	num_names_used++;
     }
   
@@ -798,7 +786,7 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	{
 	  for (nm = 0; nm < OBJECTGEN_NAME_MAX; nm++)
 	    {
-	      if (*name[nm] && !IS_SET (names_used, (1 << nm)))
+	      if (*name[nm] && !IS_SET (name_parts_used, (1 << nm)))
 		{
 		  if (count == 0)
 		    num_choices++;
@@ -813,8 +801,8 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	      num_chose = nr (1,num_choices);
 	    }
 	}
-      if (*name[nm] && !IS_SET (names_used, (1 << nm)))
-	SBIT (names_used, (1 << nm));
+      if (*name[nm] && !IS_SET (name_parts_used, (1 << nm)))
+	SBIT (name_parts_used, (1 << nm));
       names_left--;
     }
 	
@@ -822,7 +810,7 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
   
   for (i = 0; i < OBJECTGEN_NAME_MAX; i++)
     {
-      if (!IS_SET (names_used, (1 << i)))
+      if (!IS_SET (name_parts_used, (1 << i)))
 	*name[i] = '\0';
     }
   

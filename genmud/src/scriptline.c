@@ -93,7 +93,7 @@ replace_one_value (SCRIPT_EVENT *script_event, char *arg, THING *thg, bool setti
   /* If we are setting and this is a PC, send ALL updates! */
   
   if (setting)
-    update_kde (th, -1);
+    update_kde (th, ~0);
   
   /* Now set stuff for specific things... */
   

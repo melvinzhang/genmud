@@ -50,3 +50,26 @@ roomgen (THING *th, THING *room, char *arg)
   stt ("Ok, room changed.\n\r", th);
   return;
 }
+
+void
+room_add_exit (THING *room, int dir, int to)
+{
+  THING *nroom;
+  VALUE *exit;
+  
+  if (!room || !to ||
+      (nroom = find_thing_num (to)) == NULL ||
+      !IS_ROOM (nroom))
+    return;
+
+  if ((exit = FNV (room, dir + 1)) == NULL)
+    {
+      exit = new_value();
+      exit->type = dir + 1;
+      add_value (room, exit);
+      if (room->in && IS_AREA (room->in))
+	room->in->thing_flags |= TH_CHANGED;
+    }  
+  exit->val[0] = to;
+  return;
+}

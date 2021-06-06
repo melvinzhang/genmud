@@ -278,6 +278,7 @@ init_command_list (void)
   add_command ("password", do_password, 0, FALSE);
   add_command ("citygen", do_citygen, MAX_LEVEL, FALSE);
   add_command ("areagen", do_areagen, MAX_LEVEL, FALSE);
+  add_command ("cavegen", do_cavegen, MAX_LEVEL, FALSE);
   add_command ("play", do_play, 0, FALSE);
   add_command ("areas", do_areas, 0, FALSE);
   add_command ("log", do_log, MAX_LEVEL, TRUE);

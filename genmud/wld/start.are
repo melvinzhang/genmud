@@ -3,7 +3,7 @@ Name start.are`
 HpMv 0 1 109 998
 HWT 0 0
 Cost 100
-Timer 4
+Timer 3
 Short the start area`
 Long A cold wind blows by...`
 type Lonath`
@@ -41,16 +41,16 @@ Name home`
 Level 20
 HpMult 0
 HWT 0 0
-Color 2
+Color 8
 Desc This is my room. :)
 It has a tapestry in it.
 `
 Short Lonath's Room`
 MIW 1
 Long Lonath's Room is Here.`
-Symbol #`
+Symbol -`
 ThFl 524779
-Flag Room 0 0 17825793
+Flag Room 0 0 16777217
 EDESC tapestry`
 This large wall-hanging depicts great battles between the forces of good and evil.
 `
@@ -66,7 +66,7 @@ Short The Remort Room`
 MIW 1
 Symbol -`
 ThFl 524779
-Val w_exit 421256 0 0 0 0 0 0 0 `
+Val u_exit 213254 0 0 0 0 0 0 0 `
 END_THING
 
 THING 27
@@ -78,7 +78,7 @@ Wear chest`
 MIW 1
 Symbol -`
 ThFl 524779
-Val d_exit 1335894 0 0 0 0 0 0 0 `
+Val u_exit 1218773 0 0 0 0 0 0 0 `
 END_THING
 
 THING 40
@@ -1663,7 +1663,7 @@ HWT 0 0
 Short The provision pop`
 Long The provision po pis here.`
 ThFl 101063
-Val randpop 125006 227 1 0 0 0 0 0 `
+Val randpop 125006 232 1 0 0 0 0 0 `
 END_THING
 
 THING 280

@@ -439,7 +439,7 @@ read_areas (void)
       base_room = new_thing();
       base_room->vnum = 2;
       base_room->short_desc = new_str ("The God Room");
-      base_room->thing_flags = ROOM_FLAGS;	
+      base_room->thing_flags = ROOM_SETUP_FLAGS;	
       thing_to (base_room, base_area);
       add_thing_to_list (base_room);
       catchall = new_thing();

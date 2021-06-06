@@ -490,7 +490,7 @@ connect_to_game(FILE_DESC *fd, char *arg)
 	      return;
 	    }
 	  fd->th->pc->using_kde = IS_SET (fd->flags, FD_USING_KDE);
-	  update_kde (fd->th, -1);
+	  update_kde (fd->th, ~0);
 	  sprintf (errbuf, "%s enters the world\n", NAME (fd->th));    
 	  log_it (errbuf);
 	  add_thing_to_list (th);
@@ -852,7 +852,7 @@ found_old_character (FILE_DESC *fd, char *arg)
 	  stt ("Reconnecting!\n\r", fd->th);
 	  fd->connected = CON_ONLINE;
 	  act ("@1n has reconnected!", fd->th, NULL, NULL, NULL, TO_ROOM);
-	  update_kde (th, -1);
+	  update_kde (th, ~0);
 	  return TRUE;
 	}
       else
@@ -1104,7 +1104,7 @@ fix_pc (THING *th)
   find_max_mana (th);
   calculate_warmth (th); 
   set_up_move_flags (th);
-  update_kde (th, -1);
+  update_kde (th, ~0);
   return;
 }
 
@@ -1164,7 +1164,7 @@ modify_from_flags (THING *th, FLAG *startflag, bool add_perm_affects)
       if (flg->type == FLAG_AFF_ARMOR)
         th->armor += flg->val;      
     }
-  update_kde (th, -1);
+  update_kde (th, ~0);
   return;
 }
 

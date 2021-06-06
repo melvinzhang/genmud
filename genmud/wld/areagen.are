@@ -2,7 +2,7 @@ THING 107100
 Name areagen.are`
 HpMv 0 10 5 400
 HWT 0 0
-Timer 14
+Timer 1
 Short The Areagen Area`
 type Lonath`
 ThFl 1089531
@@ -251,17 +251,18 @@ HWT 0 0
 Desc Desert
 Desert
 Wasteland
-Wastelands
 Mesa
 Plateau
-Badlands
 Lands
-Grounds
 Canyon
-Mesas
 Plateaus
 Canyons
-Crags
+Crag
+Mesa
+Badland
+Crag
+Mesas
+Desert
 `
 END_THING
 
@@ -274,6 +275,11 @@ Desc Dune
 'Patch of Sand'
 'Patch of Sandy Soil'
 Canyon
+Mesa
+Crag
+Cliff
+Plateau
+Arroyo
 `
 END_THING
 
@@ -880,6 +886,7 @@ Scorched
 ''
 Barren
 Arid
+Craggy
 `
 END_THING
 

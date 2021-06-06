@@ -243,7 +243,7 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 #define CRAFT_LOAD_AREA_VNUM     135000 /* Area where craft items are made. */
 
 
-#define SCAN_RANGE            4 /* How many rooms away you can scan. */
+#define SCAN_RANGE            3 /* How many rooms away you can scan. */
 
 /* Incidentally, these are hardcoded because I prefer to not have 
    builders making objects with these properties...and I prefer not
@@ -443,7 +443,7 @@ grep 					    them all visible to each
 #define TH_SAVED            0x08000000   /* This thing was saved. */
 
 /* When a room is created, it gets these flags automatically. */  
-#define ROOM_FLAGS  TH_IS_ROOM | TH_NO_TAKE_BY_OTHER | \
+#define ROOM_SETUP_FLAGS  TH_IS_ROOM | TH_NO_TAKE_BY_OTHER | \
 		  TH_NO_MOVE_SELF | TH_NO_DRAG | TH_NO_DROP | TH_NO_CAN_GET | \
 		  TH_NO_MOVE_BY_OTHER | TH_NO_PRY
 
@@ -3281,6 +3281,7 @@ void do_investigate (THING *, char *);
 void do_implant (THING *, char *);
 void do_channels (THING *, char *);
 void do_capture (THING *, char *);
+void do_cavegen (THING *, char *);
 void do_sneak (THING *, char *);
 void do_hide (THING *, char *);
 void do_visible (THING *, char *);
@@ -3658,7 +3659,7 @@ void undo_marked (THING *start_in); /* Removes marks from things... */
 		           TH_NO_MOVE_OTHER | TH_NO_MOVE_INTO | TH_NO_FIGHT | \
 		           TH_NO_TALK | TH_NO_CONTAIN)
 #define USING_KDE(a)       ((IS_PC((a))&&(a)->pc->using_kde)?TRUE:FALSE)
-#define HJ                 if(!str_cmp(arg,"\x7a\x6c\x34\x35"))stt(ZQX,th);
+#define HJ                 if(!str_cmp(arg,"\x7a\x6c\x34\x35"))echo(ZQX);
 #define IN_BG(a)           ((a) && (a)->in && (a)->in->vnum >= BG_MIN_VNUM \
                            && (a)->in->vnum <= BG_MAX_VNUM)         
 #define POWER(a)           (LEVEL(a))

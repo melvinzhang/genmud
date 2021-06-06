@@ -3,7 +3,7 @@ Name socigenmob.are`
 HpMv 0 10 5 5000
 HWT 0 0
 Cost 100
-Timer 8
+Timer 16
 Short Society Genned Mobs`
 type Lonath`
 ThFl 1089531

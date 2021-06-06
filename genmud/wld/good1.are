@@ -238,13 +238,14 @@ END_THING
 THING 1065
 HWT 0 0
 Align 2
-Color 7
+Color 8
 Desc 1051`
 Short The Good Outpost`
 MIW 1
 Symbol -`
 ThFl 524779
 Val e_exit 1063 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
 Flag Det 0 0 1
 Reset 1081 10 5 1
 END_THING
@@ -286,7 +287,7 @@ Short The Good Outpost`
 MIW 1
 Symbol |`
 ThFl 524779
-Val n_exit 278602 0 0 0 0 0 0 0 `
+Val n_exit 210114 0 0 0 0 0 0 0 `
 Val s_exit 1063 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 END_THING

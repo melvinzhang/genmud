@@ -216,6 +216,8 @@ setup_newbie_areas (void)
       
       for (mob = area->cont; mob; mob = mob->next_cont)
 	{
+	  if (IS_ROOM (mob) || !CAN_FIGHT (mob) || !CAN_MOVE (mob))
+	    continue;
 	  if (mob->max_hp > LEVEL(area)/5)
 	    mob->max_hp = LEVEL(area)/5;
 	  

@@ -2236,7 +2236,7 @@ make_room_dir (THING *start_room, int dir, char *name, int room_flags)
   room->vnum = curr_vnum;
   if (curr_vnum > top_vnum)
     top_vnum = curr_vnum;
-  room->thing_flags = ROOM_FLAGS;
+  room->thing_flags = ROOM_SETUP_FLAGS;
   thing_to (room, area);
   add_thing_to_list (room);
   if (room_flags)
@@ -2495,7 +2495,7 @@ new_room (int vnum)
   room->vnum = vnum;
   add_thing_to_list(room);
   thing_to (room, area);
-  room->thing_flags = ROOM_FLAGS;
+  room->thing_flags = ROOM_SETUP_FLAGS;
   area->thing_flags |= TH_CHANGED;
   return room;
 }

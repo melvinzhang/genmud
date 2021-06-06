@@ -272,11 +272,6 @@ mapgen_generate (char *arg)
   int holeyness = 0;    /* How "holey" the map is...missing pieces.*/
   int extra_lines = 0; /* How many "extra lines" the map will have. */
   int x, y, i; /* Counters; Also current x and y during rasterizing.*/
-  
-  bool x_dir = TRUE; /* Is the map generally going in the x direction (if TRUE)
-			or the y direction (if FALSE). This is found by
-			comparing dx and dy in size. */
-  
   int x_len, y_len; /* How far the map will go in the x and y dirs. */
   int x_step, y_step;       /* Steps used for rastering. */
   int x_count, y_count;       /* Counters used for rasterizing.*/
@@ -338,9 +333,9 @@ mapgen_generate (char *arg)
     return NULL;
   len = atoi (arg1);
   if (len < 2) 
-    return NULL;
+    len = 2;
 
-
+  
   arg = f_word (arg, arg1);
   
   if (!*arg1)
@@ -355,6 +350,9 @@ mapgen_generate (char *arg)
     }
   
 
+
+  /* Fuzziness varies the width of the block. */
+  
   arg = f_word (arg, arg1);
   
   if (!*arg1)
@@ -379,8 +377,11 @@ mapgen_generate (char *arg)
     }
   
   
-  
   /* The holeyness represents how likely it is to have a hole in the graph. */
+  /* Holeyness around 8-9 (out of 20) makes interesting graphs... if
+     holeyness is < 8 the graph is full, if it's > 9  or 10, then it's
+     not usually much more than a line. */
+  
   arg = f_word (arg, arg1);
   
   if (!*arg1)
@@ -394,6 +395,9 @@ mapgen_generate (char *arg)
 	holeyness = 0;
     }
   
+
+  /* This makes the straight line bend a bit. */
+
   arg = f_word (arg, arg1);
   
   if (!*arg1)
@@ -434,17 +438,6 @@ mapgen_generate (char *arg)
 	}
     }
   
-  
-  /* First find what direction the map is going
-     If dy is larger than dx in absolute value, the map is generally
-     going in the y direction, otherwise it's generally going in the
-     x direction. */
-     
-  if (ABS(dy) > ABS(dx)) 
-    x_dir = FALSE;
-  else
-    x_dir = TRUE;
-  
   /* Start in the middle of the temp map. */
   
   mapgen_used[MAPGEN_MAXX][MAPGEN_MAXY] = MAPGEN_USED;
@@ -455,14 +448,27 @@ mapgen_generate (char *arg)
   
   total_len = ABS(dx)+ABS(dy); /* This should not be 0. */
  
-  if (total_len == 0)
-    return NULL;
+  if (total_len < 1)
+    total_len = 1;
   
-  
-
   x_len = dx*len/total_len;
   y_len = dy*len/total_len;
-  
+ 
+  if (y_len == 0)
+    {
+      if (dy < 0)
+	y_len = -1;
+      else if (dy > 0)
+	y_len = 1;
+    }
+  if (x_len == 0)
+    {
+      if (dx < 0)
+	x_len = -1;
+      else if (dx > 0)
+	x_len = 1;
+    }
+ 
   
   /* Beginning point is the middle. */
   
@@ -477,14 +483,14 @@ mapgen_generate (char *arg)
   /* Now begin rasterization. */
    
   
-  /* Set up the x increment. */
+  /* Set up the x increment and y increment. */
   
   if (x_len > 0) 
     x_step = 1;
   else if (x_len < 0)
     {
       x_step = -1;
-      x_len = -x_len;
+      x_len = -x_len;    
     }
   else
     x_step = 1;
@@ -514,13 +520,13 @@ mapgen_generate (char *arg)
   if (y_len <= x_len)
     {
       x_big = TRUE;
-      decrement = y_count - x_len - x_count;
+      decrement = y_count-x_count;
       x -= x_step;
     }
   else
     {
-      x_big = FALSE;
-      decrement = x_count - y_len - y_count;
+      x_big = FALSE; 
+      decrement = x_count-y_count;
       y -= y_step;
     }
   

@@ -573,7 +573,6 @@ char *dir_dist[SCAN_RANGE] =
     "",
     "close by",
     "off",
-    "far away",
   };
 
 char *dir_rev[DIR_MAX] = 

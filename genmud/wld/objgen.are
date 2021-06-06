@@ -2,7 +2,7 @@ THING 108000
 Name objgen.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 11
+Timer 5
 Short The Object Gen Area`
 type Lonath`
 ThFl 1089531
@@ -832,28 +832,28 @@ THING 108036
 Name metal_gen_names`
 HWT 0 0
 Desc Pegite & $4Pe$2gi$4te$7
-Omcopite & $FOmcopite$7
-Rubite
-Lemium & $6Lemium$7
-Wusium & $8Wusium$7
-Eslasite & $1Esla$6site$7
-Larium & $2Larium$7
-Essitium
-Logium & $2Logium$7
-Pomorate
-Conelite & $DCone$Elite$7
-Aracium & $2Aracium$7
-Ifihium
-Rarate & $ARarate$7
-Wolium & $4Wolium$7
-Noutate
-Nacate & $3Na$6ca$3te$7
-Ralupium
-Aktipite & $BAk$9tip$Bite$7
-Cegate & $ACegate$7
-Hotesium
-Nenite & $ENenite$7
-`
+Omcopite & $FOmcopite$7
+Rubite
+Lemium & $6Lemium$7
+Wusium & $8Wusium$7
+Eslasite & $1Esla$6site$7
+Larium & $2Larium$7
+Essitium
+Logium & $2Logium$7
+Pomorate
+Conelite & $DCone$Elite$7
+Aracium & $2Aracium$7
+Ifihium
+Rarate & $ARarate$7
+Wolium & $4Wolium$7
+Noutate
+Nacate & $3Na$6ca$3te$7
+Ralupium
+Aktipite & $BAk$9tip$Bite$7
+Cegate & $ACegate$7
+Hotesium
+Nenite & $ENenite$7
+`
 END_THING
 
 THING 108037
@@ -995,6 +995,7 @@ bringer
 giver
 bender
 warp
+singer
 `
 END_THING
 

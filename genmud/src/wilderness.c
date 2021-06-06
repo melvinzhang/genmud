@@ -65,7 +65,7 @@ setup_wilderness_area (void)
       base_wild_room = new_thing();
       base_wild_room->vnum = WILDERNESS_FIELD_PROTO;
       base_wild_room->short_desc = new_str ("A Giant Field");
-      base_wild_room->thing_flags = ROOM_FLAGS;	
+      base_wild_room->thing_flags = ROOM_SETUP_FLAGS;	
       thing_to (base_wild_room, find_thing_num (1));
       add_thing_to_list (base_wild_room);
     }
@@ -255,7 +255,7 @@ make_wilderness_room (int vnum)
   y = new_vnum / WILDERNESS_SIZE;
   
   room = new_thing();
-  room->thing_flags = ROOM_FLAGS | TH_NUKE;
+  room->thing_flags = ROOM_SETUP_FLAGS | TH_NUKE;
   room->proto = find_thing_num (WILDERNESS_FIELD_PROTO +
 				wilderness[x][y]);
   room->vnum = vnum;

@@ -8,9 +8,8 @@
 void
 print_update (THING *th)
 {
+  int flags, i;
   char buf[STD_LEN];
-  char buf2[STD_LEN];
-  int flags, i, len;
   if (!th || !th->fd || !IS_PC (th))
     return;
   
@@ -30,6 +29,10 @@ print_update (THING *th)
 
   /* This part sends all the updates for stuff like hps/exp etc...
      using the kde update code. */
+
+  /* I have decided to do the work of deciding how to format the data here
+     so that the client can be more flexible if people want to use it 
+     with different MUDs. */
   
   /* Always send HMV atm...*/
   
@@ -69,14 +72,6 @@ print_update (THING *th)
  
 
   
-  /* We don't actually use this KDE_UPDATE_MAP thing. Essentially,
-     if you are using KDE and you get a small map sent to you, it gets
-     put into the KDE form instead. 
-  if (IS_SET (flags, KDE_UPDATE_MAP))
-    {
-      
-    }
-  */
 
   /* Update the name/level/race/align and remorts. */
  
@@ -90,21 +85,21 @@ print_update (THING *th)
 	       th->pc->remorts);
       stt (buf, th);
     }
-  
+ 
   /* Send the basic stats... */
 
   if (IS_SET (flags, KDE_UPDATE_STAT))
     {
-      sprintf (buf, "<STAT> ");
-      len = strlen(buf);
+      sprintf (buf, "<STAT>Stats:\n");
       for (i = 0; i < STAT_MAX; i++)
 	{
-	  sprintf (buf2, "%d ",
-		   th->pc->stat[i]);
-	  sprintf (buf + len, buf2);
-	  len += strlen (buf2);
+	  sprintf (buf + strlen (buf), "%s: %2d ",
+		   stat_short_name[i],
+		   get_stat (th, i));
+	  if ((i % 4) == 3)
+	    strcat (buf, "\n");
 	}
-      sprintf (buf + len, " </STAT>");
+      strcat (buf, "</STAT>");
       stt (buf, th);
     }
   
@@ -112,11 +107,14 @@ print_update (THING *th)
   
   if (IS_SET (flags, KDE_UPDATE_GUILD))
     {
-      sprintf (buf, "<GUILD> ");
+      sprintf (buf, "<GUILD>Guilds:     ");
       for (i = 0; i < GUILD_MAX; i++)
 	{
-	  sprintf (buf2, "%d ", th->pc->guild[i]);
-	  strcat (buf, buf2);
+	  sprintf (buf + strlen (buf), "%-9s:%d ",
+		   capitalize(guild_info[i].name),
+		   th->pc->guild[i]);
+	  if ((i % 3) == 1)
+	    strcat (buf, "\n");
 	}
       strcat (buf, " </GUILD>");
       stt (buf, th);
@@ -126,11 +124,14 @@ print_update (THING *th)
 
   if (IS_SET (flags, KDE_UPDATE_IMPLANT))
     {
-       sprintf (buf, "<IMPLANT>");
+       sprintf (buf, "<IMPLANT>Implant: ");
       for (i = 0; i < PARTS_MAX; i++)
 	{
-	  sprintf (buf2, "%d ", th->pc->implants[i]);
-	  strcat (buf, buf2);
+	  sprintf (buf + strlen (buf), "%-5s: %d ",
+		   capitalize ((char *) parts_names[i]),
+		   th->pc->implants[i]);
+	  if ((i % 3) == 1)
+	    strcat (buf, "\n");
 	}
       strcat (buf, " </IMPLANT>");
       stt (buf, th);
@@ -188,7 +189,8 @@ print_update (THING *th)
   th->pc->kde_update_flags = 0;
   return;
 }
-	   
+	 
+
 
 
 /* This adds flags to the kde update list of needed... */
@@ -201,3 +203,5 @@ update_kde (THING *th, int val)
   
   th->pc->kde_update_flags |= val;
 }
+
+

@@ -322,7 +322,7 @@ do_edit (THING *th, char *arg)
 	      thing_to (thg, area_in);
 	      if (vnum > area_in->vnum && 
 		  vnum <= (area_in->vnum + area_in->mv))
-		thg->thing_flags = ROOM_FLAGS;
+		thg->thing_flags = ROOM_SETUP_FLAGS;
 	      
 	    }
 	}
@@ -2639,7 +2639,7 @@ do_tset (THING *th, char *arg)
       return;
     }
   replace_one_value (NULL, arg1, vict, TRUE, '=', arg);
-  update_kde (vict, -1);
+  update_kde (vict, ~0);
   stt ("Ok, value set.\n\r", th);
   return;
 }

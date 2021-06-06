@@ -1,17 +1,4 @@
 SPELL
-Name Scribe`
-Gen 0 0 10 0 0 1 10 6 0
-Wear_Off The spell has worn off @1n.`
-Comp 0 0 0 0 0 
-Repeat 0 0 0
-Pre_Name Absorb Blow`
-Pre_Name Grip`
-Guilds 0 0 0 0 0 0 0 0 0 0 
-Teachers 0 0 0 0 0 0 0 0 0 0 
-Stats 0 0 0 0 0 0 0 
-END_SPELL
-
-SPELL
 Name Whipping Weapons`
 Gen 1 0 10 0 582 2 10 6 0
 Wear_Off The spell has worn off @1n.`
@@ -1460,6 +1447,81 @@ Stats 0 0 0 0 0 0 0
 END_SPELL
 
 SPELL
+Name Scribe`
+Gen 2 0 10 0 315 45 10 6 0
+Wear_Off The spell has worn off @1n.`
+Comp 0 0 0 0 0 
+Repeat 0 0 0
+Pre_Name Alchemy`
+Guilds 0 2 0 0 0 0 3 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
+END_SPELL
+
+SPELL
+Name Enchant`
+Gen 2 0 10 0 321 45 10 6 0
+Wear_Off The spell has worn off @1n.`
+Comp 0 0 0 0 0 
+Repeat 0 0 0
+Pre_Name Scribe`
+Guilds 0 3 0 0 0 0 3 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
+END_SPELL
+
+SPELL
+Name Lesser Powershield`
+Gen 0 2 80 16 201 45 120 6 221
+Wear_Off The spell has worn off @1n.`
+Message @1n create@s a shimmering sphere.`
+Comp 0 0 0 0 0 
+Repeat 0 0 0
+Pre_Name Minor Powershield`
+Guilds 0 0 2 0 0 0 2 0 2 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
+END_SPELL
+
+SPELL
+Name Pound`
+Gen 1 0 10 0 596 45 10 6 0
+Wear_Off The spell has worn off @1n.`
+Comp 0 0 0 0 0 
+Repeat 0 0 0
+Pre_Name Absorb Blow`
+Pre_Name Punch`
+Guilds 0 0 0 0 0 0 0 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
+END_SPELL
+
+SPELL
+Name Deflect Blow`
+Gen 1 0 10 0 600 45 10 6 0
+Wear_Off The spell has worn off @1n.`
+Comp 0 0 0 0 0 
+Repeat 0 0 0
+Pre_Name Absorb Blow`
+Pre_Name Grip`
+Guilds 0 0 0 0 0 0 0 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
+END_SPELL
+
+SPELL
+Name Forge`
+Gen 2 0 10 0 320 45 10 6 0
+Wear_Off The spell has worn off @1n.`
+Comp 0 0 0 0 0 
+Repeat 0 0 0
+Pre_Name Mine`
+Guilds 2 0 0 0 0 2 2 2 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
+END_SPELL
+
+SPELL
 Name Fireball`
 Gen 0 0 37 4 69 48 32 5 0
 Ndam fireball`
@@ -1468,7 +1530,7 @@ Wear_Off The spell has worn off @1n.`
 Message @1n conjure@s a massive $9fireball$7 which slams into @3f!`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
-Pre_Name Ball Lightning`
+Pre_Name Flame Ray`
 Pre_Name Magma Blast`
 Guilds 0 3 0 0 0 0 0 0 0 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
@@ -1512,6 +1574,7 @@ Gen 2 0 10 0 313 50 10 6 0
 Wear_Off The spell has worn off @1n.`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
+Pre_Name Hide`
 Guilds 0 0 0 5 5 0 0 0 0 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 0 
@@ -1523,6 +1586,7 @@ Gen 2 2 10 0 324 50 10 6 0
 Wear_Off The spell has worn off @1n.`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
+Pre_Name Search`
 Guilds 0 0 0 3 3 0 0 0 3 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 0 
@@ -1549,6 +1613,30 @@ Comp 0 0 0 0 0
 Repeat 0 0 0
 Pre_Name investigate`
 Guilds 0 0 0 4 0 0 0 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
+END_SPELL
+
+SPELL
+Name Emplace`
+Gen 2 2 10 0 318 50 10 6 0
+Wear_Off The spell has worn off @1n.`
+Comp 0 0 0 0 0 
+Repeat 0 0 0
+Pre_Name Forge`
+Guilds 0 0 0 0 4 4 4 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
+END_SPELL
+
+SPELL
+Name Diplomacy`
+Gen 2 1 10 0 327 50 10 6 0
+Wear_Off The spell has worn off @1n.`
+Comp 0 0 0 0 0 
+Repeat 0 0 0
+Pre_Name Demoralize`
+Guilds 0 0 0 0 0 0 0 0 0 5 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 0 
 END_SPELL
@@ -1639,6 +1727,7 @@ Wear_Off You can no longer discern shifting colors...`
 Message @1p eyes glow $Agreen$7 briefly.`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
+Pre_Name Detect Hidden`
 Guilds 0 4 0 0 4 0 0 0 4 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 25 25 0 0 0 0 
@@ -1695,6 +1784,18 @@ Stats 0 0 0 0 0 0 0
 END_SPELL
 
 SPELL
+Name Graft`
+Gen 2 2 10 0 316 55 10 6 0
+Wear_Off The spell has worn off @1n.`
+Comp 0 0 0 0 0 
+Repeat 0 0 0
+Pre_Name Forge`
+Guilds 4 0 0 0 0 4 4 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
+END_SPELL
+
+SPELL
 Name Immersion`
 Gen 0 0 33 6 92 57 29 5 0
 Ndam fire`
@@ -1717,7 +1818,7 @@ Name Purification`
 Gen 0 1 75 2 25 58 44 5 0
 Damg r(55,105)`
 Wear_Off The spell has worn off @1n.`
-Message @1n get@s purified!`
+Message @3n get@s purified!`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
 Pre_Name Healing`
@@ -1790,10 +1891,11 @@ END_SPELL
 
 SPELL
 Name Monster Knowledge`
-Gen 0 4 10 0 2 60 10 6 0
+Gen 0 4 10 16 2 60 10 6 0
 Wear_Off The spell has worn off @1n.`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
+Pre_Name Identify`
 Guilds 0 0 0 0 0 0 0 0 5 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 0 
@@ -1809,6 +1911,19 @@ Repeat 0 0 0
 Pre_Name Circle`
 Pre_Name Second Attack`
 Guilds 1 0 0 4 0 0 0 0 0 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
+END_SPELL
+
+SPELL
+Name Imbue`
+Gen 2 0 10 0 304 60 10 6 0
+Wear_Off The spell has worn off @1n.`
+Comp 0 0 0 0 0 
+Repeat 0 0 0
+Pre_Name Scribe`
+Pre_Name Forge`
+Guilds 0 0 0 0 0 3 4 0 0 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 0 
 END_SPELL
@@ -1923,6 +2038,21 @@ Stats 0 0 0 0 0 0 0
 END_SPELL
 
 SPELL
+Name Total Protection`
+Gen 0 2 10 0 38 65 10 6 0
+Duration 5`
+Wear_Off The spell has worn off @1n.`
+Comp 0 0 0 0 0 
+Repeat 0 0 0
+Pre_Name Sanctuary`
+Pre_Name Warding`
+Guilds 0 0 4 0 0 0 0 3 3 0 
+Teachers 0 0 0 0 0 0 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
+Flag Aff 0 0 262144
+END_SPELL
+
+SPELL
 Name Death Cloud`
 Gen 0 0 39 9 88 66 33 5 0
 Ndam death`
@@ -2032,17 +2162,6 @@ Teachers 0 0 0 0 0 0 0 0 0 0
 Stats 0 0 0 0 0 0 0 
 Transport 1
 Flag Spell 0 0 128
-END_SPELL
-
-SPELL
-Name Emplace`
-Gen 2 2 10 0 318 70 10 6 0
-Wear_Off The spell has worn off @1n.`
-Comp 0 0 0 0 0 
-Repeat 0 0 0
-Guilds 0 0 0 0 4 4 4 0 0 0 
-Teachers 0 0 0 0 0 0 0 0 0 0 
-Stats 0 0 0 0 0 0 0 
 END_SPELL
 
 SPELL
@@ -2181,17 +2300,6 @@ Flag Spell 0 0 128
 END_SPELL
 
 SPELL
-Name Imbue`
-Gen 2 0 10 0 304 80 10 6 0
-Wear_Off The spell has worn off @1n.`
-Comp 0 0 0 0 0 
-Repeat 0 0 0
-Guilds 0 0 0 0 0 3 4 0 0 0 
-Teachers 0 0 0 0 0 0 0 0 0 0 
-Stats 0 0 0 0 0 0 0 
-END_SPELL
-
-SPELL
 Name Piercing Mastery`
 Gen 1 0 10 0 621 80 10 6 0
 Wear_Off The spell has worn off @1n.`
@@ -2319,13 +2427,12 @@ Duration 1`
 Wear_Off The spell has worn off @1n.`
 Message $9Creeping Death!$7`
 Comp 0 0 0 0 0 
-Repeat 2 5 0
+Repeat 2 1 0
 Pre_Name Annihilate`
 Pre_Name Hammer of Hell`
 Guilds 0 5 4 0 0 0 4 0 4 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 0 
-Flag Spell 0 0 131072
 Flag Hurt 0 0 16384
 END_SPELL
 

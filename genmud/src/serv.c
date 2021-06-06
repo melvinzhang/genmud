@@ -811,7 +811,7 @@ close_fd (FILE_DESC *fd)
   
   if (fd->th && IS_PC (fd->th))
     {
-      
+      write_fd_direct (fd, "<HANGUP> </HANGUP>");
       sprintf (buf, "%s leaves the server.\n", NAME (fd->th));
       log_it (buf);
       fd->th->fd = fd;
@@ -827,11 +827,6 @@ close_fd (FILE_DESC *fd)
       SBIT (fd->flags, FD_HANGUP);
       fd->write_buffer[0] = '\0';
       fd->write_pos = fd->write_buffer;
-      if (IS_SET (fd->flags, FD_USING_KDE))
-	{
-	  write_fd_direct (fd, "KDE_HANG_UP");
-	  return;
-	}
     }
   
   
