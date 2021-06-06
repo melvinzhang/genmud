@@ -52,7 +52,7 @@ detailgen (THING *area)
 	{
 	  /* The weight in the detail room lets you determine
 	     how many times the detail can be added to an area. */
-	  for (j = 0; j < MAX(1, start_room->weight); j++)
+	  for (j = 0; j < MAX(1, (int) start_room->weight); j++)
 	    {
 	      if (j == 0 || nr(1,2) == 1)
 		{
@@ -556,7 +556,7 @@ start_other_detail_rooms (THING *area, THING *detail_thing)
       if ((exit = FNV (room, dir+1)) != NULL &&
 	  (nroom = find_thing_num (exit->val[0])) != NULL &&
 	  IS_ROOM (nroom) && IS_MARKED(nroom) &&
-	  nr (1,4) >= (detail_thing->height-1))
+	  nr (1,4) >= ((int) detail_thing->height-1))
 	{
 	  if (!is_named (detail_thing, "same_name"))
 	    {
@@ -714,7 +714,7 @@ add_detail_resets (THING *area, THING *to, THING *detail_thing, int depth)
 	    {
 	      num_objects += nr (num_objects/2, num_objects);
 	    }
-	  for (times = 0; times < MAX(1, reset->times); times++)
+	  for (times = 0; times < MAX(1, (int) reset->times); times++)
 	    {
 	      if (nr(1,100) <= reset->pct &&
 		  (new_detail_thing = 
@@ -803,7 +803,7 @@ add_detail_resets (THING *area, THING *to, THING *detail_thing, int depth)
 	}
       else if ((new_detail_thing = find_thing_num (reset->vnum)) != NULL)
 	{
-	  for (times = 0; times < MAX(1, reset->times); times++)
+	  for (times = 0; times < MAX(1, (int) reset->times); times++)
 	    {
 	      if (nr(1,100) <= reset->pct)		
 		add_detail (area, to, new_detail_thing, depth+1);

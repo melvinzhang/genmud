@@ -1825,8 +1825,8 @@ Pre_Name Healing`
 Guilds 0 0 4 0 0 0 0 0 0 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 27 0 0 0 0 
-Flag Spell 0 0 14
 Flag Hurt 0 0 179
+Flag Spell 0 0 14
 END_SPELL
 
 SPELL
@@ -2176,8 +2176,8 @@ Pre_Name Purification`
 Guilds 0 0 5 0 0 0 0 0 0 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 30 0 0 0 0 
-Flag Spell 0 0 14
 Flag Hurt 0 0 32763
+Flag Spell 0 0 14
 END_SPELL
 
 SPELL

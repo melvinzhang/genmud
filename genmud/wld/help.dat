@@ -2,18 +2,23 @@ HELP MORT
 Key WORLDMAP WORLD_MAP`
 Admin `
 Text World Map:
-             $2*$2*                  $7
-             $2#$2#$2*                 $7
-              $A,$A,                 $7
-              $2*$A,                 $7
-             $A,$2*$2#                 $7
-          $F*  $A,$A,$2#$A,                $7
-          $A,$A,  $2#$2#$9@                $7
-          $5^$2*  $2*$2*                 $7
-           $2*$A,$2*$C#                  $7
-           $A,$A,$A,$C#$2#                 $7
-             $2*$2#$2* $A,$2#              $7
-              $2#$A,$2#$A,$2*              $7
+              $5^$F*                 $7
+              $5^$F*$5^                $7
+               $5^                 $7
+              $6$$2*                 $7
+          $5^$B,$B,$5^$2#$5^                 $7
+          $5^$A,$B,$5^                   $7
+        $B,  $A,$5^    $C#               $7
+        $B,$B, $A,$B,$5^$B,$5^$A,$2#               $7
+        $A,$A,$B,$5^$B,$B, $A,$A,$A,$A, $F*$2*$2*          $7
+        $A@$6$     $2# $A,$2#$2#$A,$2*           $7
+           $2*$2*$2* $2#$2*   $6$$5^           $7
+           $2*$A,$2*$2#$C#$A,  $5^$B,$B,           $7
+           $A, $A,      $5^$B,           $7
+            $2# $C#$2#    $A,$A,           $7
+           $2#$C#$6$$2*$2*$A, $C#$2*$A,$2*           $7
+            $C#$C#$2*$A,$A,$2#$2#$2*$2*            $7
+               $9@$A,$6$               $7
 
 
 Evil outpost: $9@$7.   Good outpost: $A@$7.   
@@ -107,25 +112,26 @@ END_HELP
 HELP MORT
 Key HISTORY BACKSTORY`
 Admin `
-Text As I recall the legendary years so long ago, I discover myself becoming
-great loss about the ages. It was the age when the harmonious gods
-followed Ocih the Neutral god of Wisdom and Protectors, Fewon the Evil
-deity of Loss, Ice and Starvation and Tanes the Good god of Chivalry. the
-Powerful Neutral Ahfade, the Ancient Evil Fos-wino and the Powerful Good
-Gorneto kept the peace at the behest of the gods.
+Text As I remember the forgotten eras so long ago, I cannot help myself from
+having a sense of great regret over how much we could gain. It was the era
+when the united deities followed Utun the Neutral deity of Warriors and
+The Sky, Olmeti the Evil deity of Innocence and Spellcraft and Ofro the
+Good deity of Seekers, Invention and Love. the Powerful Neutral Nishese,
+the Mighty Evil Ahpusu and the Powerful Good Limeli preserved harmony at
+the behest of the gods.
 
-However the breaking came. The many races of the world were destroyed, and
-the people such as the cave ogre were thrown from their homes. Many wars
-were fought and the ancient fos-wino and the other ancient races were
-driven out of the world. And thus did the power of the deities fade into
-memory. This is what the Demons had hoped for as they flooded into the
-world, but were cast back to the Pits at a terrible cost.
+But then the sundering came. The body of races of the world were smashed
+crushed broken lost , and the kingdoms such as the forest gnoll were cast
+from their cities. Many wars were fought and the powerful nishese and the
+other ancient races were powerless to preserve harmony. And thus did the
+power of the deities weaken. This is the thing that the Demons had waited
+so long for as they surged into the world, but were cast back to the Pits
+ruining the civilizations.
 
-The civilizations fell into dark ages, and the nations has remained rooted
-for many eras. But now, the Demons are gaining strength. The races are
-broken and disorganized and squabbling among themselves. They must be
-brought together to fight the demons in this Testing Battle for Destiny
-Testing
+The races slid into darkness, and things has been unmoving for many years.
+But now, the Demons are expanding. The races are broken and disorganized
+and squabbling among themselves. They must be brought together to fight
+the demons in this Testing Battle for Destiny Testing
 
 `
 SeeAlso `
@@ -183,15 +189,11 @@ some secondary list which has the same data in it.$7
 SeeAlso MOBGEN OBJGEN CITYGEN AREAGEN WORLDGEN CAVEGEN DETAILGEN CRAFTGEN`
 END_HELP
 
-HELP BLD 
+HELP BLD
 Key MOBGEN`
-Admin 
-
-This should really be admins only, but it's up to you.
+Admin This should really be admins only, but it's up to you.
 `
-Text
-
-To use this, go to the mob generators area and look at some of the mobs.
+Text To use this, go to the mob generators area and look at some of the mobs.
 You see there are lots of animals and if you decide to make a new
 mob type, you create some names in the edescs (using kname kshort
 klong unless you feel like using others) and then set the stats
@@ -211,15 +213,9 @@ END_HELP
 
 HELP BLD
 Key OBJECTGEN OBJGEN`
-
-Admin 
-
-These pieces of data will probably be set by admins
+Admin These pieces of data will probably be set by admins
 `
-
-Text 
-
-The object generators area has lists of words for making all kinds
+Text The object generators area has lists of words for making all kinds
 of armor, weapons and jewelry. It's used all over in the generation
 code so you shouldn't have to worry about making items if you don't
 want to.
@@ -230,8 +226,6 @@ as you find them.
 `
 SeeAlso AREAGEN WORLDLGEN SOCIGEN MOBGEN CRAFTGEN CAVEGEN CITYGEN`
 END_HELP
-
-
 
 HELP MAX
 Key WORLDGEN AREAGEN`
@@ -285,14 +279,10 @@ that problems will arise when players are mapping.
 SeeAlso OBJGEN SOCIGEN MOBGEN CAVEGEN CITYGEN CRAFTGEN DETAILGEN `
 END_HELP
 
-
 HELP BLD
 Key CAVEGEN`
 Admin `
-
-Text
-
-Syntax: cavegen max_x max_y max_z
+Text Syntax: cavegen max_x max_y max_z
 
 OR
 
@@ -326,16 +316,10 @@ END_HELP
 
 HELP BLD
 Key DETAILGEN`
-
-Admin
-
-This should really be admin only.
+Admin This should really be admin only.
 
 `
-
-Text
-
-The "area details area" contains things that serve as prototypes for
+Text The "area details area" contains things that serve as prototypes for
 small "mini-areas" to be found within areas to flesh them out.
 The idea is normally to have a room or rooms placed into the
 area (as the rooms are randomly chosen from the first 200? in the
@@ -363,22 +347,15 @@ and the reset objects add more details within the previous details
 and so forth.
 
 `
-
 SeeAlso OBJGEN MOBGEN AREAGEN WORLDGEN SOCIGEN CAVEGEN CRAFTGEN CITYGEN`
 END_HELP
 
-Help BLD
+HELP BLD
 Key CITYGEN`
-
-Admin
-
-This should really be admin only
+Admin This should really be admin only
 
 `
-
-Text
-
-syntax: 
+Text syntax: 
 
 citygen target_start_vnum size [<level>] [<start obj vnum -- if not 101001>]
 
@@ -396,10 +373,8 @@ in an area, you can make a randpop item that chooses one store and
 places it there. Or if you have 10 kinds of "citizens" you can choose
 one of them if you wish. 
 `
-
 SeeAlso MOBGEN AREAGEN WORLDGEN CAVEGEN OBJGEN SOCIGEN CRAFTGEN DETAILGEN`
 END_HELP
-
 
 HELP MAX
 Key ECHO`
@@ -1837,25 +1812,15 @@ END_HELP
 HELP MORT
 Key CREDITS DIKU MERC EMLEN NIMUD`
 Admin `
-Text I learned to code on EmlenMUD which is a derivative of NiMUD
-which is a derivative of MERC which is a derivative of Diku. 
-I got sick of the limitations of the code in April of 2000, so
-I decided to start over doing things "right" so I could solve
-the big design problems I was having. The code is at
+Text I started learning to code on EmlenMUDs, but when I needed 
+rooms = objs = mobs, and Emlen wouldn't let me release his code, 
+I started over. These people below are people who have helped me
+out either by releasing the code that I learned to code on, or by
+helping me to make a MUD at various points. The current project
+and files can be found at
 
-http://www.sf.net/projects/genmud
+http://www.sf.net/projects/genmud/
 
-and it is my (current) take on what a MUD should be. The interface for
-playing the game should be the same, but if you look at the internals,
-you will see that it is really different. It is more streamlined,
-and more OO, and more powerful. I didn't use Emlen's code to code 
-off of because he wouldn't let me release it, so it would have been 
-pointless, however I do appreciate that he even let me see the code.
-
-Here is an (incomplete) list of people who have helped me in one way
-or another, by allowing their code to be released, or by allowing
-me to look at it, or by putting up a MUD so I could have fun learning
-it, even if they have no idea who I am and never know about this:
 
 DikuMUD:  Hans Staerfeldt, Katja Nyboe, Tom Madsen, Michael Seifert, 
           Sebastian Hammer.       
@@ -1875,6 +1840,7 @@ GenMUD:	  Prophit (Yes the one from MPV. :))
 	  Irmin Auwerda (Sideshowbob)
 	  Charles Dube (Arkane)
 	  Thomas Schwarz
+	  Jean-Daniel Beaubien
 `
 SeeAlso `
 END_HELP

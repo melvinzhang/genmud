@@ -631,7 +631,8 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
   
   if (spl->spell_type == TAR_OFFENSIVE &&
       th->in != vict->in &&
-      IS_ACT1_SET (vict, ACT_SENTINEL))
+      (IS_ACT1_SET (vict, ACT_SENTINEL) ||
+       !CAN_MOVE(vict)))
     return;
   
   if (IS_ROOM_SET (vict->in, ROOM_NOMAGIC))
@@ -646,6 +647,12 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
 	{
 	  if (IS_SET (spl->mana_type, mana_info[mn].flagval))
 	    casting_power_bonus += caster->pc->aff[FLAG_ELEM_POWER_START+mn];
+	}
+      /* Bonus over 40 is 1/5 power. C -= 40, C /= 5, C += 40, it
+	 simplifies to C = (C-40)/5+40 = C/5 + 32 */
+      if (casting_power_bonus > 40)
+	{
+	  casting_power_bonus = casting_power_bonus/5 + 32;
 	}
     }
       

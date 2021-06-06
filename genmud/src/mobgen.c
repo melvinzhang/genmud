@@ -142,6 +142,9 @@ areagen_generate_person (THING *area, int level_bonus)
   char buf[STD_LEN];
   int i, num_names = 0;
   char name[MOBGEN_NAME_MAX][STD_LEN];
+  int num_names_used = 0;
+  int name_pass = 0; /* Take 2 passes at making names in case
+			we miss out on making any. */
   SPELL *spl;
   
   namebuf[0] = '\0';
@@ -166,22 +169,40 @@ areagen_generate_person (THING *area, int level_bonus)
   for (i = 0; i < MOBGEN_NAME_MAX; i++)
     name[i][0] = '\0';
   
-  /* Get the proper name. */
+  /* Give 3 chances to generate some kind of extra description besides a
+     job. */
 
-  if (nr (1,3) == 1)
-    strcpy (name[MOBGEN_NAME_PROPER], create_society_name(NULL));
-
-  /* Get the adjective name. */
+  for (name_pass = 0; name_pass < 3; name_pass++)
+    {
+      
+      /* Get the proper name. */
+      
+      if (nr (1,3) == 1)
+	{
+	  strcpy (name[MOBGEN_NAME_PROPER], create_society_name(NULL));
+	  num_names_used++;
+	}
   
-  if (nr (1,3) == 2)
-    strcpy (name[MOBGEN_NAME_ADJECTIVE],
-	    find_gen_word (WORDLIST_AREA_VNUM, "mob_adjective", NULL));
-    
-  /* Get the society name. */
-  
-  if (nr (1,3) == 3)
-    strcpy (name[MOBGEN_NAME_SOCIETY], find_random_society_name ('n', TRUE));
-  
+      /* Get the adjective name. */
+      
+      if (nr (1,3) == 2)
+	{
+	  strcpy (name[MOBGEN_NAME_ADJECTIVE],
+		  find_gen_word (WORDLIST_AREA_VNUM, "mob_adjective", NULL));
+	  num_names_used++;
+	}
+      
+      /* Get the society name. */
+      
+      if (nr (1,3) == 3)
+	{
+	  strcpy (name[MOBGEN_NAME_SOCIETY], find_random_society_name ('n', TRUE));
+	  num_names_used++;
+	}
+      if (num_names_used > 0)
+	break;
+    }
+      
 
   /* Get the "job" name for the mob. */
   

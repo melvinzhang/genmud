@@ -28,7 +28,7 @@
 					 to see which ones should be made
 					 into guard posts. */
 
-#define POP_BEFORE_SETTLE     150   /* Soc needs N members before it
+#define POP_BEFORE_SETTLE     300   /* Soc needs N members before it
 					attempts to make a new society. */
 
 #define SOCIETY_SETTLE_CHANCE 230   /* 1 out of N chance to settle

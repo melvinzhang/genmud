@@ -17,6 +17,20 @@
 #define CAVEGEN_MAX  21
 
 
+/* When adding rooms to the cave, we don't let rooms get put in if too
+   many are "near" to the current room. This number determines how far
+   we go out in the +/- x and y dirs to search for near rooms.
+   KEEP THIS VALUE AT LEAST 1 OR ELSE CERTAIN LOOPS IN CAVEGEN.C WON'T WORK
+   CORRECTLY DUE TO OUT OF BOUNDS ARRAY ERRORS. THIS IS HERE TO MAKE THE
+   CODE A BIT FASTER. */
+
+#define CAVEGEN_NEAR_DIST 3
+
+/* This is the max number of rooms a room can have near it before it's
+   unlikely to add another room. */
+
+#define CAVEGEN_MAX_ROOMS_NEAR (CAVEGEN_NEAR_DIST*3)
+
 #define CAVEGEN_ADD_TRIES   50  /* Number of times you try to add rooms. */
 #define CAVEGEN_FORCE_UD    15 /* The likelihood of linking U/D rooms
 				   increases with this number goes from 

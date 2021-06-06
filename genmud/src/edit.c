@@ -467,7 +467,7 @@ thg->hp, thg->max_hp,  mvbuf, thg->max_mv, thg->mv, thg->size);
 	  sprintf (buf, "EDesc: \x1b[1;35m%s\x1b[0;37m: ", eds->name);
 	  for (t = eds->desc; *t && *t != '\n'; t++)
 	    len++;	  
-	  strncat (buf, eds->desc, MIN (len, 80-strlen(buf)));
+	  strncat (buf, eds->desc, MIN (len, 80-(int) strlen(buf)));
 	  strcat (buf, "...\n\r");
 	  stt (buf, th);
 	}

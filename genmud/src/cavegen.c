@@ -59,7 +59,10 @@ cavegen (THING *th, char *arg)
     }
 
   
-  if (named_in (arg1, "room size num rooms"))
+  if (!str_cmp (arg1, "size") ||
+      !str_cmp (arg1, "num") ||
+      !str_cmp (arg1, "room") ||
+      !str_cmp (arg1, "rooms"))
     {
       total_rooms = atoi (arg);
       if (total_rooms < CAVEGEN_MIN_ROOMS)
@@ -67,10 +70,14 @@ cavegen (THING *th, char *arg)
 	  stt ("Cavegen <rooms|size|num> <size >= 100> or cavegen <dx> [<dy>] [<dz>]\n\r", th);
 	  return FALSE;
 	}
-      for (dx = 1; dx*dx*dx < total_rooms/9; dx++);
-      dy = dx;
-      dz = MAX(1,dx*2/5);
-     
+      for (dx = 1; dx*dx*dx < total_rooms*total_rooms/20; dx++);
+      
+      dx = nr (dx*4/5, dx*6/5);
+      if (dx < 5)
+	dx = 5;
+      dy = nr (dx*4/5,dx*6/5);
+      dz = 2;
+      
     }
   else
     {
@@ -78,11 +85,22 @@ cavegen (THING *th, char *arg)
       if (dx < 5)
 	dx = 5;
       arg = f_word (arg, arg1);
+      
+      if (!*arg1)
+	{ 
+	  stt ("Cavegen <rooms|size|num> <size >= 100> or cavegen <dx> [<dy>] [<dz>]\n\r", th);
+	  return FALSE;
+	}
       dy = atoi (arg1);
       if (dy < 1)
 	dy = dx;
       else if (dy < 5)
 	dy = 5;
+      if (!*arg)
+	{ 
+	  stt ("Cavegen <rooms|size|num> <size >= 100> or cavegen <dx> [<dy>] [<dz>]\n\r", th);
+	  return FALSE;
+	}
       dz = atoi (arg);
       if (dz < 1)
 	dz = dx*2/5;
@@ -100,12 +118,13 @@ cavegen (THING *th, char *arg)
   
   /* NOTE: This is the only place these variables should EVER
      be set or else bad things may happen since other loops in
-     other functions depend on these being correct. */
+     other functions depend on these being correct. The smallest 
+     the variables can be is 1 and the largest is max size - 1*/
   
-  min_x = MID (1, CAVEGEN_MAX-(dx-1)/2, CAVEGEN_MAX*2);
-  max_x = MID (1,  CAVEGEN_MAX+dx/2, CAVEGEN_MAX*2);  
-  min_y = MID (1, CAVEGEN_MAX-(dy-1)/2, CAVEGEN_MAX*2);
-  max_y = MID (1,  CAVEGEN_MAX+dy/2, CAVEGEN_MAX*2); 
+  min_x = MID (CAVEGEN_NEAR_DIST, CAVEGEN_MAX-(dx-1)/2, CAVEGEN_MAX*2 - CAVEGEN_NEAR_DIST);
+  max_x = MID (CAVEGEN_NEAR_DIST,  CAVEGEN_MAX+dx/2, CAVEGEN_MAX*2-CAVEGEN_NEAR_DIST);  
+  min_y = MID (CAVEGEN_NEAR_DIST, CAVEGEN_MAX-(dy-1)/2, CAVEGEN_MAX*2-CAVEGEN_NEAR_DIST);
+  max_y = MID (CAVEGEN_NEAR_DIST,  CAVEGEN_MAX+dy/2, CAVEGEN_MAX*2-CAVEGEN_NEAR_DIST); 
   min_z = MID (1, CAVEGEN_MAX/2-(dz-1)/2, CAVEGEN_MAX-2);
   max_z = MID (1,  CAVEGEN_MAX/2+dz/2, CAVEGEN_MAX-2);
   
@@ -163,7 +182,7 @@ cavegen (THING *th, char *arg)
     }
   if (!cavegen_is_connected ())
     {
-      stt ("Failed to generate a cave!\n\r", th);
+      stt ("\x1b[1;36mFailed to generate a cave!\x1b[0;37m\n\r", th);
       
       return FALSE;
     }
@@ -219,7 +238,7 @@ cavegen_seed_rooms (void)
 {  
     int i;
     int z;
-  
+    int x, y;
   /* Now go to the edges and seed new rooms. */
   
   for (z = min_z; z <= max_z; z++)
@@ -228,8 +247,19 @@ cavegen_seed_rooms (void)
       if (z > min_z && z < max_z && nr (1,3) != 2)
 	times++;
       for (i = 0; i < times; i++)
-	cavegen_seed_room (0, 0, z);
+	cavegen_seed_room (0, 0, z);      
     }
+
+  /* Now do interlevel connections. */
+
+  for (z = min_z; z < max_z; z++)
+    {
+      x = nr (min_x, max_x);
+      y = nr (min_y, max_y);
+      cavegen_seed_room (x, y, z);
+      cavegen_seed_room (x, y, z+1);
+    }
+
   return;
 }
 
@@ -293,8 +323,11 @@ cavegen_add_rooms (int force_ud)
   int num_corner_rooms; /* How many rooms are diagonal from this in the 
 			   NEWS plane. */
   int chance_to_add_room;
-  
-  
+
+  /* Number of rooms on the same level within +/-2 in x and y dirs. */
+  int num_near_rooms; 
+  int cx, cy, cz;
+
   cavegen_clear_bit(CAVEGEN_ADDED_ADJACENT);
   for (x = min_x; x <= max_x; x++)
     {
@@ -309,11 +342,32 @@ cavegen_add_rooms (int force_ud)
 
 	      /* Don't usually do rooms on edges. */
 	      
-	      
-	      
 	      num_adj_rooms = 0;
 	      num_above_below_rooms = 0;
 	      num_corner_rooms = 0;
+	      num_near_rooms = 0; 
+	      cz = z;
+	      for (cx = x-CAVEGEN_NEAR_DIST; cx <= x+CAVEGEN_NEAR_DIST; cx++)
+		{
+		  for (cy = y-CAVEGEN_NEAR_DIST; cy <= y+CAVEGEN_NEAR_DIST; cy++)
+		    {
+		      if (USED_CAVE(cx,cy,cz))
+			num_near_rooms++;
+		    }
+		}
+	      
+	      /* Most of the time don't connect when we're near
+		 other rooms. Be careful that as CAVEGEN_NEAR_DIST
+		 increases, you may have to work out a new formula here
+		 or else your caves won't be created correctly. */
+	      
+	      if (num_near_rooms > CAVEGEN_MAX_ROOMS_NEAR)
+		{
+		  num_near_rooms -= CAVEGEN_MAX_ROOMS_NEAR;
+		  if (nr (1,num_near_rooms) > 2) 
+		    continue;
+		}
+
 	      if (USED_CAVE (x+1,y,z))
 		num_adj_rooms++;
 	      if (USED_CAVE (x-1,y,z))
@@ -404,7 +458,7 @@ cavegen_add_rooms (int force_ud)
 bool
 cavegen_is_connected (void)
 {
-  int x, y, z;
+  int x = 0, y = 0, z = 0;
   bool found = FALSE;
   /* Find a room in the cave. */
   for (x = min_x; x <= max_x; x++)

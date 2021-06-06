@@ -10,6 +10,13 @@
 /* The size of each of the worldgen areas. */
 #define WORLDGEN_AREA_SIZE  500
 
+/* This how far away in x and y dirs cities on the map must be from
+   each other. */
+
+#define WORLDGEN_CITY_DISTANCE 2
+
+
+
 /* The start vnums for the upper and lower worldgen areas. */
 /* Note that this may overlap with the wilderness area if the numbers
    are too big. Deal with it by making the vnum size a bit smaller. */

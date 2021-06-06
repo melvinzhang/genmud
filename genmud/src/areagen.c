@@ -14,7 +14,7 @@
 #include "detailgen.h"
 #include "mobgen.h"
 #include "cavegen.h"
-
+#include "citygen.h"
  
 /* These are the kinds of patches you can use to make areas. */
 
@@ -100,6 +100,16 @@ areagen (THING *th, char *arg)
   if ((type = atoi (arg1)) == 0)
     type = find_bit_from_name (FLAG_ROOM1, arg1);
   
+  if (type == ROOM_EASYMOVE || 
+      !str_cmp (arg1, "city"))
+    {
+      sprintf (buf, "%d %d %d %d",
+	       start, size, atoi (arg), 101001);
+      citygen (th, buf);
+      return;
+    }
+  
+
   if (!IS_SET (type, ROOM_SECTOR_FLAGS))
     {
       stt ("You can only setup areas with room sector flags as a base!\n\r", th);

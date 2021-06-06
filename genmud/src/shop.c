@@ -524,8 +524,8 @@ do_resize (THING *th, char *arg)
 	cost = 0;
       else
 	cost = item->cost/5;
-      if (armor->val[4] >= th->height * 4/5 &&
-	  armor->val[4] <= th->height * 6/5)
+      if (armor->val[4] >= (int) th->height * 4/5 &&
+	  armor->val[4] <= (int) th->height * 6/5)
 	{
 	  if (!all)
 	    {

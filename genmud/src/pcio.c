@@ -645,7 +645,7 @@ is_valid_name (FILE_DESC *fd, char *arg)
   int i;
   char filename[STD_LEN];
 
-  if (strlen (arg) < 3 || strlen (arg) > 17)
+  if (!arg  || !*arg  || strlen (arg) < 3 || strlen (arg) > 17)
     {
       write_to_buffer ("\n\n\rYour name must be between 3 and 17 characters.\n\r", fd);
       return FALSE;
@@ -1361,10 +1361,11 @@ read_playerfile (char *name)
   THING *thg;
   char fname[STD_LEN];
   FILE *f;
-  FILE_READ_SINGLE_SETUP;
+  FILE_READ_SINGLE_SETUP;  
   if (!name || !*name || !isalpha (name[0]))
     return NULL;
   badcount = 0;
+  fname[0] = '\0';
   sprintf (fname, "%s%s", PLR_DIR, name);
   strcpy (pfile_name, name);
   

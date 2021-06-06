@@ -2,7 +2,7 @@ THING 107100
 Name areagen.are`
 HpMv 0 10 5 400
 HWT 0 0
-Timer 11
+Timer 2
 Short The Areagen Area`
 type Lonath`
 ThFl 1089531
@@ -54,6 +54,7 @@ Mountains
 Reaches
 Outlands
 Wastes
+Mountainside
 `
 END_THING
 
@@ -156,6 +157,8 @@ Canyon
 Reach
 Cliff
 Pass
+Mountainside
+Mountain
 `
 END_THING
 
@@ -349,6 +352,7 @@ Hills
 Heights
 Forests
 Glaciers
+Glacier
 `
 END_THING
 
@@ -376,6 +380,9 @@ Desc 'Patch of Ground'
 'Patch of Earth'
 'Piece of Earth'
 Patch
+Mountainside
+Trail
+Hills
 `
 END_THING
 
@@ -617,6 +624,9 @@ Large
 Giant
 Dirty
 Twisted
+Stony
+Stoney
+Rocky
 `
 END_THING
 
@@ -671,6 +681,11 @@ Redwood
 Ironwood
 Cedar
 Hickory
+Alder
+Yew
+Mahogany
+Willow
+Elm
 `
 END_THING
 

@@ -2,10 +2,10 @@ THING 105900
 Name wordlist.are`
 HpMv 0 10 5 100
 HWT 0 0
-Timer 1
+Timer 11
 Short The Wordlist Area`
 type Lonath`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 28
 END_THING
 
@@ -229,44 +229,29 @@ END_THING
 THING 105916
 Name mob_adjective`
 HWT 0 0
-Desc tired
-old
-young
-energetic
-weary
-wary
-cautious
-observant
-watchful
-calm
-stoic
-steady
-nervous
-smiling
-happy
-frowning
-unhappy
-quiet
-harried
-'worn out'
-guarded
-reserved
-wizened
-wise
-ancient
-haggard
-unkempt
-smelly
-dirty
-smiling
-frowning
-grimacing
-shady
-honest
-upstanding
-trustworthy
-whistling
-humming
+Desc tired old young energetic weary wary cautious observant watchful calm
+stoic steady nervous smiling happy frowning unhappy quiet harried guarded
+reserved wizened wise ancient haggard unkempt smelly dirty smiling
+frowning grimacing shady honest upstanding trustworthy whistling humming
+honorable kind haughty disreputable worn-out shy confident bashful
+insecure quick slow bold cocksure dauntless fearless intrepid presumptuous
+self-assured valiant upbeat decisive firm forceful strong-willed assertive
+brazen composed poised hesitant timid unconfident inhibited diffident
+imperious imposing officious audacious daring forward gritty resolute
+stout unabashed valorous meek fainthearted easygoing level-headed
+nochalant placid sanguine serene worried agitated affable chummy clubby
+convivial genial helpful kind friendly neighborly outgoing sociable
+solicitous considerate unselfish cold-hearted amicable attractive charming
+cheerful cordial delightful engaging good-humored good-natured gracious
+obliging pleasant righteous warm-hearted antisocial disagreeable
+quarrelsome rude surly contrary good-tempered polite discontented
+antagonistic nasty perverse reluctant uneager caring ardent cantankerous
+bellicose contentious flippant ornery nasty truculent acrimonous bitter
+belligerent caustic morose resentful sardonic sullen disaffected
+apprehensive circumspect demure humble self-effacing skittish unassertive
+abashed gregarious cheerful chipper merry mirthful peaceful upbeat
+lumbering dull fervent lethargic disheveled bedraggled greasy slovenly
+unkempt 
 `
 END_THING
 
@@ -445,6 +430,67 @@ Name has_been_was`
 HWT 0 0
 Desc 'has been'
 was
+`
+END_THING
+
+THING 105929
+Name pottery_material`
+HWT 0 0
+Desc clay
+clay
+clay
+clay
+mud
+mud
+mud
+glazed
+glazed
+wood
+wood
+shell
+shell
+horn
+ivory
+brass
+copper
+bronze
+iron
+niebold
+jade
+jadetite
+laquered
+laquered
+enameled
+enameled
+porcelain
+ceramic
+ceramic
+celadon
+ornamental
+painted
+painted
+earthen
+'terra cotta'
+stone
+stoneware
+`
+END_THING
+
+THING 105930
+Name woven_materials`
+HWT 0 0
+Desc flax
+flax
+cloth
+cloth
+hide
+hide
+leather
+leather
+fiber
+fiber
+woven
+woven
 `
 END_THING
 

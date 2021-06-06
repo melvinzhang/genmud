@@ -24,7 +24,7 @@ void
 citygen_add_fields (THING *area)
 {
 
-  THING *room, *nroom;
+  THING *room, *nroom, *start_room, *last_room;
   int x, y, z = CITYGEN_STREET_LEVEL;
   /* Used for looking at adjacent coordinates. */
   int nx, ny, nz;
@@ -33,6 +33,17 @@ citygen_add_fields (THING *area)
   int curr_vnum; /* The current vnum we assign to new rooms. */
   int max_room_vnum; /* Max vnum we're allowed to use for rooms. */
   int dir;
+  
+  int count, num_choices, num_chose;
+  /* Used to make sure that the city map has edges that other areas
+     can link to. */
+  int min_x = CITY_SIZE, max_x = 0, min_y = CITY_SIZE, max_y = 0;
+  char name[STD_LEN];
+  char buf[STD_LEN];
+  VALUE *exit;
+  bool edge_exists[FLATDIR_MAX];
+  
+  
   
   if (!area)
     return;
@@ -131,6 +142,9 @@ citygen_add_fields (THING *area)
 			  append_name (nroom, "outer_field");
 			  free_str (nroom->short_desc);
 			  nroom->short_desc = new_str ("Some Fields");
+			  
+		       
+			  
 			}
 		    }
 		  if (curr_vnum > max_room_vnum)
@@ -200,5 +214,186 @@ citygen_add_fields (THING *area)
 	    }
 	}
     }
+
+  /* Now extend roads out from "gate_house" rooms in the
+     direction of "outer_field" rooms to set the rooms that are
+     roads leading to the cities --- and set the rooms to be "dir_edge"
+     rooms, as well so that the worldgen code can link cities in correctly. */
+  
+  z = CITYGEN_STREET_LEVEL;
+  for (x = 0; x < CITY_SIZE; x++)
+    {
+      for (y = 0; y < CITY_SIZE; y++)
+	{
+	  if ((start_room = city_grid[x][y][z]) != NULL &&
+	      is_named (start_room, "gate_house"))
+	    {	      
+	      name[0] = '\0';
+	      if (nr (1,2) == 1)
+		sprintf (name, "The Road ");
+	      sprintf (name + strlen(name), "%s %s",
+		       (nr (1,3) == 2 ? "Near" :
+			(nr (1,2) == 2 ? "Outside" :
+			 "Just Outside")),
+		       (nr (1,2) == 1 ?
+			city_name : city_full_name));
+	      
+	      for (dir = 0; dir < FLATDIR_MAX; dir++)
+		{
+		  room = start_room;
+		  last_room = NULL;
+		  do
+		    {
+		      if ((exit = FNV (room, dir + 1)) != NULL &&
+			  (nroom = find_thing_num (exit->val[0])) != NULL &&
+			  IS_ROOM (nroom) &&
+			  is_named (nroom, "outer_field"))
+			{
+			  free_str (nroom->short_desc);
+			  nroom->short_desc = new_str (name);
+			  remove_flagval (nroom, FLAG_ROOM1, ~0);
+			  add_flagval (nroom, FLAG_ROOM1, ROOM_EASYMOVE);
+			  last_room = nroom;
+			  room = nroom;
+			}
+		      else
+			  nroom = NULL;
+		    }
+		  while (nroom);
+		  
+		  if (last_room)
+		    {
+		      sprintf (name, "%s_edge",
+			       dir_name [dir]);
+		      append_name (last_room, name);
+		    }
+		}
+	    }
+	}
+    }
+
+  /* Check if all 4 edges exist or not. */
+  
+  for (dir = 0; dir < FLATDIR_MAX; dir++)
+    edge_exists[dir] = FALSE;
+  
+  for (room = area->cont; room; room = room->next_cont)
+    {
+      if (!IS_ROOM (room))
+	continue;
+      
+      for (dir = 0; dir < FLATDIR_MAX; dir++)
+	{
+	  sprintf (buf, "%s_edge", dir_name[dir]);
+	  if (is_named (room, buf))
+	    edge_exists[dir] = TRUE;
+	}
+      
+    }
+  
+  /* Now go deal with edges that don't exist. */
+
+  z = CITYGEN_STREET_LEVEL;
+  
+  for (x = 0; x < CITY_SIZE; x++)
+    {
+      for (y = 0; y < CITY_SIZE; y++)
+	{
+	  if (city_coord_is_ok (x,y,z) &&
+	      (room = city_grid[x][y][z]) != NULL)
+	    {
+	      if (x < min_x)
+		min_x = x;
+	      if (x > max_x)
+		max_x = x;
+	      if (y < min_y)
+		min_y = y;
+	      if (y > max_y)
+		max_y = y;
+
+	    }
+	}
+    }
+
+  /* Now add edge rooms for each direction that lacks them. */
+
+  z = CITYGEN_STREET_LEVEL;
+  for (dir = 0; dir < FLATDIR_MAX; dir++)
+    {
+      if (edge_exists[dir])
+	continue;
+      
+      room = NULL;
+      if (dir == DIR_NORTH || dir == DIR_SOUTH)
+	{
+	  if (dir == DIR_NORTH)
+	    y = max_y;
+	  else if (dir == DIR_SOUTH)
+	    y = min_y;
+	  else
+	    continue;
+	  
+	  num_choices = 0;
+	  num_chose = 0;
+	  for (count = 0; count < 2; count++)
+	    {
+	      for (x = 0; x < CITY_SIZE; x++)
+		{
+		  if (city_coord_is_ok (x,y,z) &&
+		      (room = city_grid[x][y][z]) != NULL)
+		    {
+		      if (count == 0)
+			num_choices++;
+		      else if (--num_chose < 1)
+			break;
+		    }
+		}
+	      if (count == 0)
+		{
+		  if (num_choices < 1)
+		    break;
+		  num_chose = nr (1, num_choices);
+		}
+	    }
+	}
+      else if (dir == DIR_EAST || dir == DIR_WEST)
+	{
+	   if (dir == DIR_EAST)
+	    x = max_x;
+	  else if (dir == DIR_WEST)
+	    x = min_x;
+	  else
+	    continue;
+	  
+	  num_choices = 0;
+	  num_chose = 0;
+	  for (count = 0; count < 2; count++)
+	    {
+	      for (y = 0; y < CITY_SIZE; y++)
+		{
+		  if (city_coord_is_ok (x,y,z) &&
+		      (room = city_grid[x][y][z]) != NULL)
+		    {
+		      if (count == 0)
+			num_choices++;
+		      else if (--num_chose < 1)
+			break;
+		    }
+		}
+	      if (count == 0)
+		{
+		  if (num_choices < 1)
+		    break;
+		  num_chose = nr (1, num_choices);
+		}
+	    }
+	}
+      if (!room)
+	continue;
+      
+      sprintf (buf, "%s_edge", dir_name[dir]);
+      append_name (room, buf);
+    }
+  
   return;
 }

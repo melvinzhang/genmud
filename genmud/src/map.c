@@ -522,7 +522,7 @@ show_map (THING *th, int maxx, int maxy)
 	  for (i = 0; i < maxx; i++)
 	    {
 	      *t++ = pix[i][j] + 'a';
-	      // Now maybe add exits info. Only worry about S and E exits.
+	      /* Now maybe add exits info. Only worry about S and E exits. */
 	      if (i < maxx - 1 && pix[i+1][j] > 0 &&
 		       !IS_SET (exi[i][j], (1 << DIR_EAST)))
 		{

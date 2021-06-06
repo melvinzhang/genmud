@@ -3,10 +3,10 @@ Name persongen.are`
 HpMv 0 10 5 200
 HWT 0 0
 Cost 100
-Timer 11
+Timer 2
 Short Person Generators`
 type Lonath`
-ThFl 135307259
+ThFl 1089531
 Flag Area 0 0 28
 END_THING
 
@@ -21,7 +21,7 @@ persons from society castes.
 Short Person Generator Room`
 MIW 1
 Symbol -`
-ThFl 134742507
+ThFl 524779
 Flag Aff 0 0 18
 END_THING
 

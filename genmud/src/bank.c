@@ -345,7 +345,7 @@ do_store (THING *th, char *arg)
 
   /* If you can't afford the storage fee, bail out. */
 
-  if (th->pc->bank < obj->cost/STORAGE_DIVISOR)
+  if (th->pc->bank < (int) obj->cost/STORAGE_DIVISOR)
     {
       stt ("You don't have enough money to store this item!\n\r", th);
     }
@@ -467,7 +467,7 @@ do_unstore (THING *th, char *arg)
  /* If you don't have the money, then give an error message and
     bail out. */
  
- if (th->pc->bank < obj->cost/STORAGE_DIVISOR)
+ if (th->pc->bank < (int) obj->cost/STORAGE_DIVISOR)
    {
      stt ("You don't have enough money to unstore this item!\n\r", th);
      return;

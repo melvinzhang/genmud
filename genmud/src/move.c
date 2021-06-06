@@ -53,8 +53,8 @@ move_thing (THING *initiator, THING *mover, THING *start_in, THING *end_in)
 
   if (end_in->size > 0)
     {
-      if ((mover->carry_weight + mover->weight) >
-	  (end_in->size - (end_in->carry_weight)))
+      if ( (int) (mover->carry_weight + mover->weight) >
+	  (int) (end_in->size -  end_in->carry_weight))
 	{
 	  sprintf (buf, "%s is too big to fit inside of ",
 		   name_seen_by (initiator, mover));

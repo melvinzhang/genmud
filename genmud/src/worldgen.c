@@ -114,7 +114,6 @@ worldgen (THING *th, char *arg)
   char buf[STD_LEN];
   int x_size, y_size;
   int min_x, max_x, min_y, max_y;
-  int times;
   int area_size;
   int total_size;
   int curr_size;
@@ -378,7 +377,43 @@ worldgen (THING *th, char *arg)
 	break; 
     }
   
- 
+  /* Now change a few of these to easymove for cities. */
+
+  
+  for (x = 0; x < WORLDGEN_MAX; x++)
+    {
+      for (y = 0; y < WORLDGEN_MAX; y++)
+	{
+	  if (worldgen_sectors[x][y] &&
+	      nr (1,10) == 3)
+	    {
+	      /* Check for cities nearby and disallow this if
+		 there are any. */
+	      
+	      int min_x, max_x, min_y, max_y, cx, cy;
+	      
+	      bool city_nearby = FALSE;
+	      
+	      min_x = MAX(0, x-WORLDGEN_CITY_DISTANCE);
+	      min_y = MAX(0, y-WORLDGEN_CITY_DISTANCE);
+	      max_x = MIN(WORLDGEN_MAX-1, x+WORLDGEN_CITY_DISTANCE);
+	      max_y = MIN(WORLDGEN_MAX-1, y+WORLDGEN_CITY_DISTANCE);
+	      
+	      for (cx = min_x; cx <= max_x; cx++)
+		{
+		  for (cy = min_y; cy <= max_y; cy++)
+		    {
+		      if (worldgen_sectors[cx][cy] == ROOM_EASYMOVE)
+			city_nearby = TRUE;
+		    }
+		}
+
+	      if (!city_nearby)
+		worldgen_sectors[x][y] = ROOM_EASYMOVE;
+	    }
+	}
+    }
+	      
   
   /* Now draw the map again. */
   
@@ -724,7 +759,7 @@ worldgen_generate_areas (int area_size)
 		{
 		  for (i = 0; room1_flags[i].flagval != 0; i++)
 		    {
-		      if (room1_flags[i].flagval == worldgen_sectors[x][y])
+		      if ((int) room1_flags[i].flagval == worldgen_sectors[x][y])
 			break;
 		    }
 		  /* Make sure that this area will still fit in the
@@ -734,6 +769,15 @@ worldgen_generate_areas (int area_size)
 		    curr_size += curr_size/2;
 		  else 
 		    level_this_area = nr (level_this_area*2/3,level_this_area*5/4);
+		  
+		  /* Make cities BIG. */
+		  if (worldgen_sectors[x][y] == ROOM_EASYMOVE)
+		    {
+		      if (curr_size < 500)
+			curr_size = 500;
+		      curr_size *= 2;
+		    }
+		  
 		  curr_size = (curr_size/55+1)*50;
 		  /* Now set up the "dirs" for this area...*/
 		  
@@ -1387,6 +1431,9 @@ worldgen_show_sectors (THING *th)
 		    break;
 		  case ROOM_WATERY:
 		    sprintf (buf, "\x1b[1;34m#");
+		    break;
+		  case ROOM_EASYMOVE:
+		    sprintf (buf, "\x1b[0;36m$");
 		    break;
 		  default:
 		    for (al = 0; al < ALIGN_MAX; al++)

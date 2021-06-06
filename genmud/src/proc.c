@@ -152,7 +152,8 @@ strlen_color (const char *t)
 }
 
 /* This returns "a" or "an" depending on what the string given
-   starts with. */
+   starts with. Sucky. Will have to add exceptions as time goes
+   on since English sucks. :P */
 
 char *
 a_an (const char *t)
@@ -171,9 +172,14 @@ a_an (const char *t)
   
   if (c == 'e' || c == 'a' || c == 'o' || c == 'i' || c == 'u')
     return "an";
+
+  if (!str_prefix ("honest", word) ||
+      !str_prefix ("honor", word))
+    return "an";
+  
   return "a";
 }
- 
+
 	   
 /* This makes a new string in mem...but it segfaults if we cannot 
    allocate memory. Yes it sucks since it will probably leave
@@ -244,6 +250,8 @@ c_time (int tm)
 {
   static char ret[STD_LEN];
   char *t;  
+  
+
   sprintf (ret, "%s", ctime((const time_t *) &tm));
   t = ret;
   while (*t && *t != '\n' && *t != '\r')

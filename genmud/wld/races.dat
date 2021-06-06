@@ -14,9 +14,9 @@ RawCurr 0 0 0 0 0 0 0 0
 RawWant 0 0 0 0 0 0 0 0 
 END_RACE
 RACE Name Ogre`
-Flag armor 0 0 20
-Flag dam 0 0 4
 Flag sp_attack 0 0 3
+Flag dam 0 0 4
+Flag armor 0 0 20
 Stats 30 21 22 21 28 25 25 
 Spell 20 23 7 0 0 
 RegenBonus 0 0 0
@@ -61,8 +61,8 @@ RawCurr 0 0 0 0 0 0 0 0
 RawWant 0 0 0 0 0 0 0 0 
 END_RACE
 RACE Name Dwarf`
-Flag kickdam 0 0 3
 Flag armor 0 0 15
+Flag kickdam 0 0 3
 Stats 26 23 26 20 27 25 25 
 Spell 34 15 6 0 0 
 RegenBonus 0 0 0
@@ -77,8 +77,8 @@ RawCurr 0 0 0 0 0 0 0 0
 RawWant 0 0 0 0 0 0 0 0 
 END_RACE
 RACE Name Draconian`
-Flag armor 0 0 10
 Flag Aff 0 0 524288
+Flag armor 0 0 10
 Stats 26 27 23 20 26 25 25 
 Spell 37 16 5 0 0 
 RegenBonus 0 0 0
@@ -93,8 +93,8 @@ RawCurr 0 0 0 0 0 0 0 0
 RawWant 0 0 0 0 0 0 0 0 
 END_RACE
 RACE Name Goblin`
-Flag Aff 0 0 16
 Flag armor 0 0 10
+Flag Aff 0 0 16
 Stats 25 22 21 30 24 25 25 
 Spell 26 18 6 0 0 
 RegenBonus 0 0 0
@@ -109,8 +109,8 @@ RawCurr 0 0 0 0 0 0 0 0
 RawWant 0 0 0 0 0 0 0 0 
 END_RACE
 RACE Name Wood-Elf`
-Flag armor 0 0 5
 Flag Det 0 0 2
+Flag armor 0 0 5
 Stats 22 22 27 28 23 25 25 
 Spell 36 14 5 0 0 
 RegenBonus 0 0 0
@@ -125,8 +125,8 @@ RawCurr 0 0 0 0 0 0 0 0
 RawWant 0 0 0 0 0 0 0 0 
 END_RACE
 RACE Name Elf`
-Flag Det 0 0 4
 Flag armor 0 0 5
+Flag Det 0 0 4
 Stats 21 27 23 28 23 25 25 
 Spell 39 14 5 0 0 
 RegenBonus 0 0 0
@@ -141,8 +141,8 @@ RawCurr 0 0 0 0 0 0 0 0
 RawWant 0 0 0 0 0 0 0 0 
 END_RACE
 RACE Name Gnome`
-Flag Det 0 0 32
 Flag armor 0 0 5
+Flag Det 0 0 32
 Stats 21 27 30 22 22 25 25 
 Spell 44 7 9 0 0 
 RegenBonus 0 0 0

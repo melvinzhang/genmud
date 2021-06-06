@@ -105,7 +105,7 @@ sub_money (THING *th, int amount)
   
   for (i = NUM_COINS -1; i > 0; i--)
     {
-      if (money->val[i] > 0 && money->val[i - 1] < money_info[i].flagval/ money_info[i - 1].flagval)
+      if (money->val[i] > 0 && money->val[i - 1] < (int) (money_info[i].flagval/ money_info[i - 1].flagval))
 	{
 	  money->val[i]--;
 	  money->val[i - 1] += money_info[i].flagval/money_info[i - 1].flagval;
@@ -120,7 +120,7 @@ sub_money (THING *th, int amount)
 	 be the minimum of the amount of coins we have at this level,
 	 and the amount we have left/the value of each of these coins. */
 
-      curr_coins = MIN (money->val[i], amount_left/money_info[i].flagval);
+      curr_coins = MIN (money->val[i], (int) (amount_left/money_info[i].flagval));
       
       /* Reduce by this many coins */
       

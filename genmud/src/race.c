@@ -42,7 +42,8 @@ read_races (void)
 	{
 	  race_info[currnum] = read_race (f);
 	  top_race = currnum;
-	  race_info[currnum]->vnum = currnum++;
+	  race_info[currnum]->vnum = currnum;
+	  currnum++;
 	}
       FKEY("END_OF_RACES")
 	break;
@@ -67,7 +68,8 @@ read_aligns (void)
 	{
 	  align_info[currnum] = read_race (f);
 	  top_align = currnum;
-	  align_info[currnum]->vnum = currnum++;
+	  align_info[currnum]->vnum = currnum;
+	  currnum++;
 	}
       FKEY("END_OF_ALIGNS")
 	break;

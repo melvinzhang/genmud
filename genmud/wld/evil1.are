@@ -4,11 +4,11 @@ HpMv 0 10 25 50
 HWT 0 0
 Align 1
 Cost 100
-Timer 1
+Timer 4
 Short The Evil Outpost`
 Long The Evil Outpost comes to life again!`
 type Lonath`
-ThFl 1089531
+ThFl 135307259
 Flag Area 0 0 12
 END_THING
 
@@ -20,7 +20,7 @@ Desc The evil outpost serves as shelter from the dangers of the world.
 Short The Evil Outpost`
 MIW 1
 Symbol |`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1002 0 0 0 0 0 0 0 `
 Flag Room 0 0 16777985
 Reset 1040 100 1 1
@@ -35,7 +35,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol |`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1003 0 0 0 0 0 0 0 `
 Val s_exit 1001 0 0 0 0 0 0 0 `
 Flag Room 0 0 16777217
@@ -51,7 +51,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol +`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1008 0 0 0 0 0 0 0 `
 Val d_exit 1007 0 0 0 0 0 0 0 `
 Val u_exit 1006 0 0 0 0 0 0 0 `
@@ -70,7 +70,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val e_exit 1003 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 Flag Det 0 0 16908289
@@ -86,7 +86,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val w_exit 1003 0 0 0 0 0 0 0 `
 Flag Room 0 0 16777217
 Reset 1037 100 1 1
@@ -101,7 +101,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol *`
-ThFl 524779
+ThFl 134742507
 Val d_exit 1003 0 0 0 0 0 0 0 `
 Flag Room 0 0 16908289
 Reset 1038 100 1 1
@@ -116,7 +116,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol *`
-ThFl 524779
+ThFl 134742507
 Val u_exit 1003 0 0 0 0 0 0 0 `
 Flag Room 0 0 16908289
 Reset 1039 100 1 1
@@ -131,7 +131,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol +`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1013 0 0 0 0 0 0 0 `
 Val d_exit 1012 0 0 0 0 0 0 0 `
 Val u_exit 1011 0 0 0 0 0 0 0 `
@@ -150,7 +150,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val w_exit 1008 0 0 0 0 0 0 0 `
 Flag Room 0 0 16777217
 Reset 1033 100 1 1
@@ -165,7 +165,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val e_exit 1008 0 0 0 0 0 0 0 `
 Flag Room 0 0 16777217
 Reset 1032 100 1 1
@@ -180,7 +180,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol *`
-ThFl 524779
+ThFl 134742507
 Val d_exit 1008 0 0 0 0 0 0 0 `
 Flag Room 0 0 16908289
 Reset 1034 100 1 1
@@ -195,7 +195,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol *`
-ThFl 524779
+ThFl 134742507
 Val u_exit 1008 0 0 0 0 0 0 0 `
 Flag Room 0 0 16908289
 Reset 1035 100 1 1
@@ -210,7 +210,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol +`
-ThFl 524779
+ThFl 134742507
 Val n_exit 1018 0 0 0 0 0 0 0 `
 Val d_exit 1017 0 0 0 0 0 0 0 `
 Val u_exit 1016 0 0 0 0 0 0 0 `
@@ -229,7 +229,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val w_exit 1013 0 0 0 0 0 0 0 `
 Flag Det 0 0 16777217
 Reset 1031 10 5 1
@@ -243,7 +243,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol -`
-ThFl 524779
+ThFl 134742507
 Val e_exit 1013 0 0 0 0 0 0 0 `
 Flag Room 0 0 16777217
 Reset 1031 10 5 1
@@ -257,7 +257,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol *`
-ThFl 524779
+ThFl 134742507
 Val d_exit 1013 0 0 0 0 0 0 0 `
 Flag Room 0 0 16908289
 Reset 1031 10 5 1
@@ -271,7 +271,7 @@ Desc 1001`
 Short The Evil Outpost`
 MIW 1
 Symbol *`
-ThFl 524779
+ThFl 134742507
 Val u_exit 1013 0 0 0 0 0 0 0 `
 Flag Room 0 0 16908289
 Reset 1031 10 5 1
@@ -286,7 +286,7 @@ MIW 1
 Symbol |`
 ThFl 524779
 Val s_exit 1013 0 0 0 0 0 0 0 `
-Val n_exit 205743 0 0 0 0 0 0 0 `
+Val n_exit 202559 0 0 0 0 0 0 0 `
 Flag Room 0 0 16777217
 END_THING
 

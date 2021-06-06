@@ -64,7 +64,7 @@ society_activity (THING *th)
     {
       if (!is_hunting (th) || th->hp < th->max_hp/4)
 	{
-	  if ((healer = find_society_member_nearby (th, CASTE_HEALER, 10)) != NULL)
+	  if ((healer = find_society_member_nearby (th, CASTE_HEALER, 5)) != NULL)
 	    {
 	      start_hunting (th, KEY (healer), HUNT_HEALING);
 	      return;
@@ -528,7 +528,7 @@ find_dropoff_location (THING *th)
       (society = find_society_num (soc->val[0])) == NULL)
     return;
   if ((num_builder = find_num_members (society, CASTE_BUILDER)) < 1 ||
-      (builder = find_society_member_nearby (th, CASTE_BUILDER, nr(20,100))) == NULL)
+      (builder = find_society_member_nearby (th, CASTE_BUILDER, 30 + (nr(1,10) == 2 ? 30 : 0))) == NULL)
     {
       stop_hunting (th, TRUE);
     }

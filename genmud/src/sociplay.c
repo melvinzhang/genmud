@@ -76,7 +76,7 @@ do_play (THING *th, char *arg)
     {
       THING *adult;
 
-      if ((adult = find_society_member_nearby (child, BATTLE_CASTES, 10)) != NULL)
+      if ((adult = find_society_member_nearby (child, BATTLE_CASTES, 5)) != NULL)
 	{
 	  start_hunting (child, NAME(adult), HUNT_HEALING);
 	  hunt_thing (child, 20);

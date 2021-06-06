@@ -1087,9 +1087,20 @@ damage (THING *th, THING *vict, int dam, char *word)
       act ("A wave of peaceful energy stop@s @1n from attacking @3n.", th, NULL, vict, NULL, TO_ALL);
       return FALSE;
     }
+
+  /* Don't players damage other things at a range if the targets can't
+     move. */
+
+  if (IS_PC (th) && th->in != vict->in &&
+      (IS_ACT1_SET (vict, ACT_SENTINEL)
+       || !CAN_MOVE (vict)))
+    return FALSE;
+
   if (!CONSID)
     start_fighting (th, vict);
   
+
+
   /* Deal with relics and permadeath for pc's */
   
   if (IS_PC (th))
