@@ -1,27 +1,35 @@
-THING 17000
-Name area17000.are`
+THING 16000
+Name area16000.are`
+Level 100
 HpMv 0 10 666 1000
 HWT 0 0
-Timer 17
+Timer 4
 ThFl 1089531
+Reset 16802 50 66 1
 END_THING
 
-THING 17722
+THING 16801
 Name guard gateguard`
+Level 100
+HpMult 30
 HWT 0 0
 Short a gateguard`
 Long A gateguard is here watching for trouble.`
 ThFl 2209
-Flag Act 0 0 256
+Flag Act 0 0 384
 Flag Det 0 0 7
 END_THING
 
-THING 17723
+THING 16802
 Name guard cityguard`
+Level 100
+HpMult 30
 HWT 0 0
 Short a cityguard`
+MIW 66
 Long An alert cityguard stands here.`
 ThFl 2209
+Flag Act 0 0 128
 Flag Det 0 0 7
 END_THING
 

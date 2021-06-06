@@ -157,7 +157,18 @@ strlen_color (const char *t)
 char *
 a_an (const char *t)
 {
-  char c = LC (*t);
+  char word[STD_LEN];
+  char c;
+  if (!t || !*t)
+    return "a";
+  
+  f_word ((char *) t, word);
+  
+  if (!str_prefix ("use", word))
+    return "a";
+  
+  c = word[0];
+  
   if (c == 'e' || c == 'a' || c == 'o' || c == 'i' || c == 'u')
     return "an";
   return "a";
@@ -359,6 +370,7 @@ show_flags (FLAG *startflag, int type, bool builder)
   char buf[STD_LEN];
   char durat[STD_LEN];
   char sname[STD_LEN];
+  char buf2[STD_LEN];
   FLAG *flg;
   SPELL *spl;
   ret[0] = '\0';
@@ -431,7 +443,12 @@ show_flags (FLAG *startflag, int type, bool builder)
 		     affectlist[flg->type - AFF_START].app,
 		     flg->val, durat); 
 	}
-      strcat (ret, buf);
+      sprintf (buf2, "\x1b[1;3%dm%s\x1b[0;37m",
+	       (flg->type == FLAG_HURT ||
+		(flg->type >= AFF_START &&
+		 (int) flg->val < 0) ? 1 : 7),
+	       buf);
+      strcat (ret, buf2);
     }  
   return ret;
 }

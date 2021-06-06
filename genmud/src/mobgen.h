@@ -13,6 +13,14 @@
 #define MOBGEN_NAME_JOB          4
 #define MOBGEN_NAME_MAX          5
 
+
+/* Used in find_randpop_mob_name () */
+
+#define RANDMOB_NAME_A_AN        0x00000001 /* Return an a/an in name. */ 
+#define RANDMOB_NAME_FULL        0x00000002 /* Use full name */
+#define RANDMOB_NAME_STRONG      0x00000004 /* Use strong mobs. */
+#define RANDMOB_NAME_TWO_WORDS   0x00000008 /* Use two words in the name. */
+
 /* These are for generating regular mobs within an area. */
 
 void areagen_generate_persons (THING *area);
@@ -58,3 +66,8 @@ void setup_mob_randpop_item (int start_vnum, int tier_size);
 /* This tells if an area has a free mobject vnum in it or not. */
 
 int find_free_mobject_vnum (THING *area);
+
+
+/* this finds a random mobgen name. */
+
+char *find_randpop_mob_name (int flags);

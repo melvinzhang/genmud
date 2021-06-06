@@ -2,7 +2,7 @@ THING 104000
 Name areadetails.are`
 HpMv 0 10 400 1000
 HWT 0 0
-Timer 3
+Timer 2
 Short Area Details Area`
 type Lonath`
 ThFl 1089531
@@ -129,6 +129,12 @@ weatherbeaten dirty clean crowded smelly comfortable great-smelling dingy brick 
 `
 EDESC klong`
 Old small tiny large
+`
+EDESC format`
+'the kname of the randpop_mob_no_a_an'
+'the randpop_mob_no_a_an kname'
+'a_an klong_kshort_kname'
+'a_an klong kshort kname'
 `
 END_THING
 
@@ -602,37 +608,38 @@ THING 104408
 Name monument`
 HWT 200 20000
 ThFl 101063
+EDESC kplaq`
+statue monument plaque slab obelisk
+inscription
+bas-relief
+pillar
+memorial
+monolith
+fountain
+megalith
+tombstone
+headstone
+gravestone
+`
+EDESC remem`
+commemorating
+for
+'dedicated to'
+'in memory of'
+'in remembrance of'
+of
+of
+`
 EDESC lname`
 proper_name
 `
 EDESC fname`
 proper_name
 `
-EDESC remem`
-commemorating
-remembering
-for
-'dedicated to'
-'in memory of'
-`
 EDESC plaq`
-plaque
-monument
-statue
-slab
-obelisk
-enscription
-bas-relief
-bust
-memorial
-monolith
-megalith
-tombstone
-pillar
-fountain
 `
 EDESC format`
-'a_an plaq remem fname lname'
+'a_an kplaq remem fname lname'
 `
 END_THING
 

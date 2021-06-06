@@ -510,7 +510,9 @@ update_thing_hour (THING *th)
     {
       if (--th->timer < 1)
 	{
-	  reset_thing (th, 0);
+	  if (!th->in || !IS_AREA (th->in) ||
+	      !IS_AREA_SET (th->in, AREA_NOREPOP))
+	    reset_thing (th, 0);
 	  /* Send repop message to all players in the area. */
 	  if (th->long_desc && th->long_desc[0])
 	    {

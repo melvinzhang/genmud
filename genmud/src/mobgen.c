@@ -175,7 +175,7 @@ areagen_generate_person (THING *area, int level_bonus)
   
   if (nr (1,3) == 2)
     strcpy (name[MOBGEN_NAME_ADJECTIVE],
-	    find_gen_word (MOBGEN_DESC_AREA_VNUM, "mob_adjective", NULL));
+	    find_gen_word (WORDLIST_AREA_VNUM, "mob_adjective", NULL));
     
   /* Get the society name. */
   
@@ -676,6 +676,7 @@ generate_randpop_mob (THING *area, THING *proto, int curr_vnum)
    
    mob->thing_flags = MOB_SETUP_FLAGS | TH_NO_TALK;
    copy_thing (proto, mob);
+   mob->type = new_str (proto->type);
    mob->vnum = curr_vnum; 
   
    thing_to (mob, area);
@@ -814,4 +815,147 @@ find_free_mobject_vnum (THING *area)
 	return vnum;
     }
   return 0;
+}
+
+/* This returns the random name of a regular animal randpop mob,
+   and not too wimpy either. The parameter tells if we have the a_an
+   on the front of the return or not. (essentially return name vs
+   short desc) */
+
+char *
+find_randpop_mob_name (int flags)
+{
+  int count, num_choices = 0, num_chose = 0;
+  
+  static char buf[STD_LEN];
+
+  THING *area, *mob;
+  
+  if ((area = find_thing_num (MOBGEN_LOAD_AREA_VNUM)) == NULL)
+    {
+      if (IS_SET (flags, RANDMOB_NAME_A_AN))
+	return "a monster";
+      else
+	return "monster";
+    }
+  
+  for (count = 0; count < 2; count++)
+    {
+      for (mob = area->cont; mob; mob = mob->next_cont)
+	{
+	  if (IS_ROOM (mob) ||
+	      !CAN_FIGHT (mob) || !CAN_MOVE (mob))
+	    continue;
+	  
+	  if (LEVEL (mob) < 10)
+	    continue;
+	  /* The mob can only be above the strong mob minlevel if
+	     we asked for this feature. */
+	  if (LEVEL (mob) >= STRONG_RANDPOP_MOB_MINLEVEL &&
+	      !IS_SET (flags, RANDMOB_NAME_STRONG))
+	    continue;
+	  
+	  if (LEVEL (mob) < STRONG_RANDPOP_MOB_MINLEVEL &&
+	      IS_SET (flags, RANDMOB_NAME_STRONG))
+	    continue;
+
+	  
+	  if (!mob->name || !*mob->name ||
+	      !mob->short_desc || !*mob->short_desc)
+	    continue;
+	  
+	  if (count == 0)
+	    num_choices++;
+	  else if (--num_chose < 1)
+	    break;
+	}
+      
+      if (count == 0)
+	{
+	  if (num_choices < 1)
+	    {
+	      if (IS_SET (flags, RANDMOB_NAME_A_AN))
+		return "a monster";
+	      
+	      return "monster";
+	    }
+	  num_chose = nr (1, num_choices);
+	}
+    }
+  
+  if (mob)
+    {
+      if (IS_SET (flags, RANDMOB_NAME_FULL))
+	{
+	  if (IS_SET (flags, RANDMOB_NAME_A_AN) 
+	      && mob->short_desc && *mob->short_desc)
+	    {
+	      strcpy (buf, mob->short_desc);
+	      return buf;
+	    }
+	  if (!IS_SET (flags, RANDMOB_NAME_A_AN)
+	      && mob->name && *mob->name)
+	    {
+	      strcpy (buf, mob->name);
+	      return buf;
+	    }
+	}
+      /* Use two words...instead of one. */
+      else if (IS_SET (flags, RANDMOB_NAME_TWO_WORDS))
+	{
+	  int num_words = find_num_words (mob->name);
+	  char *wd;
+	  char buf1[STD_LEN];
+	  wd = mob->name;
+	  num_words -= 2;
+	  while (num_words-- > 0)
+	    wd = f_word (wd, buf1);
+	  
+	  strcpy (buf1, wd);
+	  if (*buf1)
+	    {
+	      if (IS_SET (flags, RANDMOB_NAME_A_AN))
+		{
+		  sprintf (buf, "%s %s", a_an(buf1), buf1);
+		  return buf;
+		}
+	      else
+		{
+		  strcpy (buf, buf1);
+		  return buf;
+		}
+	    }
+	}
+      else
+	{
+	  char *wd;
+	  char buf2[STD_LEN];
+	  
+	  buf2[0] = '\0';
+	  wd = mob->name;
+	  
+	  while (wd && *wd)
+	    wd = f_word (wd, buf2);
+
+	  if (*buf2)
+	    {
+	      if (IS_SET (flags, RANDMOB_NAME_A_AN))
+		{
+		  sprintf (buf, "%s %s", a_an(buf2), buf2);
+		  return buf;
+		}
+	      else
+		{
+		  strcpy (buf, buf2);
+		  return buf;
+		}
+	    }
+	  
+	}
+      
+      
+    }
+  if (IS_SET (flags, RANDMOB_NAME_A_AN))
+    return "a monster";  
+  return "monster";
 }

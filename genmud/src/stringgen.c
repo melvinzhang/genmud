@@ -9,6 +9,7 @@
 #include "serv.h"
 #include "society.h"
 #include "historygen.h"
+#include "mobgen.h"
 
 
 
@@ -25,6 +26,7 @@ string_gen (char *txt, int area_vnum)
   char punctuation[STD_LEN];
   char curr_word[STD_LEN];
   bool current_uppercase;
+  bool need_a_an_here = FALSE;
   
   /* Must have text */
   if (!txt || !*txt)
@@ -79,11 +81,36 @@ string_gen (char *txt, int area_vnum)
       /* Copy the new word into the string...note that find_gen_word
 	 returns the original word if no replacement is found... */
       
+      if (!str_cmp (word, "a_an"))
+	{
+	  need_a_an_here = TRUE;
+	  continue;
+	}
       strcpy (curr_word, find_gen_word (area_vnum, word, NULL));
+
+      /* Generate a word, and if it exists, we then check if 
+	 we need an a/an and if we do, we add it in first, then
+	 we add the newest word. */
       if (*curr_word)
-	strcat (ret, curr_word);
+	{
+	  if (need_a_an_here)
+	    {
+	      strcat (ret, a_an (curr_word));
+	      strcat (ret, " ");
+	      need_a_an_here = FALSE;
+	    }
+	  strcat (ret, curr_word);
+	}
       else
-	strcat (ret, word);
+	{
+	  if (need_a_an_here)
+	    {
+	      strcat (ret, a_an (word));
+	      strcat (ret, " ");
+	      need_a_an_here = FALSE;
+	    }
+	  strcat (ret, word);
+	}
       if (current_uppercase)
 	*ret_pos = UC(*ret_pos);
       strcat (ret, punctuation);
@@ -109,7 +136,7 @@ string_gen (char *txt, int area_vnum)
   /* Remove the last enter from the formatted string. */
   
   t--;
-  while ((*t == '\n' || *t == '\t') && t >= ret)
+  while ((*t == '\n' || *t == '\r') && t >= ret)
     {
       *t = '\0';
       t--;
@@ -159,7 +186,21 @@ find_gen_word (int area_vnum, char *typename, char *color)
     return list_ancient_race_names();
   else if (!str_cmp (typename, "list_controller_deities"))
     return list_controller_deities();
-  
+  else if (!str_prefix ("randpop_mob", typename))
+    {
+      int flags = 0;
+      if (strstr (typename, "strong"))
+	flags |= RANDMOB_NAME_STRONG;
+      if (strstr (typename, "a_an"))
+	flags |= RANDMOB_NAME_A_AN;
+      if (strstr (typename, "full"))
+	flags |= RANDMOB_NAME_FULL;
+      if (strstr (typename, "two"))
+	flags |= RANDMOB_NAME_TWO_WORDS;
+      
+      return find_randpop_mob_name (flags);
+    }
+      
   
   
   if ((obj = find_gen_object (area_vnum, typename)) == NULL)
@@ -238,10 +279,12 @@ find_gen_object (int area_vnum, char *typename)
 	break;
     }
   
+  
   if (!obj || !obj->desc || !*obj->desc)
     return NULL;
   
   return obj;
+  
 }
 
 

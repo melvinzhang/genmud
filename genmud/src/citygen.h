@@ -21,12 +21,21 @@
 
 #define CITY_SIZE     100
 #define CITY_HEIGHT   10
-#define CITY_STREET_LEVEL  2 /* Street level is height 2...(allows for
+#define CITYGEN_STREET_LEVEL  2 /* Street level is height 2...(allows for
 				 sewers and such below the city). */
 
 #define CITYGEN_UL_NAMES  30 /* A section can connect to at most
 			      30 diff names of things one depth below
 			      it. */
+
+
+#define CITYGEN_FIELD_DEPTH  -1  /* Fields outside the city are set
+				    to have a depth of -1. */
+
+#define CITYGEN_GUARD_GATE  0
+#define CITYGEN_GUARD_CITY  1
+#define CITYGEN_GUARD_MAX   2 /* 2 types of guards...gateguards and
+				 buffed guards. */
 
 /* Min and max numbers of rooms in the city to generate. */
 #define CITYGEN_MIN_SIZE  100
@@ -34,8 +43,11 @@
 
 
 
-THING *city_grid[CITY_SIZE][CITY_SIZE][CITY_HEIGHT];
+extern THING *city_grid[CITY_SIZE][CITY_SIZE][CITY_HEIGHT];
 
+
+extern char city_name[STD_LEN];
+extern char city_full_name[STD_LEN];
 
 /* This generates a city area. */
 
@@ -52,17 +64,27 @@ bool city_coord_is_ok (int x, int y, int z);
    a building at the given vnum and puts it into the area
    the start_vnum is in. */
 
-void generate_base_city_grid (THING *obj, int start_vnum);
+void generate_base_city_grid (THING *start_obj, int start_vnum);
 
 
 /* This adds a detail to a city. This is normally first called in
    citygen() by going down the list of words in the citygen area
    and looking for the rooms corresponding to those words. */
 
-void citygen_add_detail (THING *obj, THING *area_to, VALUE *search_dims, 
-		     int depth);
+void citygen_add_detail (RESET *start_rst, THING *area_to, THING *to, VALUE *search_dims, 
+			 int depth);
+
+/* This finds the start location where the new detail will go. The 
+   start_DIR variables are where the returned values are stored. */
+
+void citygen_find_detail_start_location (RESET *rst, THING *area_to, THING *to, VALUE *search_dims, int depth, int *start_x, int *start_y, int *start_z);
 
 
+
+
+/* This adds something like a road to an area. */
+
+void citygen_add_stringy_detail (RESET *start_rst, THING *area, THING *to, VALUE *search_dims, int depth);
 
 /* This shows the city map to a player (street level only) */
 
@@ -82,4 +104,19 @@ void citygen_connect_next_level_up (int depth, VALUE *dims);
    get the whole city linked up. */
 
 void citygen_link_base_grid (void);
+
+
+/* This adds guards and gatehouses to the city. */
+
+void citygen_add_guards (THING *area);
+
+/* This adds fields around the city. */
+
+void citygen_add_fields (THING *area);
+
+/* This connects disconnected regions within the city after everything
+   has been built. */
+
+void citygen_connect_regions (THING *area, int max_depth_jump);
+
 

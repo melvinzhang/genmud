@@ -4,7 +4,7 @@ HpMv 0 10 25 50
 HWT 0 0
 Align 2
 Cost 100
-Timer 4
+Timer 3
 Short The Good Outpost`
 Long The Good Outpost comes to life again.`
 type Lonath`
@@ -287,7 +287,7 @@ Short The Good Outpost`
 MIW 1
 Symbol |`
 ThFl 524779
-Val n_exit 200344 0 0 0 0 0 0 0 `
+Val n_exit 206650 0 0 0 0 0 0 0 `
 Val s_exit 1063 0 0 0 0 0 0 0 `
 Flag Room 0 0 1
 END_THING

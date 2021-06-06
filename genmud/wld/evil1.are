@@ -4,7 +4,7 @@ HpMv 0 10 25 50
 HWT 0 0
 Align 1
 Cost 100
-Timer 7
+Timer 1
 Short The Evil Outpost`
 Long The Evil Outpost comes to life again!`
 type Lonath`
@@ -286,7 +286,7 @@ MIW 1
 Symbol |`
 ThFl 524779
 Val s_exit 1013 0 0 0 0 0 0 0 `
-Val n_exit 203932 0 0 0 0 0 0 0 `
+Val n_exit 205743 0 0 0 0 0 0 0 `
 Flag Room 0 0 16777217
 END_THING
 

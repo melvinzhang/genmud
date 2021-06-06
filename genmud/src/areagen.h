@@ -178,9 +178,11 @@ char *generate_room_description (THING *room);
 
 void fix_disconnected_sections (THING *area);
 
-/* This returns the number of rooms in a disconnected region of an area. */
+/* This returns the number of rooms in a disconnected region of an area. 
+   It can also specify certain badroom bits allowed.  */
 
-int find_connected_rooms_size (THING *room);
+int find_connected_rooms_size (THING *room, int badroom_bits_allowed);
+
 
 /* This attempts to find a path across badroom sectors. It searches
    to a max depth then stops so we know we get the shortest bridge

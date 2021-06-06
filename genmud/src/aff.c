@@ -196,6 +196,7 @@ do_affects (THING *th, char *arg)
   if (!IS_PC (th))
     return;
   stt ("You are affected by:\n\n\r", th);
+      
   stt (show_flags (th->flags, 0, LEVEL (th) >= BLD_LEVEL), th);
   return;
 }

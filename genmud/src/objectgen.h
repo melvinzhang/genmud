@@ -68,7 +68,8 @@ void objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 /* This sets up the various names on the object that we're actually making. */
 
 void objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
-			    char color[OBJECTGEN_NAME_MAX][STD_LEN]);
+			    char color[OBJECTGEN_NAME_MAX][STD_LEN],
+			    char *preset_names);
 
 /* This sets up the stats and bonuses for the object. */
 
@@ -108,3 +109,9 @@ int find_objectgen_part_name (char *);
 
 /* This finds an affect type of a certain rank. */
 int find_aff_with_rank (int rank);
+
+
+/* This calculates the reset percent for an object based on its
+   level. */
+
+int objectgen_reset_percent (int level);

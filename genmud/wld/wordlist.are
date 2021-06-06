@@ -1,9 +1,9 @@
 THING 105900
-Name mobdescgen.are`
+Name wordlist.are`
 HpMv 0 10 5 100
 HWT 0 0
-Timer 16
-Short Mobgen Desc Generators`
+Timer 1
+Short The Wordlist Area`
 type Lonath`
 ThFl 1089531
 Flag Area 0 0 28
@@ -17,6 +17,49 @@ that they aren't so boring. They are used in mobgen.c when the
 random mobs are created.
 `
 Short Mob Long Description Generators`
+MIW 1
+Symbol -`
+ThFl 524779
+END_THING
+
+THING 105902
+Name building_size`
+HWT 0 0
+Color 7
+Desc old
+new
+large
+small 
+tiny
+big
+little
+spacious
+cramped
+`
+MIW 1
+Symbol -`
+ThFl 524779
+END_THING
+
+THING 105903
+Name building_adjective`
+HWT 0 0
+Color 7
+Desc dirty
+clean
+comfortable
+crowded
+neat
+messy
+dingy
+brick
+stone
+wood
+well-lit
+grimy
+weatherbeaten
+spare
+`
 MIW 1
 Symbol -`
 ThFl 524779
@@ -234,10 +277,10 @@ Desc wood
 wood
 wooden
 wood
-stone
 stick
 log
 rough
+plank
 `
 END_THING
 
@@ -264,6 +307,144 @@ poor-quality
 rustic
 crude
 broken
+tidy
+maintained
+sad
+sagging
+warped
+dingy
+cracked
+lopsided
+split
+`
+END_THING
+
+THING 105919
+Name obj_long_format`
+HWT 0 0
+Desc 'sdesc obj_location'
+'obj_notice sdesc'
+'obj_notice sdesc obj_location'
+'obj_notice_that sdesc obj_location_that'
+'sdesc has_been_was obj_location_was'
+'obj_notice sdesc has_been_was obj_location_was'
+`
+END_THING
+
+THING 105920
+Name obj_notice`
+HWT 0 0
+Desc 'You notice'
+'you see'
+'there is'
+"there's"
+`
+END_THING
+
+THING 105921
+Name obj_location_that`
+HWT 0 0
+Desc 'is here'
+'has been left here'
+'was abandoned here'
+'was left here'
+'is sitting here'
+'is on the ground'
+'is here'
+'looks abandoned'
+'is lying on the ground'
+'is lying here'
+'was dropped here'
+'was left here'
+`
+END_THING
+
+THING 105922
+Name obj_notice_that`
+HWT 0 0
+Desc 'you notice that'
+'you see that'
+'it appears that'
+'it looks like'
+`
+END_THING
+
+THING 105923
+Name obj_location`
+HWT 0 0
+Desc here
+'on the ground'
+'abandoned here'
+'dropped here'
+'sitting here'
+'lying here'
+'lying on the ground'
+`
+END_THING
+
+THING 105924
+Name room_size`
+HWT 0 0
+Desc small
+tiny
+large
+grand
+giant
+huge
+medium
+`
+END_THING
+
+THING 105925
+Name gate_house`
+HWT 0 0
+Desc gatehouse
+gate
+'city gate'
+'guard post'
+citygate
+'guard house'
+'guardpost'
+'city entrance'
+entrance
+portal
+`
+END_THING
+
+THING 105926
+Name building_condition`
+HWT 0 0
+Desc crumbling
+new
+ancient
+sturdy
+large
+small
+foritfied
+neglected
+old
+dirty
+dingy
+weatherbeaten
+`
+END_THING
+
+THING 105927
+Name obj_location_was`
+HWT 0 0
+Desc 'left here'
+'put here'
+'dropped here'
+'placed here'
+'abandoned here'
+`
+END_THING
+
+THING 105928
+Name has_been_was`
+HWT 0 0
+Desc 'has been'
+was
 `
 END_THING
 

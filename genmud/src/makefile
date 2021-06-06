@@ -2,7 +2,7 @@ CFLAGS = -c -Wall -pedantic -g
 
 
 OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
-	boot.o cavegen.o chan.o citygen.o \
+	boot.o cavegen.o chan.o citygen.o citygen2.o \
 	clan.o consid.o const.o color.o  combatai.o \
 	craft.o create.o \
 	dam.o detailgen.o \

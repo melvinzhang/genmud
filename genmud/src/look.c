@@ -179,7 +179,7 @@ show_exits (THING *th, THING *in)
 	    }
 	  else if (IS_SET (roomflags, ROOM_AIRY))
 	    {
-	      sprintf (buf3, "\x1b[1;36m  %s ",  dir_name[door -1]);
+	      sprintf (buf3, "\x1b[1;36m %s ",  dir_name[door -1]);
 	    }
 	  else if (IS_SET (roomflags, ROOM_FIERY))
 	    {
@@ -230,7 +230,12 @@ do_exits (THING *th, char *arg)
     {
       if ((exit = FNV (th->in, door)) == NULL ||
           (room = find_thing_num (exit->val[0])) == NULL ||
-	  !IS_ROOM (room))
+	  !IS_ROOM (room) ||
+	  /* No holylight means you can't see past closed, hidden
+	     doors. */
+	  (!IS_PC1_SET (th, PC_HOLYLIGHT) &&
+	   !IS_SET (~(exit->val[1]),
+		    EX_DOOR | EX_CLOSED | EX_HIDDEN)))
 	continue;
       if (!found)
         {

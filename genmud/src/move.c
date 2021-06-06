@@ -565,10 +565,10 @@ thing_to (THING *th, THING *to)
      
   if (!CAN_FIGHT (th) && !CAN_MOVE (th) && 
       th->proto && th->proto->timer == 0 &&
-      IS_ROOM (to) && !IS_SET(th->thing_flags, TH_NO_TAKE_BY_OTHER) &&
+      IS_ROOM (to) && !IS_SET(th->thing_flags, TH_NO_TAKE_BY_OTHER | TH_NO_MOVE_BY_OTHER) &&
       !IS_OBJ_SET (th, OBJ_NOSTORE))
     th->timer = 20; /* storable objects get 100 ticks on the ground */
- 
+  
 
   /* Check for mules. */
 

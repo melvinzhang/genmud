@@ -404,7 +404,7 @@ check_defense (THING *th, THING *vict)
 		(vict->pc->prac[576] > 29 ? 
 		 (check_spell (vict, NULL, 576) * 100 +
 		  ((50 - vict->pc->off_def) * 1) + 
-		  check_spell (vict, NULL,  585) * 100 +
+		  check_spell (vict, NULL,  585) * 80 +
 		  guild_rank (vict, GUILD_WARRIOR) * 7 +
 		  implant_rank (vict, PART_ARMS) * 3 +
 		  vict->pc->aff[FLAG_AFF_DEFENSE]) : 0) :
@@ -443,7 +443,7 @@ check_defense (THING *th, THING *vict)
 		(vict->pc->prac[577] > 29 ?
 		 (check_spell (vict, NULL, 577) * 100 +
 		  ((50 - vict->pc->off_def)) + 
-		  check_spell (vict, NULL, 583) * 100  + 
+		  check_spell (vict, NULL, 583) * 80  + 
 		  guild_rank (vict, GUILD_THIEF) * 7 +
 		  implant_rank (vict, PART_LEGS) * 3 +
 		  vict->pc->aff[FLAG_AFF_DEFENSE]) : 0) : 
@@ -486,7 +486,7 @@ check_defense (THING *th, THING *vict)
       chance =  (IS_PC (vict) ? 
 		 (vict->pc->prac[578] > 29 ?
 		  (check_spell (vict, NULL, 578) * 100 +
-		   check_spell (vict, NULL, 586) * 100 +
+		   check_spell (vict, NULL, 586) * 80 +
 		   ((50 - vict->pc->off_def) *1) + 
 		   guild_rank (vict, GUILD_KNIGHT) +
 		   implant_rank (vict, PART_BODY) +
@@ -591,6 +591,18 @@ one_hit (THING *th, THING *vict, THING *weapon, int special)
       stop_fighting (vict);
       return FALSE;
     }
+
+   /* Holypeace stops combat. */
+  if (IS_PC (vict) && LEVEL(vict) >= BLD_LEVEL &&
+      IS_PC1_SET (vict, PC_HOLYPEACE))
+    {
+      stt ("You can't attack them!\n\r",  th);
+      stop_fighting (th);
+      stop_fighting (vict);
+      return FALSE;
+    }
+  
+  
   
   if (weapon)
     wpn = FNV (weapon, VAL_WEAPON);
@@ -1410,6 +1422,14 @@ start_fighting (THING *att, THING *vict)
   if (!CAN_FIGHT (att) || !CAN_FIGHT (vict) ||
       att->in != vict->in || att == vict)
     return;
+  
+  /* Holypeace stops combat. */
+  if (IS_PC (vict) && LEVEL(vict) >= BLD_LEVEL &&
+      IS_PC1_SET (vict, PC_HOLYPEACE))
+    {
+      stt ("You can't attack them!\n\r", att);
+      return;
+    }
   
   if (!att->fgt)
     add_fight (att);

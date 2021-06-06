@@ -191,7 +191,7 @@ typedef void COMMAND_FUNCTION (THING *, char *);
    two vnums since the things here are placeholders for other code
    to generate real things to play with. */
 
-#define GENERATOR_NOCREATE_VNUM_MIN 104000
+#define GENERATOR_NOCREATE_VNUM_MIN 101000
 #define GENERATOR_NOCREATE_VNUM_MAX 110000
 
 
@@ -199,6 +199,8 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 
 
 #define CITYGEN_AREA_VNUM       101000 /* Used to generate cities. */
+
+
 
 #define DETAILGEN_AREA_VNUM      104000 /* Where area details get
 					   generated from. */
@@ -209,8 +211,9 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 
 #define MOBGEN_PROTO_AREA_VNUM   105200 /* Where the data for the mobs
 					   to be created resides. */
-#define MOBGEN_DESC_AREA_VNUM    105900 /* Short phrases used to make mob
-					   long descs. */
+#define WORDLIST_AREA_VNUM    105900 /* Short phrases and words used to 
+					generate names of objects. */
+
 
 #define SOCIETYGEN_AREA_VNUM     106000 /* Vnum of with all of the 
 					  society protos in it. */
@@ -1205,7 +1208,6 @@ grep 					    them all visible to each
    const.c if you alter these. */
 /**********************************************************************/
 
-#define PC_COMMAND       0x00000001  /* Typed a command */
 #define PC_HOLYWALK      0x00000002  /* Can walk through anything */
 #define PC_HOLYLIGHT     0x00000004  /* Can see all */
 #define PC_HOLYPEACE     0x00000008  /* No fighting here. */

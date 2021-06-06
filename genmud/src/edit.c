@@ -279,7 +279,7 @@ do_edit (THING *th, char *arg)
 		}
 	    }
 	  if ((ar = find_area_in (vnum)) == NULL &&
-	      !IS_AREA (edt))
+	      edt && !IS_AREA (edt))
 	    {
 	      stt ("That vnum is not assigned to an area.\n\r", th);
 	      return;
@@ -1640,8 +1640,7 @@ do_reset (THING *th , char *arg)
 	vnum = atoi(arg1);
       else
 	vnum = atoi (arg);
-      if ((proto = find_thing_num (vnum)) == NULL ||
-           IS_ROOM (proto) || IS_AREA (proto))
+      if ((proto = find_thing_num (vnum)) == NULL)
         {
           stt ("Item not found - reset loc <vnum>\n\r", th);
           return;
@@ -1683,6 +1682,12 @@ do_reset (THING *th , char *arg)
 	  stt ("You can't reset right here.\n\r", th);
 	  return;
 	}
+      if (th->in && IS_AREA (th->in) && IS_AREA_SET (th->in, AREA_NOREPOP))
+	{
+	  stt ("This room is in an area that can't be reset.\n\r", th);
+	  return;
+	}
+
       reset_thing (th->in, 0);
     }
   else if (!str_cmp (arg1, "area"))

@@ -1,8 +1,8 @@
-THING 20000
-Name area20000.are`
+THING 22000
+Name area22000.are`
 HpMv 0 10 666 1000
 HWT 0 0
-Timer 14
+Timer 13
 ThFl 1089531
 END_THING
 

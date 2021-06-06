@@ -660,15 +660,11 @@ generate_area_name (char *name, int type)
   char *t;
   SOCIETY *soc = NULL;
   
-  retbuf[0] = '\0'; 
-  if (!name || !*name || strlen(name) > 100 ||
-      type == 0 || !IS_SET (type, ROOM_SECTOR_FLAGS))
-    return retbuf;
-
+ 
   /* Ok, give a small chance of a single word name that's a random
      syllable or two followed by a specal suffix. */
   
-  if (nr (1,6) == 2)
+  if (nr (1,6) == 2 || type == ROOM_EASYMOVE)
     {
       int size = nr (3,5);
       do
@@ -698,14 +694,24 @@ generate_area_name (char *name, int type)
       return buf;
     }
   
+ retbuf[0] = '\0'; 
 
-  
+ 
+ /* Now make sure the name is ok and check for a proper sector
+    type. */
+ 
+ if (!name || !*name || strlen(name) > 100 ||
+     type == 0 || 
+     (!IS_SET (type, ROOM_SECTOR_FLAGS)))
+   return retbuf;
+ 
+ 
   /* Find which row in the room_flag array we want to use. */
   
   for (room_flag_num = 0; room1_flags[room_flag_num].flagval != 0; 
        room_flag_num++)
     {
-      if (room1_flags[room_flag_num].flagval == type)
+      if ((int) room1_flags[room_flag_num].flagval == type)
 	break;
     }
   
@@ -1848,7 +1854,7 @@ generate_patch_name (int sector_type, int patch_type)
   
   for (i = 0; room1_flags[i].flagval != 0; i++)
     {
-      if (patch_type == room1_flags[i].flagval &&
+      if (patch_type == (int) room1_flags[i].flagval &&
 	  *room1_flags[i].name)
 	break;
     }
@@ -2101,7 +2107,7 @@ fix_disconnected_sections (THING *area)
 	  
 	  undo_marked (area);
 	  
-	  main_section_size = find_connected_rooms_size (start_room);
+	  main_section_size = find_connected_rooms_size (start_room, 0);
 	  
 	  added_bridge = FALSE;
 	  for (room = area->cont; room; room = room->next_cont)
@@ -2125,7 +2131,7 @@ fix_disconnected_sections (THING *area)
 			  
 			  found_path = TRUE;
 			  /* Mark everything we just connected. */
-			  find_connected_rooms_size (room);
+			  find_connected_rooms_size (room, 0);
 			  added_bridge = TRUE;
 			  added_bridge_this_time = TRUE;
 			  break;
@@ -2147,16 +2153,24 @@ fix_disconnected_sections (THING *area)
    area that aren't blocked by badroom rooms. */
 
 int
-find_connected_rooms_size (THING *room)
+find_connected_rooms_size (THING *room, int badroom_bits_allowed)
 {
   int size = 1;
   int dir;
   THING *nroom;
   VALUE *exit;
-  if (!IS_ROOM (room) || IS_MARKED (room) ||
-      IS_ROOM_SET (room, BADROOM_BITS))
+  int room_flags;
+  
+  if (!IS_ROOM (room) || IS_MARKED (room))
     return 0;
   
+  room_flags = flagbits (room->flags, FLAG_ROOM1);
+  
+  /* If the room has disallowed badroom bits set, then return. */
+  
+  if (IS_SET (room_flags, (BADROOM_BITS & ~badroom_bits_allowed)))
+    return  0;
+
   SBIT (room->thing_flags, TH_MARKED);
   
   for (dir = 0; dir < REALDIR_MAX; dir++)
@@ -2164,7 +2178,7 @@ find_connected_rooms_size (THING *room)
       if ((exit = FNV (room, dir + 1)) != NULL &&
 	  (nroom = find_thing_num (exit->val[0])) != NULL &&
 	  IS_ROOM (nroom) && !IS_ROOM_SET (room, BADROOM_BITS))
-	size += find_connected_rooms_size (nroom);
+	size += find_connected_rooms_size (nroom, 0);
     }
   return size;
 }

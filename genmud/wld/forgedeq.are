@@ -2,10 +2,10 @@ THING 100000
 Name forgedeq.are`
 HpMv 0 10 5 1000
 HWT 0 0
-Timer 13
+Timer 10
 Short The Forged Eq Area`
 type Lonath`
-ThFl 135266304
+ThFl 1048576
 END_THING
 
 THING 100010

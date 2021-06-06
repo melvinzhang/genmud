@@ -1420,7 +1420,7 @@ get_delivery_quest (THING *th)
       echo (name[i]);
       echo ("\n\r");
     }
-  objectgen_setup_names (obj, name, color);
+  objectgen_setup_names (obj, name, color, NULL);
   
   /* Only 30 ticks to deliver this. */
   obj->timer = PACKAGE_DELIVERY_HOURS;

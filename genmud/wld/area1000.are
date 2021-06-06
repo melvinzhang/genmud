@@ -1,0 +1,392 @@
+THING 1000
+Name area1000.are`
+Level 100
+HpMv 0 10 666 1000
+HWT 0 0
+Timer 5
+Short The Evil Outpost`
+Long The Evil Outpost comes alive!`
+ThFl 1089531
+END_THING
+
+THING 1667
+Name guard gateguard`
+Level 100
+HWT 0 0
+Short a gateguard`
+Long A gateguard is here watching for trouble.`
+ThFl 2209
+Flag Act 0 0 256
+Flag Det 0 0 7
+Reset 1669 50 1 1
+Reset 1670 50 1 1
+Reset 1671 50 1 1
+Reset 1672 50 1 1
+Reset 1673 50 1 1
+Reset 1674 50 1 1
+Reset 1675 50 1 1
+Reset 1676 50 1 1
+Reset 1677 50 1 1
+Reset 1678 50 1 1
+Reset 1679 50 1 1
+Reset 1680 50 1 1
+Reset 1681 50 1 1
+Reset 1690 30 3 1
+END_THING
+
+THING 1668
+Name guard cityguard`
+Level 100
+HWT 0 0
+Short a cityguard`
+Long An alert cityguard stands here.`
+ThFl 2209
+Flag Det 0 0 7
+Reset 1669 50 1 1
+Reset 1670 50 1 1
+Reset 1671 50 1 1
+Reset 1672 50 1 1
+Reset 1673 50 1 1
+Reset 1674 50 1 1
+Reset 1675 50 1 1
+Reset 1676 50 1 1
+Reset 1677 50 1 1
+Reset 1678 50 1 1
+Reset 1679 50 1 1
+Reset 1680 50 1 1
+Reset 1681 50 1 1
+Reset 1690 30 3 1
+END_THING
+
+THING 1669
+Name dazzling skullcap winterwinter`
+Level 108
+HWT 14 20
+Cost 11664
+Short $Ca dazzling skullcap of the winter$7`
+Wear head`
+Long You notice $Ca dazzling skullcap of the winter$7$6 is here.$7`
+ThFl 100934
+Val armor 11 0 0 0 0 0 3 0 `
+Flag Obj 0 0 1
+Flag th_attack 0 0 2
+Flag sp_resist 0 0 3
+Flag mv 0 0 7
+Flag armor 0 0 5
+END_THING
+
+THING 1670
+Name malachite visor winterwinter`
+Level 115
+HWT 26 21
+Cost 13225
+Short a $Dmalachite$7 visor of the winter`
+Wear eyes`
+Long You notice that a $Dmalachite$7 visor of the winter$6 was left here.$7`
+ThFl 100934
+Val armor 11 0 0 0 0 0 -1 0 `
+Flag Obj 0 0 4
+Flag th_attack 0 0 1
+Flag sp_resist 0 0 1
+Flag hp 0 0 6
+Flag armor 0 0 1
+END_THING
+
+THING 1671
+Name thorned jawbone winterwinter`
+Level 91
+HWT 16 19
+Cost 8281
+Short a thorned jawbone of the winter`
+Wear face`
+Long You notice that a thorned jawbone of the winter$6 has been abandoned here.$7`
+ThFl 100934
+Val armor 10 0 0 0 0 0 2 0 `
+Flag armor 0 0 2
+Flag hp 0 0 7
+END_THING
+
+THING 1672
+Name lapis lazuli shirt winterwinter`
+Level 119
+HWT 21 63
+Cost 14161
+Short $9a $2lapis $4lazuli$9 shirt of the winter$7`
+Wear body`
+Long You see that $9a $2lapis $4lazuli$9 shirt of the winter$7$6 is here.$7`
+ThFl 100934
+Val armor 0 11 0 0 0 0 -2 0 `
+Flag Obj 0 0 1
+Flag hit 0 0 2
+Flag armor 0 0 11
+END_THING
+
+THING 1673
+Name turquoise hooded cloak winterwinter`
+Level 93
+HWT 23 19
+Cost 8649
+Short a $Ftur$Equoise$7 hooded cloak of the winter`
+Wear about`
+Long You see that a $Ftur$Equoise$7 hooded cloak of the winter$6 is here.$7`
+ThFl 100934
+Val armor 5 10 5 5 0 0 -3 0 `
+Flag Obj 0 0 32768
+Flag hit 0 0 2
+Flag defense 0 0 2
+Flag armor 0 0 10
+END_THING
+
+THING 1674
+Name jacinth armplates winterwinter`
+Level 102
+HWT 26 20
+Cost 10404
+Short $Fa pair of $Cjacinth$F armplates of the winter$7`
+Wear arms`
+Long $FA pair of $Cjacinth$F armplates of the winter$7$6 was left here by somebody.$7`
+ThFl 100934
+Val armor 0 0 11 0 0 0 0 0 `
+Flag Obj 0 0 5
+Flag sp_heal 0 0 2
+Flag sp_resist 0 0 1
+Flag armor 0 0 1
+END_THING
+
+THING 1675
+Name wusium gloves winterwinter`
+Level 97
+HWT 27 19
+Cost 9409
+Short $Dsome $8wusium$D gloves of the winter$7`
+Wear hands`
+Long You notice that $Dsome $8wusium$D gloves of the winter$7$6 was left here.$7`
+ThFl 100934
+Val armor 0 0 10 0 0 0 1 0 `
+Flag Obj 0 0 1
+Flag armor 0 0 9
+END_THING
+
+THING 1676
+Name emerald targe winterwinter`
+Level 84
+HWT 30 18
+Cost 7056
+Short $7an $2emerald$7 targe of the winter$7`
+Wear shield`
+Long You notice $7an $2emerald$7 targe of the winter$7$6 is on the ground.$7`
+ThFl 100934
+Val armor 5 5 10 5 0 0 1 0 `
+Flag hp 0 0 4
+Flag mv 0 0 8
+END_THING
+
+THING 1677
+Name onyx battle hammer winterwinter`
+Level 94
+HWT 25 124
+Cost 8836
+Short an $8onyx$7 battle hammer of the winter`
+Wear wield`
+Long An $8onyx$7 battle hammer of the winter$6 is on the ground.$7`
+ThFl 100934
+Val weapon 3 15 2 0 0 0 0 0 `
+Flag Obj 0 0 1
+Flag water_power 0 0 1
+Flag mv 0 0 1
+END_THING
+
+THING 1678
+Name wolfen's skin belt winterwinter`
+Level 96
+HWT 24 19
+Cost 9216
+Short a wolfen's skin belt of the winter`
+Wear waist`
+Long You see that a wolfen's skin belt of the winter$6 has been abandoned here.$7`
+ThFl 100934
+Val armor 0 10 0 0 0 0 -4 0 `
+Flag Obj 0 0 4
+Flag mv 0 0 9
+Flag hp 0 0 11
+END_THING
+
+THING 1679
+Name citrine cube winterwinter`
+Level 103
+HWT 6 9
+Cost 31827
+Short a $Acitrine$7 cube of the winter`
+Wear floating`
+Long A $Acitrine$7 cube of the winter$6 was left here.$7`
+ThFl 100934
+Val armor 7 0 0 0 0 0 -2 0 `
+Flag Obj 0 0 32769
+Flag th_attack 0 0 1
+Flag sp_resist 0 0 1
+Flag armor 0 0 4
+END_THING
+
+THING 1680
+Name topaz pants winterwinter`
+Level 94
+HWT 16 19
+Cost 8836
+Short $5a pair of $Btopaz$5 pants of the winter$7`
+Wear legs`
+Long $5A pair of $Btopaz$5 pants of the winter$7$6 was left here by somebody.$7`
+ThFl 100934
+Val armor 0 0 0 10 0 0 3 0 `
+Flag Obj 0 0 32768
+Flag hp 0 0 2
+END_THING
+
+THING 1681
+Name rose quartz low boots winterwinter`
+Level 99
+HWT 13 19
+Cost 9801
+Short $5a pair of $9rose quartz$5 low boots of the winter$7`
+Wear feet`
+Long $5A pair of $9rose quartz$5 low boots of the winter$7$6 has been left here.$7`
+ThFl 100934
+Val armor 0 0 0 10 0 0 4 0 `
+Flag sp_resist 0 0 3
+Flag mv 0 0 6
+Flag hp 0 0 11
+END_THING
+
+THING 1682
+Name opal spinning orb winterwinter`
+Level 121
+HWT 3 3
+Cost 43923
+Short an $8opal$7 spinning orb of the winter`
+Wear floating`
+Long You notice an $8opal$7 spinning orb of the winter$6 is lying here.$7`
+ThFl 100934
+Val armor 8 0 0 0 0 0 -1 0 `
+Flag Obj 0 0 8192
+Flag dam 0 0 1
+Flag kickdam 0 0 2
+END_THING
+
+THING 1683
+Name wicked earring winterwinter`
+Level 105
+HWT 10 2
+Cost 44100
+Short a wicked earring of the winter`
+Wear ears`
+Long You notice a wicked earring of the winter$6 has been left here.$7`
+ThFl 100934
+Val armor 7 0 0 0 0 0 0 0 `
+Flag Obj 0 0 5
+Flag hit 0 0 1
+Flag sp_resist 0 0 1
+Flag armor 0 0 1
+Flag mv 0 0 7
+END_THING
+
+THING 1684
+Name zircon circlet winterwinter`
+Level 115
+HWT 8 4
+Cost 52900
+Short a $Fzircon$7 circlet of the winter`
+Wear neck`
+Long You notice a $Fzircon$7 circlet of the winter$6 has been abandoned here.$7`
+ThFl 100934
+Val armor 7 0 0 0 0 0 1 0 `
+Flag Obj 0 0 4
+Flag hit 0 0 1
+Flag sp_resist 0 0 1
+END_THING
+
+THING 1685
+Name crystal trinket winterwinter`
+Level 122
+HWT 3 4
+Cost 59536
+Short $Ba $Ecrystal$B trinket of the winter$7`
+Wear chest`
+Long $BA $Ecrystal$B trinket of the winter$7$6 has been abandoned here.$7`
+ThFl 100934
+Val armor 0 8 0 0 0 0 -3 0 `
+Flag sp_heal 0 0 2
+Flag gf_defense 0 0 1
+END_THING
+
+THING 1686
+Name dark grey shawl winterwinter`
+Level 96
+HWT 10 7
+Cost 46080
+Short $1a $8dark grey$1 shawl of the winter$7`
+Wear shoulder`
+Long You notice that $1a $8dark grey$1 shawl of the winter$7$6 is lying here.$7`
+ThFl 100934
+Val armor 0 0 6 0 0 0 -5 0 `
+Flag hit 0 0 1
+Flag armor 0 0 3
+Flag hp 0 0 4
+END_THING
+
+THING 1687
+Name icy armguard winterwinter`
+Level 123
+HWT 7 8
+Cost 75645
+Short an icy armguard of the winter`
+Wear wrist`
+Long You see that an icy armguard of the winter$6 is here.$7`
+ThFl 100934
+Val armor 0 0 8 0 0 0 -6 0 `
+Flag Obj 0 0 32769
+Flag gf_attack 0 0 1
+Flag mv 0 0 8
+Flag hp 0 0 2
+END_THING
+
+THING 1688
+Name carnelian ring winterwinter`
+Level 115
+HWT 2 10
+Cost 66125
+Short a $9carnelian$7 ring of the winter`
+Wear finger`
+Long A $9carnelian$7 ring of the winter$6 is here.$7`
+ThFl 100934
+Val armor 0 0 7 0 0 0 -1 0 `
+Flag Obj 0 0 1
+Flag hit 0 0 1
+Flag gf_attack 0 0 1
+Flag mv 0 0 1
+Flag armor 0 0 4
+END_THING
+
+THING 1689
+Name carnelian anklet winterwinter`
+Level 90
+HWT 2 4
+Cost 24300
+Short $Fa $9carnelian$F anklet of the winter$7`
+Wear ankle`
+Long $FA $9carnelian$F anklet of the winter$7$6 was left here.$7`
+ThFl 100934
+Val armor 0 0 0 6 0 0 -4 0 `
+Flag Obj 0 0 1
+Flag hit 0 0 1
+Flag defense 0 0 1
+END_THING
+
+THING 1690
+Name randpop`
+HWT 0 0
+Short randpop`
+ThFl 100934
+Val randpop 1682 8 1 0 0 0 0 0 `
+END_THING
+
+END_OF_AREA
+

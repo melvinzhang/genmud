@@ -571,17 +571,87 @@ do_config (THING *th, char *arg)
 {
   int value;
   char buf[STD_LEN];
+  char buf2[STD_LEN];
   FLAG *flg;
-  if (!IS_PC (th))
+  FLAG_DATA *flgd;
+  int current_flags;
+  char *t;
+  int pass =0;
+  bool flag_is_set = FALSE;
+  if (!th || !IS_PC (th))
     return;
   
   
   if (arg[0] == '\0')
     {
-      stt ("These are the pc flags currently set on you!\n\r", th);
       if (LEVEL (th) >= BLD_LEVEL)
-	stt (show_flags (th->flags, FLAG_PC1, LEVEL (th) >= BLD_LEVEL), th);
-      stt (show_flags (th->flags, FLAG_PC2, LEVEL (th) >= BLD_LEVEL), th);
+	pass = 0;
+      else
+	pass = 1;
+      
+      do
+	{
+	  if (pass == 0)
+	    {
+	      stt ("This is your admin configuration.\n\n\r", th);	      
+	      flgd = (FLAG_DATA *) pc1_flags;
+	      current_flags = flagbits (th->flags, FLAG_PC1);
+	    }	  
+	  else if (pass == 1)
+	    {
+	      flgd = (FLAG_DATA *) pc2_flags;
+	      stt ("\nThese are your configuration options:\n\n\r", th);
+	      current_flags = flagbits (th->flags, FLAG_PC2);
+	    }
+	  else
+	    break;
+	  
+	  for (; flgd->flagval != 0; flgd++)
+	    {
+	      if (IS_SET (current_flags, flgd->flagval))
+		flag_is_set = TRUE;
+	      else
+		flag_is_set = FALSE;
+	      
+	      sprintf (buf2, "%-15s", flgd->app);
+	      
+	      for (t = buf2; *t; t++)
+		{
+		  if (flag_is_set)
+		    *t = UC(*t);
+		  else
+		*t = LC(*t);
+		}
+	      sprintf (buf, "\x1b[1;33m[\x1b[1;3%dm%s\x1b[1;33m]\x1b[0;37m",
+		       (flag_is_set ? 7: 1),
+		       buf2);
+	      strcat (buf, "   You ");
+	      
+	      if (!flag_is_set)
+		{
+		  if (pass == 0)
+		    {
+		      if (IS_SET (flgd->flagval, PC_SILENCE | PC_FREEZE | PC_DENY | PC_UNVALIDATED))
+			strcat (buf, "are ");
+		      else
+			strcat (buf, "aren't ");
+		    }
+		  else
+		    strcat (buf, "don't ");
+		}
+	      else if (pass == 0)
+		{
+		  if (IS_SET (flgd->flagval, PC_SILENCE | PC_FREEZE | PC_DENY  | PC_UNVALIDATED))
+		    strcat (buf, "aren't ");
+		  else
+		    strcat (buf, "are ");
+		}
+	      strcat (buf, flgd->help);
+	      strcat (buf, "\n\r");
+	      stt (buf, th);
+	    }
+	}
+      while (++pass < 2);
       return;
     }
   
@@ -1318,7 +1388,7 @@ exp_to_level (int lev)
 {
   if (lev < 1 || lev > MORT_LEVEL)
     return 0;
-  return 50 * lev *lev *lev;
+  return 20 * lev *lev *lev + 30 * lev * lev;
 }
 
 

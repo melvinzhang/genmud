@@ -16,10 +16,14 @@
 
 
 
+
+
+
 /* The actual city rooms are stored in this grid. */
 
 THING *city_grid[CITY_SIZE][CITY_SIZE][CITY_HEIGHT];
-
+char city_name[STD_LEN];
+char city_full_name[STD_LEN];
 
 
 /* This is a specialized type of "areagen". */
@@ -39,13 +43,14 @@ citygen (THING *th, char *arg)
 {
   int start, size, level;
   char arg1[STD_LEN];
-  THING *area, *citygen_area, *thg;
-  EDESC *districts;
-  int times;
-  char *wd;
-  char word[STD_LEN];
-  int x, y;
+  THING *area, *thg;
+  THING *start_proto = NULL;
+  VALUE *start_dims; /* The starting dimensions of this 
+			prototype. */
+  RESET *rst;
+  int x, y, dx, dy, dir;
   THING *room1, *room2;
+
   if (!arg || !*arg)
     return;
 
@@ -58,7 +63,7 @@ citygen (THING *th, char *arg)
   arg = f_word (arg, arg1);
   if ((start = atoi (arg1)) < 1)
     {
-      stt ("citygen <start> <size> [<level>]\n\r", th);
+      stt ("citygen <start> <size> [<level>] [<start proto>]\n\r", th);
       return;
     }
   
@@ -75,62 +80,81 @@ citygen (THING *th, char *arg)
       return;
     }
 
-  arg = f_word (arg, arg1);
   
+
+  arg = f_word (arg, arg1);  
   if ((level = atoi (arg1)) == 0)
     level = 100;
-
-  if ((citygen_area = find_thing_num (CITYGEN_AREA_VNUM)) == NULL)
+  
+  arg = f_word (arg, arg1);
+  
+  if ((start_proto = find_thing_num (atoi (arg1))) == NULL)
+    start_proto = find_thing_num (CITYGEN_AREA_VNUM + 1);
+  
+  if (!start_proto)
     {
-      stt ("The citygen area doesn't exist. Bailing out.\n\r", th);
+      stt ("Couldn't find the starting object needed for the city.\n\r", th);
       return;
     }
+  
+  clear_city_grid (FALSE);
 
-  if ((districts = find_edesc_thing (citygen_area, "districts", TRUE)) == NULL)
-    {
-      stt ("The citygen area doesn't have a list of districts to set up inside of the city.\n\r", th);
-      return;
-    }
 
   /* Create the area and set it up. */
   
-  if ((area = new_thing ()) == NULL)
-    return;
+  if ((area = find_thing_num (start)) == NULL)
+    {
+      if ((area = new_thing ()) == NULL)
+	return;
+      
+      area->vnum = start;
+      top_vnum = MAX (top_vnum, start);
+      area->level = level;
+      add_thing_to_list (area);
+      set_up_new_area(area, size);
+      
+      /* Now make an area name like "The city of Foo" or something. */
+      
+      strcpy (city_name, generate_area_name (NULL, ROOM_EASYMOVE));
+      
+      if (nr (1,3) == 1)
+	strcpy (city_full_name, city_name);
+      else if (nr (1,2) == 2)
+	sprintf (city_full_name, "The City of %s", city_name);
+      else 
+	sprintf (city_full_name, "%s City", city_name);
+      
+      free_str (area->short_desc);
+      area->short_desc = new_str (city_full_name);
+    }
+
   
-  area->vnum = start;
-  top_vnum = MAX (top_vnum, start);
-  add_thing_to_list (area);
-  set_up_new_area(area, size);
   area->mv = size*2/3;
-
-
+  area->thing_flags |= TH_CHANGED;
   /* This generates a base city grid that uses up about 3/4 of the
      available rooms. It makes a grid of partially overlapping 
      squares. */
   
-  generate_base_city_grid (area, area->vnum+1);
+  generate_base_city_grid (start_proto, area->vnum+1);
   
 
-  /* Now add each of the districts. Find the district in the citygen
-     area and plop it into the city. */
-  wd = districts->desc;
-  do
-    {
-      wd = f_word (wd, word);
-      if ((thg = find_thing_thing (citygen_area, citygen_area, word, FALSE)) == NULL)
-	continue;
+  /* Now add details based on all of the resets that this object
+     has. */
   
-      /* Get the number of times we try to set this thing into the
-	 city. */
-      times = MAX(1, thg->max_mv*area->mv/(CITYGEN_MAX_SIZE/4));
-      if (times > 4)
-	times = 4;
-      while (--times >= 0)
+  /* If this thing is a detail itself, (in that it has dimensions)
+     we reset it, otherwise we do the resets of it. */
+
+  if ((start_dims = FNV (start_proto, VAL_DIMENSION)) != NULL)
+    {
+      citygen_add_detail (NULL, area, start_proto, NULL, 2);
+    }
+  else
+    {
+      for (rst = start_proto->resets; rst; rst = rst->next)
 	{
-	  citygen_add_detail (thg, area, NULL, 2);
+	  citygen_add_detail (rst, area, NULL, NULL, 2);
 	}
     }
-  while (wd && *wd);
   
   /* Now connect all rooms at depth 1 on the road level. */
 
@@ -138,45 +162,74 @@ citygen (THING *th, char *arg)
     {
       for (y = 0; y < CITY_SIZE; y++)
 	{
-	  if (city_coord_is_ok (x,y,CITY_STREET_LEVEL) &&
-	      (room1 = city_grid[x][y][CITY_STREET_LEVEL]) != NULL &&
+	  if (city_coord_is_ok (x, y, CITYGEN_STREET_LEVEL) &&
+	      (room1 = city_grid[x][y][CITYGEN_STREET_LEVEL]) != NULL &&
 	      room1->mv == 0)
 	    {
-	      if (city_coord_is_ok (x+1, y, CITY_STREET_LEVEL) &&
-		  (room2 = city_grid[x+1][y][CITY_STREET_LEVEL]) != NULL &&
-		  room2->mv == 0)
+	      for (dir = 0; dir < FLATDIR_MAX; dir++)
 		{
-		  room_add_exit (room1, DIR_EAST, room2->vnum, 0);
-		  room_add_exit (room2, DIR_WEST, room1->vnum, 0);
-		}
-	      if (city_coord_is_ok (x, y+1, CITY_STREET_LEVEL) &&
-		  (room2 = city_grid[x][y+1][CITY_STREET_LEVEL]) != NULL &&
-		  room2->mv == 0)
-		{
-		  room_add_exit (room1, DIR_NORTH, room2->vnum, 0);
-		  room_add_exit (room2, DIR_SOUTH, room1->vnum, 0);
+		  dx = 0;
+		  dy = 0;
+		  if (dir == DIR_NORTH)
+		    dy++;
+		  else if (dir == DIR_SOUTH)
+		    dy--;
+		  else if (dir == DIR_EAST)
+		    dx++;
+		  else if (dir == DIR_WEST)
+		    dx--;
+		  
+		  if (city_coord_is_ok (x+dx, y+dy, CITYGEN_STREET_LEVEL) &&
+		      (room2 = city_grid[x+dx][y+dy][CITYGEN_STREET_LEVEL]) != NULL &&
+		      (room2->mv == 0 ||
+		       is_named (room2, "road")))
+		    {		      
+		      room_add_exit (room1, dir, room2->vnum, 0);
+		      room_add_exit (room2, RDIR (dir), room1->vnum, 0);
+		    }
 		}
 	    }
 	}
     }
 
-
+  
   citygen_link_base_grid ();
-  clear_city_grid(FALSE);
+  
+  /* This connects disconnected regions in the city. */
 
+  citygen_connect_regions (area, 1);
+  
   /* Now set all rooms/mobs in the area to mv 1 and all objects to
      mv 0. So we get 1 of each room and unlimited objects of
      each other type. */
 
   for (thg = area->cont; thg; thg = thg->next_cont)
     {
+      /* Rooms/mobs */
       if (IS_ROOM (thg) || CAN_MOVE(thg) || CAN_FIGHT (thg))
-	thg->mv = 1;
-      else
-	thg->mv = 0;
+	thg->max_mv = 1;
+      else  /* Objects. */
+	thg->max_mv = 0;
+      thg->mv = 0;
     }
+  
 
+  /* This adds guards and stock eq and gatehouses to the city.
+     THIS MUST COME AFTER THE PREVIOUS CODE WHERE YOU SET ALL OF THE
+     MAX_MV'S TO LOW VALUES OR ELSE THE GUARDS WON'T WORK RIGHT! */
 
+  /* Only do this for full cities...not partial cities! */
+  
+  if (!start_dims)
+    citygen_add_guards (area);
+  
+  /* This adds fields ringing the city that will attach to gatehouses. */
+ 
+  citygen_add_fields (area);
+  
+  clear_city_grid(FALSE);
+
+  reset_thing (area, 0);
   return;
 }
 
@@ -206,6 +259,8 @@ clear_city_grid (bool nuke_things)
 	    }
 	}
     }
+  city_name[0] = '\0';
+  city_full_name[0] = '\0';
   return;
 }
 
@@ -253,8 +308,6 @@ generate_base_city_grid (THING *obj, int start_vnum)
     return;
   
   max_vnum = area->vnum + area->mv-1;
-  /* Clean up city grid before doing this. */
-  clear_city_grid (TRUE);
   
   /* If this is a city, we make a bunch of blocks until we finally get
      to our target size. If it's a single building or room, just make a 
@@ -272,15 +325,6 @@ generate_base_city_grid (THING *obj, int start_vnum)
 	dim_y = 1;
       if (dim_z < 1)
 	dim_z = 1;
-      num_rooms = dim_x*dim_y*dim_z;
-      curr_vnum = start_vnum;
-    }
-  else if (!IS_AREA (obj))
-    {
-      dim_x = 1;
-      dim_y = 1;
-      dim_z = 1;
-      num_blocks = 1;
       num_rooms = dim_x*dim_y*dim_z;
       curr_vnum = start_vnum;
     }
@@ -308,9 +352,9 @@ generate_base_city_grid (THING *obj, int start_vnum)
     {
       start_x = (CITY_SIZE-dim_x)/2;
       start_y = (CITY_SIZE-dim_y)/2;
-      start_z = 1;
+      start_z = CITYGEN_STREET_LEVEL;
       
-      for (z = 1; z < start_z + dim_z; z++)
+      for (z = start_z; z < start_z + dim_z; z++)
 	{
 	  for (x = start_x; x < start_x + dim_x; x++)
 	    {
@@ -323,7 +367,9 @@ generate_base_city_grid (THING *obj, int start_vnum)
 		    {
 		      city_grid[x][y][z] = new_room(curr_vnum);
 		      free_str (city_grid[x][y][z]->short_desc);
-		      city_grid[x][y][z]->short_desc = new_str ("The City");
+		      if (obj)
+			append_name (city_grid[x][y][z], obj->name);
+		      city_grid[x][y][z]->short_desc = new_str (city_full_name);
 		      city_grid[x][y][z]->mv = 1;
 		      curr_vnum++;
 		      num_rooms++;
@@ -338,7 +384,7 @@ generate_base_city_grid (THING *obj, int start_vnum)
   /* Add the blocks of rooms to the area. */
   
   num_rooms = 0;
-  max_num_rooms = (max_vnum-start_vnum)*2/3;
+  max_num_rooms = (max_vnum-start_vnum)/2;
 
   max_num_rooms_sqrt = 0;
   while (max_num_rooms_sqrt*max_num_rooms_sqrt < max_num_rooms)
@@ -357,13 +403,13 @@ generate_base_city_grid (THING *obj, int start_vnum)
 	{
 	  start_x = CITY_SIZE/2 - dim_x/2;
 	  start_y = CITY_SIZE/2 - dim_y/2;
-	  start_z = CITY_STREET_LEVEL;
+	  start_z = CITYGEN_STREET_LEVEL;
 	}
       else
 	{
 	  start_x = CITY_SIZE/2 + nr (0, max_num_rooms_sqrt/2) - nr (0, max_num_rooms_sqrt/2);
 	  start_y = CITY_SIZE/2 + nr (0, max_num_rooms_sqrt/2) - nr (0, max_num_rooms_sqrt/2);
-	  start_z = CITY_STREET_LEVEL;
+	  start_z = CITYGEN_STREET_LEVEL;
 	  
 	  /* Now check if the rooms overlap. */
 	  rooms_overlap = FALSE;
@@ -407,7 +453,8 @@ generate_base_city_grid (THING *obj, int start_vnum)
 		      city_grid[x][y][z] = new_room(curr_vnum);
 		      add_flagval (city_grid[x][y][z], FLAG_ROOM1, ROOM_EASYMOVE);
 		      city_grid[x][y][z]->mv = 1;
-		      city_grid[x][y][z]->short_desc = new_str ("The City");
+		      append_name (city_grid[x][y][z], obj->name);
+		      city_grid[x][y][z]->short_desc = new_str (city_full_name);
 		      curr_vnum++;		      
 		      num_rooms++;
 		    }
@@ -439,7 +486,7 @@ show_city_map (THING *th)
     {
       for (y = 0; y < CITY_SIZE; y++)
 	{
-	  if (city_grid[x][y][CITY_STREET_LEVEL])
+	  if (city_grid[x][y][CITYGEN_STREET_LEVEL])
 	    {
 	      if (x > max_x)
 		max_x = x;
@@ -458,7 +505,7 @@ show_city_map (THING *th)
       t = buf;
       for (x = min_x; x <= max_x; x++)
 	{
-	  if (city_grid[x][y][CITY_STREET_LEVEL])
+	  if (city_grid[x][y][CITYGEN_STREET_LEVEL])
 	    *t = '*';
 	  else
 	    *t = ' ';
@@ -481,9 +528,9 @@ show_city_map (THING *th)
   this room is atm. */
 
 void
-citygen_add_detail (THING *obj, THING *area, VALUE *start_dims, int depth)
+citygen_add_detail (RESET *start_reset, THING *area, THING *to, VALUE *start_dims, int depth)
 {
- 
+  
   /* Actual xyz sizes for the object we will place here. */
   
   int o_dim_x, o_dim_y, o_dim_z;
@@ -513,7 +560,7 @@ citygen_add_detail (THING *obj, THING *area, VALUE *start_dims, int depth)
   
   int vnum;
   VALUE *obj_dims;
-  THING *rst_obj; /* Object being reset. */
+  THING *obj = NULL, *start_obj = NULL;
   /* Number of good rooms in this particular region. */
   int good_rooms, good_rooms_base_level;
   int rooms_needed, base_rooms_needed;
@@ -522,272 +569,488 @@ citygen_add_detail (THING *obj, THING *area, VALUE *start_dims, int depth)
   bool need_edge_room = FALSE;
   bool need_center_room = FALSE;
   
-  
+  bool make_full_size = FALSE;
   bool room_is_on_edge = FALSE;
+
+  bool room_is_below_room = FALSE; /* Is this a room below the other rooms...
+			      like a basement. */
   
   /* Start and end vnum where we can put things. */
   int start_room_vnum = 0, end_room_vnum = 0;
-  THING *room, *proto;
-  
+  THING *room, *proto = NULL, *sroom = NULL;
   /* Used for linking up/down rooms. */
   int stair_x, stair_y;
   THING *below_room, *above_room;
   RESET *rst;
-  int times;
-  bool stringy_object = FALSE;
   
-
-  if (!obj || !area || depth < 1 || depth > 30)
+  /* This finds the last name of the parent object (to object) so that
+     we only overwrite things that have this name in it...to avoid 
+     stomping on different pieces of the city. */
+  char last_parent_name[STD_LEN];
+  char *wd;
+  int reset_times = 1;
+  int reset_percent = 100;
+  VALUE *randpop;
+  
+  if((!start_reset && !to) || !area || depth < 1 || depth > 30)
     return;
   
-
-
+  
   /* Argh, not having ctors sucks. Must init struct on the stack
      by hand. :P */
 
   this_obj_dims.word = nonstr;
-  /* Get the vnum(s) where these objects will be stored in the area. */
-  if (IS_ROOM (obj))
-    {
-      int max_room_vnum = area->vnum+1;
-      for (room = area->cont; room; room = room->next_cont)
-	{
-	  if (IS_ROOM (room) &&
-	      room->vnum > max_room_vnum)
-	    max_room_vnum = room->vnum;
-	}
-      start_room_vnum = max_room_vnum+1;
-      end_room_vnum = area->vnum+area->mv;
-      if (start_room_vnum > end_room_vnum)
-	{
-	  start_room_vnum = end_room_vnum = 0;
-	}
-    }
-  else
-    {
-      start_room_vnum = find_free_mobject_vnum (area);
-      end_room_vnum = start_room_vnum;
-    }
+
+  /* First order of business. If this obj is NOT within the
+     GENERATOR_NOCREATE_VNUM_MIN/MAX range, then this is a REGULAR
+     RESET PUT ONTO to!!!! if it's not a ROOM! 
+     Also, we set the number of times and the percent here if this
+     came from a reset up above. */
   
-  if (start_room_vnum == 0)
+  if (start_reset)
+    {
+      start_obj = find_thing_num (start_reset->vnum);
+      reset_times = MAX(1, start_reset->times);
+      reset_percent = MAX(1, start_reset->pct);
+    }
+  else if (to)
+    start_obj = to;
+  else
+    return;
+
+  if (!start_obj)
     return;
   
-  /* Get the size of the new object. */
-  
- 
-  
-  /* Get the starting and ending places to look. */
-  
-  if (start_dims)
+  last_parent_name[0] = '\0';
+  if (to)
     {
-      s_min_x = start_dims->val[0];
-      s_max_x = start_dims->val[1];
-      s_min_y = start_dims->val[2];
-      s_max_y = start_dims->val[3];
-      s_min_z = start_dims->val[4];
-      s_max_z = start_dims->val[5];
-    }
-  else
-    {
-      s_min_x = s_min_y = 0;
-      s_max_x = s_max_y = CITY_SIZE-1;
-      s_min_z = s_max_z = CITY_STREET_LEVEL;
+      wd = to->name;
+      while (wd && *wd)
+	wd = f_word (wd, last_parent_name);
     }
 
-   /* If this has no dimensions set, then make it 1x1x1. Same for
-     nonrooms. */
-  if ((obj_dims = FNV (obj, VAL_DIMENSION)) == NULL || !IS_ROOM (obj))
+
+  /* Now if the obj is outside the range, we just add it as a 
+     reset to to. */
+
+  if (to && start_obj != to && start_reset &&
+      start_reset->vnum < GENERATOR_NOCREATE_VNUM_MIN &&
+      start_reset->vnum > GENERATOR_NOCREATE_VNUM_MAX)
     {
-      o_dim_x = o_dim_y = o_dim_z = 1;
+      add_reset (to, start_reset->vnum, start_reset->pct, start_reset->times, start_reset->nest);
+      return;
     }
-  else
-    {
-      o_dim_x = MAX (1, nr (obj_dims->val[0],obj_dims->val[1]));
-      o_dim_y = MAX (1, nr (obj_dims->val[2],obj_dims->val[3]));
-      o_dim_z = MAX (1, nr (obj_dims->val[4],obj_dims->val[5]));
-    
-      /* This is for making "stringy" objects like roads. */
+  
+  /* Now loop through the number of times the reset says to, and
+     each time you add some other detail. */
+  
+  randpop = FNV (start_obj, VAL_RANDPOP);
+  
+  while (--reset_times >= 0)
+    {/*
+      {
+	char buf[STD_LEN];
+      sprintf (buf, "Reset obj %-6d  %-20s  (x%d)\n\r",
+	       start_obj->vnum, start_obj->name, reset_times);
+      echo (buf);
+      }*/
+
+      if (nr (1,100) > reset_percent)
+	continue;
       
-      if (obj_dims->word && *obj_dims->word)
+      bad_room = FALSE; 
+      location_is_bad = FALSE;
+      use_perfect_choices = FALSE;       
+      found_start_location = FALSE;      
+      need_edge_room = FALSE;
+      need_center_room = FALSE;      
+      room_is_on_edge = FALSE;
+      make_full_size = FALSE;
+      proto = NULL;
+      num_choices = 0;
+      num_chose = 0;
+      num_perfect_choices = 0;
+      room_is_below_room = FALSE;
+      /* Second, see if we change to another object due to a randpop
+	 appearing. */
+      
+      if (randpop)
 	{
-	 
-	  if (named_in (obj_dims->word, "stringy"))
-	    { 
-	      stringy_object = TRUE;
-	      need_edge_room = TRUE;
-	    }	  
-	  else if (named_in (obj_dims->word, "edge"))
-	    need_edge_room = TRUE;
-	  else if (named_in (obj_dims->word, "center"))
-	    need_center_room = TRUE;
+	  obj = find_thing_num (calculate_randpop_vnum 
+				(randpop, (to ? LEVEL (to) : LEVEL(area))));
+	  if (!obj)
+	    obj = start_obj;
 	}
-    }
-  
-  
-  /* Now search for the proper place to go. Search between search_min
-     and search_max in the x, y, z coords..with the rule that the
-     "base" level of the search area must contain all rooms, and you
-     can build up into blank rooms, but you can't add the rooms to the 
-     base level of rooms. */
-  
-  
-  for (count = 0; count < 2; count++)
-    {
-      for (x = s_min_x; x <= s_max_x; x++)
+      else
+	obj = start_obj;
+      
+      
+      /* Get the vnum(s) where these objects will be stored in the area. */
+      start_room_vnum = 0;
+      end_room_vnum = 0;
+      if (IS_ROOM (obj))
 	{
-	  for (y = s_min_y; y <= s_max_y; y++)
+	  int max_room_vnum = area->vnum+1;
+	  for (room = area->cont; room; room = room->next_cont)
 	    {
-	      for (z = s_min_z; z <= s_max_z; z++)
+	      if (IS_ROOM (room) &&
+		  room->vnum > max_room_vnum)
+		max_room_vnum = room->vnum;
+	    }
+	  start_room_vnum = max_room_vnum+1;
+	  end_room_vnum = area->vnum+area->mv;
+	  if (start_room_vnum > end_room_vnum)
+	    {
+	      start_room_vnum = end_room_vnum = 0;
+	    }
+	}
+      else
+	{
+	  start_room_vnum = find_free_mobject_vnum (area);
+	  end_room_vnum = start_room_vnum;
+	}
+      
+      
+      if (start_room_vnum == 0)
+	continue;      
+      /* Get the size of the new object. */
+      
+      
+      
+      /* Get the starting and ending places to look. */
+      
+      if (start_dims)
+	{
+	  s_min_x = start_dims->val[0];
+	  s_max_x = start_dims->val[1]-1;
+	  s_min_y = start_dims->val[2];
+	  s_max_y = start_dims->val[3]-1;
+	  s_min_z = start_dims->val[4];
+	  s_max_z = start_dims->val[5]-1;
+	}
+      else
+	{
+	  s_min_x = s_min_y = 0;
+	  s_max_x = s_max_y = CITY_SIZE-1;
+	  s_min_z = s_max_z = CITYGEN_STREET_LEVEL;
+	}
+      
+      /* If this has no dimensions set, then make it 1x1x1. Same for
+	 nonrooms. */
+      if ((obj_dims = FNV (obj, VAL_DIMENSION)) == NULL || !IS_ROOM (obj))
+	{
+	  o_dim_x = o_dim_y = o_dim_z = 1;
+	}
+      /* If this is the start of a single building, then we make
+	 sure that the start dims are as large as possible to fill
+	 in the entire grid. */
+      else if (to == obj)
+	{
+	  o_dim_x = MAX(1, obj_dims->val[1]);
+	  o_dim_y = MAX(1, obj_dims->val[3]);
+	  o_dim_z = MAX(1, obj_dims->val[5]);
+	}
+      else
+	{
+	  o_dim_x = MAX (1, nr (obj_dims->val[0],obj_dims->val[1]));
+	  o_dim_y = MAX (1, nr (obj_dims->val[2],obj_dims->val[3]));
+	  o_dim_z = MAX (1, nr (obj_dims->val[4],obj_dims->val[5]));
+	  
+	  /* This is for making "stringy" objects like roads. */
+	  
+	  if (obj_dims->word && *obj_dims->word)
+	    {
+	      
+	      if (named_in (obj_dims->word, "stringy"))
+		{ 
+		  citygen_add_stringy_detail (start_reset, area, to, start_dims, depth);
+		  continue;
+		}      
+	      else if (named_in (obj_dims->word, "edge"))
+		need_edge_room = TRUE;
+	      else if (named_in (obj_dims->word, "center"))
+		need_center_room = TRUE;
+	      
+
+	      /* This makes the inner object full size (i.e. taking
+		 up the full area alotted. This might sound stupid, but
+		 if you combine this with some of the other things
+		 below like north or top or east or whatever, you
+		 can do things like make entire floors of locations
+		 the same name. */
+	      if (named_in (obj_dims->word, "full"))
+		make_full_size = TRUE;
+	      
+	      /* These are for making the object sit in different
+		 parts of the larger object. The idea is that you can
+		 specify NEWSUD or top/bottom (sets to edge) or 
+		 left/right directions so that the objects appear in
+		 certain places inside the larger set. 
+
+		 The reason for all of the + 1's is that for example
+		 if you have a range of 2-3 in some direction and you want
+		 the object to appear in the 3 place, so if you did
+		 (2+3)/2 as the new lower endpoint, you haven't gotten 
+		 anywhere. The reason for not doing it in the opp
+		 direction is that again if we have a range from 2-3 and
+		 we only want to look in the 2 coord, (2+3)/2 = 2, but
+		 (2+3+1)/2 = 3 so we don't need it there.
+		 Also, for ranges like 2-4, we get (2+4+1)/2 = 3 for upper,
+		 (2+4)/2 = 3 for lower, so there's an overlap.  */
+	      if (named_in (obj_dims->word, "east"))
+		s_min_x = (s_min_x + s_max_x+ 1)/2;
+	      if (named_in (obj_dims->word, "west"))
+		s_max_x = (s_min_x + s_max_x )/2;
+	      if (named_in (obj_dims->word, "north"))
+		s_min_y = (s_min_y + s_max_y+ 1)/2;
+	      if (named_in (obj_dims->word, "south"))
+		s_min_y = (s_min_y + s_max_y  )/2;
+	      if (named_in (obj_dims->word, "upper"))
+		s_min_z = (s_min_z + s_max_z + 1)/2;
+	      if (named_in (obj_dims->word, "lower"))
+		s_max_z = (s_min_z + s_max_z )/2;
+
+	      /* These last two set the max/min z's directly to the ends. */
+	      if (named_in (obj_dims->word, "top"))
+		s_min_z = s_max_z;
+	      if (named_in (obj_dims->word, "bottom"))
+		s_max_z = s_min_z;
+	      
+	      if (named_in (obj_dims->word, "south"))
+		s_min_y = (s_min_y + s_max_y + 1)/2;
+	      
+
+	      /* These make things like basements and such. */
+	      if (named_in (obj_dims->word, "underneath") ||
+		  named_in (obj_dims->word, "beneath") ||
+		  named_in (obj_dims->word, "below"))
 		{
+		  s_min_z--;
+		  s_max_z = s_min_z;
+		  room_is_below_room = TRUE;
 		  
-		  if (x <= s_min_x || x + o_dim_x >= s_max_x ||
-		      y <= s_min_y || y + o_dim_y >= s_max_y ||
-		      z <= s_min_z || z + o_dim_z >= s_max_z)
-		    room_is_on_edge = TRUE;
-		  else
-		    room_is_on_edge = FALSE;
-		  /* At each possible starting point see if the rooms are
-		     available for something of the size we need. */
-		  
-		  good_rooms = 0;
-		  good_rooms_base_level = 0;
-		  for (z1 = z; z1 < z + o_dim_z; z1++)
+		}
+
+
+	    }
+	}
+      
+      
+      /* Now search for the proper place to go. Search between search_min
+	 and search_max in the x, y, z coords..with the rule that the
+	 "base" level of the search area must contain all rooms, and you
+	 can build up into blank rooms, but you can't add the rooms to the 
+	 base level of rooms. */
+      
+
+      /* If this is full size, just set it to the s_min_xyz locations
+	 and be done with it. */
+      
+      if (make_full_size)
+	{
+	  x = s_min_x;
+	  y = s_min_y;
+	  z = s_min_z;
+
+	  o_dim_x = s_max_x - s_min_x + 1;
+	  o_dim_y = s_max_y - s_min_y + 1;
+	  o_dim_z = s_max_z - s_min_z + 1;
+	  found_start_location = TRUE;
+	}
+      
+      /* If there's no starting reset, but there is a to, then
+	 we have a single building, and not a city. */
+      
+      
+      
+      else if (!start_reset && to)
+	{
+	  z = CITYGEN_STREET_LEVEL;
+	  for (x = 0; x < CITY_SIZE; x++)
+	    {
+	      for (y = 0; y < CITY_SIZE; y++)
+		{
+		  if (city_grid[x][y][z])
 		    {
-		      for (x1 = x; x1 < x + o_dim_x; x1++)
-			{
-			  for (y1 = y; y1 < y + o_dim_y; y1++)
-			    { 
-			      if (!city_coord_is_ok (x1, y1, z1))
-				continue;
-			      /* Set it so we haven't found a bad room. 
-				 A bad room is not a killer. It just means
-				 that we have to find enough good
-				 rooms to justify putting this here. */
-			      bad_room = FALSE;
-			      /* The bottom level NEEDS all of the
-				 rooms to be there. */
-			      if (!city_grid[x1][y1][z1])
-				{
-				  if (z1 == z || !IS_ROOM(obj))
-				    bad_room = TRUE;
-				}
-			      /* Now the city grid exists. If it's depth
-				 is too high, ignore it. It's already
-				 been detailed. */
-			      
-			      else if (city_grid[x1][y1][z1]->mv >= depth)
-				bad_room = TRUE;
-			      
-			      if (!bad_room)
-				good_rooms++;
-			      if (z == z1)
-				good_rooms_base_level++;
-			      
-			    }
-			}
+		      found_start_location = TRUE;
+		      break;
 		    }
-		  /* Should be >= 1. */		  
-		  rooms_needed = (o_dim_x*o_dim_y*o_dim_z);
-		  base_rooms_needed = (o_dim_x*o_dim_y);
-		  
-		  /* Now allow some small errors to appear where
-		     we don't require ALL rooms to be good. Just most
-		     of them. */
-		  location_is_bad = FALSE;
-		  
-		  /* If all rooms are available, we can go with a perfect
-		     fit area.*/
-		  if (good_rooms >= rooms_needed)
-		    {
-		      /* Only use the rooms if we don't care about
-			 center/edge stuff, or if we do care and 
-			 this is the right kind of room. */
-		      if ((!need_edge_room && !need_center_room) ||
-			  (need_edge_room && room_is_on_edge) ||
-			  (need_center_room && !room_is_on_edge))
-			num_perfect_choices++;
-		    }
-		  else if (!stringy_object)
-		    {
-		      /* Small areas require all rooms. */
-		      if (rooms_needed <= 2 &&
-			  good_rooms < rooms_needed)
-			location_is_bad = TRUE;
-		      
-		      if (good_rooms <= rooms_needed*4/5)
-			location_is_bad = TRUE;
-		      
-		      /* You REALLY need the base level rooms to be there. */
-		      if (good_rooms_base_level < base_rooms_needed - 1)
-			location_is_bad = TRUE;
-		      
-		    }
-		  else if (!city_grid[x1][y1][z1])
-		    location_is_bad = TRUE;
-		  
-		  if (!location_is_bad)
-		    {
-		      if (count == 0)		
-			num_choices++;
-		      
-		      /* When we're choosing places to put the rooms,
-			 if you have perfect choices to pick from, then
-			 use them. Otherwise do this if it's any old ok
-			 location. We can also specify if we need to
-			 use center rooms or edge rooms. */
-		      
-		      else if ((!use_perfect_choices ||
-				(good_rooms >= rooms_needed &&
-				 ((!need_edge_room && !need_center_room) ||
-				  (need_edge_room && room_is_on_edge) ||
-				  (need_center_room && !room_is_on_edge)))) &&
-			       --num_chose < 1)
-			{
-			  found_start_location = TRUE;
-			  break;
-			}
-		    }
-		  if (found_start_location)
-		    break;
 		}
 	      if (found_start_location)
 		break;
 	    }
-	  if (found_start_location)
-	    break;
 	}
-      if (count == 0)
+      else
 	{
-	  use_perfect_choices = FALSE;
-	  if (num_perfect_choices > 0)
+
+	  for (count = 0; count < 2; count++)
 	    {
-	      num_chose = nr (1, num_perfect_choices);
-	      use_perfect_choices = TRUE;
-	    }
-	  else if (num_choices > 0)
-	    num_chose = nr (1, num_choices);
-	  else
-	    {
-	      found_start_location = FALSE;
-	      break;	      
+	      for (x = s_min_x; x <= s_max_x; x++)
+		{
+		  for (y = s_min_y; y <= s_max_y; y++)
+		    {
+		      for (z = s_min_z; z <= s_max_z; z++)
+			{
+			  if (IS_ROOM (obj) &&
+			      (sroom = city_grid[x][y][z]) != NULL &&
+			      (is_named (sroom, "road") ||
+			       (*last_parent_name && sroom->name &&
+				*sroom->name &&
+				!named_in (sroom->name, last_parent_name))))
+			    continue;
+			  
+			  if (x <= s_min_x || x + o_dim_x >= s_max_x ||
+			      y <= s_min_y || y + o_dim_y >= s_max_y ||
+			      z <= s_min_z || z + o_dim_z >= s_max_z)
+			    room_is_on_edge = TRUE;
+			  else
+			    room_is_on_edge = FALSE;
+			  /* At each possible starting point see if the rooms are
+			     available for something of the size we need. */
+			  
+			  good_rooms = 0;
+			  good_rooms_base_level = 0;
+			  for (z1 = z; z1 < z + o_dim_z; z1++)
+			    {
+			      for (x1 = x; x1 < x + o_dim_x; x1++)
+				{
+				  for (y1 = y; y1 < y + o_dim_y; y1++)
+				    { 
+				      if (!city_coord_is_ok (x1, y1, z1))
+					continue;
+				      /* Set it so we haven't found a bad room. 
+					 A bad room is not a killer. It just means
+					 that we have to find enough good
+					 rooms to justify putting this here. */
+				      bad_room = FALSE;
+				      /* The bottom level NEEDS all of the
+					 rooms to be there. */
+				      if (!city_grid[x1][y1][z1])
+					{
+					  if ((z1 == z &&
+					       z1 >= CITYGEN_STREET_LEVEL) 
+					      || !IS_ROOM(obj))
+					    bad_room = TRUE;
+					}
+				      
+				      
+				      /* Now the city grid exists. If it's depth
+					 is too high, ignore it. It's already
+					 been detailed. */
+				      
+				      else if (city_grid[x1][y1][z1]->mv >= depth)
+					bad_room = TRUE;
+				      
+				      if (!bad_room)
+					{
+					  good_rooms++;
+					  if (z == z1)
+					    good_rooms_base_level++;
+					}
+				    }
+				}
+			    }
+			  /* Should be >= 1. */		  
+			  rooms_needed = (o_dim_x*o_dim_y*o_dim_z);
+			  base_rooms_needed = (o_dim_x*o_dim_y);
+			  
+			  /* Now allow some small errors to appear where
+			     we don't require ALL rooms to be good. Just most
+			     of them. */
+			  location_is_bad = FALSE;
+			  
+			  /* If all rooms are available, we can go with a perfect
+			     fit area.*/
+			  if (good_rooms >= rooms_needed)
+			    {
+			      /* Only use the rooms if we don't care about
+				 center/edge stuff, or if we do care and 
+				 this is the right kind of room. */
+			      if ((!need_edge_room && !need_center_room) ||
+				  (need_edge_room && room_is_on_edge) ||
+				  (need_center_room && !room_is_on_edge))
+				num_perfect_choices++;
+			    }
+			  else 
+			    {
+			      /* Small areas require all rooms. */
+			      if (rooms_needed < 2 &&
+				  good_rooms < rooms_needed)
+				location_is_bad = TRUE;
+			      
+			      if (good_rooms < rooms_needed/2)
+				location_is_bad = TRUE;
+			      
+			      /* You need the base level rooms to be there. */
+			      if (good_rooms_base_level < base_rooms_needed/2)
+				location_is_bad = TRUE;
+			      
+			    }
+			  
+			  if (!location_is_bad)
+			    {
+			      if (count == 0)		
+				num_choices++;
+			      
+			      /* When we're choosing places to put the rooms,
+				 if you have perfect choices to pick from, then
+				 use them. Otherwise do this if it's any old ok
+				 location. We can also specify if we need to
+				 use center rooms or edge rooms. */
+			      
+			      else if ((!use_perfect_choices ||
+					(good_rooms >= rooms_needed &&
+					 ((!need_edge_room && !need_center_room) ||
+					  (need_edge_room && room_is_on_edge) ||
+				      (need_center_room && !room_is_on_edge)))) &&
+				       --num_chose < 1)
+				{
+				  found_start_location = TRUE;
+				  break;
+				}
+			    }
+			  if (found_start_location)
+			    break;
+			}
+		      if (found_start_location)
+			break;
+		    }
+		  if (found_start_location)
+		    break;
+		}
+	      if (count == 0)
+		{
+		  use_perfect_choices = FALSE;
+		  if (num_perfect_choices > 0)
+		    {
+		      num_chose = nr (1, num_perfect_choices);
+		      use_perfect_choices = TRUE;
+		    }
+		  else if (num_choices > 0)
+		    num_chose = nr (1, num_choices);
+		  else
+		    {
+		      found_start_location = FALSE;
+		      break;	      
+		    }
+		}
+	      if (found_start_location)
+		break;
 	    }
 	}
-      if (found_start_location)
-	break;
-    }
-  if (!found_start_location)
-    return;
-  /* Get the starting coords  */
-  sx = x;
-  sy = y;
-  sz = z;
-/* Now fill in the rooms as needed. */
-  
-  if (IS_ROOM (obj))
-    {
-      /* First fill in blocks like this. */
-      if (!stringy_object)
+
+      if (!found_start_location)
+	continue;
+      
+      /* Get the starting coords  */
+      sx = x;
+      sy = y;
+      sz = z;
+      /* Now fill in the rooms as needed. */
+      
+      if (IS_ROOM (obj))
 	{
+	  THING *copying_start_room = NULL;
 	  vnum = start_room_vnum;
 	  for (x = sx; x < sx + o_dim_x; x++)
 	    {
@@ -804,8 +1067,37 @@ citygen_add_detail (THING *obj, THING *area, VALUE *start_dims, int depth)
 			  
 			  vnum++;
 			}  
-		      remove_flagval (city_grid[x][y][z], FLAG_ROOM1, ~0);
-		      add_flagval (city_grid[x][y][z], FLAG_ROOM1, flagbits (obj->flags, FLAG_ROOM1));
+		      else if ((room = city_grid[x][y][z]) != NULL &&
+			       room->mv != depth - 1 &&
+			       (is_named (room, "road") ||
+				(*last_parent_name && room->name &&
+				 *room->name &&
+				 !named_in (room->name, last_parent_name))))
+			continue;
+		      
+		      if ((room = city_grid[x][y][z]) == NULL)
+			continue;
+		      
+		      if (!copying_start_room)
+			{
+			  copying_start_room = city_grid[x][y][z];
+			  free_str (copying_start_room->short_desc);
+			  copying_start_room->short_desc = nonstr;
+			  generate_detail_name (obj, copying_start_room);
+			  capitalize_all_words (copying_start_room->short_desc);
+			  strcpy (word, copying_start_room->short_desc);
+			}
+		      else
+			{
+			  free_str (room->short_desc);
+			  room->short_desc = new_str (word);
+			}
+		      append_name (room, obj->name);
+		      remove_flagval (room, FLAG_ROOM1, ~0);
+		      add_flagval (room, FLAG_ROOM1, flagbits (obj->flags, FLAG_ROOM1));
+		      room->mv = depth;
+		      
+		      
 		      if (vnum >= end_room_vnum)
 			break;
 		    }
@@ -815,36 +1107,13 @@ citygen_add_detail (THING *obj, THING *area, VALUE *start_dims, int depth)
 	      if (vnum >= end_room_vnum)
 		break;
 	    }
-	  free_str (city_grid[sx][sy][sz]->short_desc);
-	  city_grid[sx][sy][sz]->short_desc = nonstr;
-	  generate_detail_name (obj, city_grid[sx][sy][sz]);
 	  
-	  strcpy (word, city_grid[sx][sy][sz]->short_desc
-);
-	  /* Now copy the name. */
 	  
-	  for (x = sx; x < sx+o_dim_x; x++)
-	    {
-	      for (y = sy; y < sy+o_dim_y; y++)
-		{
-		  for (z = sz; z < sz + o_dim_z; z++)
-		    {
-		      if (city_coord_is_ok (x,y,z) &&
-			  (room = city_grid[x][y][z]) != NULL &&
-			  room->mv < depth)
-			{
-			  free_str (room->short_desc);
-			  room->short_desc = nonstr;
-			  room->short_desc = new_str (word);
-			  room->mv = depth;
-			}
-		    }
-		}
-	    }
 	  
 	  /* ADD U/D links between rooms. */
 	  
-	  for (z = sz; z < sz + o_dim_z - 1; z++)
+	  for (z = sz; z < sz + o_dim_z + 
+		 (room_is_below_room ? 0 : -1 ); z++)
 	    {
 	      stair_x = nr (sx, sx+o_dim_x-1);
 	      stair_y = nr (sy, sy+o_dim_y-1);
@@ -858,355 +1127,106 @@ citygen_add_detail (THING *obj, THING *area, VALUE *start_dims, int depth)
 		{
 		  room_add_exit (below_room, DIR_UP, above_room->vnum, 0);
 		  room_add_exit (above_room, DIR_DOWN, below_room->vnum, 0);
+		  if (room_is_below_room && z < CITYGEN_STREET_LEVEL)
+		    place_secret_door (below_room, DIR_UP, generate_secret_door_name());
 		}
 	    }
 	  
-	}
-      else
+	} 
+      else if ((city_grid[sx][sy][sz] || to) &&
+	       (vnum = find_free_mobject_vnum (area)) != 0)
 	{
-	  MAPGEN *map = NULL;
-	  char buf[STD_LEN];
-	  int dx = 0, dy = 0;
-	  THING *oroom;
-	  int map_x, map_y, city_x, city_y, city_z;
-	  int old_room_num = 0, last_dir = REALDIR_MAX;
-	  int opp_x, opp_y;
-	  bool found = FALSE;
-	  int opp_dir;
+	  int reset_pct;
+	  int obj_level;
+	  proto = NULL;
 	  
-	  /* Get the correct dx and dy based on where this
-	     room edge is. */
+	  if (to)
+	    obj_level = LEVEL(to);
+	  else
+	    obj_level = LEVEL(area);
 	  
-	  if (sx == s_min_x)
-	    dx++;
-	  if (sx == s_max_x)
-	    dx--;
-	  if (sy == s_min_y)
-	    dy++;
-	  if (sy == s_max_y)
-	    dy--;
-	 
-	  if (dx == 0 && dy == 0)
+	  if (obj->vnum == OBJECTGEN_AREA_VNUM)
+	    proto = objectgen (area, ITEM_WEAR_NONE, obj_level, 0, NULL);
+	  else if (obj->vnum == PERSONGEN_AREA_VNUM)
+	    proto = areagen_generate_person (area, nr (0, LEVEL(area)/2));
+	  
+	  if (proto == NULL)
 	    {
-	      if (nr (0,1) == 1)
-		dx = 1;
-	      else
-		dy = 1;
-	    }
-	  sprintf (buf, "%d %d %d %d %d %d %d %d",
-		   dx, /* Dx */
-		   dy, /* Dy */
-		   s_max_x-s_min_x+s_max_y-s_min_y + 10, /* Length */
-		   1, /* Width */ 
-		   0,  /* Fuzziness */
-		   0,   /* Holeyness */
-		   15, /* Curviness */
-		   0); /* Xtra Lines */
-	  
-	  
-	  while (!map)
-	    {
-	      map = mapgen_generate (buf);
-	      if (map->num_rooms > 5)
-		break;
-	      else
-		{
-		  free_mapgen (map);
-		  map = NULL;
-		}
+	      
+	      proto = new_thing();
+	      copy_thing (obj, proto);
+	      proto->type = new_str (obj->type);
+	      proto->thing_flags = obj->thing_flags;      
+	      proto->vnum = vnum;
+	      thing_to (proto, area);
+	      add_thing_to_list (proto);
+	      generate_detail_name (obj, proto);
+	      
+	      
 	    }
 	  
-	  /* Now we have a map. Overlay it onto the city map. */
+	  if (CAN_FIGHT (proto) || CAN_MOVE (proto))
+	    reset_pct = 100;
+	  else
+	    reset_pct = objectgen_reset_percent (LEVEL(proto));
 	  
-	  /* Get the name we will use here. */
-	  free_str (city_grid[sx][sy][sz]->short_desc);
-	  city_grid[sx][sy][sz]->short_desc = nonstr;
-	  generate_detail_name (obj, city_grid[sx][sy][sz]);
-	  strcpy (word, city_grid[sx][sy][sz]->short_desc);
-	  
-	  /* Now loop through the sequence of rooms given by the 
-	     mapgen map and set the rooms in the city to the same value.
-	     The way this is done is that we start with the mapgen
-	     center room and stick it into the start room, then we
-	     copy the object values into that room and nuke the
-	     room in the mapgen. then we go adjacent to the room and
-	     find whatever room is next to and in the mapgen map. */
-	  
-	  city_x = sx;
-	  city_y = sy;
-	  city_z = sz;
-	  map_x = MAPGEN_MAXX/2;
-	  map_y = MAPGEN_MAXY/2;
-	  
-	  if (dx > 0)
+	  if (!to && city_coord_is_ok (sx, sy, sz))
 	    {
-	      for (x = 0; x < MAPGEN_MAXX && !found; x++)
-		{
-		  for (y = 0; y < MAPGEN_MAXY; y++)
-		    {
-		      if (map->used[x][y])
-			{
-			  map_x = x;
-			  map_y = y;
-			  found = TRUE;
-			  break;
-			}
-		    }
-		}
-	    }
-	  else if (dx < 0)
-	    {
-	      for (x = MAPGEN_MAXX-1; x >= 0 && !found; x--)
-		{
-		  for (y = 0; y < MAPGEN_MAXY; y++)
-		    {
-		      if (map->used[x][y])
-			{
-			  map_x = x;
-			  map_y = y;
-			  found = TRUE;
-			  break;
-			}
-		    }
-		}
+	      to = city_grid[sx][sy][sz];
 	    }
 	  
-	  else if (dy > 0)
-	    {
-	      for (y = 0; y < MAPGEN_MAXY && !found; y++)
-		{
-		  for (x = 0; x < MAPGEN_MAXX; x++)
-		    {
-		      if (map->used[x][y])
-			{
-			  map_x = x;
-			  map_y = y;
-			  found = TRUE;
-			  break;
-			}
-		    }
-		}
-	    }
-	  else if (dy < 0)
-	    {
-	      for (y = MAPGEN_MAXY-1; y >= 0 && !found; y--)
-		{
-		  for (x = 0; x < MAPGEN_MAXY; x++)
-		    {
-		      if (map->used[x][y])
-			{
-			  map_x = x;
-			  map_y = y;
-			  found = TRUE;
-			  break;
-			}
-		    }
-		}
-	    }
-	  
-	  
-	  
-	  log_it ("ROAD");
-	  /* Every time we are at a map room */
-	  old_room_num = 0;
-	  last_dir = REALDIR_MAX;
-	  while (map->used[map_x][map_y])
-	    {
-	      /* Check if the city room is ok. */
-	      if (!city_coord_is_ok (city_x, city_y, city_z) ||
-		  (room = city_grid[city_x][city_y][city_z]) == NULL ||
-		  room->mv != depth - 1)
-		break;
-	      
-	      
-	      log_it ("O");
-	      room->mv = depth;
-	      free_str (room->short_desc);
-	      room->short_desc = new_str (word);
-	      if (flagbits (obj->flags, FLAG_ROOM1))
-		{
-		  remove_flagval (room, FLAG_ROOM1, ~0);
-		  add_flagval (room, FLAG_ROOM1, 
-			       /*   flagbits (obj->flags, FLAG_ROOM1) | */ ROOM_FIERY);
-		  room->name = new_str ("road");
-		}
-	      
-	      map->used[map_x][map_y] = 0;
-	      
-	      /* Now link to previous rooms if any. */
-	      
-	      if (old_room_num &&
-		  last_dir >= 0 && last_dir < REALDIR_MAX &&
-		  (oroom = find_thing_num (old_room_num)) != NULL &&
-		  IS_ROOM (oroom))
-		{
-		  room_add_exit (room, RDIR (last_dir), old_room_num, 0);
-		  room_add_exit (oroom, last_dir, room->vnum, 0);
-		}
-	      
-	      /* Now add exits to adjacent places. */
-	      
-	      opp_x = city_x;
-	      opp_y = city_y;
-	      if (last_dir == DIR_SOUTH || last_dir == DIR_NORTH)
-		{
-		  if (nr (0,1) == 1)
-		    {
-		      opp_dir = DIR_EAST;
-		      opp_x++;
-		    }
-		  else
-		    {
-		      opp_dir = DIR_WEST;
-		      opp_x--;
-		    }
-		}
-	      else
-		{
-		  if (nr (0,1) == 1)
-		    {
-		      opp_dir = DIR_NORTH;
-		      opp_y++;
-		    }
-		  else
-		    {
-		      opp_dir = DIR_SOUTH;
-		      opp_y--;
-		    }
-		}
-	      
-	      /* Make sure the map isn't at the opp dir point so we can
-		 actually add the adjacent links. */
-	      if (nr (1,2) == 1 && 
-		  !map->used[map_x+(opp_x-city_x)][map_y+(opp_y-city_y)] &&
-		  city_coord_is_ok (opp_x, opp_y, sz) &&
-		  (oroom = city_grid[opp_x][opp_y][sx]) != NULL)	       
-		{
-		  room_add_exit (room, opp_dir, oroom->vnum, 0);
-		  room_add_exit (oroom, RDIR(opp_dir), room->vnum, 0);
-		}
-	      
-	      
-	      
-	      
-	      if (map->used[map_x+1][map_y])
-		{
-		  map_x++;
-		  city_x++;
-		  last_dir = DIR_EAST;
-		}
-	      else if (map->used[map_x-1][map_y])
-		{
-		  map_x--;
-		  city_x--;
-		  last_dir = DIR_WEST;
-		}
-	      if (map->used[map_x][map_y+1])
-		{
-		  map_y++;
-		  city_y++;
-		  last_dir = DIR_NORTH;
-		}
-	      else if (map->used[map_x][map_y-1])
-		{
-		  map_y--;
-		  city_y--;
-		  last_dir = DIR_SOUTH;
-		}
-	      
-	      old_room_num = room->vnum;
-	    }	      
-	  free_mapgen (map);
-	  map = NULL;
+	  add_reset (to, proto->vnum, reset_pct, MAX(1, proto->max_mv), 1); 
 	}
       
-    }
-  else if (city_grid[sx][sy][sz] &&
-	   (vnum = find_free_mobject_vnum (area)) != 0)
-    {
-      int reset_pct;
-      proto = new_thing();
-      copy_thing (obj, proto);
-      proto->thing_flags = obj->thing_flags;      
-      proto->vnum = vnum;
-      thing_to (proto, area);
-      add_thing_to_list (proto);
-      generate_detail_name (obj, proto);
-      if (CAN_FIGHT (proto) || CAN_MOVE (proto))
-	reset_pct = 100;
-      else
-	reset_pct = MID(75,120-LEVEL(proto)*2/3,1);
       
-      add_reset (city_grid[sx][sy][sz], vnum, reset_pct, MAX(1, proto->max_mv), 1); 
-    }
-  
-  /* At this point the rooms (or proto) are created, and the names
-     have been set. */
-
-  /* Now set up the dims where the subobjects will be reset. */
-
-  this_obj_dims.type = VAL_DIMENSION;
-  this_obj_dims.val[0] = sx;
-  this_obj_dims.val[1] = sx + o_dim_x;
-  this_obj_dims.val[2] = sy;
-  this_obj_dims.val[3] = sy + o_dim_y;
-  this_obj_dims.val[4] = sz;
-  this_obj_dims.val[5] = sz + o_dim_z;
-  
-  
-  for (rst = obj->resets; rst; rst = rst->next)
-    {
-      if ((rst_obj = find_thing_num (rst->vnum)) == NULL)
-	continue;
       
-      for (times = 0; times < (int) rst->times; times++)
+      /* At this point the rooms (or proto) are created, and the names
+	 have been set. */
+      
+      /* Now set up the dims where the subobjects will be reset. */
+      
+      this_obj_dims.type = VAL_DIMENSION;
+      this_obj_dims.val[0] = sx;
+      this_obj_dims.val[1] = sx + o_dim_x;
+      this_obj_dims.val[2] = sy;
+      this_obj_dims.val[3] = sy + o_dim_y;
+      this_obj_dims.val[4] = sz;
+      this_obj_dims.val[5] = sz + o_dim_z;
+      
+      
+      
+      for (rst = obj->resets; rst; rst = rst->next)
 	{
-	  if (nr(1,100) <= MAX(2, rst->pct))
-	    {
-	      citygen_add_detail (rst_obj, area, &this_obj_dims, depth + 1);
-	    }
+	  citygen_add_detail (rst, area, proto, &this_obj_dims, depth + 1);
 	}
-    }
-  
-
-
-  if (IS_ROOM (obj))
-    {
-      int connect_times = 1;
-      
-      /* ADD NEWS links within the rooms here. We do this after the other
-	 resets since it will tend to make things */
-      
-
-      
-      /* For each level....*/
       
       
       
-      citygen_connect_same_level (depth, &this_obj_dims);
       
       
       
-      /* This links rooms at this depth to things depth n-1 above. */
-      
-      if (stringy_object)
-	connect_times = 5;
-      
-      while (connect_times > 0)
+      if (IS_ROOM (obj))
 	{
-	  citygen_connect_next_level_up(depth, &this_obj_dims);
-	  connect_times--;
-	}
 	  
+	  /* ADD NEWS links within the rooms here. We do this after the other
+	     resets since it will tend to make things */
+	  
+	  
+	  
+	  /* For each level....*/
+      
+	  
+	  
+	  citygen_connect_same_level (depth, &this_obj_dims);
+	  
+
+	  citygen_connect_next_level_up (depth, &this_obj_dims);
+	}
     }
   return;
 }
 
-
-
-
   
-
 void
 citygen_connect_same_level (int depth, VALUE *dims)
 {
@@ -1222,6 +1242,7 @@ citygen_connect_same_level (int depth, VALUE *dims)
       for (x = dims->val[0]; x < dims->val[1]; x++)
 	{
 	  for (y = dims->val[2]; y < dims->val[3]; y++)
+	    
 	    {
 	      if (city_coord_is_ok(x,y,z) && 
 		  (room1 = city_grid[x][y][z]) != NULL &&
@@ -1230,7 +1251,7 @@ citygen_connect_same_level (int depth, VALUE *dims)
 		  if (city_coord_is_ok (x+1, y, z) &&
 		      (room2 = city_grid[x+1][y][z]) != NULL &&
 		      room2->mv == depth &&
-		      x < dims->val[1] -1)
+		      x < dims->val[1] - 1)
 		    {
 		      room_add_exit (room1, DIR_EAST, room2->vnum, 0);
 		      room_add_exit (room2, DIR_WEST, room1->vnum, 0);
@@ -1238,7 +1259,7 @@ citygen_connect_same_level (int depth, VALUE *dims)
 		  if (city_coord_is_ok (x, y+1, z) &&
 		      (room2 = city_grid[x][y+1][z]) != NULL &&
 		      room2->mv == depth &&
-		      y < dims->val[3] -1)
+		      y < dims->val[3] - 1)
 		    {
 		      room_add_exit (room1, DIR_NORTH, room2->vnum, 0);
 		      room_add_exit (room2, DIR_SOUTH, room1->vnum, 0);
@@ -1249,6 +1270,7 @@ citygen_connect_same_level (int depth, VALUE *dims)
     }
   return;
 }
+
 
 /* This links rooms at a certain depth to rooms a depth above. */
 
@@ -1495,10 +1517,1028 @@ citygen_link_base_grid (void)
 
 /* This adds a "stringy" detail to an area -- like a road or trail
    or something like that. It's because lines and blocks (which is
-   what the other objects are like) seem to be different. */
+   what the other objects are like) seem to be different. 
+   It is assumed that all rooms exist so we don't need to make any
+   new rooms here. Just attach and rename certain rooms. */
 
 void
-citygen_add_stringy_detail (THING *obj, THING *area, VALUE *start_dims, int depth)
+citygen_add_stringy_detail (RESET *start_reset, THING *area, THING *to, VALUE *start_dims, int depth)
 {
+  int count = 0, num_choices = 0, num_chose = 0;
+  VALUE *o_dims;
+  
+  /* The starting dims where we're allowed to search. Gotten from start
+     dims. If start_dims is null, search the whole city. (at ground level). */
+  
+  int s_min_x, s_min_y, s_min_z, s_max_x, s_max_y, s_max_z;
+  
+
+  /* Starting x, y, z when we actually find a start location. */
+
+  int sx, sy, sz;
+
+  THING *rst_obj;
+  
+  bool found_start_room = FALSE;
+  
+  int bad_dir_this_room = REALDIR_MAX;
+  int dir;
+  int x, y, z;
+  
+  THING *room;
+  THING *start_obj, *obj;
+  char word[STD_LEN];
+  RESET *rst;
+  MAPGEN *map = NULL;
+  char buf[STD_LEN];
+  int dx = 0, dy = 0;
+  THING *nroom;
+  int map_x, map_y, city_x, city_y, city_z;
+  int old_room_num = 0, last_dir = REALDIR_MAX;
+  bool found = FALSE;
+  int num_open_dirs;
+  int nx, ny;
+  int reset_times = 1;
+  int reset_percent = 100;
+  int map_tries = 0;
+  VALUE *randpop = NULL;
+  
+  THING *last_room = NULL, *first_room = NULL;
+  
+  /* The new object dims used to tell where to reset something along the
+     road. */
+  
+  VALUE n_obj_dims;
+  
+  if (!area || depth < 1 || depth > 30 ||
+      (!start_reset && !to))
+    return;
+  
+  /* First order of business. If this obj is NOT within the
+     GENERATOR_NOCREATE_VNUM_MIN/MAX range, then this is a REGULAR
+     RESET PUT ONTO to!!!! if it's not a ROOM! 
+     Also, we set the number of times and the percent here if this
+     came from a reset up above. */
+  
+  if (start_reset)
+    {
+      start_obj = find_thing_num (start_reset->vnum);
+      reset_times = MAX(1, start_reset->times);
+      reset_percent = MAX(1, start_reset->pct);
+    }
+  else if (to)
+    start_obj = to;
+  else
+    return;
+  
+  while (--reset_times >= 0)
+    {
+      if (nr (1,100) > reset_percent)
+	continue;
+      
+      last_dir = REALDIR_MAX;
+      old_room_num = 0;
+      bad_dir_this_room = REALDIR_MAX;
+      found_start_room = FALSE;
+      
+      if (randpop)
+	{
+	  obj = find_thing_num (calculate_randpop_vnum 
+				(randpop, (to ? LEVEL (to) : LEVEL(area))));
+	  if (!obj)
+	    obj = start_obj;
+	}
+      else
+	obj = start_obj;
+      
+      /* Need a dimension value on this object that says that
+	 it's stringy. */
+      
+      if ((o_dims = FNV (obj, VAL_DIMENSION)) == NULL ||
+	  !o_dims->word || !*o_dims->word || 
+	  !named_in (o_dims->word, "stringy"))
+	continue;
+      
+      n_obj_dims.word = nonstr;
+      
+      /* Get the starting and ending places to look. */
+      
+      if (start_dims)
+	{
+	  s_min_x = start_dims->val[0];
+	  s_max_x = start_dims->val[1] - 1;
+	  s_min_y = start_dims->val[2];
+	  s_max_y = start_dims->val[3] - 1;
+	  s_min_z = start_dims->val[4];
+	  s_max_z = start_dims->val[5] - 1;
+	}
+      else
+	{
+	  s_min_x = s_min_y = 0;
+	  s_max_x = s_max_y = CITY_SIZE-1;
+	  s_min_z = s_max_z = CITYGEN_STREET_LEVEL;
+	}
+      
+      
+      
+      
+      /* Now search for the proper place to go. Search between search_min
+	 and search_max in the x, y, z coords..with the rule that the
+	 "base" level of the search area must contain all rooms, and you
+	 can build up into blank rooms, but you can't add the rooms to the 
+	 base level of rooms. */
+      
+      
+      for (count = 0; count < 2; count++)
+	{
+	  for (x = s_min_x; x <= s_max_x; x++)
+	    {
+	      for (y = s_min_y; y <= s_max_y; y++)
+		{
+		  for (z = s_min_z; z <= s_max_z; z++)
+		    {
+		      bad_dir_this_room = REALDIR_MAX;
+		      num_open_dirs = 0;
+		      /* This is a bit different. We need rooms that
+			 exist and are on an edge. of the area. */
+		      
+		      if (!city_coord_is_ok (x, y, z) ||
+			  (room = city_grid[x][y][z]) == NULL ||
+			  is_named (room, "road"))
+			continue;
+		      
+		      /* The room is on an edge if it's at the
+			 xyz edges, or if a room doesn't exist
+			 adjacent to it. For each acceptable position,
+			 add another direction to teh acceptable
+			 directions list. */
+		      
+		      if (x == s_min_x ||
+			  !city_coord_is_ok(x-1,y,z) ||
+			  !city_grid[x-1][y][z])
+			{
+			  bad_dir_this_room = DIR_WEST;
+			  num_open_dirs++;
+			}
+		      
+		      if (x == s_max_x ||
+			  !city_coord_is_ok(x+1,y,z) ||
+			  !city_grid[x+1][y][z])
+			{
+			  bad_dir_this_room = DIR_EAST;
+			  num_open_dirs++;
+			}
+		      
+		      if (y == s_min_y ||
+			  !city_coord_is_ok(x,y-1,z) ||
+			  !city_grid[x][y-1][z])
+			{
+			  bad_dir_this_room = DIR_SOUTH;
+			  num_open_dirs++;
+			}
+		      
+		      if (y == s_max_y ||
+			  !city_coord_is_ok(x,y+1,z) ||
+			  !city_grid[x][y+1][z])
+			{
+			  bad_dir_this_room = DIR_NORTH;
+			  num_open_dirs++;
+			}
+		      
+		      /* Need exactly 1 edge room because corners suck. */
+		      if (num_open_dirs == 1)
+			{
+			  if (count == 0)
+			    num_choices++;
+			  else if (--num_chose < 1)
+			    {
+			      found_start_room = TRUE;
+			      sx = x;
+			      sy = y;
+			      sz = z;
+			    }
+			}
+		    }
+		  if (found_start_room)
+		    break;
+		}
+	      if (found_start_room)
+		break;
+	    }
+	  if (found_start_room)
+	    break;
+	  
+	  if (count == 0)
+	    {
+	      if (num_choices < 1)
+		break;
+	      num_chose = nr (1, num_choices);
+	    }	  
+	}
+      
+      if (!city_coord_is_ok (sx, sy, sz) ||
+	  (room = city_grid[sx][sy][sz]) == NULL ||
+	  is_named (room, "road") ||
+	  bad_dir_this_room == REALDIR_MAX)
+	continue;
+      
+      
+      /* Get the correct dx and dy based on where this
+	 room edge is. We go in the opp dir to the "bad" dir. */
+      
+      
+      if (bad_dir_this_room == DIR_EAST)
+	dx--;
+      else if (bad_dir_this_room == DIR_WEST)
+	dx++;
+      else if (bad_dir_this_room == DIR_NORTH)
+	dy--;
+      else if (bad_dir_this_room == DIR_SOUTH)
+	dy++;
+      else
+	continue;
+      
+      
+      sprintf (buf, "%d %d %d %d %d %d %d %d",
+	       dx, /* Dx */
+	       dy, /* Dy */
+	       50, /* Length */
+	       1, /* Width */ 
+	       0,  /* Fuzziness */
+	       0,   /* Holeyness */
+	       7, /* Curviness */
+	       0); /* Xtra Lines */
+      
+      do
+	{
+	  map = mapgen_generate (buf);
+	  
+	  if (map && map->num_rooms > 20)
+	    break;
+	  else
+	    {
+	      free_mapgen (map);
+	      map = NULL;
+	    }
+	}
+      while (!map && ++map_tries < 1000);
+      
+      if (!map)
+	continue;
+
+      /* Now we have a map. Overlay it onto the city map. */
+      
+      /* Get the name we will use here. */
+      free_str (city_grid[sx][sy][sz]->short_desc);
+      city_grid[sx][sy][sz]->short_desc = nonstr;
+      generate_detail_name (obj, city_grid[sx][sy][sz]);
+      capitalize_all_words (city_grid[sx][sy][sz]->short_desc);
+      strcpy (word, city_grid[sx][sy][sz]->short_desc);
+      
+      /* Now loop through the sequence of rooms given by the 
+	 mapgen map and set the rooms in the city to the same value.
+	 The way this is done is that we start with the mapgen
+	 center room and stick it into the start room, then we
+	 copy the object values into that room and nuke the
+	 room in the mapgen. then we go adjacent to the room and
+	 find whatever room is next to and in the mapgen map. */
+      
+      city_x = sx;
+      city_y = sy;
+      city_z = sz;
+      if (dx > 0)
+	{
+	  for (x = 0; x < MAPGEN_MAXX && !found; x++)
+	    {
+	      for (y = 0; y < MAPGEN_MAXY; y++)
+		{
+		  if (map->used[x][y])
+		    {
+		      map_x = x;
+		      map_y = y;
+		      found = TRUE;
+		      break;
+		    }
+		}
+	    }
+	}
+      else if (dx < 0)
+	{
+	  for (x = MAPGEN_MAXX-1; x >= 0 && !found; x--)
+	    {
+	      for (y = 0; y < MAPGEN_MAXY; y++)
+		{
+		  if (map->used[x][y])
+		    {
+		      map_x = x;
+		      map_y = y;
+		      found = TRUE;
+		      break;
+		    }
+		}
+	    }
+	}
+      
+      else if (dy > 0)
+	{
+	  for (y = 0; y < MAPGEN_MAXY && !found; y++)
+	    {
+	      for (x = 0; x < MAPGEN_MAXX; x++)
+		{
+		  if (map->used[x][y])
+		    {
+		      map_x = x;
+		      map_y = y;
+		      found = TRUE;
+		      break;
+		    }
+		}
+	    }
+	}
+      else if (dy < 0)
+	{
+	  for (y = MAPGEN_MAXY-1; y >= 0 && !found; y--)
+	    {
+	      for (x = 0; x < MAPGEN_MAXY; x++)
+		{
+		  if (map->used[x][y])
+		    {
+		      map_x = x;
+		      map_y = y;
+		      found = TRUE;
+		      break;
+		    }
+		}
+	    }
+	}
+      
+      
+      
+      /* Every time we are at a map room */
+      old_room_num = 0;
+      last_dir = REALDIR_MAX;
+      undo_marked (area);
+      while (map->used[map_x][map_y])
+	{
+	  /* Check if the city room is ok. It's ok if it's
+	     the right depth or if it's named as a road. */
+	  if (!city_coord_is_ok (city_x, city_y, city_z) ||
+	      (room = city_grid[city_x][city_y][city_z]) == NULL ||
+	      (room->mv >= depth &&
+	       !is_named (room, "road")))
+	    break;
+	  
+	  if (!first_room)
+	    first_room = room;
+	  last_room = room;
+	  room->mv = depth;
+	  free_str (room->short_desc);
+	  append_name (room, obj->name);
+	  room->short_desc = new_str (word);
+	  append_name (room, "road");
+	  SBIT (room->thing_flags, TH_MARKED);
+	  if (flagbits (obj->flags, FLAG_ROOM1))
+	    {
+	      remove_flagval (room, FLAG_ROOM1, ~0);
+	      add_flagval (room, FLAG_ROOM1, 
+			   /*   flagbits (obj->flags, FLAG_ROOM1) | */ ROOM_ROUGH);
+	      
+	    }
+	  
+	  map->used[map_x][map_y] = 0;
+	  
+	  /* Now link to adjacent rooms. */
+	  
+	  for (dir = 0; dir < FLATDIR_MAX; dir++)
+	    {
+	      nx = city_x;
+	      ny = city_y;
+	      
+	      if (dir == DIR_NORTH)
+		ny++;
+	      else if (dir == DIR_SOUTH)
+		ny--;
+	      else if (dir == DIR_EAST)
+		nx++;
+	      else if (dir == DIR_WEST)
+		nx--;
+	      
+	      /* Now make sure this room won't be in the road
+		 eventually. */
+	      
+	      
+	      
+	      if (city_coord_is_ok (nx, ny, city_z) &&
+		  (nroom = city_grid[nx][ny][city_z]) != NULL &&
+		  !is_named (nroom, "road") &&
+		  nroom->mv <= depth &&
+		  !FNV (room, dir + 1))
+		{
+		  if (map->used[map_x+(nx-city_x)][map_y+(ny-city_y)] ||
+		      nr (1,5) == 2)
+		    {
+		      room_add_exit (room, dir, nroom->vnum, 0);
+		      room_add_exit (nroom, RDIR (dir), room->vnum, 0);
+		    }
+		}
+	    }
+	  
+	  
+	  
+	  
+	  if (map->used[map_x+1][map_y])
+	    {
+	      map_x++;
+	      city_x++;
+	      last_dir = DIR_EAST;
+	    }
+	  else if (map->used[map_x-1][map_y])
+	    {
+	      map_x--;
+	      city_x--;
+	      last_dir = DIR_WEST;
+	    }
+	  else if (map->used[map_x][map_y+1])
+	    {
+	      map_y++;
+	      city_y++;
+	      last_dir = DIR_NORTH;
+	    }
+	  else if (map->used[map_x][map_y-1])
+	    {
+	      map_y--;
+	      city_y--;
+	      last_dir = DIR_SOUTH;
+	    }
+	  
+	  old_room_num = room->vnum;
+	}	      
+      free_mapgen (map);
+      map = NULL;
+      
+      /* Now make the ends of the roads "road ends" */
+      
+      append_name (first_room, "road_end");
+      append_name (last_room, "road_end");
+      
+      /* At this point the rooms (or proto) are created, and the names
+	 have been set. */
+      
+      /*  Now perform resets on this road. */
+      
+      /* These things should ALWAYS be a road reset,so we don't
+	 need to add the "to" here.  These resets are screwy
+	 and the times and pcts must be done here since
+	 we can't search for their proper locations within the
+	 stringy object we've made at the next level down. */
+      
+      
+      for (rst = obj->resets; rst; rst = rst->next)
+	{
+	  RESET temp_reset;
+	  int times;
+	  if ((rst_obj = find_thing_num (rst->vnum)) == NULL)
+	    continue;
+	  
+	  copy_reset (rst, &temp_reset);
+	  temp_reset.times = 1;
+	  
+	  for (times = 0; times < (int) rst->times; times++)
+	    {
+	      if (nr(1,100) <= MAX(2, rst->pct))
+		{
+		  /* Now set up the dims where the subobjects will be reset. 
+		     Pick a random marked room at the correct depth
+		     and it should be on the road. */
+		  
+		  num_choices = 0;
+		  num_chose = 0;
+		  found_start_room = FALSE;
+		  
+		  for (count = 0; count < 2; count++)
+		    {
+		      for (x = s_min_x; x <= s_max_x; x++)
+			{
+			  for (y = s_min_y; y <= s_max_y; y++)
+			    {
+			      for (z = s_min_z; z <= s_max_z; z++)
+				{
+				  if ((room = city_grid[x][y][z]) == NULL ||
+				      !IS_MARKED (room) ||
+				      room->mv != depth)
+				    continue;
+				  
+				  if (count == 0)
+				    num_choices++;
+				  else if (--num_chose < 1)
+				    {
+				      found_start_room = TRUE;
+				      sx = x;
+				      sy = y;
+				      sz = z;
+				      break;
+				    }
+				}
+			      if (found_start_room)
+				break;
+			    }
+			  if (found_start_room)
+			    break;		      
+			}
+		      if (found_start_room)
+			break;
+		      
+		      if (count == 0)
+			{
+			  if (num_choices < 1)
+			    break;
+			  else
+			    num_chose = nr (1, num_choices);
+			}
+		    }
+		  
+		  /* Make the dimensions for the next reset location,
+		     "this room." */
+		  
+		  n_obj_dims.type = VAL_DIMENSION;
+		  n_obj_dims.val[0] = n_obj_dims.val[1] = sx;
+		  n_obj_dims.val[2] = n_obj_dims.val[3] = sy;
+		  n_obj_dims.val[4] = n_obj_dims.val[5] = sz;
+		  
+		  
+		  
+		  citygen_add_detail (&temp_reset, area, NULL, &n_obj_dims, depth+ 1);
+		}
+	    }
+	}
+    } 
+  if (depth < 2)    
+    undo_marked (area);
+  return;
+}
+
+
+/* This adds guards and gatehouses and stock eq to the area. */
+
+void
+citygen_add_guards (THING *area)
+{
+  THING *mob[CITYGEN_GUARD_MAX], *proto;
+  THING *obj;
+  int vnum;
+  int times;
+  
+  char buf[STD_LEN];
+  char nametype[STD_LEN];
+  
+  THING *jewelry_randpop_item = NULL;
+  VALUE *randpop;
+  int i;
+  
+
+  /* These variables are used to find and place guard posts. You
+     find road rooms that are on the edge of the city and you place
+     the gatehouses there and fill them with guards. */
+  
+  THING *room, *nroom;
+  int x, y, z;
+  int nx, ny, nz;
+  
+  int dir;
+  int num_guard_posts = 0, guards_per_post = 0;
+  
+  /* Used to set up the min and max vnums for the armor and
+     jewelry and such. */
+  
+  int armor_start_vnum = 0, armor_end_vnum = 0;
+  int jewelry_start_vnum = 0, jewelry_end_vnum = 0;
+  int overall_color;
+  int num_worn = 0;
+  
+  if (!area)
+    return;
+  guards_per_post = MIN(10, area->mv/40);
+  
+
+  for (times = 0; times < CITYGEN_GUARD_MAX; times++)
+    {
+      if ((vnum = find_free_mobject_vnum (area)) == 0)
+	return;
+      
+      
+      proto = new_thing();
+      proto->vnum = vnum;
+      proto->thing_flags = MOB_SETUP_FLAGS;
+      
+      /* Set up level and max hps. */
+      proto->max_hp = 30;
+      proto->level = LEVEL(area)*5/4 + 10;
+      
+
+      thing_to (proto, area);
+      add_thing_to_list (proto);
+      proto->level = LEVEL(area);
+      add_flagval (proto, FLAG_DET, AFF_DARK | AFF_INVIS | AFF_HIDDEN);
+      /* Guards assist all. Nasty. */
+      add_flagval (proto, FLAG_ACT1, ACT_ASSISTALL);
+      if (times == 0)
+	{
+	  proto->name = new_str ("guard gateguard");
+	  proto->short_desc = new_str ("a gateguard");
+	  proto->long_desc = new_str ("A gateguard is here watching for trouble.");	  
+	  add_flagval (proto, FLAG_ACT1, ACT_SENTINEL);
+	}
+      else if (times == 1)
+	{
+	  proto->name = new_str ("guard cityguard");
+	  proto->short_desc = new_str ("a cityguard");
+	  proto->long_desc = new_str ("An alert cityguard stands here.");	  
+	  proto->max_mv = area->mv/10;
+	  /* Add a reset to the area so the guards just 
+	     wander all over. */
+	  add_reset (area, proto->vnum, 50, proto->max_mv, 1);
+	}
+      mob[times] = proto;
+    }
+
+/* Now make the objects. */
+
+  /* First generate a name that all objects will share. Either a
+     metal name or a prefix or a suffix. */
+  
+  switch (nr (1,2))
+    {
+      case 1:
+	sprintf (nametype, "prefix");
+	break;
+      case 2:
+      default:
+	sprintf (nametype, "suffix");
+	break;
+    }
+  
+  sprintf (buf, "%s '%s'", nametype, find_gen_word (OBJECTGEN_AREA_VNUM, nametype, NULL));
+  
+  /* Overall color for objects in the city. */
+  overall_color = nr (1,15);
+  sprintf (buf + strlen (buf), " overall_color %d", overall_color);
+  
+  /* Do this in 2 passes. First, we have one pass that makes
+     common armor and weapons, and another that makes rare
+     jewelry. Then we give resets of these items to the
+     guards we created above. */
+  
+  /* Make armor. */
+  
+  for (i = ITEM_WEAR_NONE + 1; i < ITEM_WEAR_MAX; i++)
+    {
+      if (wear_data[i].how_many_worn > 1 &&
+	  i != ITEM_WEAR_WIELD)
+	continue;
+      
+      if (i == ITEM_WEAR_BELT)
+	continue;
+
+      num_worn = wear_data[i].how_many_worn;
+      
+      while (--num_worn >= 0)
+	{
+	  
+	  if ((vnum = find_free_mobject_vnum (area)) == 0)
+	    break;
+	  
+	  if ((obj = objectgen (area, i, LEVEL(area), vnum, buf)) == NULL)
+	    break;
+	  
+	  /* Only set once. */
+	  if (armor_start_vnum == 0)
+	    armor_start_vnum = obj->vnum;
+	  
+	  /* Keeps going up. */
+	  armor_end_vnum = obj->vnum;      
+	}
+    }
+  
+  
+  /* Now do jewelry. */
+  for (i = ITEM_WEAR_NONE + 1; i < ITEM_WEAR_MAX; i++)
+    {
+      if (wear_data[i].how_many_worn <= 1 ||
+	  i == ITEM_WEAR_WIELD || i == ITEM_WEAR_BELT)
+	continue;
+
+      
+      num_worn = wear_data[i].how_many_worn;
+      
+      while (--num_worn >= 0)
+	{
+	  
+	  if ((vnum = find_free_mobject_vnum (area)) == 0)
+	    break;
+	  
+	  if ((obj = objectgen (area, i, LEVEL(area), vnum, buf)) == NULL)
+	    break;
+	  
+	  /* Only set once. */
+	  if (jewelry_start_vnum == 0)
+	    jewelry_start_vnum = obj->vnum;
+	  
+	  /* Keeps going up. */
+	  jewelry_end_vnum = obj->vnum;      
+	}
+    }
+
+  /* Set up the randpop item for the jewelry. */
+  
+  if ((vnum = find_free_mobject_vnum (area)) != 0 &&
+      jewelry_start_vnum > 0 && 
+      jewelry_end_vnum >= jewelry_start_vnum)
+    {
+      jewelry_randpop_item = new_thing();
+      jewelry_randpop_item->vnum = vnum;
+      jewelry_randpop_item->thing_flags = OBJ_SETUP_FLAGS;
+      thing_to (jewelry_randpop_item, area);
+      add_thing_to_list (jewelry_randpop_item);
+      
+      jewelry_randpop_item->name = new_str ("randpop");
+      jewelry_randpop_item->short_desc = new_str ("randpop");
+      randpop = new_value();
+      randpop->type = VAL_RANDPOP;
+      add_value (jewelry_randpop_item, randpop);
+      randpop->val[0] = jewelry_start_vnum;
+      randpop->val[1] = jewelry_end_vnum - jewelry_start_vnum+1;
+      randpop->val[2] = 1;
+    }
+  
+  /* Now add the item resets to the guards. */
+
+  for (times = 0; times < CITYGEN_GUARD_MAX; times++)
+    {
+      if (!mob[times])
+	continue;
+      
+      if (armor_start_vnum > 0 &&
+	  armor_end_vnum >= armor_start_vnum)
+	{
+	  for (vnum = armor_start_vnum; vnum <= armor_end_vnum; vnum++)
+	    {
+	      if ((obj = find_thing_num (vnum)) != NULL)
+		{
+		  add_reset (mob[times], vnum, 50, 1, 1);
+		}
+	    }
+	}
+      
+      if (jewelry_randpop_item)
+	add_reset (mob[times], jewelry_randpop_item->vnum, 30, 3, 1);
+    }
+
+  
+  /* Now we have to set up the guards and the guard posts. */
+  
+  if (mob[CITYGEN_GUARD_GATE])
+    {
+      char name[STD_LEN];
+      
+      /* YOU MUST FREE THIS THING BEFORE YOU RETURN IF YOU DON'T DO
+	 THIS IS WILL CAUSE A MEMORY LEAK! IT WON'T BE TOO BAD SINCE
+	 YOU ONLY GET ONE LEAK PER CITY GENERATED, BUT STILL. */
+   
+      /* Only do this for things at depth 2 (main roads) and things
+	 on the z == CITYGEN_STREET_LEVEL */
+      
+      z = CITYGEN_STREET_LEVEL;
+      for (x = 0; x < CITY_SIZE; x++)
+	{
+	  for (y = 0; y < CITY_SIZE; y++)
+	    {
+	      if (!city_coord_is_ok (x, y, z) ||
+		  (room = city_grid[x][y][z]) == NULL ||
+		  !is_named (room, "road_end") ) 
+		continue;
+	      for (dir = 0; dir < FLATDIR_MAX; dir++)
+		{
+		  nx = x;
+		  ny = y;
+		  nz = z;
+		  if (dir == DIR_NORTH)
+		    ny++;
+		  else if (dir == DIR_SOUTH)
+		    ny--;
+		  else if (dir == DIR_EAST)
+		    nx++;
+		  else if (dir == DIR_WEST)
+		    nx--;
+		  
+		  
+		  /* If an adjacent room doesn't exist, and it's a 
+		     road end, then we call this a gate. */
+		  if (!city_coord_is_ok (nx, ny, nz) ||
+		      (nroom = city_grid[nx][ny][nz]) == NULL)
+		    {
+		      *name = '\0';
+		      
+		      if (nr (1,3) == 2)
+			strcpy (name, string_gen ("a_an room_size gate_house", WORDLIST_AREA_VNUM));
+		      else
+			strcpy (name, string_gen ("a_an building_condition gate_house", WORDLIST_AREA_VNUM));
+		      
+		      capitalize_all_words (name);
+		      if (*name)
+			{
+			  free_str (room->short_desc);
+			  room->short_desc = new_str (name);
+			  append_name (room, "gate_house");
+			  add_reset (room, mob[CITYGEN_GUARD_GATE]->vnum, 50, guards_per_post, 1);
+			  num_guard_posts++;
+			  break;
+			}
+		    }
+		}
+	    }
+	}
+    }
+  mob[CITYGEN_GUARD_GATE]->max_mv = num_guard_posts*guards_per_post;      
+  return;
+}
+
+
+/* This fixes disconnected regions within the city by connecting
+   things to adjacent open regions. */
+
+
+/* It works by starting at the lowest room vnum in the area and
+   doing a DFS to check connectivity. If it's connected, we stop
+   else we continue to link new regions as needed. */
+
+void 
+citygen_connect_regions (THING *area, int max_jump_depth)
+{
+  THING *start_room, *room, *nroom;
+  int count, num_choices = 0, num_chose = 0, 
+    num_road_choices = 0, num_road_chose = 0;
+
+  int total_num_rooms = 0;
+  int current_rooms_connected;
+  bool added_a_link; /* Did we add a room link. */
+  
+  bool connect_to_road = FALSE; /* Can we connect to a road? */
+  
+  bool found_room = FALSE;
+  
+  int dir;
+  
+  /* Need to loop through all rooms with these variables. */
+  int x, y, z;
+
+  /* These are the "adjacent" room variables we will use
+     to find which adjacent rooms don't have a connection. */
+  int nx, ny, nz;
+
+  if (!area || (start_room = area->cont) == NULL ||
+      !IS_ROOM (start_room) || max_jump_depth >= 10)
+    return;
+
+  if (max_jump_depth < 1)
+    max_jump_depth = 1;
+  
+  undo_marked (area);
+  
+  for (room = area->cont; room; room = room->next_cont)
+    {
+      if (IS_ROOM (room))
+	total_num_rooms++;
+    }
+  
+  do
+    {
+      added_a_link = FALSE;
+      undo_marked (area);
+      
+      current_rooms_connected = find_connected_rooms_size (start_room, ~0);
+     
+      if (current_rooms_connected >= total_num_rooms)
+	break;
+      
+      num_choices = 0;
+      num_chose = 0;
+      num_road_choices = 0;
+      num_road_chose = 0;
+      connect_to_road = FALSE;
+      for (count = 0; count < 2; count++)
+	{
+	  for (x = 0; x < CITY_SIZE; x++)
+	    {
+	      for (y = 0; y < CITY_SIZE; y++)
+		{
+		  for (z = 0; z < CITY_HEIGHT; z++)
+		    {
+		      if (!city_coord_is_ok (x, y, z) ||
+			  (room = city_grid[x][y][z]) == NULL ||
+			  !IS_MARKED (room))
+			continue;
+		      for (dir = 0; dir < REALDIR_MAX; dir++)
+			{
+			  
+			  /* Find the coordinates of the adjacent room
+			     we care about. */
+			  
+			  nx = x;
+			  ny = y;
+			  nz = z;
+			  
+			  if (dir == DIR_NORTH)
+			    ny++;
+			  if (dir == DIR_SOUTH)
+			    ny--;
+			  if (dir == DIR_EAST)
+			    nx++;
+			  if (dir == DIR_WEST)
+			    nx--;
+			  if (dir == DIR_UP)
+			    nz++;
+			  if (dir == DIR_DOWN)
+			    nz--;
+			  
+			  if (city_coord_is_ok(nx, ny, nz) &&
+			      (nroom = city_grid[nx][ny][nz]) != NULL &&
+			      IS_ROOM (nroom) &&
+			      !IS_MARKED (nroom) &&
+			      nroom->mv - room->mv <= max_jump_depth &&
+			      room->mv - nroom->mv <= max_jump_depth)
+			    {
+			     
+			      if (is_named (nroom, "road"))
+				{
+				  connect_to_road = TRUE;
+				  if (count == 0)
+				    num_road_choices++;
+				  else if (--num_road_chose < 1)
+				    {
+				      found_room = TRUE;
+				      break;
+				    }
+				}
+			      if (!connect_to_road)
+				{
+				  if (count == 0)
+				    num_choices++;
+				  else if (--num_chose < 1)
+				    {
+				      found_room = TRUE;
+				      break;
+				    }
+				}
+			      
+			    }
+			  if (found_room)
+			    break;
+			}
+		      if (found_room)
+			break;
+		    }
+		  if (found_room)
+		    break;
+		}
+	      if (found_room)
+		break;
+	    }
+	  if (found_room)
+	    break;
+	  
+	  if (count == 0)
+	    {
+	      if (connect_to_road)
+		{
+		  if (num_road_choices < 1)
+		    break;
+		  num_road_chose = nr (1, num_road_choices);
+		}
+	      else
+		{
+		  if (num_choices < 1)
+		    break;
+		  num_chose = nr (1, num_choices);
+		}
+	    }
+	}
+  
+  /* We should have a room. */
+
+      if (room && nroom && found_room && dir >= 0 &&
+	  dir < REALDIR_MAX)
+	{
+	  room_add_exit (room, dir, nroom->vnum, 0);
+	  room_add_exit (nroom, RDIR (dir), room->vnum, 0);
+	  added_a_link = TRUE;
+	}     
+    }
+  while (added_a_link);
+ 
+  undo_marked (area);
+  
+  if (find_connected_rooms_size (start_room, ~0) < total_num_rooms)
+    citygen_connect_regions (area, max_jump_depth + 1);
+  return;
   
 }

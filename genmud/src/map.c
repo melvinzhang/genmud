@@ -202,93 +202,104 @@ set_up_map_room (THING *room)
   /* Set up the "road" symbols and the ascii symbols
      for those with upper ascii displays. */
 
-  if (room->symbol == '\0')
+  if (IS_SET (exits, (1 << DIR_NORTH)))
     {
-      if (IS_SET (exits, (1 << DIR_NORTH)))
-	{
-	  if (IS_SET (exits, (1 << DIR_SOUTH)))
-	    {
-	      if (IS_SET (exits, (1 << DIR_EAST)))
-		{
-		  if (IS_SET (exits, (1 << DIR_WEST)))
-		    {
-		      room->symbol = '+'; /* nsew */
-		      room->ascii_symbol = 197;
-		    }
-		  else
-		    {
-		      room->symbol = '}'; /* nse */
-		      room->ascii_symbol = 195;
-		    }
-		}
-	      else if (IS_SET (exits, (1 << DIR_WEST)))
-		{ 
-		  room->symbol = '{'; /* nsw */
-		  room->ascii_symbol = 180;
-		}		      
-	      else
-		{ 
-		  room->symbol = '|'; /* ns */
-		  room->ascii_symbol = 179;
-		}
-	    }
-	  else if (IS_SET (exits, (1 << DIR_EAST)))
-	    {
-	      if (IS_SET (exits, (1 << DIR_WEST)))
-		{ 
-		  room->symbol = '+'; /* new */
-		  room->ascii_symbol = 193;
-		}
-	      else
-		{ 
-		  room->symbol = '\\'; /* ne */
-		  room->ascii_symbol = 192;
-		}
-	    }
-	  else if (IS_SET (exits, (1 << DIR_WEST)))
-	    { 
-	      room->symbol = '/'; /* nw */
-	      room->ascii_symbol = 217;
-	    }
-	  else
-	    {
-	      room->symbol = '|'; /* n */
-	      room->ascii_symbol = 179;
-	    }
-	}
-      else if (IS_SET (exits, (1 << DIR_SOUTH)))
+      if (IS_SET (exits, (1 << DIR_SOUTH)))
 	{
 	  if (IS_SET (exits, (1 << DIR_EAST)))
 	    {
 	      if (IS_SET (exits, (1 << DIR_WEST)))
 		{
-		  room->symbol = '+'; /* sew */
-		  room->ascii_symbol = 194;
+		  if (room->symbol == '\0')
+		    room->symbol = '+'; /* nsew */
+		  room->ascii_symbol = 197;
 		}
 	      else
-		{ 
-		  room->symbol = '/'; /* se */
-		  room->ascii_symbol = 218;
+		{
+		  if (room->symbol == '\0')
+		    room->symbol = '}'; /* nse */
+		  room->ascii_symbol = 195;
 		}
 	    }
 	  else if (IS_SET (exits, (1 << DIR_WEST)))
 	    { 
-	      room->symbol = '\\'; /* sw */
-	      room->ascii_symbol = 191;
-	    }
+	      if (room->symbol == '\0')
+		room->symbol = '{'; /* nsw */
+	      room->ascii_symbol = 180;
+	    }		      
 	  else
 	    { 
-	      room->symbol = '|'; /* s */
+	      if (room->symbol == '\0')
+		room->symbol = '|'; /* ns */
 	      room->ascii_symbol = 179;
 	    }
 	}
-      else
+      else if (IS_SET (exits, (1 << DIR_EAST)))
+	{
+	  if (IS_SET (exits, (1 << DIR_WEST)))
+	    { 
+	      if (room->symbol == '\0')
+		room->symbol = '+'; /* new */
+	      room->ascii_symbol = 193;
+	    }
+	  else
+	    { 
+	      if (room->symbol == '\0')
+		room->symbol = '\\'; /* ne */
+	      room->ascii_symbol = 192;
+	    }
+	}
+      else if (IS_SET (exits, (1 << DIR_WEST)))
 	{ 
-	  room->symbol = '-'; /* ew e w or none */
-	  room->ascii_symbol = 196;
+	  if (room->symbol == '\0')
+	    room->symbol = '/'; /* nw */
+	  room->ascii_symbol = 217;
+	}
+      else
+	{
+	  if (room->symbol == '\0')
+	    room->symbol = '|'; /* n */
+	  room->ascii_symbol = 179;
 	}
     }
-  return;
+  else if (IS_SET (exits, (1 << DIR_SOUTH)))
+    {
+      if (IS_SET (exits, (1 << DIR_EAST)))
+	{
+	  if (IS_SET (exits, (1 << DIR_WEST)))
+	    {
+	      if (room->symbol == '\0')
+		room->symbol = '+'; /* sew */
+	      room->ascii_symbol = 194;
+	    }
+	  else
+	    { 
+	      if (room->symbol == '\0')
+		room->symbol = '/'; /* se */
+	      room->ascii_symbol = 218;
+	    }
+	}
+      else if (IS_SET (exits, (1 << DIR_WEST)))
+	{ 
+	  if (room->symbol == '\0')
+	    room->symbol = '\\'; /* sw */
+	  room->ascii_symbol = 191;
+	}
+      else
+	{ 
+	  if (room->symbol == '\0')
+	    room->symbol = '|'; /* s */
+	  room->ascii_symbol = 179;
+	}
+    }
+  else
+    { 
+      if (room->symbol == '\0')
+	room->symbol = '-'; /* ew e w or none */
+      room->ascii_symbol = 196;
+    }
+  
+return;
 }
 
 /* Sets color to gray, clears screen, makes whole screen scroll again. */

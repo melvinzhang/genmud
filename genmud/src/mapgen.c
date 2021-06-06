@@ -282,8 +282,8 @@ mapgen_generate (char *arg)
   int last_width; /* To keep it from being to "spiky."*/
   bool x_big = FALSE; /* Is the dx > the dy? */ 
   MAPGEN *map = NULL;     /* The new mapgen data.*/
-  
-
+  bool curve_jump_last_room = FALSE; /* Did curviness jump us last room? */
+  bool curve_jump_now;  /* Did we curve jump this room? */
   /* A matrix of the squares that have been used. */
   
   
@@ -549,13 +549,15 @@ mapgen_generate (char *arg)
       mapgen_used[x][y] = MAPGEN_USED;
       
       jump_dist = 0;
+      curve_jump_now = FALSE;
       if (decrement >= 0 || nr (1,50) <= curviness)
 	{
 	  if (x_big)
 	    decrement -= x_count;
 	  else
 	    decrement -= y_count;
-	  if (nr (1,20) > curviness)
+	  if (nr (1,20) > curviness ||
+	      curve_jump_last_room)
 	    {
 	      if (x_big)
 		y += y_step;
@@ -565,6 +567,7 @@ mapgen_generate (char *arg)
 	    }
 	  else
 	    {
+	      curve_jump_now = TRUE;
 	      jump_dist = MID (1, curviness/3, 4);
 	      jump_dist = nr (-jump_dist, jump_dist);
 	      if (jump_dist > 0)
@@ -598,6 +601,12 @@ mapgen_generate (char *arg)
       if (x < 4 || x >= MAPGEN_MAXX * 2 - 4 || y < 4 
 	  || y >= MAPGEN_MAXY * 2 - 4)
 	break;
+      
+
+      if (curve_jump_now)
+	curve_jump_last_room = TRUE;
+      else
+	curve_jump_last_room = FALSE;
       
       /* Now "fatten the line" */
        

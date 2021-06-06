@@ -2525,7 +2525,7 @@ do_thing (THING *th, char *arg)
   if (!th || LEVEL (th) < MAX_LEVEL || !IS_PC (th))
     return;
 
-  if (!str_cmp (arg, "gap") || !str_cmp (arg, "made"))
+  if (!str_cmp (arg, "gap") || !str_cmp (arg, "made") || !str_cmp (arg, "max") || !str_cmp (arg, "count"))
     {
       int made = 0;
       int vnum = 0;

@@ -99,7 +99,7 @@ static const char *objectgen_part_names[OBJECTGEN_NAME_MAX] =
 
 
 THING *
-objectgen (THING *area, int wear_loc, int level, int curr_vnum, char *names)
+objectgen (THING *area, int wear_loc, int level, int curr_vnum, char *preset_names)
 {
   THING *obj, *in_area;
   int weapon_type = -1;
@@ -148,7 +148,7 @@ objectgen (THING *area, int wear_loc, int level, int curr_vnum, char *names)
     return NULL;
   /* Get the descriptions of the object. */
   
-  objectgen_generate_names (name, color, wear_loc, weapon_type, level, names);
+  objectgen_generate_names (name, color, wear_loc, weapon_type, level, preset_names);
   
   
   if ((obj = new_thing()) == NULL)
@@ -164,7 +164,7 @@ objectgen (THING *area, int wear_loc, int level, int curr_vnum, char *names)
   /* Set up the name, short_desc, long_desc for the object. Maybe
      desc at some way way future date. */
 
-  objectgen_setup_names (obj, name, color);
+  objectgen_setup_names (obj, name, color, preset_names);
   
   /* This puts the stats and bonuses onto the object. */
   
@@ -197,7 +197,8 @@ generate_weapon_type (void)
 
 void
 objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
-		       char colorname[OBJECTGEN_NAME_MAX][STD_LEN])
+		       char colorname[OBJECTGEN_NAME_MAX][STD_LEN],
+		       char *preset_names)
 {
   int i;
   char fullname[STD_LEN*2];
@@ -205,10 +206,30 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
   char longname[STD_LEN*3];
   char namebuf[STD_LEN];
   char *t;
+
+  /* Used to get an "overall color" out of this item. */
+  char *wd;
+  char word[STD_LEN];
+  int overall_color = 0;
+
   bool put_prefix_at_end = FALSE; /* Do we put a prefix at the end? */
   if (!obj || !name || !colorname || obj->wear_pos <= ITEM_WEAR_NONE ||
       obj->wear_pos >= ITEM_WEAR_MAX || obj->wear_pos == ITEM_WEAR_BELT)
     return;
+  
+  wd = preset_names;
+  while (wd && *wd)
+    {
+      wd = f_word (wd, word);
+      if (!str_cmp (word, "overall_color"))
+	{
+	  wd = f_word (wd, word);
+	  if (atoi (word) > 0)	    
+	    overall_color = atoi(word);
+	  else if (LC(*word) >= 'a' && LC(*word) <= 'f')
+	    overall_color = LC(*word)-'a'+ 10;
+	}
+    }
   
   /* Set up the name name. */
   fullname[0] = '\0';
@@ -369,18 +390,25 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
     }
   
   /* Now possibly set the overall name of the object to something
-     different than just gray. */
+     different than just gray. You can set this outside objectgen
+     by putting the world "overall_color" into the list of names
+     passed to objectgen, and if the number is a hex digit or an int
+     from 1-15, it gets sent here and colors the object one main color. */
   
   strcpy (realfullname, add_color (fullname));
-  if (nr (1,3) == 3)
+  if (nr (1,3) == 3 || (overall_color > 0 && overall_color <= 15))
     {
       char *t, c;
       char tempname[STD_LEN];
       int num = nr (1,15);
       
+      /* If the color has been preset, then we use it, otherwise we
+	 use the random number we choose. */
+      if (overall_color > 0)
+	num = overall_color;
       c = int_to_hex_digit (num);
+
       
-    
       sprintf (tempname, "\x1b[%d;3%dm", num/8, num%8);
       strcat (tempname, realfullname);
       strcpy (realfullname, tempname);
@@ -824,6 +852,10 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
   
   for (t = name[OBJECTGEN_NAME_TYPE]; *t; t++);
   t--;
+  /* Go back past any quotes or whitespace in the name. */
+  while ((*t == '\'' || *t == '\"' || isspace (*t)) &&
+	 t > name[OBJECTGEN_NAME_TYPE])
+    t--;
   
   /* If the owner_name exists, the a_an gets set to empty. */
   
@@ -1630,4 +1662,13 @@ find_aff_with_rank (int rank)
 
   afftype += AFF_START;
   return (afftype);
+}
+
+
+/* this calculates the reset percent of an object based on its level. */
+
+int
+objectgen_reset_percent (int level)
+{
+  return MID (2,  70-level*2/3, 50);
 }

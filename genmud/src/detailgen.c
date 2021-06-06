@@ -620,7 +620,8 @@ generate_detail_mobject (THING *area, THING *to, THING *detail_thing)
  
 
   mobject = new_thing ();
-  copy_thing (detail_thing, mobject);  
+  copy_thing (detail_thing, mobject); 
+  mobject->type = new_str (detail_thing->type);
   generate_detail_name (detail_thing, mobject);
   mobject->vnum = vnum;
   if (CAN_TALK (mobject))
@@ -668,8 +669,9 @@ generate_detail_mobject (THING *area, THING *to, THING *detail_thing)
       IS_SET (mobject->thing_flags, TH_NO_TAKE_BY_OTHER | TH_NO_MOVE_BY_OTHER))
     reset->pct = 100;
   else
-    reset->pct = MAX(2, 70 - mobject->level*2/3);
+    reset->pct = objectgen_reset_percent (mobject->level);
   
+   
   reset->next = new_to->resets;
   new_to->resets = reset;
   return mobject;
@@ -723,7 +725,7 @@ add_detail_resets (THING *area, THING *to, THING *detail_thing, int depth)
 		  newreset = new_reset();
 		  newreset->vnum = new_detail_thing->vnum;
 		  newreset->times = 0;
-		  newreset->pct = MAX (2, 70-new_detail_thing->vnum*2/3);
+		  newreset->pct = objectgen_reset_percent (new_detail_thing->level);
 		  newreset->next = to->resets;
 		  to->resets = newreset;
 		}
@@ -774,6 +776,7 @@ add_detail_resets (THING *area, THING *to, THING *detail_thing, int depth)
 		      break;
 		    }
 		}
+
 	    }
 	  else
 	    {
@@ -832,7 +835,10 @@ generate_detail_name (THING *proto, THING *target)
   bool need_a_an_here;
   bool use_plural = FALSE;  /* Is this a plural name? */
   bool use_notice = FALSE;  /* Do we have the "You notice" prefix on the ldesc? */
+  bool no_space_here = FALSE; /* Set this if you don't want a space here. */
   char *t;
+  char word2[STD_LEN];
+  THING *wlist_obj;
   /* Proto and target needed. */
   if (!proto || !target)
     return;
@@ -881,46 +887,79 @@ generate_detail_name (THING *proto, THING *target)
   need_a_an_here = FALSE;
   do
     {
-      
+      no_space_here = FALSE;
       format_pos = f_word (format_pos, lookup_word);
       /* If the lookup word is for an a/an we have to wait for the
 	 next word to actually add this word in... */
       if (!str_cmp (lookup_word, "a_an"))
 	need_a_an_here = TRUE;      
+      else if (!str_cmp (lookup_word, "##"))
+	no_space_here = TRUE;
       else
 	{
 	  
+	  word[0] = '\0';
 	  /* If the word belongs to another edesc add a random word... */
 	  if ((wdesc = find_edesc_thing (proto, lookup_word, TRUE)) != NULL)
+	    strcpy (word, find_random_word (wdesc->desc, detail_society_name));
+	  
+	  
+	  
+	  /* Now see if this is a word from the word list area or not. */
+	  *word2 = '\0';
+	  
+	  if (!*word)
+	    strcpy (word2, find_gen_word (WORDLIST_AREA_VNUM, lookup_word, NULL));
+	  
+	  /* If the lookup_word isn't one of the WORDLIST_AREA things,
+	     then check if the word we got from the lookup_word is. */
+	  if (*word && !*word2)
+	    strcpy (word2, find_gen_word (WORDLIST_AREA_VNUM, word, NULL));
+	  
+	  if (*word2 && str_cmp (word, word2))
 	    {
-	      strcpy (word, find_random_word (wdesc->desc, detail_society_name));
-	      if (LC(*lookup_word) == 'k')
+	      strcpy (word, word2);
+	      /* Word gives us the actual name to look up. */
+	      if (LC(*word) == 'k')
 		{
 		  if (*keywords)
 		    strcat (keywords, " ");
-		  strcat (keywords, word);
+		  strcat (keywords, word2);
 		}
-	      
 	    }
-	  else if (!named_in_full_word ("kshort klong kname", lookup_word))
-	    /* Otherwise plop this word directly in there. */
-	    strcpy (word, lookup_word);
-	  else
-	    *word = '\0';
-	  /* If we need an a_an here first, plop it down then put the
-	     word. */
+	  /* lookup_word gives us the name to look up. */
+	  else if (LC(*lookup_word) == 'k')
+	    {
+	      if (*keywords)
+		strcat (keywords, " ");
+	      strcat (keywords, word);
+	    }
+	  
+	  
+	  if (!*word)
+	    {
+	      if (!named_in_full_word ("kshort klong kname", lookup_word))
+		/* Otherwise plop this word directly in there. */
+		strcpy (word, lookup_word);
+	      else
+		*word = '\0';
+	    }
+      
+      
+      /* If we need an a_an here first, plop it down then put the
+	 word. */
 	  
 	  if (need_a_an_here && *word)
 	    {
 	      if (*sdesc && *word)
 		strcat (sdesc, " ");
 	      if (use_plural)
-		strcat (sdesc, find_gen_word (MOBGEN_DESC_AREA_VNUM, "a_an_plural", NULL));
+		strcat (sdesc, find_gen_word (WORDLIST_AREA_VNUM, "a_an_plural", NULL));
 	      else
 		strcat (sdesc, a_an (word));
 	      need_a_an_here = FALSE;
 	    }
-	  if (*sdesc)
+	  if (*sdesc && !no_space_here)
 	    strcat (sdesc, " ");
 	  strcat (sdesc, word);
 	  
@@ -1032,9 +1071,28 @@ generate_detail_name (THING *proto, THING *target)
 	  fdesc->desc && *fdesc->desc)
 	strcpy (lformat, find_random_word (fdesc->desc, NULL));
       if (!*lformat)
-	sprintf (lformat, "%s is here", sdesc);
+	{
+	  char tempformat[STD_LEN];
+	  strcpy (tempformat, find_gen_word (WORDLIST_AREA_VNUM, "obj_long_format", NULL));
+	  if (!*tempformat)
+	    sprintf (lformat, "%s is here", sdesc);
+	  else
+	    {
+	      char *wd = tempformat;
+	      lformat[0] = '\0';
+	      while (wd && *wd)
+		{
+		  wd = f_word (wd, word);
+		  if (*lformat)
+		    strcat (lformat, " ");
+		  if (!str_cmp (word, "sdesc"))		    
+		    strcat (lformat, sdesc);
+		  else
+		    strcat (lformat, word);
+		}
+	    }
+	}
     }
-  
   /* Then loop through it setting it up. This is a little different than
    the previous setup. In there we had some lookup_words that we used to
   find random words from the list of words in that edesc. We can't do
@@ -1063,11 +1121,30 @@ generate_detail_name (THING *proto, THING *target)
 	  if ((wdesc = find_edesc_thing (proto, lookup_word, TRUE)) != NULL)
 	    {
 	      strcpy (word, string_found_in (wdesc->desc, target->short_desc));
+	      
 	      if (!*word)
-		strcpy (word, find_random_word (wdesc->desc, NULL));
+		{
+		  *word2 = '\0';
+		  /* Look for the word in the wordlist area. */
+		  if ((wlist_obj = find_thing_thing (the_world, find_thing_num (WORDLIST_AREA_VNUM), word, FALSE)) != NULL)
+		    {
+		      strcpy (word2, string_found_in (wlist_obj->desc, target->short_desc));
+		      
+		      if (!*word2)
+			strcpy (word2, find_random_word (wlist_obj->desc, NULL));		      
+		    }
+		  /* If we get a match, use it. */
+		  if (*word2)
+		    {
+		      strcpy (word, word2);
+		    }
+		}
 	    }
-	  else 
-	    strcpy (word, find_gen_word (MOBGEN_DESC_AREA_VNUM, lookup_word, NULL));
+	  else  /* Look for something in the word list. */
+	    {
+	      strcpy (word, find_gen_word (WORDLIST_AREA_VNUM, lookup_word, NULL));
+	    }
+	  
 	  if (!*word)
 	    strcpy (word, lookup_word);
 	  
@@ -1078,7 +1155,7 @@ generate_detail_name (THING *proto, THING *target)
 	    {
 	      strcat (ldesc, " ");
 	      if (use_plural)
-		strcat (ldesc, find_gen_word (MOBGEN_DESC_AREA_VNUM, "a_an_plural", NULL));
+		strcat (ldesc, find_gen_word (WORDLIST_AREA_VNUM, "a_an_plural", NULL));
 	      else
 		strcat (ldesc, a_an (word));
 	      need_a_an_here = FALSE;

@@ -1,73 +1,4970 @@
 THING 14000
 Name area14000.are`
+Level 100
 HpMv 0 10 666 1000
 HWT 0 0
-Timer 5
+Short Pulhear`
 ThFl 1089531
+Reset 14723 100 1 1
+END_THING
+
+THING 14001
+HWT 0 0
+Short Broad Street`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14002
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14003
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14004
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14005
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14006
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14007
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14008
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14009
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14010
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val w_exit 14181 0 0 0 0 0 0 0 `
+Val n_exit 14011 0 0 0 0 0 0 0 `
+Val e_exit 14022 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14011
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val s_exit 14010 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14012
+Name roads road roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol \`
+ThFl 524779
+Val w_exit 14183 0 0 0 0 0 0 0 `
+Val n_exit 14192 0 0 0 0 0 0 0 `
+Val e_exit 14024 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14013
+Name roads road road_end road_end`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14014 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14014
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14015 0 0 0 0 0 0 0 `
+Val s_exit 14013 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14015
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14016 0 0 0 0 0 0 0 `
+Val s_exit 14014 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14016
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val e_exit 14028 0 0 0 0 0 0 0 `
+Val n_exit 14017 0 0 0 0 0 0 0 `
+Val s_exit 14015 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14017
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val e_exit 14029 0 0 0 0 0 0 0 `
+Val n_exit 14018 0 0 0 0 0 0 0 `
+Val s_exit 14016 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+Reset 14682 100 1 1
+END_THING
+
+THING 14018
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val e_exit 14030 0 0 0 0 0 0 0 `
+Val n_exit 14019 0 0 0 0 0 0 0 `
+Val s_exit 14017 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14019
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val e_exit 14031 0 0 0 0 0 0 0 `
+Val n_exit 14020 0 0 0 0 0 0 0 `
+Val s_exit 14018 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14020
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val e_exit 14032 0 0 0 0 0 0 0 `
+Val n_exit 14021 0 0 0 0 0 0 0 `
+Val s_exit 14019 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14021
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14022 0 0 0 0 0 0 0 `
+Val s_exit 14020 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14022
+Name roads road roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol |`
+ThFl 524779
+Val w_exit 14010 0 0 0 0 0 0 0 `
+Val n_exit 14023 0 0 0 0 0 0 0 `
+Val s_exit 14021 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14023
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14024 0 0 0 0 0 0 0 `
+Val s_exit 14022 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14024
+Name roads road roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol /`
+ThFl 524779
+Val w_exit 14012 0 0 0 0 0 0 0 `
+Val e_exit 14036 0 0 0 0 0 0 0 `
+Val s_exit 14023 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14025
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14026
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14027
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14028
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val w_exit 14016 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14029
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val w_exit 14017 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14030
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val w_exit 14018 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14031
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val w_exit 14019 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14032
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val w_exit 14020 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14033
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val n_exit 14034 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14034
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val s_exit 14033 0 0 0 0 0 0 0 `
+Val e_exit 14046 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14035
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14036
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val e_exit 14048 0 0 0 0 0 0 0 `
+Val w_exit 14024 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14037
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14038
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14039
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14040
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14041
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14042
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14043
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14044
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14045
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14046 0 0 0 0 0 0 0 `
+Val e_exit 14057 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14046
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val w_exit 14034 0 0 0 0 0 0 0 `
+Val e_exit 14058 0 0 0 0 0 0 0 `
+Val s_exit 14045 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14047
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14048
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val n_exit 14126 0 0 0 0 0 0 0 `
+Val w_exit 14036 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14049
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14050
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14051
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val n_exit 14052 0 0 0 0 0 0 0 `
+Val e_exit 14063 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14052
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val n_exit 14053 0 0 0 0 0 0 0 `
+Val e_exit 14064 0 0 0 0 0 0 0 `
+Val s_exit 14051 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14053
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val n_exit 14054 0 0 0 0 0 0 0 `
+Val e_exit 14065 0 0 0 0 0 0 0 `
+Val s_exit 14052 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14054
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val n_exit 14055 0 0 0 0 0 0 0 `
+Val e_exit 14066 0 0 0 0 0 0 0 `
+Val s_exit 14053 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14055
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val e_exit 14067 0 0 0 0 0 0 0 `
+Val s_exit 14054 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14056
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14057
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val w_exit 14045 0 0 0 0 0 0 0 `
+Val e_exit 14069 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14058
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val w_exit 14046 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14059
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14060
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val n_exit 14130 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14061
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14062
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14063
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val n_exit 14064 0 0 0 0 0 0 0 `
+Val e_exit 14101 0 0 0 0 0 0 0 `
+Val w_exit 14051 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14064
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val n_exit 14065 0 0 0 0 0 0 0 `
+Val e_exit 14073 0 0 0 0 0 0 0 `
+Val s_exit 14063 0 0 0 0 0 0 0 `
+Val w_exit 14052 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14065
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val n_exit 14066 0 0 0 0 0 0 0 `
+Val e_exit 14074 0 0 0 0 0 0 0 `
+Val s_exit 14064 0 0 0 0 0 0 0 `
+Val w_exit 14053 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14066
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val n_exit 14067 0 0 0 0 0 0 0 `
+Val e_exit 14075 0 0 0 0 0 0 0 `
+Val s_exit 14065 0 0 0 0 0 0 0 `
+Val w_exit 14054 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14067
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val n_exit 14068 3 3 0 0 0 0 0 `
+Val e_exit 14076 0 0 0 0 0 0 0 `
+Val s_exit 14066 0 0 0 0 0 0 0 `
+Val w_exit 14055 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14068
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val s_exit 14067 3 3 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14069
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val w_exit 14057 0 0 0 0 0 0 0 `
+Val e_exit 14078 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14070
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14071
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14072
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14073
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val n_exit 14074 0 0 0 0 0 0 0 `
+Val e_exit 14103 0 0 0 0 0 0 0 `
+Val s_exit 14101 0 0 0 0 0 0 0 `
+Val w_exit 14064 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14074
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val n_exit 14075 0 0 0 0 0 0 0 `
+Val e_exit 14104 0 0 0 0 0 0 0 `
+Val s_exit 14073 0 0 0 0 0 0 0 `
+Val w_exit 14065 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14075
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val n_exit 14076 0 0 0 0 0 0 0 `
+Val e_exit 14105 0 0 0 0 0 0 0 `
+Val s_exit 14074 0 0 0 0 0 0 0 `
+Val w_exit 14066 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14076
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val e_exit 14106 0 0 0 0 0 0 0 `
+Val s_exit 14075 0 0 0 0 0 0 0 `
+Val w_exit 14067 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14077
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14078 0 0 0 0 0 0 0 `
+Val e_exit 14107 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14078
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val w_exit 14069 0 0 0 0 0 0 0 `
+Val n_exit 14097 0 0 0 0 0 0 0 `
+Val s_exit 14077 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14079
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14080
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14081
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14082
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14083
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14084
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14085
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14086
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14087
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14088
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14089
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14090
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14091
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14092
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14093
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14094
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14095
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14096
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14097
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val s_exit 14078 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14098
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14099
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14100
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14101
+Name barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol -`
+ThFl 524779
+Val n_exit 14073 0 0 0 0 0 0 0 `
+Val e_exit 14102 0 0 0 0 0 0 0 `
+Val w_exit 14063 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14102
+Name park barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol }`
+ThFl 524779
+Val w_exit 14101 0 0 0 0 0 0 0 `
+Val n_exit 14103 0 0 0 0 0 0 0 `
+Val e_exit 14108 0 0 0 0 0 0 0 `
+Val s_exit 14378 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14103
+Name park barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol |`
+ThFl 524779
+Val e_exit 14109 0 0 0 0 0 0 0 `
+Val w_exit 14073 0 0 0 0 0 0 0 `
+Val n_exit 14104 0 0 0 0 0 0 0 `
+Val s_exit 14102 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14104
+Name park barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol }`
+ThFl 524779
+Val w_exit 14074 0 0 0 0 0 0 0 `
+Val n_exit 14105 0 0 0 0 0 0 0 `
+Val e_exit 14110 0 0 0 0 0 0 0 `
+Val s_exit 14103 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14105
+Name park barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol }`
+ThFl 524779
+Val w_exit 14075 0 0 0 0 0 0 0 `
+Val n_exit 14106 0 0 0 0 0 0 0 `
+Val e_exit 14111 0 0 0 0 0 0 0 `
+Val s_exit 14104 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14106
+Name park barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol |`
+ThFl 524779
+Val e_exit 14112 0 0 0 0 0 0 0 `
+Val w_exit 14076 0 0 0 0 0 0 0 `
+Val s_exit 14105 0 0 0 0 0 0 0 `
+Val n_exit 14107 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14107
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val w_exit 14077 0 0 0 0 0 0 0 `
+Val s_exit 14106 0 0 0 0 0 0 0 `
+Val e_exit 14113 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14108
+Name park barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol +`
+ThFl 524779
+Val e_exit 14114 0 0 0 0 0 0 0 `
+Val w_exit 14102 0 0 0 0 0 0 0 `
+Val n_exit 14109 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14109
+Name park tree barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol |`
+ThFl 524779
+Val n_exit 14110 0 0 0 0 0 0 0 `
+Val e_exit 14115 0 0 0 0 0 0 0 `
+Val w_exit 14103 0 0 0 0 0 0 0 `
+Val s_exit 14108 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14716 50 1 1
+END_THING
+
+THING 14110
+Name park barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol +`
+ThFl 524779
+Val s_exit 14109 0 0 0 0 0 0 0 `
+Val n_exit 14111 0 0 0 0 0 0 0 `
+Val e_exit 14116 0 0 0 0 0 0 0 `
+Val w_exit 14104 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14111
+Name park barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol +`
+ThFl 524779
+Val e_exit 14117 0 0 0 0 0 0 0 `
+Val s_exit 14110 0 0 0 0 0 0 0 `
+Val w_exit 14105 0 0 0 0 0 0 0 `
+Val n_exit 14112 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14112
+Name park tree barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol |`
+ThFl 524779
+Val e_exit 14118 0 0 0 0 0 0 0 `
+Val w_exit 14106 0 0 0 0 0 0 0 `
+Val s_exit 14111 0 0 0 0 0 0 0 `
+Val n_exit 14113 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14717 50 1 1
+END_THING
+
+THING 14113
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val s_exit 14112 0 0 0 0 0 0 0 `
+Val w_exit 14107 0 0 0 0 0 0 0 `
+Val e_exit 14119 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14114
+Name park barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol +`
+ThFl 524779
+Val n_exit 14115 0 0 0 0 0 0 0 `
+Val e_exit 14120 0 0 0 0 0 0 0 `
+Val w_exit 14108 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14115
+Name park barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol |`
+ThFl 524779
+Val w_exit 14109 0 0 0 0 0 0 0 `
+Val n_exit 14116 0 0 0 0 0 0 0 `
+Val s_exit 14114 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14116
+Name park barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol +`
+ThFl 524779
+Val n_exit 14117 0 0 0 0 0 0 0 `
+Val e_exit 14122 0 0 0 0 0 0 0 `
+Val s_exit 14115 0 0 0 0 0 0 0 `
+Val w_exit 14110 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14117
+Name park barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol +`
+ThFl 524779
+Val n_exit 14118 0 0 0 0 0 0 0 `
+Val e_exit 14123 0 0 0 0 0 0 0 `
+Val s_exit 14116 0 0 0 0 0 0 0 `
+Val w_exit 14111 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14118
+Name park barracks`
+HWT 0 0
+Color 7
+Short A City Guard Houses`
+Symbol }`
+ThFl 524779
+Val w_exit 14112 0 0 0 0 0 0 0 `
+Val n_exit 14119 0 0 0 0 0 0 0 `
+Val e_exit 14124 0 0 0 0 0 0 0 `
+Val s_exit 14117 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14119
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val s_exit 14118 0 0 0 0 0 0 0 `
+Val n_exit 14232 0 0 0 0 0 0 0 `
+Val w_exit 14113 0 0 0 0 0 0 0 `
+Val e_exit 14125 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14120
+Name park`
+HWT 0 0
+Color 7
+Short A Peaceful Park`
+Symbol -`
+ThFl 524779
+Val s_exit 14381 0 0 0 0 0 0 0 `
+Val w_exit 14114 0 0 0 0 0 0 0 `
+Val n_exit 14121 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14121
+Name park tree`
+HWT 0 0
+Color 7
+Short A Small Tree`
+Symbol -`
+ThFl 524779
+Val s_exit 14120 0 0 0 0 0 0 0 `
+Flag Room 0 0 16908288
+Reset 14714 50 1 1
+END_THING
+
+THING 14122
+Name park`
+HWT 0 0
+Color 7
+Short A Peaceful Park`
+Symbol -`
+ThFl 524779
+Val n_exit 14123 0 0 0 0 0 0 0 `
+Val w_exit 14116 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14123
+Name park`
+HWT 0 0
+Color 7
+Short A Peaceful Park`
+Symbol -`
+ThFl 524779
+Val n_exit 14124 0 0 0 0 0 0 0 `
+Val s_exit 14122 0 0 0 0 0 0 0 `
+Val w_exit 14117 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14124
+Name park`
+HWT 0 0
+Color 7
+Short A Peaceful Park`
+Symbol -`
+ThFl 524779
+Val n_exit 14125 0 0 0 0 0 0 0 `
+Val s_exit 14123 0 0 0 0 0 0 0 `
+Val w_exit 14118 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14125
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val s_exit 14124 0 0 0 0 0 0 0 `
+Val w_exit 14119 0 0 0 0 0 0 0 `
+Val n_exit 14237 0 0 0 0 0 0 0 `
+Val e_exit 14242 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14126
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val w_exit 14208 0 0 0 0 0 0 0 `
+Val e_exit 14130 0 0 0 0 0 0 0 `
+Val n_exit 14127 0 0 0 0 0 0 0 `
+Val s_exit 14048 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14127
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val s_exit 14126 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14128
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14129
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val w_exit 14211 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14130
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val e_exit 14134 0 0 0 0 0 0 0 `
+Val s_exit 14060 0 0 0 0 0 0 0 `
+Val w_exit 14126 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14131
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14132
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14133
+Name housing house bedroom`
+HWT 0 0
+Color 7
+Short A Cluttered Bedroom`
+Symbol -`
+ThFl 524779
+Flag Room 0 0 1
+Reset 14691 17 1 1
+Reset 14692 50 1 1
+END_THING
+
+THING 14134
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val e_exit 14139 0 0 0 0 0 0 0 `
+Val w_exit 14130 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14135
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14136
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14137
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val e_exit 14142 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14138
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14139
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val e_exit 14147 0 0 0 0 0 0 0 `
+Val n_exit 14140 0 0 0 0 0 0 0 `
+Val w_exit 14134 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14140
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val e_exit 14148 0 0 0 0 0 0 0 `
+Val s_exit 14139 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14141
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val e_exit 14149 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14142
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val n_exit 14228 0 0 0 0 0 0 0 `
+Val e_exit 14150 0 0 0 0 0 0 0 `
+Val w_exit 14137 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14143
+Name religious`
+HWT 0 0
+Color 7
+Short The Temple Retreat`
+Symbol -`
+ThFl 524779
+Val n_exit 14144 0 0 0 0 0 0 0 `
+Val e_exit 14151 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14144
+Name religious`
+HWT 0 0
+Color 7
+Short The Temple Retreat`
+Symbol -`
+ThFl 524779
+Val n_exit 14145 0 0 0 0 0 0 0 `
+Val e_exit 14152 0 0 0 0 0 0 0 `
+Val s_exit 14143 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14145
+Name religious`
+HWT 0 0
+Color 7
+Short The Temple Retreat`
+Symbol -`
+ThFl 524779
+Val e_exit 14153 0 0 0 0 0 0 0 `
+Val s_exit 14144 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14146
+Name religious tree`
+HWT 0 0
+Color 7
+Short A Small Tree`
+Symbol -`
+ThFl 524779
+Val n_exit 14147 0 0 0 0 0 0 0 `
+Flag Room 0 0 16908288
+Reset 14713 50 1 1
+END_THING
+
+THING 14147
+Name religious`
+HWT 0 0
+Color 7
+Short The Temple Retreat`
+Symbol -`
+ThFl 524779
+Val e_exit 14155 0 0 0 0 0 0 0 `
+Val s_exit 14146 0 0 0 0 0 0 0 `
+Val w_exit 14139 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14148
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val e_exit 14156 0 0 0 0 0 0 0 `
+Val n_exit 14149 0 0 0 0 0 0 0 `
+Val w_exit 14140 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14149
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val w_exit 14141 0 0 0 0 0 0 0 `
+Val e_exit 14157 0 0 0 0 0 0 0 `
+Val s_exit 14148 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14150
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val n_exit 14261 0 0 0 0 0 0 0 `
+Val e_exit 14158 0 0 0 0 0 0 0 `
+Val w_exit 14142 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14151
+Name religious`
+HWT 0 0
+Color 7
+Short The Temple Retreat`
+Symbol -`
+ThFl 524779
+Val n_exit 14152 0 0 0 0 0 0 0 `
+Val w_exit 14143 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14152
+Name religious`
+HWT 0 0
+Color 7
+Short The Temple Retreat`
+Symbol -`
+ThFl 524779
+Val n_exit 14153 0 0 0 0 0 0 0 `
+Val s_exit 14151 0 0 0 0 0 0 0 `
+Val w_exit 14144 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14153
+Name religious`
+HWT 0 0
+Color 7
+Short The Temple Retreat`
+Symbol -`
+ThFl 524779
+Val n_exit 14154 0 0 0 0 0 0 0 `
+Val s_exit 14152 0 0 0 0 0 0 0 `
+Val w_exit 14145 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14154
+Name religious`
+HWT 0 0
+Color 7
+Short The Temple Retreat`
+Symbol -`
+ThFl 524779
+Val n_exit 14155 0 0 0 0 0 0 0 `
+Val s_exit 14153 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14155
+Name religious`
+HWT 0 0
+Color 7
+Short The Temple Retreat`
+Symbol -`
+ThFl 524779
+Val s_exit 14154 0 0 0 0 0 0 0 `
+Val w_exit 14147 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14156
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val w_exit 14148 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14157
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val e_exit 14272 0 0 0 0 0 0 0 `
+Val w_exit 14149 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14158
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val w_exit 14150 0 0 0 0 0 0 0 `
+Val e_exit 14273 3 3 0 0 0 0 0 `
+END_THING
+
+THING 14159
+Name roads road road_end road_end`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val e_exit 14170 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14160
+Name roads road road_end`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val e_exit 14171 0 0 0 0 0 0 0 `
+Val n_exit 14161 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14161
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val n_exit 14162 0 0 0 0 0 0 0 `
+Val w_exit 14390 0 0 0 0 0 0 0 `
+Val e_exit 14172 0 0 0 0 0 0 0 `
+Val s_exit 14160 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14162
+Name mayors`
+HWT 0 0
+Color 7
+Short The Large Mayor's Manor`
+Symbol -`
+ThFl 524779
+Val n_exit 14163 0 0 0 0 0 0 0 `
+Val e_exit 14173 0 0 0 0 0 0 0 `
+Val s_exit 14161 0 0 0 0 0 0 0 `
+Val w_exit 14391 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14163
+Name mayors`
+HWT 0 0
+Color 7
+Short The Large Mayor's Manor`
+Symbol -`
+ThFl 524779
+Val n_exit 14164 0 0 0 0 0 0 0 `
+Val e_exit 14174 0 0 0 0 0 0 0 `
+Val s_exit 14162 0 0 0 0 0 0 0 `
+Val w_exit 14392 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14164
+Name mayors`
+HWT 0 0
+Color 7
+Short The Large Mayor's Manor`
+Symbol -`
+ThFl 524779
+Val n_exit 14165 0 0 0 0 0 0 0 `
+Val e_exit 14175 0 0 0 0 0 0 0 `
+Val s_exit 14163 0 0 0 0 0 0 0 `
+Val w_exit 14393 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14165
+Name mayors`
+HWT 0 0
+Color 7
+Short The Large Mayor's Manor`
+Symbol -`
+ThFl 524779
+Val e_exit 14176 0 0 0 0 0 0 0 `
+Val s_exit 14164 0 0 0 0 0 0 0 `
+Val w_exit 14394 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14166
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14167
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14168
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14169
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14170
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val w_exit 14159 0 0 0 0 0 0 0 `
+Val e_exit 14181 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14171
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val n_exit 14172 0 0 0 0 0 0 0 `
+Val w_exit 14160 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14172
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val e_exit 14183 0 0 0 0 0 0 0 `
+Val s_exit 14171 0 0 0 0 0 0 0 `
+Val n_exit 14173 0 0 0 0 0 0 0 `
+Val w_exit 14161 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14173
+Name mayors`
+HWT 0 0
+Color 7
+Short The Large Mayor's Manor`
+Symbol |`
+ThFl 524779
+Val n_exit 14174 0 0 0 0 0 0 0 `
+Val e_exit 14184 0 0 0 0 0 0 0 `
+Val w_exit 14162 0 0 0 0 0 0 0 `
+Val s_exit 14172 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14174
+Name mayors`
+HWT 0 0
+Color 7
+Short The Large Mayor's Manor`
+Symbol -`
+ThFl 524779
+Val n_exit 14175 0 0 0 0 0 0 0 `
+Val e_exit 14185 0 0 0 0 0 0 0 `
+Val s_exit 14173 0 0 0 0 0 0 0 `
+Val w_exit 14163 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14175
+Name mayors`
+HWT 0 0
+Color 7
+Short The Large Mayor's Manor`
+Symbol -`
+ThFl 524779
+Val n_exit 14176 0 0 0 0 0 0 0 `
+Val e_exit 14186 0 0 0 0 0 0 0 `
+Val s_exit 14174 0 0 0 0 0 0 0 `
+Val w_exit 14164 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14176
+Name mayors`
+HWT 0 0
+Color 7
+Short The Large Mayor's Manor`
+Symbol -`
+ThFl 524779
+Val e_exit 14187 0 0 0 0 0 0 0 `
+Val s_exit 14175 0 0 0 0 0 0 0 `
+Val w_exit 14165 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14177
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14178
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14179
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14180
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14181
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val w_exit 14170 0 0 0 0 0 0 0 `
+Val n_exit 14182 0 0 0 0 0 0 0 `
+Val e_exit 14010 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14182
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val s_exit 14181 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14183
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val n_exit 14184 0 0 0 0 0 0 0 `
+Val w_exit 14172 0 0 0 0 0 0 0 `
+Val e_exit 14012 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14184
+Name mayors`
+HWT 0 0
+Color 7
+Short The Large Mayor's Manor`
+Symbol |`
+ThFl 524779
+Val n_exit 14185 0 0 0 0 0 0 0 `
+Val w_exit 14173 0 0 0 0 0 0 0 `
+Val s_exit 14183 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14185
+Name mayors`
+HWT 0 0
+Color 7
+Short The Large Mayor's Manor`
+Symbol -`
+ThFl 524779
+Val n_exit 14186 0 0 0 0 0 0 0 `
+Val s_exit 14184 0 0 0 0 0 0 0 `
+Val w_exit 14174 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14186
+Name mayors`
+HWT 0 0
+Color 7
+Short The Large Mayor's Manor`
+Symbol -`
+ThFl 524779
+Val n_exit 14187 0 0 0 0 0 0 0 `
+Val s_exit 14185 0 0 0 0 0 0 0 `
+Val w_exit 14175 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14187
+Name mayors`
+HWT 0 0
+Color 7
+Short The Large Mayor's Manor`
+Symbol -`
+ThFl 524779
+Val s_exit 14186 0 0 0 0 0 0 0 `
+Val w_exit 14176 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14188
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14189 0 0 0 0 0 0 0 `
+Val e_exit 14196 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14189
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14190 0 0 0 0 0 0 0 `
+Val s_exit 14188 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14190
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14191 0 0 0 0 0 0 0 `
+Val s_exit 14189 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14191
+Name roads road road_end road_end`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val s_exit 14190 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14192
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val e_exit 14200 0 0 0 0 0 0 0 `
+Val n_exit 14193 0 0 0 0 0 0 0 `
+Val s_exit 14012 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14193
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val e_exit 14201 0 0 0 0 0 0 0 `
+Val n_exit 14194 0 0 0 0 0 0 0 `
+Val s_exit 14192 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14194
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14195 0 0 0 0 0 0 0 `
+Val s_exit 14193 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14195
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14196 0 0 0 0 0 0 0 `
+Val s_exit 14194 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14196
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val w_exit 14188 0 0 0 0 0 0 0 `
+Val s_exit 14195 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14197
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14198
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14199
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14200
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val w_exit 14192 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14201
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val w_exit 14193 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14202
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14203
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14204
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14205
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14206
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14207
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14208
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val e_exit 14126 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14209
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14210
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14211
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val n_exit 14212 0 0 0 0 0 0 0 `
+Val e_exit 14129 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14212
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val n_exit 14213 0 0 0 0 0 0 0 `
+Val s_exit 14211 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14213
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val e_exit 14217 0 0 0 0 0 0 0 `
+Val s_exit 14212 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14214
+Name housing house bedroom`
+HWT 0 0
+Color 7
+Short A Large Bedroom`
+Symbol -`
+ThFl 524779
+Val d_exit 14355 7 7 0 0 0 0 0 MossyBranch`
+Val u_exit 14354 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14667 50 1 1
+END_THING
+
+THING 14215
+Name housing house bedroom`
+HWT 0 0
+Color 7
+Short A Small Bedroom`
+Symbol -`
+ThFl 524779
+Flag Room 0 0 1
+Reset 14700 50 1 1
+END_THING
+
+THING 14216
+Name housing house bedroom`
+HWT 0 0
+Color 7
+Short A Messy Bedroom`
+Symbol -`
+ThFl 524779
+Val u_exit 14366 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14705 17 1 1
+END_THING
+
+THING 14217
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val w_exit 14213 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14218
+Name housing house bedroom`
+HWT 0 0
+Color 7
+Short A Clean Bedroom`
+Symbol -`
+ThFl 524779
+Flag Room 0 0 1
+Reset 14674 50 1 1
+END_THING
+
+THING 14219
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val e_exit 14223 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14220
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+END_THING
+
+THING 14221
+Name housing house bedroom`
+HWT 0 0
+Color 7
+Short A Clean Bedchamber`
+Symbol -`
+ThFl 524779
+Flag Room 0 0 1
+Reset 14701 17 1 1
+Reset 14703 50 1 1
+Reset 14704 50 1 1
+END_THING
+
+THING 14222
+Name housing house bedroom`
+HWT 0 0
+Color 7
+Short A Dirty Bedroom`
+Symbol -`
+ThFl 524779
+Flag Room 0 0 1
+Reset 14673 50 1 1
+END_THING
+
+THING 14223
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val e_exit 14227 0 0 0 0 0 0 0 `
+Val w_exit 14219 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14224
+Name housing house kitchen`
+HWT 0 0
+Color 7
+Short A Tidy Kitchen`
+Symbol |`
+ThFl 524779
+Val n_exit 14225 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14690 50 1 1
+END_THING
+
+THING 14225
+Name housing house bedroom`
+HWT 0 0
+Color 7
+Short A Large Bedroom`
+Symbol -`
+ThFl 524779
+Val s_exit 14224 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14688 50 1 1
+Reset 14689 50 1 1
+END_THING
+
+THING 14226
+Name housing house bedroom`
+HWT 0 0
+Color 7
+Short A Large Bedroom`
+Symbol -`
+ThFl 524779
+Val e_exit 14230 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14697 50 1 1
+END_THING
+
+THING 14227
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val w_exit 14223 0 0 0 0 0 0 0 `
+Val e_exit 14231 3 3 0 0 0 0 0 `
+END_THING
+
+THING 14228
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val n_exit 14229 0 0 0 0 0 0 0 `
+Val e_exit 14261 0 0 0 0 0 0 0 `
+Val s_exit 14142 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14229
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val e_exit 14262 0 0 0 0 0 0 0 `
+Val s_exit 14228 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14230
+Name housing house`
+HWT 0 0
+Color 7
+Short A Tiny Home`
+Symbol -`
+ThFl 524779
+Val w_exit 14226 3 3 0 0 0 0 0 `
+Val n_exit 14231 0 0 0 0 0 0 0 `
+Val e_exit 14263 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14231
+Name housing house`
+HWT 0 0
+Color 7
+Short A Tiny Home`
+Symbol -`
+ThFl 524779
+Val w_exit 14227 3 3 0 0 0 0 0 `
+Val e_exit 14264 0 0 0 0 0 0 0 `
+Val s_exit 14230 0 0 0 0 0 0 0 `
+Val u_exit 14359 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14232
+Name religious tree`
+HWT 0 0
+Color 7
+Short A Large Tree`
+Symbol |`
+ThFl 524779
+Val e_exit 14237 0 0 0 0 0 0 0 `
+Val s_exit 14119 0 0 0 0 0 0 0 `
+Val n_exit 14233 0 0 0 0 0 0 0 `
+Flag Room 0 0 16908288
+Reset 14712 50 1 1
+END_THING
+
+THING 14233
+Name religious graveyard`
+HWT 0 0
+Color 7
+Short A Spooky Burial Ground`
+Symbol -`
+ThFl 524779
+Val s_exit 14232 0 0 0 0 0 0 0 `
+Val n_exit 14234 0 0 0 0 0 0 0 `
+Val e_exit 14238 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14234
+Name religious graveyard`
+HWT 0 0
+Color 7
+Short A Spooky Burial Ground`
+Symbol -`
+ThFl 524779
+Val n_exit 14235 0 0 0 0 0 0 0 `
+Val e_exit 14239 0 0 0 0 0 0 0 `
+Val s_exit 14233 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14235
+Name religious graveyard`
+HWT 0 0
+Color 7
+Short A Spooky Burial Ground`
+Symbol -`
+ThFl 524779
+Val s_exit 14234 0 0 0 0 0 0 0 `
+Val n_exit 14236 3 3 0 0 0 0 0 `
+Val e_exit 14240 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14236
+Name religious graveyard mausoleum`
+HWT 0 0
+Color 7
+Short A Simple Granite Mauosoleum`
+Symbol -`
+ThFl 524779
+Val s_exit 14235 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14237
+Name religious`
+HWT 0 0
+Color 7
+Short The Temple Retreat`
+Symbol |`
+ThFl 524779
+Val w_exit 14232 0 0 0 0 0 0 0 `
+Val s_exit 14125 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14238
+Name religious graveyard`
+HWT 0 0
+Color 7
+Short A Spooky Burial Ground`
+Symbol -`
+ThFl 524779
+Val n_exit 14239 0 0 0 0 0 0 0 `
+Val e_exit 14244 0 0 0 0 0 0 0 `
+Val w_exit 14233 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14239
+Name religious graveyard`
+HWT 0 0
+Color 7
+Short A Spooky Burial Ground`
+Symbol -`
+ThFl 524779
+Val n_exit 14240 0 0 0 0 0 0 0 `
+Val e_exit 14245 0 0 0 0 0 0 0 `
+Val s_exit 14238 0 0 0 0 0 0 0 `
+Val w_exit 14234 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14240
+Name religious church graveyard`
+HWT 0 0
+Color 7
+Short A Spooky Burial Ground`
+Symbol +`
+ThFl 524779
+Val s_exit 14239 0 0 0 0 0 0 0 `
+Val w_exit 14235 0 0 0 0 0 0 0 `
+Val n_exit 14241 0 0 0 0 0 0 0 `
+Val e_exit 14246 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14241
+Name religious church graveyard`
+HWT 0 0
+Color 7
+Short A Spooky Burial Ground`
+Symbol }`
+ThFl 524779
+Val d_exit 14370 7 7 0 0 0 0 0 ObscuredBranch`
+Val n_exit 14279 0 0 0 0 0 0 0 `
+Val e_exit 14247 0 0 0 0 0 0 0 `
+Val s_exit 14240 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14242
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val w_exit 14125 0 0 0 0 0 0 0 `
+Val e_exit 14248 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14243
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val e_exit 14249 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14244
+Name graveyard`
+HWT 0 0
+Color 7
+Short A Spooky Burial Ground`
+Symbol -`
+ThFl 524779
+Val n_exit 14245 0 0 0 0 0 0 0 `
+Val e_exit 14250 0 0 0 0 0 0 0 `
+Val w_exit 14238 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14245
+Name graveyard`
+HWT 0 0
+Color 7
+Short A Spooky Burial Ground`
+Symbol -`
+ThFl 524779
+Val n_exit 14246 0 0 0 0 0 0 0 `
+Val e_exit 14251 0 0 0 0 0 0 0 `
+Val s_exit 14244 0 0 0 0 0 0 0 `
+Val w_exit 14239 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14246
+Name church graveyard`
+HWT 0 0
+Color 7
+Short A Spooky Burial Ground`
+Symbol +`
+ThFl 524779
+Val s_exit 14245 0 0 0 0 0 0 0 `
+Val n_exit 14247 0 0 0 0 0 0 0 `
+Val e_exit 14252 0 0 0 0 0 0 0 `
+Val w_exit 14240 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14247
+Name church graveyard gravesite`
+HWT 0 0
+Color 7
+Short A Neat Grave`
+Symbol +`
+ThFl 524779
+Val n_exit 14287 3 3 0 0 0 0 0 `
+Val e_exit 14253 0 0 0 0 0 0 0 `
+Val s_exit 14246 0 0 0 0 0 0 0 `
+Val w_exit 14241 0 0 0 0 0 0 0 `
+Flag Room 0 0 16908288
+Reset 14707 50 1 1
+END_THING
+
+THING 14248
+Name roads road trail road`
+HWT 0 0
+Color 7
+Short A Dirty Pathway`
+Symbol -`
+ThFl 524779
+Val n_exit 14249 0 0 0 0 0 0 0 `
+Val w_exit 14242 0 0 0 0 0 0 0 `
+Val e_exit 14254 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14249
+Name trail road road_end`
+HWT 0 0
+Color 7
+Short A Dirty Pathway`
+Symbol -`
+ThFl 524779
+Val w_exit 14243 0 0 0 0 0 0 0 `
+Val e_exit 14255 0 0 0 0 0 0 0 `
+Val n_exit 14250 0 0 0 0 0 0 0 `
+Val s_exit 14248 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14250
+Name graveyard`
+HWT 0 0
+Color 7
+Short A Spooky Burial Ground`
+Symbol -`
+ThFl 524779
+Val s_exit 14249 0 0 0 0 0 0 0 `
+Val n_exit 14251 0 0 0 0 0 0 0 `
+Val w_exit 14244 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14251
+Name graveyard`
+HWT 0 0
+Color 7
+Short A Spooky Burial Ground`
+Symbol -`
+ThFl 524779
+Val s_exit 14250 0 0 0 0 0 0 0 `
+Val w_exit 14245 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14252
+Name church graveyard gravesite`
+HWT 0 0
+Color 7
+Short A Forgotten Burial Plot`
+Symbol /`
+ThFl 524779
+Val n_exit 14253 0 0 0 0 0 0 0 `
+Val w_exit 14246 0 0 0 0 0 0 0 `
+Flag Room 0 0 16908288
+Reset 14706 50 1 1
+END_THING
+
+THING 14253
+Name church graveyard`
+HWT 0 0
+Color 7
+Short A Spooky Burial Ground`
+Symbol {`
+ThFl 524779
+Val n_exit 14295 0 0 0 0 0 0 0 `
+Val s_exit 14252 0 0 0 0 0 0 0 `
+Val w_exit 14247 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14254
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val s_exit 14325 0 0 0 0 0 0 0 `
+Val w_exit 14248 0 0 0 0 0 0 0 `
+Val n_exit 14255 0 0 0 0 0 0 0 `
+Val e_exit 14331 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14255
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val w_exit 14249 0 0 0 0 0 0 0 `
+Val s_exit 14254 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14256
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14257
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14258
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14259
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14260
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14261
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val n_exit 14262 0 0 0 0 0 0 0 `
+Val s_exit 14150 0 0 0 0 0 0 0 `
+Val w_exit 14228 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14262
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val s_exit 14261 0 0 0 0 0 0 0 `
+Val w_exit 14229 0 0 0 0 0 0 0 `
+Val n_exit 14263 3 3 0 0 0 0 0 `
+END_THING
+
+THING 14263
+Name housing house`
+HWT 0 0
+Color 7
+Short A Tiny Home`
+Symbol -`
+ThFl 524779
+Val s_exit 14262 3 3 0 0 0 0 0 `
+Val n_exit 14264 0 0 0 0 0 0 0 `
+Val w_exit 14230 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14264
+Name housing house`
+HWT 0 0
+Color 7
+Short A Tiny Home`
+Symbol -`
+ThFl 524779
+Val s_exit 14263 0 0 0 0 0 0 0 `
+Val w_exit 14231 0 0 0 0 0 0 0 `
+Val d_exit 14362 7 7 0 0 0 0 0 SlidingDoor`
+Flag Room 0 0 1
+END_THING
+
+THING 14265
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14266
+Name housing house kitchen`
+HWT 0 0
+Color 7
+Short A Dirty Kitchen`
+Symbol |`
+ThFl 524779
+Val n_exit 14267 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14687 50 1 1
+END_THING
+
+THING 14267
+Name housing house bedroom`
+HWT 0 0
+Color 7
+Short A Cluttered Bedroom`
+Symbol -`
+ThFl 524779
+Val s_exit 14266 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14685 17 1 1
+Reset 14686 50 1 1
+END_THING
+
+THING 14268
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val n_exit 14269 0 0 0 0 0 0 0 `
+Val e_exit 14276 3 3 0 0 0 0 0 `
+END_THING
+
+THING 14269
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val e_exit 14277 0 0 0 0 0 0 0 `
+Val s_exit 14268 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14270
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14271
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14272
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val n_exit 14273 3 3 0 0 0 0 0 `
+Val e_exit 14280 0 0 0 0 0 0 0 `
+Val w_exit 14157 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14273
+Name housing house`
+HWT 0 0
+Color 7
+Short A Tiny House`
+Symbol -`
+ThFl 524779
+Val w_exit 14158 3 3 0 0 0 0 0 `
+Val s_exit 14272 3 3 0 0 0 0 0 `
+Val e_exit 14281 0 0 0 0 0 0 0 `
+Val d_exit 14356 7 7 0 0 0 0 0 SlidingDoor`
+Val n_exit 14274 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14274
+Name housing house bedroom`
+HWT 0 0
+Color 7
+Short A Messy Bedchamber`
+Symbol -`
+ThFl 524779
+Val s_exit 14273 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14675 17 1 1
+Reset 14676 50 1 1
+END_THING
+
+THING 14275
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+END_THING
+
+THING 14276
+Name housing house`
+HWT 0 0
+Color 7
+Short A Dirty Home`
+Symbol -`
+ThFl 524779
+Val w_exit 14268 3 3 0 0 0 0 0 `
+Val e_exit 14284 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14277
+Name housing`
+HWT 0 0
+Color 7
+Short A Rich Development`
+Symbol -`
+ThFl 524779
+Val e_exit 14285 0 0 0 0 0 0 0 `
+Val w_exit 14269 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14278
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14279
+Name church`
+HWT 0 0
+Color 7
+Short A Small Temple`
+Symbol -`
+ThFl 524779
+Val n_exit 14280 3 3 0 0 0 0 0 `
+Val e_exit 14287 0 0 0 0 0 0 0 `
+Val s_exit 14241 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14280
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val s_exit 14279 3 3 0 0 0 0 0 `
+Val e_exit 14288 0 0 0 0 0 0 0 `
+Val w_exit 14272 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14281
+Name house`
+HWT 0 0
+Color 7
+Short A Tiny House`
+Symbol -`
+ThFl 524779
+Val w_exit 14273 0 0 0 0 0 0 0 `
+Val n_exit 14282 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14682 100 1 1
+END_THING
+
+THING 14282
+Name house kitchen`
+HWT 0 0
+Color 7
+Short A Barren Kitchen`
+Symbol -`
+ThFl 524779
+Val s_exit 14281 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14677 50 1 1
+Reset 14678 50 1 1
+Reset 14679 50 1 1
+END_THING
+
+THING 14283
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14284
+Name house bedroom`
+HWT 0 0
+Color 7
+Short A Dirty Bedroom`
+Symbol -`
+ThFl 524779
+Val w_exit 14276 3 3 0 0 0 0 0 `
+Val u_exit 14365 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14285
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val w_exit 14277 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14286
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14287
+Name church`
+HWT 0 0
+Color 7
+Short A Small Temple`
+Symbol -`
+ThFl 524779
+Val e_exit 14295 0 0 0 0 0 0 0 `
+Val s_exit 14247 3 3 0 0 0 0 0 `
+Val w_exit 14279 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14288
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val e_exit 14296 0 0 0 0 0 0 0 `
+Val w_exit 14280 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14289
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14290
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14291
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14292
+Name tavern bar`
+HWT 0 0
+Color 7
+Short A Crowded Hall`
+Symbol -`
+ThFl 524779
+Val n_exit 14293 0 0 0 0 0 0 0 `
+Val e_exit 14300 0 0 0 0 0 0 0 `
+Val u_exit 14395 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14293
+Name tavern bar`
+HWT 0 0
+Color 7
+Short A Crowded Hall`
+Symbol -`
+ThFl 524779
+Val n_exit 14294 0 0 0 0 0 0 0 `
+Val e_exit 14301 0 0 0 0 0 0 0 `
+Val s_exit 14292 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14294
+Name tavern bar`
+HWT 0 0
+Color 7
+Short A Crowded Hall`
+Symbol -`
+ThFl 524779
+Val e_exit 14302 0 0 0 0 0 0 0 `
+Val s_exit 14293 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14295
+Name roads road church`
+HWT 0 0
+Color 7
+Short A Small Temple`
+Symbol \`
+ThFl 524779
+Val s_exit 14253 0 0 0 0 0 0 0 `
+Val w_exit 14287 0 0 0 0 0 0 0 `
+Val e_exit 14303 0 0 0 0 0 0 0 `
+Val n_exit 14296 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14296
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val e_exit 14304 0 0 0 0 0 0 0 `
+Val s_exit 14295 0 0 0 0 0 0 0 `
+Val w_exit 14288 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14297
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14298
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14299
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14300
+Name tavern bar`
+HWT 0 0
+Color 7
+Short A Crowded Hall`
+Symbol -`
+ThFl 524779
+Val n_exit 14301 0 0 0 0 0 0 0 `
+Val e_exit 14308 0 0 0 0 0 0 0 `
+Val w_exit 14292 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14301
+Name tavern bar`
+HWT 0 0
+Color 7
+Short A Crowded Hall`
+Symbol -`
+ThFl 524779
+Val n_exit 14302 0 0 0 0 0 0 0 `
+Val e_exit 14309 0 0 0 0 0 0 0 `
+Val s_exit 14300 0 0 0 0 0 0 0 `
+Val w_exit 14293 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14302
+Name tavern bar`
+HWT 0 0
+Color 7
+Short A Crowded Hall`
+Symbol -`
+ThFl 524779
+Val e_exit 14310 0 0 0 0 0 0 0 `
+Val s_exit 14301 0 0 0 0 0 0 0 `
+Val w_exit 14294 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14303
+Name roads road road_end`
+HWT 0 0
+Color 7
+Short Broad Promenade`
+Symbol -`
+ThFl 524779
+Val w_exit 14295 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14304
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val w_exit 14296 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14305
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14306
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14307
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14308
+Name tavern bar`
+HWT 0 0
+Color 7
+Short A Crowded Hall`
+Symbol -`
+ThFl 524779
+Val n_exit 14309 0 0 0 0 0 0 0 `
+Val w_exit 14300 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14309
+Name tavern bar`
+HWT 0 0
+Color 7
+Short A Crowded Hall`
+Symbol -`
+ThFl 524779
+Val n_exit 14310 0 0 0 0 0 0 0 `
+Val s_exit 14308 0 0 0 0 0 0 0 `
+Val w_exit 14301 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14310
+Name tavern bar`
+HWT 0 0
+Color 7
+Short A Crowded Hall`
+Symbol -`
+ThFl 524779
+Val s_exit 14309 0 0 0 0 0 0 0 `
+Val w_exit 14302 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14311
+Name park trail road`
+HWT 0 0
+Color 7
+Short A Dirty Pathway`
+Symbol -`
+ThFl 524779
+Val n_exit 14312 0 0 0 0 0 0 0 `
+Val e_exit 14316 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14312
+Name park trail road`
+HWT 0 0
+Color 7
+Short A Dirty Pathway`
+Symbol -`
+ThFl 524779
+Val n_exit 14313 0 0 0 0 0 0 0 `
+Val s_exit 14311 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14313
+Name park trail road`
+HWT 0 0
+Color 7
+Short A Dirty Pathway`
+Symbol -`
+ThFl 524779
+Val n_exit 14314 0 0 0 0 0 0 0 `
+Val s_exit 14312 0 0 0 0 0 0 0 `
+Val e_exit 14318 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14314
+Name park trail road`
+HWT 0 0
+Color 7
+Short A Dirty Pathway`
+Symbol -`
+ThFl 524779
+Val e_exit 14319 0 0 0 0 0 0 0 `
+Val n_exit 14315 0 0 0 0 0 0 0 `
+Val s_exit 14313 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14315
+Name park trail road`
+HWT 0 0
+Color 7
+Short A Dirty Pathway`
+Symbol -`
+ThFl 524779
+Val e_exit 14320 0 0 0 0 0 0 0 `
+Val s_exit 14314 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14316
+Name park trail road`
+HWT 0 0
+Color 7
+Short A Dirty Pathway`
+Symbol -`
+ThFl 524779
+Val w_exit 14311 0 0 0 0 0 0 0 `
+Val e_exit 14321 0 0 0 0 0 0 0 `
+Val s_exit 14383 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14317
+Name park`
+HWT 0 0
+Color 7
+Short A Peaceful Park`
+Symbol -`
+ThFl 524779
+Val e_exit 14322 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14318
+Name park tree`
+HWT 0 0
+Color 7
+Short A Large Tree`
+Symbol -`
+ThFl 524779
+Val w_exit 14313 0 0 0 0 0 0 0 `
+Flag Room 0 0 16908288
+Reset 14715 50 1 1
+END_THING
+
+THING 14319
+Name park`
+HWT 0 0
+Color 7
+Short A Peaceful Park`
+Symbol -`
+ThFl 524779
+Val e_exit 14324 0 0 0 0 0 0 0 `
+Val w_exit 14314 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14320
+Name park trail road`
+HWT 0 0
+Color 7
+Short A Dirty Pathway`
+Symbol -`
+ThFl 524779
+Val e_exit 14325 0 0 0 0 0 0 0 `
+Val w_exit 14315 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14321
+Name park`
+HWT 0 0
+Color 7
+Short A Peaceful Park`
+Symbol -`
+ThFl 524779
+Val n_exit 14322 0 0 0 0 0 0 0 `
+Val s_exit 14384 0 0 0 0 0 0 0 `
+Val w_exit 14316 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14322
+Name park`
+HWT 0 0
+Color 7
+Short A Peaceful Park`
+Symbol -`
+ThFl 524779
+Val n_exit 14323 0 0 0 0 0 0 0 `
+Val s_exit 14321 0 0 0 0 0 0 0 `
+Val w_exit 14317 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14323
+Name park`
+HWT 0 0
+Color 7
+Short A Peaceful Park`
+Symbol -`
+ThFl 524779
+Val n_exit 14324 0 0 0 0 0 0 0 `
+Val s_exit 14322 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14324
+Name park`
+HWT 0 0
+Color 7
+Short A Peaceful Park`
+Symbol -`
+ThFl 524779
+Val n_exit 14325 0 0 0 0 0 0 0 `
+Val s_exit 14323 0 0 0 0 0 0 0 `
+Val w_exit 14319 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14325
+Name park`
+HWT 0 0
+Color 7
+Short A Peaceful Park`
+Symbol -`
+ThFl 524779
+Val n_exit 14254 0 0 0 0 0 0 0 `
+Val s_exit 14324 0 0 0 0 0 0 0 `
+Val w_exit 14320 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14326
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14327
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val n_exit 14328 0 0 0 0 0 0 0 `
+Val e_exit 14334 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14328
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val n_exit 14329 0 0 0 0 0 0 0 `
+Val e_exit 14335 0 0 0 0 0 0 0 `
+Val s_exit 14327 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14329
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val n_exit 14330 0 0 0 0 0 0 0 `
+Val e_exit 14336 0 0 0 0 0 0 0 `
+Val s_exit 14328 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14330
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val e_exit 14337 0 0 0 0 0 0 0 `
+Val s_exit 14329 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14331
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14332 0 0 0 0 0 0 0 `
+Val w_exit 14254 0 0 0 0 0 0 0 `
+Val e_exit 14338 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14332
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val s_exit 14331 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14333
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14334
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val n_exit 14335 0 0 0 0 0 0 0 `
+Val e_exit 14341 0 0 0 0 0 0 0 `
+Val w_exit 14327 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14335
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val n_exit 14336 0 0 0 0 0 0 0 `
+Val e_exit 14342 0 0 0 0 0 0 0 `
+Val s_exit 14334 0 0 0 0 0 0 0 `
+Val w_exit 14328 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14336
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val n_exit 14337 0 0 0 0 0 0 0 `
+Val e_exit 14343 0 0 0 0 0 0 0 `
+Val s_exit 14335 0 0 0 0 0 0 0 `
+Val w_exit 14329 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14337
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val e_exit 14344 0 0 0 0 0 0 0 `
+Val s_exit 14336 0 0 0 0 0 0 0 `
+Val w_exit 14330 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14338
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val w_exit 14331 0 0 0 0 0 0 0 `
+Val n_exit 14339 0 0 0 0 0 0 0 `
+Val e_exit 14345 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14339
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val s_exit 14338 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14340
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14341
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val n_exit 14342 0 0 0 0 0 0 0 `
+Val e_exit 14348 0 0 0 0 0 0 0 `
+Val w_exit 14334 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14342
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val n_exit 14343 0 0 0 0 0 0 0 `
+Val e_exit 14349 0 0 0 0 0 0 0 `
+Val s_exit 14341 0 0 0 0 0 0 0 `
+Val w_exit 14335 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14343
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val n_exit 14344 0 0 0 0 0 0 0 `
+Val e_exit 14350 0 0 0 0 0 0 0 `
+Val s_exit 14342 0 0 0 0 0 0 0 `
+Val w_exit 14336 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14344
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val e_exit 14351 0 0 0 0 0 0 0 `
+Val s_exit 14343 0 0 0 0 0 0 0 `
+Val w_exit 14337 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14345
+Name roads road`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val w_exit 14338 0 0 0 0 0 0 0 `
+Val e_exit 14352 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14346
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 14347
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val n_exit 14348 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14348
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val s_exit 14347 0 0 0 0 0 0 0 `
+Val n_exit 14349 0 0 0 0 0 0 0 `
+Val w_exit 14341 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14349
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val n_exit 14350 0 0 0 0 0 0 0 `
+Val s_exit 14348 0 0 0 0 0 0 0 `
+Val w_exit 14342 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14350
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val n_exit 14351 0 0 0 0 0 0 0 `
+Val s_exit 14349 0 0 0 0 0 0 0 `
+Val w_exit 14343 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14351
+Name market`
+HWT 0 0
+Color 7
+Short The Wondrous Bazaar`
+Symbol -`
+ThFl 524779
+Val s_exit 14350 0 0 0 0 0 0 0 `
+Val w_exit 14344 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14352
+Name roads road road_end road_end`
+HWT 0 0
+Color 7
+Short Broad Lane`
+Symbol -`
+ThFl 524779
+Val n_exit 14353 0 0 0 0 0 0 0 `
+Val w_exit 14345 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14353
+HWT 0 0
+Short Pulhear`
+ThFl 524779
+Val s_exit 14352 0 0 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 14354
+Name house kitchen`
+HWT 0 0
+Color 7
+Short A Tidy Kitchen`
+Symbol -`
+ThFl 524779
+Val d_exit 14214 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14668 50 1 1
+Reset 14669 50 1 1
+END_THING
+
+THING 14355
+Name basement`
+HWT 0 0
+Short A Grand Clean Cellar`
+ThFl 524779
+Val u_exit 14214 7 7 0 0 0 0 0 MossyBranch`
+Flag Room 0 0 16781312
+Reset 14670 50 1 1
+Reset 14671 50 1 1
+Reset 14672 44 1 1
+END_THING
+
+THING 14356
+Name basement catacombs gravesite`
+HWT 0 0
+Color 7
+Short An Overgrown Grave`
+Symbol |`
+ThFl 524779
+Val e_exit 14373 0 0 0 0 0 0 0 `
+Val n_exit 14357 0 0 0 0 0 0 0 `
+Val u_exit 14273 7 7 0 0 0 0 0 SlidingDoor`
+Flag Room 0 0 16908288
+Reset 14680 50 1 1
+Reset 14681 50 1 1
+Reset 14711 50 1 1
+END_THING
+
+THING 14357
+Name basement`
+HWT 0 0
+Short A Tiny Dark Room`
+ThFl 524779
+Val s_exit 14356 0 0 0 0 0 0 0 `
+Flag Room 0 0 16781312
+END_THING
+
+THING 14358
+Name house kitchen`
+HWT 0 0
+Color 7
+Short A Tidy Kitchen`
+Symbol |`
+ThFl 524779
+Val e_exit 14360 3 3 0 0 0 0 0 `
+Val n_exit 14359 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14693 50 1 1
+Reset 14694 50 1 1
+END_THING
+
+THING 14359
+Name house bedroom`
+HWT 0 0
+Color 7
+Short A Clean Bedchamber`
+Symbol -`
+ThFl 524779
+Val s_exit 14358 3 3 0 0 0 0 0 `
+Val d_exit 14231 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14360
+Name house`
+HWT 0 0
+Short A Tiny Home`
+ThFl 524779
+Val n_exit 14361 0 0 0 0 0 0 0 `
+Val w_exit 14358 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14361
+Name house`
+HWT 0 0
+Short A Tiny Home`
+ThFl 524779
+Val s_exit 14360 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14362
+Name basement`
+HWT 0 0
+Short A Small Nutty Room`
+ThFl 524779
+Val n_exit 14363 0 0 0 0 0 0 0 `
+Val u_exit 14264 7 7 0 0 0 0 0 SlidingDoor`
+Flag Room 0 0 16781312
+END_THING
+
+THING 14363
+Name basement`
+HWT 0 0
+Short A Small Nutty Room`
+ThFl 524779
+Val s_exit 14362 0 0 0 0 0 0 0 `
+Flag Room 0 0 16781312
+Reset 14695 44 1 1
+END_THING
+
+THING 14364
+Name house kitchen`
+HWT 0 0
+Color 7
+Short A Small Kitchen`
+Symbol -`
+ThFl 524779
+Val e_exit 14365 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14698 50 1 1
+Reset 14699 50 1 1
+END_THING
+
+THING 14365
+Name house`
+HWT 0 0
+Short A Dirty Home`
+ThFl 524779
+Val e_exit 14395 3 3 0 0 0 0 0 `
+Val w_exit 14364 3 3 0 0 0 0 0 `
+Val d_exit 14284 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14366
+Name house kitchen`
+HWT 0 0
+Color 7
+Short A Neat Kitchen`
+Symbol -`
+ThFl 524779
+Val d_exit 14216 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 14367
+Name catacombs`
+HWT 0 0
+Short Some Dry  Tunnels`
+ThFl 524779
+Val e_exit 14370 0 0 0 0 0 0 0 `
+Val n_exit 14368 0 0 0 0 0 0 0 `
+Flag Room 0 0 16781312
+END_THING
+
+THING 14368
+Name catacombs gravesite`
+HWT 0 0
+Color 7
+Short A Vandalized Grave`
+Symbol -`
+ThFl 524779
+Val s_exit 14367 0 0 0 0 0 0 0 `
+Flag Room 0 0 16908288
+Reset 14710 50 1 1
+END_THING
+
+THING 14369
+Name catacombs`
+HWT 0 0
+Short Some Dry  Tunnels`
+ThFl 524779
+Val e_exit 14372 0 0 0 0 0 0 0 `
+Flag Room 0 0 16781312
+END_THING
+
+THING 14370
+Name catacombs`
+HWT 0 0
+Short Some Dry  Tunnels`
+ThFl 524779
+Val n_exit 14371 0 0 0 0 0 0 0 `
+Val e_exit 14374 0 0 0 0 0 0 0 `
+Val w_exit 14367 0 0 0 0 0 0 0 `
+Val u_exit 14241 7 7 0 0 0 0 0 ObscuredBranch`
+Flag Room 0 0 16781312
+END_THING
+
+THING 14371
+Name catacombs`
+HWT 0 0
+Short Some Dry  Tunnels`
+ThFl 524779
+Val n_exit 14372 0 0 0 0 0 0 0 `
+Val s_exit 14370 0 0 0 0 0 0 0 `
+Flag Room 0 0 16781312
+END_THING
+
+THING 14372
+Name catacombs`
+HWT 0 0
+Short Some Dry  Tunnels`
+ThFl 524779
+Val n_exit 14373 0 0 0 0 0 0 0 `
+Val s_exit 14371 0 0 0 0 0 0 0 `
+Val w_exit 14369 0 0 0 0 0 0 0 `
+Flag Room 0 0 16781312
+END_THING
+
+THING 14373
+Name catacombs`
+HWT 0 0
+Short Some Dry  Tunnels`
+ThFl 524779
+Val e_exit 14377 0 0 0 0 0 0 0 `
+Val s_exit 14372 0 0 0 0 0 0 0 `
+Val w_exit 14356 0 0 0 0 0 0 0 `
+Flag Room 0 0 16781312
+END_THING
+
+THING 14374
+Name catacombs`
+HWT 0 0
+Short Some Dry  Tunnels`
+ThFl 524779
+Val w_exit 14370 0 0 0 0 0 0 0 `
+Val n_exit 14375 0 0 0 0 0 0 0 `
+Flag Room 0 0 16781312
+END_THING
+
+THING 14375
+Name catacombs gravesite`
+HWT 0 0
+Color 7
+Short A Vandalized Grave`
+Symbol -`
+ThFl 524779
+Val s_exit 14374 0 0 0 0 0 0 0 `
+Flag Room 0 0 16908288
+Reset 14709 50 1 1
+END_THING
+
+THING 14376
+Name catacombs gravesite`
+HWT 0 0
+Color 7
+Short An Overgrown Gravesite`
+Symbol -`
+ThFl 524779
+Val n_exit 14377 0 0 0 0 0 0 0 `
+Flag Room 0 0 16908288
+Reset 14708 50 1 1
+END_THING
+
+THING 14377
+Name catacombs`
+HWT 0 0
+Short Some Dry  Tunnels`
+ThFl 524779
+Val w_exit 14373 0 0 0 0 0 0 0 `
+Val s_exit 14376 0 0 0 0 0 0 0 `
+Flag Room 0 0 16781312
+END_THING
+
+THING 14378
+Name park`
+HWT 0 0
+Short A Peaceful Park`
+ThFl 524779
+Val n_exit 14102 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14379
+Name park tree`
+HWT 0 0
+Color 7
+Short A Small Tree`
+Symbol -`
+ThFl 524779
+Val e_exit 14380 0 0 0 0 0 0 0 `
+Flag Room 0 0 16908288
+Reset 14718 50 1 1
+END_THING
+
+THING 14380
+Name park tree`
+HWT 0 0
+Color 7
+Short A Dirt Path`
+Symbol -`
+ThFl 524779
+Val e_exit 14381 0 0 0 0 0 0 0 `
+Val w_exit 14379 0 0 0 0 0 0 0 `
+Flag Room 0 0 16908288
+Reset 14719 50 1 1
+END_THING
+
+THING 14381
+Name park`
+HWT 0 0
+Short A Peaceful Park`
+ThFl 524779
+Val n_exit 14120 0 0 0 0 0 0 0 `
+Val e_exit 14382 0 0 0 0 0 0 0 `
+Val w_exit 14380 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14382
+Name park`
+HWT 0 0
+Short A Peaceful Park`
+ThFl 524779
+Val w_exit 14381 0 0 0 0 0 0 0 `
+Val e_exit 14383 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14383
+Name park trail road road_end`
+HWT 0 0
+Color 7
+Short A Dirty Pathway`
+Symbol -`
+ThFl 524779
+Val w_exit 14382 0 0 0 0 0 0 0 `
+Val n_exit 14316 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14384
+Name park`
+HWT 0 0
+Short A Peaceful Park`
+ThFl 524779
+Val n_exit 14321 0 0 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 14385
+Name mayors`
+HWT 0 0
+Short The Large Mayor's Manor`
+ThFl 524779
+Val n_exit 14386 0 0 0 0 0 0 0 `
+Val e_exit 14390 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14386
+Name mayors`
+HWT 0 0
+Short The Large Mayor's Manor`
+ThFl 524779
+Val n_exit 14387 0 0 0 0 0 0 0 `
+Val e_exit 14391 0 0 0 0 0 0 0 `
+Val s_exit 14385 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14387
+Name mayors`
+HWT 0 0
+Short The Large Mayor's Manor`
+ThFl 524779
+Val n_exit 14388 0 0 0 0 0 0 0 `
+Val e_exit 14392 0 0 0 0 0 0 0 `
+Val s_exit 14386 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14388
+Name mayors`
+HWT 0 0
+Short The Large Mayor's Manor`
+ThFl 524779
+Val n_exit 14389 0 0 0 0 0 0 0 `
+Val e_exit 14393 0 0 0 0 0 0 0 `
+Val s_exit 14387 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14389
+Name mayors`
+HWT 0 0
+Short The Large Mayor's Manor`
+ThFl 524779
+Val e_exit 14394 0 0 0 0 0 0 0 `
+Val s_exit 14388 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14390
+Name mayors`
+HWT 0 0
+Short The Large Mayor's Manor`
+ThFl 524779
+Val n_exit 14391 0 0 0 0 0 0 0 `
+Val e_exit 14161 0 0 0 0 0 0 0 `
+Val w_exit 14385 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14391
+Name mayors`
+HWT 0 0
+Short The Large Mayor's Manor`
+ThFl 524779
+Val n_exit 14392 0 0 0 0 0 0 0 `
+Val e_exit 14162 0 0 0 0 0 0 0 `
+Val s_exit 14390 0 0 0 0 0 0 0 `
+Val w_exit 14386 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14392
+Name mayors`
+HWT 0 0
+Short The Large Mayor's Manor`
+ThFl 524779
+Val n_exit 14393 0 0 0 0 0 0 0 `
+Val e_exit 14163 0 0 0 0 0 0 0 `
+Val s_exit 14391 0 0 0 0 0 0 0 `
+Val w_exit 14387 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14393
+Name mayors`
+HWT 0 0
+Short The Large Mayor's Manor`
+ThFl 524779
+Val n_exit 14394 0 0 0 0 0 0 0 `
+Val e_exit 14164 0 0 0 0 0 0 0 `
+Val s_exit 14392 0 0 0 0 0 0 0 `
+Val w_exit 14388 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14394
+Name mayors`
+HWT 0 0
+Short The Large Mayor's Manor`
+ThFl 524779
+Val e_exit 14165 0 0 0 0 0 0 0 `
+Val s_exit 14393 0 0 0 0 0 0 0 `
+Val w_exit 14389 0 0 0 0 0 0 0 `
+END_THING
+
+THING 14395
+Name tavern inn_rooms guest_room`
+HWT 0 0
+Color 7
+Short A Tiny Resting Room`
+Symbol |`
+ThFl 524779
+Val w_exit 14365 3 3 0 0 0 0 0 `
+Val n_exit 14396 3 3 0 0 0 0 0 `
+Val d_exit 14292 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14732 50 1 1
+Reset 14733 50 1 1
+END_THING
+
+THING 14396
+Name tavern inn_rooms guest_room`
+HWT 0 0
+Color 7
+Short A Spacious Sleeping Room`
+Symbol |`
+ThFl 524779
+Val s_exit 14395 3 3 0 0 0 0 0 `
+Val n_exit 14397 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14730 50 1 1
+Reset 14731 17 1 1
+END_THING
+
+THING 14397
+Name tavern inn_rooms guest_room`
+HWT 0 0
+Color 7
+Short A Luxurious Resting Room`
+Symbol -`
+ThFl 524779
+Val s_exit 14396 3 3 0 0 0 0 0 `
+Val e_exit 14400 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14728 50 1 1
+Reset 14729 50 1 1
+END_THING
+
+THING 14398
+Name tavern inn_rooms guest_room`
+HWT 0 0
+Color 7
+Short A Tiny Sleeping Room`
+Symbol -`
+ThFl 524779
+Val e_exit 14401 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14720 50 1 1
+Reset 14721 17 1 1
+Reset 14722 50 1 1
+Reset 14723 100 1 1
+END_THING
+
+THING 14399
+Name tavern inn_rooms guest_room`
+HWT 0 0
+Color 7
+Short A Tiny  Room`
+Symbol -`
+ThFl 524779
+Flag Room 0 0 1
+Reset 14725 50 1 1
+Reset 14726 17 1 1
+END_THING
+
+THING 14400
+Name tavern inn_rooms hallway road road_end`
+HWT 0 0
+Color 7
+Short A Crowded Hallway`
+Symbol -`
+ThFl 524779
+Val w_exit 14397 3 3 0 0 0 0 0 `
+Val e_exit 14403 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14401
+Name tavern inn_rooms guest_room`
+HWT 0 0
+Color 7
+Short A Small Guest Room`
+Symbol /`
+ThFl 524779
+Val w_exit 14398 3 3 0 0 0 0 0 `
+Val n_exit 14402 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+Reset 14727 50 1 1
+END_THING
+
+THING 14402
+Name tavern inn_rooms hallway road road_end`
+HWT 0 0
+Color 7
+Short A Crowded Hallway`
+Symbol -`
+ThFl 524779
+Val s_exit 14401 0 0 0 0 0 0 0 `
+Val n_exit 14403 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
+END_THING
+
+THING 14403
+Name tavern inn_rooms hallway road`
+HWT 0 0
+Color 7
+Short A Crowded Hallway`
+Symbol -`
+ThFl 524779
+Val w_exit 14400 0 0 0 0 0 0 0 `
+Val s_exit 14402 0 0 0 0 0 0 0 `
+Flag Room 0 0 65536
 END_THING
 
 THING 14667
-Name slender elm tree`
+Name clean bed`
 HWT 0 0
-Short a slender elm tree`
-Long A slender elm tree is here.`
-ThFl 100934
+Short a clean bed`
+Long There is a clean bed was dropped here.`
+type furniture`
+ThFl 101062
 END_THING
 
 THING 14668
-Name wilted dogwood tree`
+Name chair`
 HWT 0 0
-Short a wilted dogwood tree`
-Long A wilted dogwood tree is here.`
-ThFl 100934
+Short a warped rough chair`
+Long A warped rough chair lying on the ground.`
+type furniture`
+ThFl 101062
 END_THING
 
 THING 14669
-Name light pine sapling`
+Name table`
 HWT 0 0
-Short a light pine sapling`
-Long A light pine sapling is here.`
-ThFl 100934
+Short a forlorn wood table`
+Long There is a forlorn wood table abandoned here.`
+type furniture`
+ThFl 101062
 END_THING
 
 THING 14670
-Name wilted maple sapling`
+Name dirty clay jar`
 HWT 0 0
-Short a wilted maple sapling`
-Long A wilted maple sapling is here.`
+Short a dirty clay jar`
+Long You see a dirty clay jar lying here.`
 ThFl 100934
 END_THING
 
 THING 14671
-Name light cherry sapling`
+Name painted terra cotta pot`
 HWT 0 0
-Short a light cherry sapling`
-Long A light cherry sapling is here.`
+Short a painted terra cotta pot`
+Long It looks like a painted terra cotta pot was dropped here.`
 ThFl 100934
 END_THING
 
 THING 14672
-Name hearty oak sapling`
+Name trough`
+Level 40
 HWT 0 0
-Short a hearty oak sapling`
-Long A hearty oak sapling is here.`
+Short a split wood trough`
+Long You notice a split wood trough.`
+type container`
+ThFl 100934
+END_THING
+
+THING 14673
+Name clean bed`
+HWT 0 0
+Short a clean bed`
+Long A clean bed has been placed here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14674
+Name stiff bed`
+HWT 0 0
+Short a stiff bed`
+Long A stiff bed has been left here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14675
+Name locker`
+Level 80
+HWT 0 0
+Short a sad stick locker`
+Long You notice a sad stick locker on the ground.`
+ThFl 100934
+END_THING
+
+THING 14676
+Name bed`
+HWT 0 0
+Short a dirty bed`
+Long A dirty bed has been dropped here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14677
+Name stool`
+HWT 0 0
+Short a worn wood stool`
+Long A worn wood stool abandoned here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14678
+Name chair`
+HWT 0 0
+Short a forlorn stick chair`
+Long A forlorn stick chair has been placed here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14679
+Name table`
+HWT 0 0
+Short a dirty plank table`
+Long You see a dirty plank table abandoned here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14680
+Name thin clay flask`
+HWT 0 0
+Short a thin clay flask`
+Long It appears that a thin clay flask looks abandoned.`
 ThFl 100934
 END_THING
 
 THING 14681
-Name light elm sapling`
+Name lopsided earthen decanter`
 HWT 0 0
-Short a light elm sapling`
-Long A light elm sapling is here.`
+Short a lopsided earthen decanter`
+Long A lopsided earthen decanter was dropped here.`
 ThFl 100934
 END_THING
 
 THING 14682
-Name light cherry sapling`
+Name Welehpec apprentice`
+Level 116
 HWT 0 0
-Short a light cherry sapling`
-Long A light cherry sapling is here.`
+Short Welehpec the apprentice`
+MIW 1
+Long Welehpec the apprentice is here.`
+Sex 1
+ThFl 2209
+Val money 2 3 2 0 0 0 0 0 `
+Val cast 0 0 0 0 93 0 0 0 `
+Flag Det 0 0 4
+Reset 277 3 1 1
+Reset 279 20 1 1
+Reset 14683 2 1 1
+Reset 14684 7 1 1
+END_THING
+
+THING 14683
+Name ebony sledgehammer`
+Level 108
+HWT 30 138
+Cost 11664
+Short an $8ebony$7 sledgehammer`
+Wear wield`
+Long You see that an $8ebony$7 sledgehammer$6 is here.$7`
 ThFl 100934
+Val weapon 4 16 2 0 0 0 0 0 `
+Flag Obj 0 0 197
+Flag sp_heal 0 0 2
+Flag sp_resist 0 0 2
+Flag mv 0 0 7
+Flag armor 0 0 6
+END_THING
+
+THING 14684
+Name citrine bronze battle boots`
+Level 87
+HWT 21 18
+Cost 7569
+Short $1a pair of $Acitrine$1$1-studded $3bronze$1 battle boots$7`
+Wear feet`
+Long $1A pair of $Acitrine$1$1-studded $3bronze$1 battle boots$7$6 was left here.$7`
+ThFl 100934
+Val armor 0 0 0 10 0 0 0 0 `
+Flag gf_defense 0 0 3
+Flag hp 0 0 2
+END_THING
+
+THING 14685
+Name coffer`
+Level 80
+HWT 0 0
+Short a beat-up wood coffer`
+Long You see a beat-up wood coffer on the ground.`
+ThFl 100934
+END_THING
+
+THING 14686
+Name clean bed`
+HWT 0 0
+Short a clean bed`
+Long You see that a clean bed was left here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14687
+Name table`
+HWT 0 0
+Short a creaky wood table`
+Long You see that a creaky wood table was left here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14688
+Name dingy bed`
+HWT 0 0
+Short a dingy bed`
+Long You see that a dingy bed is lying on the ground.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14689
+Name table`
+HWT 0 0
+Short a filthy wood table`
+Long A filthy wood table lying here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14690
+Name table`
+HWT 0 0
+Short a wobbly log table`
+Long There is a wobbly log table.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14691
+Name bureau`
+Level 80
+HWT 0 0
+Short a sagging wood bureau`
+Long A sagging wood bureau was put here.`
+ThFl 100934
+END_THING
+
+THING 14692
+Name seat`
+HWT 0 0
+Short a sagging log seat`
+Long A sagging log seat was placed here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14693
+Name chair`
+HWT 0 0
+Short a sagging wood chair`
+Long There is a sagging wood chair lying here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14694
+Name table`
+HWT 0 0
+Short a poor-quality stick table`
+Long You notice a poor-quality stick table on the ground.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14695
+Name crate`
+Level 40
+HWT 0 0
+Short a crude plank crate`
+Long There's a crude plank crate lying on the ground.`
+type container`
+ThFl 100934
+Reset 14696 36 1 1
+END_THING
+
+THING 14696
+Name titanium mask`
+Level 51
+HWT 22 15
+Cost 2601
+Short $Ea $Ftitanium$E mask$7`
+Wear face`
+Long You see that $Ea $Ftitanium$E mask$7$6 was left here by somebody.$7`
+ThFl 100934
+Val armor 8 0 0 0 0 0 0 0 `
+Flag Obj 0 0 32768
+Flag armor 0 0 1
+END_THING
+
+THING 14697
+Name dingy bed`
+HWT 0 0
+Short a dingy bed`
+Long It appears that a dingy bed is here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14698
+Name chair`
+HWT 0 0
+Short a sturdy wooden chair`
+Long You see that a sturdy wooden chair is sitting here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14699
+Name table`
+HWT 0 0
+Short a beat-up wood table`
+Long You notice a beat-up wood table.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14700
+Name shelf`
+HWT 0 0
+Short a lopsided plank shelf`
+Long There's a lopsided plank shelf has been dropped here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14701
+Name coffer`
+Level 80
+HWT 0 0
+Short a tidy wood coffer`
+Long A tidy wood coffer dropped here.`
+ThFl 100934
+Reset 14702 18 1 1
+END_THING
+
+THING 14702
+Name amethyst belt guardianguardian`
+Level 79
+HWT 15 17
+Cost 6241
+Short an $5amethyst$7 belt of the guardian`
+Wear waist`
+Long An $5amethyst$7 belt of the guardian$6 is lying here.$7`
+ThFl 100934
+Val armor 0 9 0 0 0 0 1 0 `
+Flag sp_resist 0 0 1
+Flag hp 0 0 2
+END_THING
+
+THING 14703
+Name clean bed`
+HWT 0 0
+Short a clean bed`
+Long It appears that a clean bed was left here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14704
+Name stand`
+HWT 0 0
+Short a filthy wood stand`
+Long A filthy wood stand lying on the ground.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14705
+Name locker`
+Level 80
+HWT 0 0
+Short a sagging wood locker`
+Long You see a sagging wood locker here.`
+ThFl 100934
+END_THING
+
+THING 14706
+Name statue`
+HWT 200 20000
+Short a statue commemorating Odit Sifeh`
+Long A statue commemorating odit sifeh has been left here.`
+ThFl 101063
+END_THING
+
+THING 14707
+Name memorial`
+HWT 200 20000
+Short a memorial for Ho-ef Sosnunum`
+Long You see a memorial for ho-ef sosnunum was dropped here.`
+ThFl 101063
+END_THING
+
+THING 14708
+Name tombstone`
+HWT 200 20000
+Short a tombstone of Igoth Desalsiy`
+Long You see a tombstone of igoth desalsiy lying on the ground.`
+ThFl 101063
+END_THING
+
+THING 14709
+Name gravestone`
+HWT 200 20000
+Short a gravestone of Afepnud Owtip`
+Long There is a gravestone of afepnud owtip has been left here.`
+ThFl 101063
+END_THING
+
+THING 14710
+Name bas-relief`
+HWT 200 20000
+Short a bas-relief in memory of Belil Hasreswe`
+Long There is a bas-relief in memory of belil hasreswe lying on the ground.`
+ThFl 101063
+END_THING
+
+THING 14711
+Name slab`
+HWT 200 20000
+Short a slab for Fatpup Iclet`
+Long It appears that a slab for fatpup iclet is on the ground.`
+ThFl 101063
+END_THING
+
+THING 14712
+Name light spruce sapling`
+HWT 0 0
+Short a light spruce sapling`
+Long A light spruce sapling lying here.`
+type tree`
+ThFl 101062
+END_THING
+
+THING 14713
+Name small mahogany sapling`
+HWT 0 0
+Short a small mahogany sapling`
+Long A small mahogany sapling has been left here.`
+type tree`
+ThFl 101062
+END_THING
+
+THING 14714
+Name strong pine tree`
+HWT 0 0
+Short a strong pine tree`
+Long A strong pine tree has been dropped here.`
+type tree`
+ThFl 101062
+END_THING
+
+THING 14715
+Name large ash sapling`
+HWT 0 0
+Short a large ash sapling`
+Long A large ash sapling lying here.`
+type tree`
+ThFl 101062
+END_THING
+
+THING 14716
+Name wilted mahogany sapling`
+HWT 0 0
+Short a wilted mahogany sapling`
+Long A wilted mahogany sapling has been left here.`
+type tree`
+ThFl 101062
+END_THING
+
+THING 14717
+Name wilted dogwood tree`
+HWT 0 0
+Short a wilted dogwood tree`
+Long A wilted dogwood tree was put here.`
+type tree`
+ThFl 101062
+END_THING
+
+THING 14718
+Name large dogwood tree`
+HWT 0 0
+Short a large dogwood tree`
+Long A large dogwood tree on the ground.`
+type tree`
+ThFl 101062
+END_THING
+
+THING 14719
+Name small poplar tree`
+HWT 0 0
+Short a small poplar tree`
+Long You notice a small poplar tree has been put here.`
+type tree`
+ThFl 101062
+END_THING
+
+THING 14720
+Name dingy bed`
+HWT 0 0
+Short a dingy bed`
+Long You notice a dingy bed sitting here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14721
+Name cabinet`
+Level 80
+HWT 0 0
+Short a filthy wooden cabinet`
+Long There is a filthy wooden cabinet was put here.`
+ThFl 100934
+END_THING
+
+THING 14722
+Name table`
+HWT 0 0
+Short a poor-quality rough table`
+Long There is a poor-quality rough table lying here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14723
+Name citizen`
+Level 105
+HWT 0 0
+Short a citizen`
+MIW 1
+Long A citizen is here.`
+Sex 2
+ThFl 2209
+Val money 9 4 9 0 0 0 0 0 `
+Flag Det 0 0 4
+Reset 14724 2 1 1
+END_THING
+
+THING 14724
+Name brown arm plates melding`
+Level 123
+HWT 17 22
+Cost 15129
+Short $Aa pair of $3brown$A arm plates of melding$7`
+Wear arms`
+Long You see that $Aa pair of $3brown$A arm plates of melding$7$6 has been abandoned here.$7`
+ThFl 100934
+Val armor 0 0 12 0 0 0 2 0 `
+Flag Obj 0 0 1
+Flag sp_attack 0 0 3
+Flag gf_attack 0 0 4
+Flag hp 0 0 5
+END_THING
+
+THING 14725
+Name dingy bed`
+HWT 0 0
+Short a dingy bed`
+Long There's a dingy bed sitting here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14726
+Name coffer`
+Level 80
+HWT 0 0
+Short a creaky plank coffer`
+Long There is a creaky plank coffer.`
+ThFl 100934
+END_THING
+
+THING 14727
+Name bed`
+HWT 0 0
+Short a forlorn bed`
+Long You see that a forlorn bed is here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14728
+Name pallet`
+HWT 0 0
+Short a rustic pallet`
+Long A rustic pallet was left here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14729
+Name table`
+HWT 0 0
+Short an old rough table`
+Long There's an old rough table here.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14730
+Name clean bed`
+HWT 0 0
+Short a clean bed`
+Long You notice a clean bed.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14731
+Name trunk`
+Level 80
+HWT 0 0
+Short a warped rough trunk`
+Long You notice a warped rough trunk was dropped here.`
+ThFl 100934
+END_THING
+
+THING 14732
+Name dingy bed`
+HWT 0 0
+Short a dingy bed`
+Long There is a dingy bed.`
+type furniture`
+ThFl 101062
+END_THING
+
+THING 14733
+Name table`
+HWT 0 0
+Short a used wooden table`
+Long You notice that a used wooden table was dropped here.`
+type furniture`
+ThFl 101062
 END_THING
 
 END_OF_AREA
