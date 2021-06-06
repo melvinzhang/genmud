@@ -727,3 +727,4 @@ find_num_gen_words (THING *obj)
     }
   return total;
 }
+

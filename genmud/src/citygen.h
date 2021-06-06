@@ -120,3 +120,7 @@ void citygen_add_fields (THING *area);
 void citygen_connect_regions (THING *area, int max_depth_jump);
 
 
+/* This exports some of the map as a simple plasm setup. */
+void citygen_plasm_export (void);
+
+

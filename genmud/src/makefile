@@ -11,7 +11,8 @@ OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 	guild.o help.o historygen.o implant.o info.o \
 	int.o kde.o look.o magic.o magicitem.o map.o mapgen.o \
 	mobgen.o money.o move.o myrand.o note.o objectgen.o \
-	parse.o pcio.o pkdata.o prac.o proc.o provisiongen.o \
+	parse.o pcio.o pkdata.o plasmgen.o \
+	prac.o proc.o provisiongen.o \
 	questgen.o questgenold.o quit.o race.o roomdescgen.o \
 	roomgen.o rumor.o \
 	script.o scriptio.o scriptedit.o scriptline.o security.o serv.o \

@@ -17,6 +17,7 @@
 #include "historygen.h"
 #include "rumor.h"
 #include "craft.h"
+#include "plasmgen.h"
 
 /* Are we allowed to have areas in these places? */
 static int worldgen_allowed[WORLDGEN_MAX][WORLDGEN_MAX];
@@ -222,6 +223,7 @@ worldgen (THING *th, char *arg)
       set_up_map(NULL);
       setup_newbie_areas ();
       reset_world();
+      plasmgen_export (the_world->cont);
       RBIT (server_flags, SERVER_WORLDGEN);
       end_memory = find_total_memory_used();
       gettimeofday (&worldgen_time, NULL);
@@ -911,6 +913,7 @@ worldgen_generate_area_levels (void)
 	num_aligns++;
     }
 
+ 
   /* Now get the number of usable areas. Those are areas that are
      level 0 (unused) and which are not badroom bit areas and which
      aren't too close to previously used outpost areas. */

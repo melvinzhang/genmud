@@ -591,6 +591,12 @@ do_scan (THING *th, char *arg)
       stt ("You can't scan here.\n\r", th);
       return;
     }
+
+  if (FIGHTING(th)) 
+    {  
+      stt ("You can't scan while you're fighting.\n\r", th);
+      return;
+    }
   
   if (th->position == POSITION_SLEEPING)
     {

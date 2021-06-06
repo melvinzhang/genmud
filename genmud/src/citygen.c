@@ -13,8 +13,7 @@
 #include "mobgen.h"
 #include "mapgen.h"
 #include "citygen.h"
-
-
+#include "plasmgen.h"
 
 
 
@@ -208,6 +207,8 @@ citygen (THING *th, char *arg)
 
   citygen_connect_regions (area, 1);
   
+  if (!IS_SET (server_flags, SERVER_WORLDGEN))
+    plasmgen_export (area);
   /* Now set all rooms/mobs in the area to mv 1 and all objects to
      mv 0. So we get 1 of each room and unlimited objects of
      each other type. */
@@ -235,6 +236,8 @@ citygen (THING *th, char *arg)
   /* This adds fields ringing the city that will attach to gatehouses. */
  
   citygen_add_fields (area);
+
+
   
   clear_city_grid(FALSE);
 
@@ -772,6 +775,14 @@ citygen_add_detail (RESET *start_reset, THING *area, THING *to, VALUE *start_dim
 	  o_dim_z = MID (1, nr (obj_dims->val[4],obj_dims->val[5]),
 			 s_max_z-s_min_z+1);
 	  
+	  /* Except...the z dim can eb as big as needed if the
+	     initial object is on street level. */
+	  
+	  if (s_min_z == CITYGEN_STREET_LEVEL)
+	    {
+	      o_dim_z = MAX (1, nr (obj_dims->val[4],obj_dims->val[5]));
+	    }
+
 	  /* This is for making "stringy" objects like roads. */
 	  
 	  if (obj_dims->word && *obj_dims->word)
@@ -882,7 +893,9 @@ citygen_add_detail (RESET *start_reset, THING *area, THING *to, VALUE *start_dim
 
 	  o_dim_x = s_max_x - s_min_x + 1;
 	  o_dim_y = s_max_y - s_min_y + 1;
-	  o_dim_z = s_max_z - s_min_z + 1;
+	  
+	  if (o_dim_z < s_max_z - s_min_z + 1)
+	    o_dim_z = s_max_z - s_min_z + 1;
 	  found_start_location = TRUE;
 	}
       
@@ -917,7 +930,7 @@ citygen_add_detail (RESET *start_reset, THING *area, THING *to, VALUE *start_dim
 		{
 		  for (y = s_min_y; y <= s_max_y-o_dim_y +1; y++)
 		    {
-		      for (z = s_min_z; z <= s_max_z - o_dim_z +1; z++)
+		      for (z = s_min_z; z < s_min_z + o_dim_z; z++)
 			{
 			  if (IS_ROOM (obj) &&
 			      (sroom = city_grid[x][y][z]) != NULL &&
@@ -1344,7 +1357,7 @@ citygen_connect_same_level (int depth, VALUE *dims)
       num_choices = 0;
       num_chose = 0;
       found_room = FALSE;
-      
+      find_connected_rooms_size (start_room, BADROOM_BITS);
       for (count = 0; count < 2; count++)
 	{
 	  for (z = dims->val[4]; z <= dims->val[5]; z++)
@@ -2706,6 +2719,8 @@ citygen_connect_regions (THING *area, int max_jump_depth)
   
   /* We should have a room. */
 
+
+
       if (room && nroom && found_room && dir >= 0 &&
 	  dir < REALDIR_MAX)
 	{
@@ -2723,3 +2738,4 @@ citygen_connect_regions (THING *area, int max_jump_depth)
   return;
   
 }
+

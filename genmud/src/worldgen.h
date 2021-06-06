@@ -169,3 +169,4 @@ void worldgen_link_special_room (int special_room_vnum);
 /* This finds the number of generator words there are in the world. */
 
 int find_num_gen_words (THING *);
+

@@ -160,6 +160,7 @@ const char *value_list[VAL_MAX] =
   "dimension",
   "craft",
   "daily_cycle",
+  "coord",
 };
 
 

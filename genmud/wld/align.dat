@@ -1,48 +1,47 @@
 ALIGN
 Name Neutral`
 Stats 0 0 0 0 0 0 0 
-Spell 0 0 0 0 0 
+Spell 35 14 5 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
-AscendFrom 0
+AscendFrom -1
 HatedSociety 0
 Goals 50
 Relic 0 0 0
-Parts 0 0 0 0 
+Parts 1 1 1 1 
 HWT 0 0 0 0
 RawCurr 0 0 0 0 0 0 0 0 
 RawWant 0 0 0 0 0 0 0 0 
 END_ALIGN
 ALIGN
 Name Evil`
-Flag Det 0 0 4
-Stats 1 0 1 0 0 0 0 
-Spell 0 1 0 0 0 
+Stats 0 0 0 0 0 0 0 
+Spell 35 14 5 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
-AscendFrom 0
-HatedSociety 0
+AscendFrom -1
+HatedSociety 39
 Goals 50
-Relic 1001 0 1018
-Parts 0 0 0 0 
+Relic 0 0 1018
+Parts 1 1 1 1 
 HWT 0 0 0 0
-RawCurr 124500 0 0 0 0 0 0 0 
+RawCurr 124500 130106 100897 111803 100240 101524 128626 106638 
 RawWant 0 0 0 0 0 0 0 0 
 END_ALIGN
 ALIGN
 Name Good`
-Stats 0 1 0 1 0 0 0 
-Spell 2 0 0 0 0 
+Stats 0 0 0 0 0 0 0 
+Spell 35 14 5 0 0 
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
-AscendFrom 0
-HatedSociety 0
-Goals 50
-Relic 1051 0 1068
-Parts 0 0 0 0 
+AscendFrom -1
+HatedSociety 67
+Goals 70
+Relic 0 0 1058
+Parts 1 1 1 1 
 HWT 0 0 0 0
-RawCurr 124500 0 0 5222 0 0 0 0 
-RawWant 0 0 50 0 0 0 95 100 
+RawCurr 124500 99986 114974 107110 108724 100303 106075 103922 
+RawWant 0 0 0 0 0 0 0 0 
 END_ALIGN
 
 END_OF_ALIGNS

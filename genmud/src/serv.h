@@ -784,7 +784,8 @@ grep 					    them all visible to each
 #define VAL_DIMENSION        49 /* Dimensions of an object. */
 #define VAL_CRAFT            50 /* Crafted items data. */
 #define VAL_DAILY_CYCLE      51 /* This thing goes through a daily cycle. */
-#define VAL_MAX              52 /* Total number of values. */
+#define VAL_COORD            52 /* What coordinate we're in for plasmgen. */
+#define VAL_MAX              53 /* Total number of values. */
   
   
 
@@ -2915,13 +2916,13 @@ void paragraph_format (char **);
 /* This finds a generator object based on an area vnum and a typename.
    Used inside of find_gen_word mostly, but also for making metal names. */
 
-THING *find_gen_object (int area_vnum, char *typename);
+THING *find_gen_object (int area_vnum, char *typenames);
 /* This finds a descriptive word from one of the areas in the
    generator section of the areas-- those between GENERATOR_NOCREATE_VNUM
    MIN and MAX. If the word is not found or if no word in the desc
    can be found, the original word is returned. */
 
-char *find_gen_word (int area_vnum, char *typename, char *color);
+char *find_gen_word (int area_vnum, char *typenames, char *color);
 /* This creates a string of text using generator words from the given area. */
 char *string_gen (char *txt, int area_vnum);
 
