@@ -1,0 +1,38 @@
+THING 20000
+Name area20000.are`
+HpMv 0 10 750 1000
+HWT 0 0
+Timer 1
+ThFl 1089531
+END_THING
+
+THING 20001
+HWT 0 0
+Color 7
+Symbol +`
+ThFl 524779
+Val n_exit 20002 0 0 0 0 0 0 0 `
+Val w_exit 20002 0 0 0 0 0 0 0 `
+Val e_exit 20002 0 0 0 0 0 0 0 `
+END_THING
+
+THING 20002
+HWT 0 0
+Color 7
+Symbol +`
+ThFl 524779
+Val s_exit 20001 0 0 0 0 0 0 0 `
+Val e_exit 20001 0 0 0 0 0 0 0 `
+Val w_exit 20001 0 0 0 0 0 0 0 `
+END_THING
+
+THING 20800
+Name squirrel`
+HWT 0 0
+Short A squirrel`
+Long A squirrel is here.`
+ThFl 2209
+END_THING
+
+END_OF_AREA
+

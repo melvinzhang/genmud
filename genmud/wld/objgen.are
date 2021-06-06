@@ -2,7 +2,7 @@ THING 108000
 Name objgen.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 5
+Timer 14
 Short The Object Gen Area`
 type Lonath`
 ThFl 1089531
@@ -61,6 +61,7 @@ Charred
 Tattered
 Shadowed
 Whispering
+Glyphed
 `
 Short Descriptive name.`
 MIW 1

@@ -909,9 +909,9 @@ seg_handler (void)
   shutdown_server ();
   /* Wait for world state save. */
   do
-    sleep (1);
+    usleep (50000);
   while (IS_SET (server_flags, SERVER_SAVING_WORLD | SERVER_SAVING_AREAS) &&
-	 ++count < 20);
+	 ++count < 200);
   
   kill (getpid(), SIGSEGV);
   exit(SIGSEGV);
@@ -928,7 +928,6 @@ shutdown_server (void)
   if (IS_SET (server_flags, SERVER_AUTO_WORLDGEN))
     {
       worldgen (NULL, "clear yes");
-      sleep(1);
     }
   if (seg_count < 2)
     {
@@ -958,8 +957,6 @@ shutdown_server (void)
       write_notes ();
     }
   SBIT (server_flags, SERVER_REBOOTING);
-  close (listen_socket);
-  listen_socket = 0;
   return;
 }
 

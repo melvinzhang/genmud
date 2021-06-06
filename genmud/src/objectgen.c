@@ -770,11 +770,17 @@ objectgen_generate_names (char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	num_names_used++;
     }
   
-  names_left += nr (1, level/50+3);
-  if (num_names_used + names_left >= 5)
-    names_left = MAX(1, 5-num_names_used);
+  names_left = nr (1, level/50+2);
+
+  if (num_names_used + names_left > 3 && IS_SET (name_parts_used, (1 << OBJECTGEN_NAME_SOCIETY)))
+    names_left--;
   
+  /* Cut down on the number of names. */
   
+  if (num_names_used + names_left > 4)
+    {
+	names_left = MAX(1,4-num_names_used);
+    }
   
   /* Choose from the remaining descriptive names. You only pick
      from things that are not mutexed and which have names and which

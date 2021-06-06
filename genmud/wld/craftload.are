@@ -2,7 +2,7 @@ THING 135000
 Name craftload.are`
 HpMv 0 10 5 2000
 HWT 0 0
-Timer 7
+Timer 16
 Short The Craftgen Load Area`
 type Lonath`
 ThFl 1089531

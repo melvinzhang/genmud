@@ -30,7 +30,6 @@ static struct sockaddr_in listen_address;
 static fd_set input_set;
 int times_through_loop = 0;
 static int number_of_pulses = 0;
-static pthread_mutex_t read_mut = PTHREAD_MUTEX_INITIALIZER;
 
 /* All this function does is 1.  Set up the socket on the correct port.
    2. Load a database and 3. Run the server loop. Then it will clean up
@@ -56,20 +55,26 @@ main (int argc, char **argv)
 void
 init_socket (void)
 {
-  int reuse;
+  static int sockflags = 1;
+  
+  /* You NEED to zero this out or else it will fail to rebind. Bleh. */
+  bzero (&listen_address, sizeof(listen_address));
+  
+
   listen_address.sin_family = AF_INET;
   listen_address.sin_port = htons (PORT_NUMBER);
-  //inet_aton("216.162.171.221", &listen_address.sin_addr);
   if (((listen_socket = socket (AF_INET, SOCK_STREAM, 0)) < 0) ||
-      (setsockopt (listen_socket, SOL_SOCKET, SO_REUSEADDR, (char *) &reuse, sizeof (reuse)) < 0) ||
+      
+      (setsockopt (listen_socket, SOL_SOCKET, SO_REUSEADDR , (char *) &sockflags, sizeof (sockflags)) < 0) ||
       ((bind (listen_socket, (struct sockaddr *) &listen_address, sizeof (listen_address))) < 0) ||
       (fcntl (listen_socket, F_SETFL, (fcntl (listen_socket, F_GETFL, 0) | O_NONBLOCK)) < 0) ||
       (listen (listen_socket, 5) < 0))
     {
-      log_it ("Socket Failed!\n\r");
-      close (listen_socket);
-      exit (1);
+      log_it ("Socket Failed!");
+       exit (1);
     }
+  log_it ("Socket Ok.");
+
 }
 
 /* Main loop to run the world. */
@@ -80,7 +85,6 @@ run_server (void)
   struct timeval now_time;
   int count;
   int current_time_update_ticks = 0;
-
 
   
   max_fd = listen_socket;
@@ -137,10 +141,6 @@ run_server (void)
       times_through_loop++;
     }
   shutdown_server ();
-  count = 0;
-  while (IS_SET (server_flags, SERVER_SAVING_WORLD |
-		 SERVER_SAVING_AREAS) && ++count < 10)
-    sleep(1);
   return;
 }
 /* This starts the thread that keeps the game pulse. */
@@ -159,7 +159,7 @@ update_pulse (void *foo)
 {
   while (!IS_SET (server_flags, SERVER_REBOOTING))
     {
-      if (!IS_SET (server_flags, SERVER_SPEEDUP))
+      if (!IS_SET (server_flags, SERVER_SPEEDUP | SERVER_REBOOTING))
 	{
 	  number_of_pulses++;
 	  usleep (900000/PULSE_PER_SECOND);
@@ -227,15 +227,15 @@ read_in_from_network (void*pointer)
        and we wait for the game to update this. */
       if (get_input ())
 	{
-	  pthread_mutex_lock (&read_mut);
-      /* Do not continue the loop until all data has been handled by
-	 the server. */
-      
+	  int count = 0;
+	  SBIT (server_flags, SERVER_READ_INPUT);
+	  /* Do not continue the loop until all data has been handled by
+	     the server. */
 	  /* Only give a second lag time of the reading gets
 	     funked somehow. This ++count < 50 can be dangerous but
 	     once in a while it seems to hang so i wanted to put this
 	     in. Be careful with it. threads suck. Move along. */
-	  while (pthread_mutex_trylock (&read_mut) == EBUSY)
+	  while (IS_SET (server_flags, SERVER_READ_INPUT) && ++count < 20)
 	    usleep (20000);
 	}
       else
@@ -252,7 +252,7 @@ get_input (void)
   FILE_DESC *fd, *fd_next;
   bool got_input = FALSE;
   for (fd = fd_list; fd; fd = fd_next)
-    {
+{
       fd_next = fd->next;
       if (FD_ISSET (fd->r_socket, &input_set) && 
 	  !read_into_buffer (fd))
@@ -374,7 +374,7 @@ process_input (void)
 	}
     }
   prev_command[0] = '\0';
-  pthread_mutex_unlock (&read_mut);
+  RBIT (server_flags, SERVER_READ_INPUT);
   return;
 }
 
@@ -792,9 +792,6 @@ close_fd (FILE_DESC *fd)
   
   /* Clean up any residual output */
   
-   // if (fd->write_buffer[0])
-  //   write_fd_direct (fd, fd->write_buffer);
-
   FD_CLR (fd->r_socket, &input_set);
   
   /* Clean up snoop/switch. */

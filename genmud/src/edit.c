@@ -247,18 +247,19 @@ do_edit (THING *th, char *arg)
 	}
       else 
 	{
-	  if (!*arg2 && th->pc->editing && th->fd &&
+	  THING *edt = (THING *) th->pc->editing;
+	  if (!*arg2 && edt && th->fd &&
 	      th->fd->connected == CON_EDITING)
 	    {
 	      int j;
-	      vnum = ((THING *)th->pc->editing)->vnum;
+	      vnum = edt->vnum;
 	      for (j = 0; j < 200; j++)
 		{
 		  if ((thg = find_thing_num (vnum + j)) == NULL &&
-		      ((THING *)th->pc->editing)->in &&
+		      edt->in &&
 		      (ar = find_area_in (vnum + j)) != NULL &&
 		      ar->vnum == 
-		      ((THING *)th->pc->editing)->in->vnum)
+		      edt->in->vnum)
 		    {
 		      vnum += j;
 		      break;
@@ -277,7 +278,8 @@ do_edit (THING *th, char *arg)
 		  return;
 		}
 	    }
-	  if ((ar = find_area_in (vnum)) == NULL)
+	  if ((ar = find_area_in (vnum)) == NULL &&
+	      !IS_AREA (edt))
 	    {
 	      stt ("That vnum is not assigned to an area.\n\r", th);
 	      return;
@@ -1178,7 +1180,18 @@ edit (THING *th, char *arg)
 	{
 	  int count = 0, reset_num = 0, thing_num = 0, pct = 0, nest = 0, max_num = 0;
 	  RESET *reset, *resetn, *newreset;
+	  char *oldarg = arg;
+	  
 	  arg = f_word (arg, arg1);
+	  
+	  if (!str_cmp (arg1, "loc") || !str_cmp (arg1, "location") ||
+	      !str_cmp (arg1, "find") || !str_cmp (arg1, "where") ||
+	      !str_cmp (arg1, "place"))
+	    {
+	      do_reset (th, oldarg);
+	      return;
+	    }
+
 	  if (!is_number (arg1) || !isdigit (*arg1))
 	    {
 	      stt ("Syntax: reset <number> <delete> or <thing_num pct max_num nest>\n\r", th);
@@ -2415,9 +2428,11 @@ do_tfind (THING *th, char *arg)
 	  else if (uvnum == 0)
 	    uvnum = atoi (arg1);
 	}
-      else if (!str_cmp (arg1, "mob"))
+      else if (!str_cmp (arg1, "mob") || !str_cmp (arg1, "monsters") ||
+	       !str_cmp (arg1, "creatures"))
 	mob = TRUE;
-      else if (!str_cmp (arg1, "obj"))
+      else if (!str_cmp (arg1, "obj") || !str_cmp (arg1, "object") ||
+	       !str_cmp (arg1, "objects"))
 	obj = TRUE;
       else if (!str_cmp (arg1, "room"))
 	room = TRUE;

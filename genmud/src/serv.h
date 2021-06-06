@@ -570,6 +570,7 @@ grep 					    them all visible to each
 #define SERVER_RAVAGE              0x00000200  /* ravage..super flurry */
 #define SERVER_BEING_ATTACKED_YELL 0x00000400  /* Yeller being attacked */
 #define SERVER_LOG_ALL             0x00000800  /* All commands logged. */
+#define SERVER_READ_INPUT           0x00001000  /* Got input read in. */
 #define SERVER_SACRIFICE           0x00002000  /* Sacrifice spell in use */
 #define SERVER_TSTAT               0x00004000  /* Tstatting */
 #define SERVER_SAVING_WORLD        0x00008000  /* Saving world */

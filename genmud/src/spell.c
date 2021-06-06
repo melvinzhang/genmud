@@ -171,6 +171,7 @@ read_spell (FILE *f)
   char word[STD_LEN];
   bool found;
   int pre_number = 0, i;
+  int bad_read_count = 0;
   spl = new_spell ();
   for (;;)
     {
@@ -333,9 +334,15 @@ read_spell (FILE *f)
 		}
 	      break;	
 	    default:
+	      bad_read_count++;
 	      break;
 	}
-      
+      if (bad_read_count >= 100)
+	{
+	  log_it ("Bad read on single spell in spells.dat!");
+	  break;
+	}
+       
     }
   return;
 }

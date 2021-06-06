@@ -326,7 +326,7 @@ areagen_generate_person (THING *area, int level_bonus)
 
   area_room_flags = flagbits (area->flags, FLAG_ROOM1) & ROOM_SECTOR_FLAGS & ~BADROOM_BITS;
   
-  if (nr (1,3) == 2 &&
+  if (nr (1,4) != 2 &&
       (room = find_random_room (area, FALSE, area_room_flags, BADROOM_BITS)) != NULL)
     add_reset (room, curr_vnum, 100, 1, 1);
   else
@@ -371,11 +371,11 @@ add_objects_to_person (THING *person, char *name)
       /* Add standard armor/wpn pops. */
   
   if (nr (1,3) == 2)
-    add_reset (person, WEAPON_RANDPOP_VNUM, 30, 1, 1);
+    add_reset (person, WEAPON_RANDPOP_VNUM, 25, 1, 1);
   if (nr (1,3) == 2)
-    add_reset (person, ARMOR_RANDPOP_VNUM, 20, 4, 1);
+    add_reset (person, ARMOR_RANDPOP_VNUM, 20, 2, 1);
   if (nr (1,3) == 2)
-    add_reset (person, PROVISION_RANDPOP_VNUM, 20, 3, 1);
+    add_reset (person, PROVISION_RANDPOP_VNUM, 20, 1, 1);
   
   /* Sometimes there are no objects. */
   

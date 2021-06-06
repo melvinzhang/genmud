@@ -225,8 +225,8 @@ setup_newbie_areas (void)
 	  /* Add more armor/wpn pops to the talker mobs. */
 	  if (CAN_TALK (mob))
 	    {
-	      add_reset (mob, ARMOR_RANDPOP_VNUM, 50, 6, 1);
-	      add_reset (mob, WEAPON_RANDPOP_VNUM, 80, 1, 1);
+	      add_reset (mob, ARMOR_RANDPOP_VNUM, 20, 3, 1);
+	      add_reset (mob, WEAPON_RANDPOP_VNUM, 20, 1, 1);
 	    }
 	}
       

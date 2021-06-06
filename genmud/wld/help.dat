@@ -2,22 +2,22 @@ HELP MORT
 Key WORLDMAP WORLD_MAP`
 Admin `
 Text World Map:
-              $5^$F*$5^                $7
-             $A,$A, $A,$2*$5^$2*             $7
-             $A,  $5^$2#$2#$2#$2#            $7
-             $5^$F* $B,$2*  $2*$2*           $7
-           $A,$2*$2#$2*$2*$B,$B,  $2*$5^           $7
-            $2#$2#$2*$A,$5^$B, $2*$5^$B,$5^          $7
-           $A,$A,$A,$2* $A,$5^ $5^$5^$B,           $7
-          $5^$A,$2*$2*$A,$A,$2#$A@   $B,$5^          $7
-          $2*$A,   $A,      $9@          $7
-           $A,                     $7
-           $2*$A,$A,$A,                  $7
-            $A,$A,$2*$2*                 $7
-              $A,$2#$2*                $7
+              $2*$2*$5^$F*               $7
+                $F*$F*$2#              $7
+                $5^$F*$5^$B,$5^$2#           $7
+           $2*      $2*$A, $B,           $7
+          $2*$5^$5^     $2*$A, $B,$B,          $7
+          $A,$A,$A,$A,$2*$2*$2* $A,  $5^           $7
+            $A,$2*$2*$2*$A,    $A,$A,          $7
+              $A,$2*$2*$2*$2*   $2*          $7
+              $A,$C#$2#$2#$A,$A,$A,$2*$A,          $7
+             $A,$2#$C#   $2#$2*$A,           $7
+              $2#$2#$A,$C#$2#$A,$A,$2*           $7
+             $2*$2#$C#$A,$2*$2*$A,$5^            $7
+              $5^$2*$2*$2*$2*              $7
 
 
-Evil outpost: $9@$7.   Good outpost: $A@$7.   
+
 All outposts are entered from the area just north of them.
 `
 SeeAlso `
@@ -108,28 +108,26 @@ END_HELP
 HELP MORT
 Key HISTORY BACKSTORY`
 Admin `
-Text As I recall the ancient epochs back through the mists of time, I catch
-myself feeling a sense of unending loss about what we are missing. It was
-the time when the united gods followed Gaon the Neutral deity of Fortune
-and Order, Gubosmur the Evil god of Light and The Hunt and Ogle the Good
-god of Perserverence, Rain and Light. the Mighty Neutral Seklako, the
-Mighty Evil Fehitipe and the Ancient Good Tesgice enforced justice at the
-behest of the gods.
+Text As I look back the legendary days receding into history, I begin feeling a
+sense of tremendous sadness about what once was. It was the era when the
+unified gods followed Wekha the Neutral god of Life and Health. the
+Powerful Neutral Hadowe ensured the peace at the behest of the deities.
 
 
-But then the cataclysm destroyed the world. The legion of governments of
-the world were sundered, and the governments such as the cave kobold were
-cast out from their villages. Many wars were fought and the mighty seklako
-and the other ancient races were unable to enforce their rule. And thus
-did the power of the deities fade. This was the thing that the Demons were
-waiting for as they spilled into the world, but were cast back to the Pits
-destroying the world.
+However the destruction came. The many kingdoms of the world were
+sundered, and the people like the black orc were cast out from their
+cities. Many battles were fought and the powerful hadowe and the other
+ancient races were unable to keep their places of power. And thus did the
+power of the deities fade to nothingness. This is what the Demons wanted
+as they flooded into the world, but were cast back to the Pits at the cost
+of civilization.
 
 
-The nations fell into despair, and things has been unmoved for many ages.
-But now, the Demons are gaining strength. The races are broken and
-disorganized and squabbling among themselves. They must be brought
-together to fight the demons in this Testing Battle for Destiny Testing
+The races slipped into despair, and the world has continued unmoving for
+many epochs. But now, the Demons are gathering their power. The races are
+broken and disorganized and squabbling among themselves. They must be
+brought together to fight the demons in this Testing Battle for Destiny
+Testing
 
 
 `

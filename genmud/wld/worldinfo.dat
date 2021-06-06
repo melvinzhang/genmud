@@ -1,4 +1,726 @@
-TH 8 0 0 0 0 0 0 20 0 0 6
+TH 101 0 0 0 0 0 0 0 0 0 6
+EN_TH
+
+TH 102 0 0 0 0 0 0 0 0 0 6
+EN_TH
+
+TH 1001 0 0 0 0 0 0 0 0 0 6
+EN_TH
+
+TH 1040 1 100 0 0 0 0 200 1 0 6
+Val money 16 16 2 0 0 0 0 0 `
+EN_TH
+
+TH 1002 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1003 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1031 1 100 0 0 0 0 150 1 0 6
+Val money 23 12 1 0 0 0 0 0 `
+EN_TH
+
+TH 1004 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1031 1 100 0 0 0 0 150 1 0 6
+Val money 15 19 0 0 0 0 0 0 `
+EN_TH
+
+TH 1036 1 100 0 0 0 0 100 1 0 6
+Val money 16 0 0 0 0 0 0 0 `
+EN_TH
+
+TH 1005 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1037 1 100 0 0 0 0 100 1 0 6
+Val money 12 9 0 0 0 0 0 0 `
+EN_TH
+
+TH 1006 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1031 1 100 0 0 0 0 150 1 0 6
+Val money 9 13 0 0 0 0 0 0 `
+EN_TH
+
+TH 1031 1 100 0 0 0 0 150 1 0 6
+Val money 5 6 0 0 0 0 0 0 `
+EN_TH
+
+TH 1038 1 100 0 0 0 0 100 1 0 6
+Val money 14 8 0 0 0 0 0 0 `
+EN_TH
+
+TH 1007 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1039 1 100 0 0 0 0 100 1 0 6
+Val money 7 7 0 0 0 0 0 0 `
+EN_TH
+
+TH 1008 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1031 1 100 0 0 0 0 150 1 0 6
+Val money 10 0 0 0 0 0 0 0 `
+EN_TH
+
+TH 1009 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1033 1 100 0 0 0 0 100 1 0 6
+Val money 23 10 0 0 0 0 0 0 `
+EN_TH
+
+TH 1010 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1031 1 100 0 0 0 0 150 1 0 6
+Val money 10 8 1 0 0 0 0 0 `
+EN_TH
+
+TH 1031 1 100 0 0 0 0 150 1 0 6
+Val money 13 5 0 0 0 0 0 0 `
+EN_TH
+
+TH 1032 1 100 0 0 0 0 100 1 0 6
+Val money 17 16 0 0 0 0 0 0 `
+EN_TH
+
+TH 1011 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1034 1 100 0 0 0 0 50 1 0 6
+Val money 13 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 1012 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1035 1 100 0 0 0 0 100 1 0 6
+Val money 9 8 0 0 0 0 0 0 `
+EN_TH
+
+TH 1013 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1031 1 100 0 0 0 0 150 1 0 6
+Val money 18 11 0 0 0 0 0 0 `
+EN_TH
+
+TH 1031 1 100 0 0 0 0 150 1 0 6
+Val money 3 12 0 0 0 0 0 0 `
+EN_TH
+
+TH 1014 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1031 1 100 0 0 0 0 150 1 0 6
+Val money 18 9 0 0 0 0 0 0 `
+EN_TH
+
+TH 1016 0 0 0 0 0 0 0 1 0 6
+EN_TH
+
+TH 1031 1 100 0 0 0 0 150 1 0 6
+Val money 22 11 0 0 0 0 0 0 `
+EN_TH
+
+TH 1051 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 7 3 0 0 0 0 0 0 `
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 13 9 0 0 0 0 0 0 `
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 7 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 1090 1 100 0 0 0 0 200 2 0 6
+Val money 5 6 1 0 0 0 0 0 `
+EN_TH
+
+TH 1052 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 9 10 0 0 0 0 0 0 `
+EN_TH
+
+TH 1053 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 24 2 0 0 0 0 0 0 `
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 10 12 1 0 0 0 0 0 `
+EN_TH
+
+TH 1054 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 11 9 0 0 0 0 0 0 `
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 7 12 0 0 0 0 0 0 `
+EN_TH
+
+TH 1087 1 100 0 0 0 0 100 2 0 6
+Val money 13 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 1055 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 13 7 0 0 0 0 0 0 `
+EN_TH
+
+TH 1086 1 100 0 0 0 0 100 2 0 6
+Val money 7 0 0 0 0 0 0 0 `
+EN_TH
+
+TH 1056 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 14 7 0 0 0 0 0 0 `
+EN_TH
+
+TH 1088 1 100 0 0 0 0 100 2 0 6
+Val money 25 14 0 0 0 0 0 0 `
+EN_TH
+
+TH 1057 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 15 9 0 0 0 0 0 0 `
+EN_TH
+
+TH 1089 1 100 0 0 0 0 100 2 0 6
+Val money 14 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 1058 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 20 2 0 0 0 0 0 0 `
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 18 15 0 0 0 0 0 0 `
+EN_TH
+
+TH 1059 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 4 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 1083 1 100 0 0 0 0 100 2 0 6
+Val money 2 0 0 0 0 0 0 0 `
+EN_TH
+
+TH 1060 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1082 1 100 0 0 0 0 100 2 0 6
+Val money 9 6 0 0 0 0 0 0 `
+EN_TH
+
+TH 1061 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 15 5 0 0 0 0 0 0 `
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 11 5 0 0 0 0 0 0 `
+EN_TH
+
+TH 1084 1 100 0 0 0 0 50 2 0 6
+Val money 18 4 0 0 0 0 0 0 `
+EN_TH
+
+TH 1062 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1085 1 100 0 0 0 0 100 2 0 6
+Val money 20 10 0 0 0 0 0 0 `
+EN_TH
+
+TH 1063 0 0 0 0 0 0 0 0 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 12 15 0 0 0 0 0 0 `
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 18 9 0 0 0 0 0 0 `
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 12 3 0 0 0 0 0 0 `
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 15 19 0 0 0 0 0 0 `
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 15 7 0 0 0 0 0 0 `
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 4 10 0 0 0 0 0 0 `
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 17 2 1 0 0 0 0 0 `
+EN_TH
+
+TH 1064 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 10 3 0 0 0 0 0 0 `
+EN_TH
+
+TH 1065 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 9 7 0 0 0 0 0 0 `
+EN_TH
+
+TH 1066 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 8 17 1 0 0 0 0 0 `
+EN_TH
+
+TH 1067 0 0 0 0 0 0 0 2 0 6
+EN_TH
+
+TH 1081 1 100 0 0 0 0 150 2 0 6
+Val money 12 2 0 0 0 0 0 0 `
+EN_TH
+
+TH 1069 0 0 0 0 0 0 0 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 302 9 0 0 0 0 0 0 `
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 201 9 0 0 0 0 0 0 `
+EN_TH
+
+TH 645 2 100 0 101 11 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 238 9 0 0 0 0 0 0 `
+EN_TH
+
+TH 637 2 100 0 54 7 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 233 8 0 0 0 0 0 0 `
+EN_TH
+
+TH 635 2 100 0 50 9 0 10 0 0 6
+EN_TH
+
+TH 648 2 100 0 97 19 0 10 0 0 6
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 71 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 90 2 0 0 0 0 0 0 `
+EN_TH
+
+TH 604 2 100 0 90 16 0 10 0 0 6
+EN_TH
+
+TH 1070 0 0 0 0 0 0 0 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 176 8 0 0 0 0 0 0 `
+EN_TH
+
+TH 641 2 100 0 50 19 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 248 7 0 0 0 0 0 0 `
+EN_TH
+
+TH 645 2 100 0 99 11 0 10 0 0 6
+EN_TH
+
+TH 606 2 100 0 264 16 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 283 2 0 0 0 0 0 0 `
+EN_TH
+
+TH 603 2 100 0 108 16 0 10 0 0 6
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 90 0 0 0 0 0 0 0 `
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 69 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 637 2 100 0 52 7 0 10 0 0 6
+EN_TH
+
+TH 638 2 100 0 55 11 0 10 0 0 6
+EN_TH
+
+TH 601 2 100 0 107 16 0 10 0 0 6
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 79 3 0 0 0 0 0 0 `
+EN_TH
+
+TH 636 2 100 0 48 2 0 10 0 0 6
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 92 4 0 0 0 0 0 0 `
+EN_TH
+
+TH 637 2 100 0 55 7 0 10 0 0 6
+EN_TH
+
+TH 635 2 100 0 49 9 0 10 0 0 6
+EN_TH
+
+TH 1071 0 0 0 0 0 0 0 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 207 2 0 0 0 0 0 0 `
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 243 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 645 2 100 0 108 11 0 10 0 0 6
+EN_TH
+
+TH 646 2 100 0 91 13 0 10 0 0 6
+EN_TH
+
+TH 640 2 100 0 54 17 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 295 0 0 0 0 0 0 0 `
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 55 2 0 0 0 0 0 0 `
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 78 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 637 2 100 0 51 7 0 10 0 0 6
+EN_TH
+
+TH 635 2 100 0 45 9 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 152 4 0 0 0 0 0 0 `
+EN_TH
+
+TH 648 2 100 0 104 19 0 10 0 0 6
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 54 2 0 0 0 0 0 0 `
+EN_TH
+
+TH 637 2 100 0 53 7 0 10 0 0 6
+EN_TH
+
+TH 639 2 100 0 45 13 0 10 0 0 6
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 85 2 0 0 0 0 0 0 `
+EN_TH
+
+TH 604 2 100 0 96 16 0 10 0 0 6
+EN_TH
+
+TH 1072 0 0 0 0 0 0 0 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 269 9 0 0 0 0 0 0 `
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 91 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 639 2 100 0 49 13 0 10 0 0 6
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 101 3 0 0 0 0 0 0 `
+EN_TH
+
+TH 636 2 100 0 46 2 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 225 5 0 0 0 0 0 0 `
+EN_TH
+
+TH 607 2 100 0 249 16 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 192 8 0 0 0 0 0 0 `
+EN_TH
+
+TH 635 2 100 0 54 9 0 10 0 0 6
+EN_TH
+
+TH 600 2 100 0 101 16 0 10 0 0 6
+EN_TH
+
+TH 1073 0 0 0 0 0 0 0 0 0 6
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 78 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 637 2 100 0 53 7 0 10 0 0 6
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 89 3 0 0 0 0 0 0 `
+EN_TH
+
+TH 635 2 100 0 48 9 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 223 8 0 0 0 0 0 0 `
+EN_TH
+
+TH 600 2 100 0 107 16 0 10 0 0 6
+EN_TH
+
+TH 647 2 100 0 102 17 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 255 8 0 0 0 0 0 0 `
+EN_TH
+
+TH 636 2 100 0 50 2 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 183 9 0 0 0 0 0 0 `
+EN_TH
+
+TH 636 2 100 0 46 2 0 10 0 0 6
+EN_TH
+
+TH 643 2 100 0 109 0 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 195 9 0 0 0 0 0 0 `
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 163 5 0 0 0 0 0 0 `
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 99 3 0 0 0 0 0 0 `
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 74 0 0 0 0 0 0 0 `
+EN_TH
+
+TH 600 2 100 0 100 16 0 10 0 0 6
+EN_TH
+
+TH 1074 0 0 0 0 0 0 0 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 168 2 0 0 0 0 0 0 `
+EN_TH
+
+TH 647 2 100 0 90 17 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 296 1 1 0 0 0 0 0 `
+EN_TH
+
+TH 602 2 100 0 100 16 0 10 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 205 0 0 0 0 0 0 0 `
+EN_TH
+
+TH 614 2 100 0 531 16 0 15 0 0 6
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 166 4 0 0 0 0 0 0 `
+EN_TH
+
+TH 646 2 100 0 94 13 0 10 0 0 6
+EN_TH
+
+TH 604 2 100 0 105 16 0 10 0 0 6
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 74 0 0 0 0 0 0 0 `
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 67 3 0 0 0 0 0 0 `
+EN_TH
+
+TH 1092 1 100 0 0 0 0 30 0 0 6
+Val money 168 2 0 0 0 0 0 0 `
+EN_TH
+
+TH 649 2 100 0 95 21 0 10 0 0 6
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 66 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 603 2 100 0 91 16 0 10 0 0 6
+EN_TH
+
+TH 1091 1 100 0 0 0 0 15 0 0 6
+Val money 61 2 0 0 0 0 0 0 `
+EN_TH
+
+TH 636 2 100 0 46 2 0 10 0 0 6
+EN_TH
+
+TH 638 2 100 0 50 11 0 10 0 0 6
+EN_TH
+
+TH 135001 0 0 0 0 0 0 0 0 0 6
+EN_TH
+
+TH 230 1 100 0 0 0 0 100 0 0 6
+Name Ranit trainer teacher Wizened`
+Short Ranit the Wizened`
+Long Ranit the Wizened is here.`
+Val teacher 9 0 0 0 0 0 0 0 `
+Val money 7 6 0 0 0 0 0 0 `
+EN_TH
+
+TH 230 1 100 0 0 0 0 100 0 0 6
+Name Tusli trainer teacher Enlightened`
+Short Tusli the Enlightened`
+Long Tusli the Enlightened is here.`
+Val teacher 319 0 0 0 0 0 0 0 `
+Val money 14 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 230 1 100 0 0 0 0 100 0 0 6
+Name Tihgitwum trainer teacher Wizened`
+Short Tihgitwum the Wizened`
+Long Tihgitwum the Wizened is here.`
+Val teacher 39 0 0 0 0 0 0 0 `
+Val money 21 13 0 0 0 0 0 0 `
+EN_TH
+
+TH 230 1 100 0 0 0 0 100 0 0 6
+Name Nesan trainer teacher Wise`
+Short Nesan the Wise`
+Long Nesan the Wise is here.`
+Val teacher 180 0 0 0 0 0 0 0 `
+Val money 16 10 0 0 0 0 0 0 `
+EN_TH
+
+TH 230 1 100 0 0 0 0 100 0 0 6
+Name Topusfeg trainer teacher Wizened`
+Short Topusfeg the Wizened`
+Long Topusfeg the Wizened is here.`
+Val teacher 575 0 0 0 0 0 0 0 `
+Val money 19 13 0 0 0 0 0 0 `
+EN_TH
+
+TH 230 1 100 0 0 0 0 100 0 0 6
+Name Okkisbew trainer teacher Wizened`
+Short Okkisbew the Wizened`
+Long Okkisbew the Wizened is here.`
+Val teacher 328 0 0 0 0 0 0 0 `
+Val money 5 3 0 0 0 0 0 0 `
+EN_TH
+
+TH 230 1 100 0 0 0 0 100 0 0 6
+Name Lesuth trainer teacher Enlightened`
+Short Lesuth the Enlightened`
+Long Lesuth the Enlightened is here.`
+Val teacher 306 0 0 0 0 0 0 0 `
+Val money 16 1 0 0 0 0 0 0 `
+EN_TH
+
+TH 230 1 100 0 0 0 0 100 0 0 6
+Name Nagtog trainer teacher Wise`
+Short Nagtog the Wise`
+Long Nagtog the Wise is here.`
+Val teacher 700 0 0 0 0 0 0 0 `
+Val money 12 8 0 0 0 0 0 0 `
 EN_TH
 
 

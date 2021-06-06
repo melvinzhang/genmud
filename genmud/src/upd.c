@@ -442,7 +442,6 @@ update_hour (void)
       if (--reboot_ticks == 0)
 	{
 	  SBIT (server_flags, SERVER_REBOOTING);
-	  sleep(1);
 	  return;
 	}
       else
@@ -495,12 +494,11 @@ update_thing_hour (THING *th)
   char buf[STD_LEN]; 
   THING *proto, *th_in;
   FLAG *flag, *flagn;
-  VALUE *feed, *light, *pet;
+  VALUE *feed, *light, *pet, *socval;
   VALUE *val, *valn;
   TRACK *trkn, *trk, *prev;
   int  i, j, feed_choices, feed_chose, condval;
   bool killed = FALSE;
-  SOCIETY *soc;
   
   if (!th || !th->in || (IS_AREA (th->in)  && !IS_ROOM (th) &&
 		  !IS_AREA (th)))
@@ -551,7 +549,7 @@ update_thing_hour (THING *th)
 	      if (th->pc->no_quit < 1)
 		free_thing (th);
 	    } /* Society members die. */
-	  else if ((soc = FNV (th, VAL_SOCIETY)) != NULL)
+	  else if ((socval = FNV (th, VAL_SOCIETY)) != NULL)
 	    {
 	      act ("$9@1n die@s of old age.$7", th, NULL, NULL, NULL, TO_ALL);
 	      get_killed (th, NULL);
