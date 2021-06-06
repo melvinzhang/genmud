@@ -190,7 +190,7 @@ areagen (THING *th, char *arg)
   top_vnum = MAX (top_vnum, start);
   add_thing_to_list (area);
   set_up_new_area(area, size);
-  area->mv = size*3/5;
+  area->mv = size/2;
   min_num_rooms = area->mv/3;
   max_num_rooms = area->mv*5/6;    
   area->max_mv = size;

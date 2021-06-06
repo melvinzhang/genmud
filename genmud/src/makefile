@@ -1,4 +1,4 @@
-CFLAGS = -c -Wall -pedantic -g -pg
+CFLAGS = -c -Wall -pedantic -O2
 
 
 OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
@@ -13,7 +13,7 @@ OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 	mobgen.o money.o move.o myrand.o note.o objectgen.o \
 	parse.o pcio.o pkdata.o plasmgen.o \
 	prac.o proc.o provisiongen.o \
-	questgen.o questgenold.o quit.o race.o roomdescgen.o \
+	questgen.o questgenold.o quit.o race.o randobj.o roomdescgen.o \
 	roomgen.o rumor.o \
 	script.o scriptio.o scriptedit.o scriptline.o security.o serv.o \
 	shop.o socials.o socibuild.o sociedit.o society.o societyio.o \
@@ -28,7 +28,7 @@ OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 CC = gcc
 
 
-LFLAGS = -lpthread -lcrypt -pg
+LFLAGS = -lpthread -lcrypt -O3
 
 .c.o: serv.h
 	$(CC) $(CFLAGS) $<

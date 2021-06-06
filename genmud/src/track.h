@@ -24,7 +24,7 @@
 #define HUNT_MAX           13    /* Maximum kind of hunting. */
 
 #define MAX_HUNT_DEPTH         3000    /* Max depth hunting works... */
-#define MAX_SHORT_HUNT_DEPTH   50      /* Max depth you go on "short" 
+#define MAX_SHORT_HUNT_DEPTH   40      /* Max depth you go on "short" 
 hunts. */
 #define SOCIETY_HUNT_DEPTH     6       /* Max depth society members hunt. 
 */

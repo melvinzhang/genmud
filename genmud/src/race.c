@@ -467,6 +467,7 @@ show_align (THING *th, RACE *race)
       strcat (buf, buf2);
     }  
   strcat (buf, "\n\r");
+  stt (buf, th);
   sprintf (buf, "Members of this alignment regen hps at %d%% of normal.\n\r",
 	   (100 + race->hp_regen_bonus));
   stt (buf, th);

@@ -1522,7 +1522,6 @@ void
 set_up_thing (THING *th)
 {
   THING *proto;
-  int i;
   if (!th)
     return;
   
@@ -1530,9 +1529,12 @@ set_up_thing (THING *th)
   if ((proto = find_thing_num (th->vnum)) == NULL)
     return;
   
-  th->max_hp = 1;
-  for (i = 0; i < LEVEL (th) + 1; i++)
-    th->max_hp += nr (0, 1 + LEVEL (th)/7);
+  th->max_hp = LEVEL(th)+1;
+
+  /* Hps start to go up quadratically at level 40+...*/
+  if (LEVEL(th) >= 40)    
+    th->max_hp += (LEVEL(th)-40)*(LEVEL(th)-40)/5;
+  
   
   /* Hpmult, 10 = normal, 2 = .2 hps, 100 = 10x hps..max dunno why,
      I guess to keep really stupid cheater mobs from being created. */
@@ -1543,10 +1545,10 @@ set_up_thing (THING *th)
   th->max_hp += nr (0, th->max_hp/10);
   if (LEVEL(th) >= 100) /* Hp bonus for ultra-high levels */
     {
-      th->max_hp += (LEVEL(th)-100)*th->max_hp/200;
+      th->max_hp += (LEVEL(th)-100)*th->max_hp/300;
     }
   th->hp = th->max_hp;
-  th->max_mv = (LEVEL (th) * 10) + 1000;
+  th->max_mv = (LEVEL (th) * 10) + 300;
   th->mv = th->max_mv;
   th->cost = nr (th->cost *9/10, th->cost *11/10);
 

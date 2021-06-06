@@ -1288,12 +1288,12 @@ citygen_connect_same_level (int depth, VALUE *dims)
   int x, y, z;
   THING *room1 = NULL, *room2 = NULL;
   THING *start_room = NULL;
-  THING *area;
+  THING *area = NULL;
   int count = 0, num_choices, num_chose;
   bool found_room = FALSE;
   bool all_attached = FALSE;
   int attach_tries = 0;
-  int dir;
+  int dir =  REALDIR_MAX;
   int nx, ny, nz;
   VALUE *exit;
 

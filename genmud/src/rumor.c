@@ -527,15 +527,15 @@ send_mortal_rumor (THING *th)
     }
   
   /* If the mob exists, it will only give rumors once in a while
-     and players can only get rumors once every 2 minutes rl. */
+     and players can only get rumors once every N seconds rl. */
   
   
   if (nr (1,3) == 2 || 
       (LEVEL(th) < MAX_LEVEL &&
-       (current_time - th->pc->last_rumor) < 100))
+       (current_time - th->pc->last_rumor) < 5))
     {
       do_say (mob, no_rumor_message());
-      th->pc->last_rumor = current_time;
+      /* th->pc->last_rumor = current_time; */
       return;	  
     }
   
@@ -560,7 +560,7 @@ send_mortal_rumor (THING *th)
        (soc2->align == 0 || DIFF_ALIGN (soc2->align, th->align)) &&
        (area = find_area_in (soc2->room_start)) != NULL)
     {
-      sprintf (buf, "The %s could really use your help. The %s of %s have been attacking us a lot lately and we need your help to stop them!\n\r",
+      sprintf (buf, "The %s could really use your help. The %s of %s have been attacking us a lot lately and we need your help to stop them!",
 	       align->name, soc2->pname, NAME(area));
       do_say (mob, buf);
       return;
@@ -1292,7 +1292,7 @@ send_overlord_message (THING *th, THING *mob)
   
   area = find_area_in (soc->room_start);
 
-  sprintf (buf, "The %s of %s have a powerful leader named %s.\n\r",
+  sprintf (buf, "The %s of %s have a powerful leader named %s.",
 	   society_pname (soc), (area ? NAME(area) : "these lands"),
 	   (socval->word && *socval->word ? socval->word : "something that I can't recall right now"));
   do_say (mob, buf);

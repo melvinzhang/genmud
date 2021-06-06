@@ -2,7 +2,7 @@ THING 108000
 Name objgen.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 1
+Timer 4
 Short The Object Gen Area`
 type Lonath`
 ThFl 1089531
@@ -64,6 +64,7 @@ Whispering
 Glyphed
 Keen
 Beaded
+Glorious
 `
 Short Descriptive name.`
 MIW 1
@@ -297,6 +298,7 @@ Misdirection
 Recovery
 'the Mystic'
 Authority
+Glory
 `
 Short Descriptive name.`
 END_THING
@@ -626,15 +628,9 @@ shard
 piercer
 stabber
 dagger
-dagger
-dagger
-dagger
-knife
-knife
 knife
 dagger
 knife
-dagger
 dagger
 harpoon
 javelin
@@ -644,6 +640,14 @@ spear
 stiletto
 sticker
 awl
+kris
+poignard
+rondel
+stilleto
+stilleto
+poignard
+dirk
+pilum
 `
 END_THING
 
@@ -688,6 +692,12 @@ sword
 sword
 sword
 sword
+tulwar
+shamshir
+gladius
+espandon
+zweihander
+crowbill
 `
 END_THING
 
@@ -710,7 +720,6 @@ mace
 club
 club
 hammer
-hammer
 staff
 'walking staff'
 'battle hammer'
@@ -726,7 +735,6 @@ crusher
 scepter
 hammer
 club
-mace
 warhammer
 'war maul'
 'war mace'
@@ -735,12 +743,11 @@ sap
 baton
 masher
 mace
-mace
 hammer
-hammer
-warhammer
 warhammer
 beater
+knout
+mallet
 `
 END_THING
 
@@ -896,29 +903,28 @@ END_THING
 THING 108036
 Name metal_gen_names`
 HWT 0 0
-Desc Pegite & $4Pe$2gi$4te$7
-Omcopite & $FOmcopite$7
-Rubite
-Lemium & $6Lemium$7
-Wusium & $8Wusium$7
-Eslasite & $1Esla$6site$7
-Larium & $2Larium$7
-Essitium
-Logium & $2Logium$7
-Pomorate
-Conelite & $DCone$Elite$7
-Aracium & $2Aracium$7
-Ifihium
-Rarate & $ARarate$7
-Wolium & $4Wolium$7
-Noutate
-Nacate & $3Na$6ca$3te$7
-Ralupium
-Aktipite & $BAk$9tip$Bite$7
-Cegate & $ACegate$7
-Hotesium
-Nenite & $ENenite$7
-`
+Desc Hecium & $8Hecium$7
+Panium & $APa$6ni$Aum$7
+Ribate & $6Ri$1ba$6te$7
+Stemium & $7St$3em$7ium$7
+Alesite & $FAlesite$7
+Sofite & $DSofite$7
+Teosate & $4Te$6os$4ate$7
+Itesium & $1Ite$Esium$7
+Getium & $8Get$4ium$7
+Cuhate & $ACuhate$7
+Eginate & $DEginate$7
+Nirogate & $2Ni$6rog$2ate$7
+Esogite & $EEs$6og$Eite$7
+Adhewium
+Timium & $9Ti$7mi$9um$7
+Icinium & $1Icinium$7
+Gipite & $DGipite$7
+Lelium & $9Le$Eli$9um$7
+Uhpewate
+Cehium & $DCehium$7
+Lafium & $6Lafium$7
+`
 END_THING
 
 THING 108037
@@ -1060,6 +1066,7 @@ giver
 bender
 warp
 singer
+catcher
 `
 END_THING
 

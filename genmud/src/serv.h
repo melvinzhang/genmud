@@ -247,6 +247,8 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 
 #define CRAFT_LOAD_AREA_VNUM     135000 /* Area where craft items are made. */
 
+#define RANDOBJ_AREA_VNUM        150000 /* Lots of random objs for mobs
+					   to load. */
 
 #define SCAN_RANGE            3 /* How many rooms away you can scan. */
 
@@ -267,6 +269,7 @@ typedef void COMMAND_FUNCTION (THING *, char *);
 #define GEM_RANDPOP_VNUM       277   /* Pop gems.*/
 #define MOB_RANDPOP_VNUM       278  /* Used for wilderness repops. */
 #define PROVISION_RANDPOP_VNUM 279  /* Load random provisions...*/
+#define RANDOBJ_VNUM           281  /* Load random items on mobs. */
 #define ARMOR_DIVISOR          10   /* Each N of these on armor add one armor*/
 #define AUCTION_DIVISOR        12   /* Obj->cost/this = auction fee. */
 #define WGT_MULT               10   /* Ratio of pebbles to stones. */

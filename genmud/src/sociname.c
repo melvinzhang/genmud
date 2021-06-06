@@ -316,7 +316,8 @@ setup_society_name (THING *th)
   strcat (namebuf, t);
   free_str (th->short_desc);
   th->short_desc = new_str (namebuf);
- 
+  for (t = th->short_desc + 1; *t; t++)
+    *t = LC(*t);
   
   /* Set up the long desc. */
   
@@ -330,12 +331,15 @@ setup_society_name (THING *th)
   /* Add adjectives if necessary! */
   if (soc->adj && *soc->adj && soc->generated_from != ORGANIZATION_SOCIGEN_VNUM)
     {
-      strcat (namebuf, soc->adj);
+      strcat (namebuf, soc->adj);      
       strcat (namebuf, " ");
     }
   strcat (namebuf, t);
   free_str (th->long_desc);
-  th->long_desc = new_str (namebuf);
+  th->long_desc = new_str (namebuf); 
+  for (t = th->long_desc + 1; *t; t++)
+    *t = LC(*t);
+  
   return;
 }
   

@@ -1091,11 +1091,6 @@ damage (THING *th, THING *vict, int dam, char *word)
   /* Don't players damage other things at a range if the targets can't
      move. */
 
-  if (IS_PC(th))
-    dam *= 10;
-  if (IS_PC (vict))
-    dam /= 10;
-
   if (IS_PC (th) && th->in != vict->in &&
       (IS_ACT1_SET (vict, ACT_SENTINEL)
        || !CAN_MOVE (vict)))

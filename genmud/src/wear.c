@@ -627,7 +627,7 @@ do_draw (THING *th, char *arg)
 void
 find_eq_to_wear (THING *th)
 {
-  THING *obj, *objn, *equip = NULL;
+  THING *obj = NULL, *objn = NULL, *equip = NULL;
   int armorsum = 0, weaponsum = 0, curr_armorsum, curr_weaponsum;
   bool new_is_better = FALSE;
   VALUE *armor, *weapon = NULL, *curr_armor, *curr_weapon, *money;
@@ -778,7 +778,7 @@ find_eq_to_wear (THING *th)
 	      (!weapon || weaponsum < 12))
 	    continue;
 	  
-	       
+	  
 	      
 	  /* Have armor or weapon at this point. See if we have space
 	     to wear it or not. Check quality. */
@@ -824,8 +824,7 @@ find_eq_to_wear (THING *th)
 	    }
 	  
 	  if (new_is_better)
-	    break;
-	  
+	    break;	  
 	}
       if (new_is_better && obj)
 	{
@@ -843,6 +842,11 @@ find_eq_to_wear (THING *th)
 	    }
 	  else if (!is_worker) 
 	    wear_thing (th, obj);
+	  break;
+	}
+      else if (obj && nr (1,5) == 2 && obj->in == th)
+	{
+	  free_thing (obj);
 	  break;
 	}
     }

@@ -245,7 +245,7 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
       /* sprintf (fullname + strlen (fullname), "%s:  '%s'", objectgen_part_names[i], name[i]); */
       
       t = name[i];
-      do
+      while (t && *t)
 	{
 	  t = f_word (t, namebuf);
 	  if (str_cmp (namebuf, "the") &&
@@ -256,10 +256,7 @@ objectgen_setup_names (THING *obj, char name[OBJECTGEN_NAME_MAX][STD_LEN],
 	      if (t && *t)
 		strcat (fullname, " ");
 	    }
-	  else
-	    strcat (fullname, t);
 	}
-      while (t && *t);
     }
   
   free_str (obj->name);
@@ -1045,6 +1042,8 @@ objectgen_setup_stats (THING *obj, int weapon_type)
   obj->level += nr (0, obj->level/3);
   obj->level -= nr (0, obj->level/4);
   
+  /* CHEATER, make objs better. */
+  obj->level += obj->level/3;
   
   
   for (lev_sqrt = 1; lev_sqrt*lev_sqrt <= obj->level; lev_sqrt++);
@@ -1064,9 +1063,10 @@ objectgen_setup_stats (THING *obj, int weapon_type)
       
       val->type = VAL_WEAPON;
       
-      val->val[0] = nr (lev_sqrt/3,lev_sqrt/2);
-      val->val[1] = nr(lev_sqrt*2/3,lev_sqrt*3/2);
-      
+      val->val[0] = nr (lev_sqrt/2,lev_sqrt*2/3);
+      val->val[1] = nr(lev_sqrt, lev_sqrt*2);
+      val->val[0] += nr (1,2);
+      val->val[2] += nr (2,4);
       if (weapon_type < 0 || 
 	  weapon_type >= WPN_DAM_MAX)
 	weapon_type = WPN_DAM_SLASH;

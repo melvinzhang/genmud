@@ -9,29 +9,50 @@ void
 combat_ai (THING *th)
 {
   THING *weakest_opponent = NULL, *fighting, *vict, *weakest_ally = NULL;
-  int min_hps = 2000000, weakest_ally_hp_pct = 40;
+  int min_hps, weakest_ally_hp_pct;
   THING *strongest_pc = NULL, *attacker;
-  int max_pc_dam = 0;
+  int max_pc_dam;
   
-  int relative_power = 0;
+  int relative_power;
   
   /* These are used to calculate the odds and relative power of the
      two sides. */
   
-  int friend_count = 0, enemy_count = 0;
-  int friend_power = 0, enemy_power = 0;
-  int friend_hp = 0, enemy_hp = 0;
+  int friend_count, enemy_count;
+  int friend_power , enemy_power;
+  int friend_hp, enemy_hp;
   
   
   /* Make sure this thing is in the correct state to attempt combat
      tactics. */
   
-  if ((fighting = FIGHTING (th)) == NULL || nr(1,3) != 2 || !th->in ||
+  if (nr(1,3) != 2 || (fighting = FIGHTING (th)) == NULL || !th->in ||
       th->position != POSITION_FIGHTING || IS_PC (th) || 
       !CAN_TALK (th) || IS_ACT1_SET (th, ACT_DUMMY))
     return;
   
+  /* Init vars. */
+  min_hps = 2000000;
+  weakest_ally_hp_pct = 40;
+  max_pc_dam = 0;
+  relative_power = 0;
   
+  /* These are used to calculate the odds and relative power of the
+     two sides. */
+  
+  friend_count = 0;
+  enemy_count = 0;
+  friend_power = 0;
+  enemy_power = 0;
+  friend_hp = 0;
+  enemy_hp = 0;
+  
+  
+  
+  /* Sometimes */
+
+  if (nr (1,5) == 2)
+    {
   /* Find the strongest and weakest opponents and the weakest member
      on your side. This code really sucks because it requires things
      to be updated for each thing fighting each combat pulse. This may
@@ -88,7 +109,7 @@ combat_ai (THING *th)
 	  enemy_count++;	  
 	}
     }
-  
+    } /* Only sometimes. */
   /* Sanity checks to avoid divide by 0. */
   
 
@@ -173,7 +194,7 @@ combat_ai (THING *th)
       fighting->position != POSITION_STUNNED &&
       (nr (1,12) == 3 || 
        fighting->hp < fighting->max_hp/3 ||
-       relative_power >= nr (15,24)) &&
+       relative_power >= nr (12,24)) &&
       nr (1,6) == 2)
     {
       if (nr (1,8) == 2)

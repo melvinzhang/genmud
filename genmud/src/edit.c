@@ -700,9 +700,9 @@ edit (THING *th, char *arg)
 	  {
 	    value = atoi (arg);
 	    
-	    if (value < 0 || value > 10000)
+	    if (value < 0 || value > 20000)
 	      {
-		stt ("The armor must be between 0 and 10000.\n\r", th);
+		stt ("The armor must be between 0 and 20000.\n\r", th);
 		return;
 	      }
 	    thg->armor = value;
@@ -1132,9 +1132,9 @@ edit (THING *th, char *arg)
 	    {
 	      value = atoi(arg);
 	      
-	      if (value < 5 || value > 10000)
+	      if (value < 5 || value > 20000)
 		{
-		  stt ("Areas must have between 5 and 10000 things and rooms contained in them.\n\r", th);
+		  stt ("Areas must have between 5 and 20000 things and rooms contained in them.\n\r", th);
 		  return;
 		}
 	      if (!check_area_vnums (thg, thg->vnum, thg->vnum + value))
@@ -1804,11 +1804,11 @@ reset_thing (THING *th, int rdepth)
     basethisthing = find_thing_num (th->vnum);
   if (!basethisthing)
     return;
- 
+  
   /* Now go down the list of resets in the base thing. */
 
   for (reset = basethisthing->resets; reset; reset = reset->next)
-    {   
+    {  
       /* Check if the thing we want to reset exists. */
       
       if ((stthing = find_thing_num (reset->vnum)) == NULL ||
@@ -1884,15 +1884,15 @@ reset_thing (THING *th, int rdepth)
       
       times_through = MAX (0, reset->times - curr_num_here);
       for (j = 0; j < times_through; j++)
-	{	   
+	{    
 	  if (np () > reset->pct)
 	    continue;	
-	  
+	   
           if (rnd) /* Random pops */
             rsvnum = calculate_randpop_vnum (rnd, LEVEL (th));
           else
   	    rsvnum = reset->vnum;
-	  
+	   
 	  /* This doesn't quite work. This is the code that makes
 	     things limited. It doesn't work since players may have
 	     objects (or pets) that should really be limited, but 
@@ -1907,7 +1907,7 @@ reset_thing (THING *th, int rdepth)
 	      (basething->max_mv > 0 && 
 	       basething->mv >= basething->max_mv))
 	    continue;
-	  
+	   
 	  /* Now see if we have repeated nesting. */
 	  
 	  for (i = 0; i <= rdepth; i++)
@@ -1942,7 +1942,7 @@ reset_thing (THING *th, int rdepth)
 	    }
 	  th_room_flags = flagbits (basething->flags, FLAG_ROOM1) &
 	    ROOM_SECTOR_FLAGS;
-	  
+	 
 	  if ((newthing = create_thing (rsvnum)) == NULL)	    
 	    continue;
 	  
@@ -1969,20 +1969,22 @@ reset_thing (THING *th, int rdepth)
 		    }
 		  /* Now send resets to areas. If the area is the area
 		     starting with vnum 1, we assume it's a global reset. */
-
+		  
 		  area_to = thing_nest[i];
 		  if (area_to->vnum == START_AREA_VNUM)
 		    area_to = find_random_area (AREA_NOREPOP);
 		  
 		  if (!area_to)
 		    break;
-		  
 		  if ((room = find_random_room 
 		       (area_to, FALSE, th_room_flags, 
 			(BADROOM_BITS & ~th_room_flags))) != NULL)
 		    {
+		      
 		      thing_to (newthing, room);
 		    }
+		  else
+		    
 		  break;
 		}
 	      /* Added to stop quest items from popping on the ground. 
@@ -3080,7 +3082,7 @@ calculate_randpop_vnum (VALUE *rnd, int level)
       /* Minimum 10 percent chance to increase tier based on level. */
       if ((rnd->val[3] > 0 && 
 	   level >= rnd->val[3]/10 &&
-	   nr(1,rnd->val[3]) < level) ||
+	   nr(1,rnd->val[3]) < MIN (level, rnd->val[3]*19/20)) ||
 	  (rnd->val[4] > 0 &&
 	   rnd->val[5] > 0 &&
 	   nr(1,rnd->val[4]) <= rnd->val[5]))

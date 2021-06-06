@@ -18,6 +18,7 @@
 #include "rumor.h"
 #include "craft.h"
 #include "plasmgen.h"
+#include "randobj.h"
 
 /* Are we allowed to have areas in these places? */
 static int worldgen_allowed[WORLDGEN_MAX][WORLDGEN_MAX];
@@ -151,6 +152,7 @@ worldgen (THING *th, char *arg)
       historygen_clear();
       clear_craft_items (th);
       clear_provisions (th);
+      clear_randobj_items (th);
       worldgen_clear();
       worldgen_clear_player_items();
       clear_rumor_history();
@@ -217,12 +219,22 @@ worldgen (THING *th, char *arg)
       worldgen_show_sectors (NULL);
       worldgen_generate_quests();
       
+      worldgen_randobj_generate ();
       do_purge (th, "all");
       set_up_teachers();
       worldgen_place_guildmasters ();
       set_up_map(NULL);
       setup_newbie_areas ();
       reset_world();
+      if (!wt_info)
+	wt_info = new_value();
+      wt_info->val[WVAL_YEAR] = nr (200, 1200);
+      wt_info->val[WVAL_MONTH] = nr (0, NUM_MONTHS - 1);
+      wt_info->val[WVAL_DAY] = nr (0, NUM_WEEKS*NUM_DAYS - 1);
+      wt_info->val[WVAL_HOUR] = nr (0, NUM_HOURS);
+      wt_info->val[WVAL_TEMP] = nr (50, 75);
+      wt_info->val[WVAL_WEATHER] = 0;
+      wt_info->val[WVAL_LAST_RAIN] = 0;
       plasmgen_export (the_world->cont);
       RBIT (server_flags, SERVER_WORLDGEN);
       end_memory = find_total_memory_used();
@@ -884,6 +896,12 @@ worldgen_generate_areas (int area_size)
  the areas near the outposts and mark them as level 10, then
  do the searching to fill in the map. */
 
+
+/* INCIDENTALLY -- THIS WILL NOT WORK UNLESS YOU HAVE ALIGNMENT OUTPOST
+   GATES SET IF THE LEVELS KEEP COMING UP AS A GRID OF 0'S CHECK YOUR
+   ALIGNMENTS AND MAKE SURE THEIR OUTPOST GATES (FOR ALIGNMENTS 1+ ARE
+   SET TO SOME REAL ROOM OR THE LEVELS WILL ALL COME UP 0 HERE! */
+
 void
 worldgen_generate_area_levels (void)
 {
@@ -1029,7 +1047,7 @@ worldgen_generate_area_levels (void)
   
   /* This is how big the levels jump from one room to the next. */
   jumpsize = 250/((max_x-min_x)+(max_y-min_y));
-
+  
   /* Now loop until all areas have levels. */
   
   while (++times < 1000)

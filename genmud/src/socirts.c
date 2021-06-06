@@ -1561,9 +1561,11 @@ find_society_member_nearby (THING *th, int caste_flags, int max_depth)
     {      
       for (vict = room->cont; vict; vict = vict->next_cont)
 	{
-	  if ((soc2 = FNV (vict, VAL_SOCIETY)) != NULL &&
+	  if (CAN_MOVE (vict) && 
+	      (soc2 = FNV (vict, VAL_SOCIETY)) != NULL &&
 	      soc2->val[0] == soc->val[0] &&
-	      IS_SET (soc2->val[2], caste_flags))
+	      IS_SET (soc2->val[2], caste_flags) &&
+	      vict != th)
 	    break;
 	}
       

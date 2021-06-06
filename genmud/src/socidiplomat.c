@@ -180,8 +180,7 @@ do_inspire (THING *th, char *arg)
       return;
     }
   
-  sprintf (buf, "%s give@s a rousing speech and inspire@s the %s of %s.\n\r",
-	   NAME (th), 
+  sprintf (buf, "@1n give@s a rousing speech and inspire@s the %s of %s.\n\r", 
 	   society_pname (soc),
 	   (th->in && th->in->in && IS_AREA (th->in->in) ?
 	    NAME (th->in->in) : "these lands"));

@@ -369,7 +369,7 @@ kill_exp (THING *killer, THING *vict)
   undo_marked (vict->in);
   add_bfs (NULL, vict->in, DIR_MAX);
   
-
+  
   /* Set up bfs list of appropriate rooms nearby. Note, this only gets
      done if the victim died in a regular room. */
   
@@ -1388,7 +1388,7 @@ exp_to_level (int lev)
 {
   if (lev < 1 || lev > MORT_LEVEL)
     return 0;
-  return 20 * lev *lev *lev + 30 * lev * lev;
+  return 10 * lev *lev *lev + 15 * lev * lev;
 }
 
 
