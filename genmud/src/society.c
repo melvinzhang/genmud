@@ -50,13 +50,13 @@ const struct flag_data caste1_flags[] =
     {"wizard", " Wizard", CASTE_WIZARD, "Academy"},
     {"thief", " Thief", CASTE_THIEF, "Den"},
     /* These are things that I don't feel like having in right now. */
-    //{"shopkeeper", " Shopkeeper", CASTE_SHOPKEEPER, "Marketplace"},
-    //{"crafter", " Crafter", CASTE_CRAFTER, "Craftsmens' Guild"},
+    /* {"shopkeeper", " Shopkeeper", CASTE_SHOPKEEPER, "Marketplace"}, */
+    /* {"crafter", " Crafter", CASTE_CRAFTER, "Craftsmens' Guild"}, */
     /* Generally CASTE_FARMER should be last since their caste
        houses take up a lot more rooms (they overwrite many field
        or underground rooms rather than just a few in a small area. 
     I wlll not use this right now. */
-    //    {"farmer", " Farmer", CASTE_FARMER, "Farm"},
+    /*   {"farmer", " Farmer", CASTE_FARMER, "Farm"}, */
     {"none", "none", 0, "nothing"},
   };
 

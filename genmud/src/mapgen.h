@@ -19,9 +19,16 @@
 
 struct mapgen_data
 {
-    int num_rooms;         /* Number of nontrivial rooms in this map piece. */
-    bool used[MAPGEN_MAXX][MAPGEN_MAXY]; /* Matrix of which rooms are used. */
-    MAPGEN *next;          /* For the free list. */
+  int num_rooms;         /* Number of nontrivial rooms in this map piece. */
+  bool used[MAPGEN_MAXX][MAPGEN_MAXY]; /* Matrix of which rooms are used. */
+  MAPGEN *next;          /* For the free list. */
+
+  /* These are the min and max x and y values where the map
+     actually sits. */
+  int min_x;          
+  int max_x;         
+  int min_y; 
+  int max_y;
 };
 
 

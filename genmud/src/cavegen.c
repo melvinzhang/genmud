@@ -649,12 +649,12 @@ cavegen_generate (THING *th, int start_vnum)
 	      if (cave_grid[x][y][z] &&
 		  (room = find_thing_num (cave_grid[x][y][z])) != NULL)
 		{
-		  room_add_exit (room, DIR_EAST, cave_grid[x+1][y][z]);
-		  room_add_exit (room, DIR_WEST, cave_grid[x-1][y][z]);
-		  room_add_exit (room, DIR_NORTH, cave_grid[x][y+1][z]);
-		  room_add_exit (room, DIR_SOUTH, cave_grid[x][y-1][z]);
-		  room_add_exit (room, DIR_UP, cave_grid[x][y][z-1]);
-		  room_add_exit (room, DIR_DOWN, cave_grid[x][y][z+1]);
+		  room_add_exit (room, DIR_EAST, cave_grid[x+1][y][z],0);
+		  room_add_exit (room, DIR_WEST, cave_grid[x-1][y][z],0);
+		  room_add_exit (room, DIR_NORTH, cave_grid[x][y+1][z],0);
+		  room_add_exit (room, DIR_SOUTH, cave_grid[x][y-1][z],0);
+		  room_add_exit (room, DIR_UP, cave_grid[x][y][z-1],0);
+		  room_add_exit (room, DIR_DOWN, cave_grid[x][y][z+1],0);
 		}
 	    }
 	}

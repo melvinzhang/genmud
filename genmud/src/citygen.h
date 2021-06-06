@@ -24,6 +24,10 @@
 #define CITY_STREET_LEVEL  2 /* Street level is height 2...(allows for
 				 sewers and such below the city). */
 
+#define CITYGEN_UL_NAMES  30 /* A section can connect to at most
+			      30 diff names of things one depth below
+			      it. */
+
 /* Min and max numbers of rooms in the city to generate. */
 #define CITYGEN_MIN_SIZE  100
 #define CITYGEN_MAX_SIZE  2000
@@ -58,10 +62,24 @@ void generate_base_city_grid (THING *obj, int start_vnum);
 void citygen_add_detail (THING *obj, THING *area_to, VALUE *search_dims, 
 		     int depth);
 
+
+
 /* This shows the city map to a player (street level only) */
 
 void show_city_map (THING *th);
 
+
+
 /* This connects blocks of rooms inside of the city. */
 
-void connect_city_blocks (int x, int y, int z, int dir);
+void citygen_connect_same_level (int depth, VALUE *dims);
+
+/* This links details at a certain level to things one level up. */
+
+void citygen_connect_next_level_up (int depth, VALUE *dims);
+
+/* Thinks links the base grid of the city (depth 0 things) so we
+   get the whole city linked up. */
+
+void citygen_link_base_grid (void);
+

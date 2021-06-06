@@ -260,6 +260,6 @@ void add_shorelines (THING *area);
 void roomgen (THING *th, THING *room, char *arg);
 
 /* This adds an exit from a room to another vnummed room if the target
-   exists. */
+   exists. The exit flag tells what exits to add here. */
 
-void room_add_exit (THING *room, int dir, int vnum_to);
+void room_add_exit (THING *room, int dir, int vnum_to, int exit_flags);

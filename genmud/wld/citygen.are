@@ -2,12 +2,13 @@ THING 101000
 Name citygen.are`
 HpMv 0 10 500 1000
 HWT 0 0
-Timer 17
+Timer 9
 Short The City Generator Area`
 type Lonath`
 ThFl 1089531
 Flag Area 0 0 28
 EDESC districts`
+ roads
 market housing religious park barracks mayors
 `
 END_THING
@@ -36,12 +37,11 @@ END_THING
 THING 101003
 Name market`
 HWT 0 0
-Color 6
+Color 7
 MIW 1
 Symbol -`
 ThFl 524779
-Val dimension 3 10 3 10 1 1 0 0 `
-Flag Room 0 0 32768
+Val dimension 3 5 3 5 1 1 0 0 `
 EDESC kname`
 marketplace
 market
@@ -97,12 +97,14 @@ END_THING
 THING 101005
 Name religious`
 HWT 0 0
-Color 7
+Color 10
 MIW 1
-Symbol -`
+Symbol ,`
 ThFl 524779
-Val dimension 5 10 5 5 1 1 0 0 `
+Val dimension 3 6 3 6 1 1 0 0 `
+Flag Room 0 0 262144
 Reset 101012 100 1 1
+Reset 101015 30 10 1
 EDESC kname`
 grounds 
 `
@@ -117,11 +119,14 @@ END_THING
 THING 101006
 Name park`
 HWT 0 0
-Color 7
+Color 10
 MIW 1
-Symbol -`
+Symbol ,`
 ThFl 524779
-Val dimension 5 10 5 10 0 0 0 0 `
+Val dimension 3 7 3 7 0 0 0 0 `
+Flag Room 0 0 262144
+Reset 101015 50 8 1
+Reset 101016 50 3 1
 EDESC kname`
 park 
 `
@@ -141,7 +146,7 @@ Color 7
 MIW 1
 Symbol -`
 ThFl 524779
-Val dimension 5 10 5 10 0 0 0 0 `
+Val dimension 3 6 3 6 0 0 0 0 `
 EDESC kshort`
 cityguard
 guard
@@ -162,7 +167,7 @@ Color 7
 MIW 1
 Symbol -`
 ThFl 524779
-Val dimension 5 10 5 10 0 0 0 0 `
+Val dimension 3 6 3 6 1 1 0 0 `
 EDESC kname`
 palace
 estate
@@ -296,6 +301,102 @@ apartment flat loft
 `
 EDESC kshort`
 cramped small smelly tiny ugly dirty 
+`
+END_THING
+
+THING 101015
+Name tree`
+HWT 0 0
+Color 2
+MIW 1
+Symbol *`
+ThFl 524779
+Flag Room 0 0 16908288
+Reset 101501 100 1 1
+EDESC kname`
+tree
+`
+EDESC kshort`
+shady large small
+`
+END_THING
+
+THING 101016
+Name trail`
+HWT 0 0
+Color 6
+MIW 1
+Symbol -`
+ThFl 524779
+Val dimension 0 0 0 0 0 0 0 0 stringy`
+Flag Room 0 0 32768
+EDESC kshort`
+gravel
+dirt
+brick
+clean
+dirty
+small
+`
+EDESC kname`
+trail 
+path
+walkway
+pathway
+`
+END_THING
+
+THING 101017
+Name roads`
+HWT 0 0
+Color 9
+MIW 1
+Symbol ^`
+ThFl 524779
+Val dimension 0 0 0 0 0 0 0 0 stringy`
+Flag Room 0 0 8
+EDESC kshort`
+grand
+broad
+narrow
+winding
+twisty
+clean
+`
+EDESC format`
+'the kshort kname'
+`
+EDESC kname`
+road
+promenade
+boulevard
+roadway
+street
+avenue
+lane
+`
+END_THING
+
+THING 101501
+Name tree`
+HWT 0 0
+ThFl 100934
+EDESC kname`
+tree sapling 
+`
+EDESC kshort`
+oak cherry mahogany pine cedar maple 
+dogwood
+spruce
+ash
+poplar
+willow
+birch
+elm
+`
+EDESC klong`
+large small wilted strong hearty
+slender light
 `
 END_THING
 

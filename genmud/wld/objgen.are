@@ -2,7 +2,7 @@ THING 108000
 Name objgen.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 14
+Timer 4
 Short The Object Gen Area`
 type Lonath`
 ThFl 1089531
@@ -656,6 +656,7 @@ battlesword
 slasher
 slicer
 tomahawk
+hatchet
 `
 END_THING
 

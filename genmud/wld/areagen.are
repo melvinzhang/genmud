@@ -2,7 +2,7 @@ THING 107100
 Name areagen.are`
 HpMv 0 10 5 400
 HWT 0 0
-Timer 5
+Timer 11
 Short The Areagen Area`
 type Lonath`
 ThFl 1089531
@@ -51,6 +51,9 @@ Mount
 Cliffs
 'Mountain Range'
 Mountains
+Reaches
+Outlands
+Wastes
 `
 END_THING
 
@@ -161,6 +164,8 @@ Name forest_names`
 HWT 0 0
 Desc Forest Woods Forest Woods Thicket Woodlands Bocage Copse Lands Dale Glen
 Grove Grounds Shire Marches Timberland Forest Woods Forest Woods 
+Reaches
+Outlands
 `
 END_THING
 
@@ -206,6 +211,8 @@ Valleys
 Savannahs
 Dales
 Shire
+Reaches
+Outlands
 `
 END_THING
 
@@ -263,6 +270,9 @@ Badland
 Crag
 Mesas
 Desert
+Reaches
+Outlands
+Wastes
 `
 END_THING
 
@@ -872,6 +882,7 @@ Sinister
 Pale
 Perilous
 Dread
+Rocky
 `
 END_THING
 

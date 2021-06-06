@@ -1,0 +1,3599 @@
+THING 17000
+Name area17000.are`
+HpMv 0 10 666 1000
+HWT 0 0
+ThFl 1089531
+END_THING
+
+THING 17001
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17002
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17003
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17004
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17005
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17006
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17007
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17008
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17009
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17010
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17011
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17012
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17013
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17014
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17015
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17016
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17017
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17018
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17019
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17020
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17021
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17022
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17023
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17024
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17025
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17026
+HWT 0 0
+Short The City`
+ThFl 524779
+Val e_exit 17038 3 3 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 17027
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17028
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17029
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17030
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17031
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17032
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17033
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17034
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17035
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17036
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17037
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17038
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val w_exit 17026 3 3 0 0 0 0 0 `
+Val e_exit 17050 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17039
+HWT 0 0
+Color 7
+Short a clean home`
+Symbol -`
+ThFl 524779
+Val n_exit 17040 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17040
+HWT 0 0
+Color 7
+Short a clean home`
+Symbol -`
+ThFl 524779
+Val n_exit 17041 3 3 0 0 0 0 0 `
+Val s_exit 17039 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17041
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17042 0 0 0 0 0 0 0 `
+Val e_exit 17053 0 0 0 0 0 0 0 `
+Val s_exit 17040 3 3 0 0 0 0 0 `
+END_THING
+
+THING 17042
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17043 0 0 0 0 0 0 0 `
+Val e_exit 17054 0 0 0 0 0 0 0 `
+Val s_exit 17041 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17043
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17044 0 0 0 0 0 0 0 `
+Val e_exit 17055 0 0 0 0 0 0 0 `
+Val s_exit 17042 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17044
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val e_exit 17056 0 0 0 0 0 0 0 `
+Val s_exit 17043 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17045
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17046
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17047
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17048
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17049
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17050
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17051 0 0 0 0 0 0 0 `
+Val e_exit 17062 0 0 0 0 0 0 0 `
+Val w_exit 17038 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17051
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17052 0 0 0 0 0 0 0 `
+Val e_exit 17063 0 0 0 0 0 0 0 `
+Val s_exit 17050 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17052
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17053 0 0 0 0 0 0 0 `
+Val e_exit 17064 0 0 0 0 0 0 0 `
+Val s_exit 17051 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17053
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17054 0 0 0 0 0 0 0 `
+Val e_exit 17065 0 0 0 0 0 0 0 `
+Val s_exit 17052 0 0 0 0 0 0 0 `
+Val w_exit 17041 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17054
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17055 0 0 0 0 0 0 0 `
+Val e_exit 17066 0 0 0 0 0 0 0 `
+Val s_exit 17053 0 0 0 0 0 0 0 `
+Val w_exit 17042 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17055
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17056 0 0 0 0 0 0 0 `
+Val e_exit 17067 0 0 0 0 0 0 0 `
+Val s_exit 17054 0 0 0 0 0 0 0 `
+Val w_exit 17043 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17056
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val e_exit 17068 0 0 0 0 0 0 0 `
+Val s_exit 17055 0 0 0 0 0 0 0 `
+Val w_exit 17044 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17057
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17058
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17059
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17060
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17061
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17062
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17063 0 0 0 0 0 0 0 `
+Val e_exit 17074 0 0 0 0 0 0 0 `
+Val w_exit 17050 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17063
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17064 0 0 0 0 0 0 0 `
+Val e_exit 17075 0 0 0 0 0 0 0 `
+Val s_exit 17062 0 0 0 0 0 0 0 `
+Val w_exit 17051 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17064
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17065 0 0 0 0 0 0 0 `
+Val e_exit 17076 0 0 0 0 0 0 0 `
+Val s_exit 17063 0 0 0 0 0 0 0 `
+Val w_exit 17052 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17065
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17066 0 0 0 0 0 0 0 `
+Val e_exit 17077 0 0 0 0 0 0 0 `
+Val s_exit 17064 0 0 0 0 0 0 0 `
+Val w_exit 17053 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17066
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17067 0 0 0 0 0 0 0 `
+Val e_exit 17078 0 0 0 0 0 0 0 `
+Val s_exit 17065 0 0 0 0 0 0 0 `
+Val w_exit 17054 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17067
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17068 0 0 0 0 0 0 0 `
+Val e_exit 17079 0 0 0 0 0 0 0 `
+Val s_exit 17066 0 0 0 0 0 0 0 `
+Val w_exit 17055 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17068
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val e_exit 17080 0 0 0 0 0 0 0 `
+Val s_exit 17067 0 0 0 0 0 0 0 `
+Val w_exit 17056 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17069
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17070
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17071
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17072
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17073
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17074
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17075 0 0 0 0 0 0 0 `
+Val e_exit 17086 0 0 0 0 0 0 0 `
+Val w_exit 17062 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17075
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17076 0 0 0 0 0 0 0 `
+Val e_exit 17087 0 0 0 0 0 0 0 `
+Val s_exit 17074 0 0 0 0 0 0 0 `
+Val w_exit 17063 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17076
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17077 0 0 0 0 0 0 0 `
+Val e_exit 17088 0 0 0 0 0 0 0 `
+Val s_exit 17075 0 0 0 0 0 0 0 `
+Val w_exit 17064 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17077
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17078 0 0 0 0 0 0 0 `
+Val s_exit 17076 0 0 0 0 0 0 0 `
+Val w_exit 17065 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17078
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17079 0 0 0 0 0 0 0 `
+Val s_exit 17077 0 0 0 0 0 0 0 `
+Val w_exit 17066 0 0 0 0 0 0 0 `
+Val e_exit 17090 3 3 0 0 0 0 0 `
+END_THING
+
+THING 17079
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17080 0 0 0 0 0 0 0 `
+Val e_exit 17091 0 0 0 0 0 0 0 `
+Val s_exit 17078 0 0 0 0 0 0 0 `
+Val w_exit 17067 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17080
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val e_exit 17092 0 0 0 0 0 0 0 `
+Val s_exit 17079 0 0 0 0 0 0 0 `
+Val w_exit 17068 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17081
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17082
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17083
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17084
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17085
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17086
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17087 0 0 0 0 0 0 0 `
+Val e_exit 17355 0 0 0 0 0 0 0 `
+Val w_exit 17074 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17087
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17088 0 0 0 0 0 0 0 `
+Val e_exit 17356 0 0 0 0 0 0 0 `
+Val s_exit 17086 0 0 0 0 0 0 0 `
+Val w_exit 17075 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17088
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val e_exit 17330 0 0 0 0 0 0 0 `
+Val s_exit 17087 0 0 0 0 0 0 0 `
+Val w_exit 17076 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17089
+HWT 0 0
+Color 7
+Short a run-down home`
+Symbol -`
+ThFl 524779
+Val n_exit 17090 0 0 0 0 0 0 0 `
+Val e_exit 17331 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17090
+HWT 0 0
+Color 7
+Short a run-down home`
+Symbol -`
+ThFl 524779
+Val w_exit 17078 3 3 0 0 0 0 0 `
+Val e_exit 17332 0 0 0 0 0 0 0 `
+Val s_exit 17089 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17091
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17092 0 0 0 0 0 0 0 `
+Val w_exit 17079 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17092
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val e_exit 17173 0 0 0 0 0 0 0 `
+Val s_exit 17091 0 0 0 0 0 0 0 `
+Val w_exit 17080 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17093
+HWT 0 0
+Color 7
+Short the acrid market`
+Symbol -`
+ThFl 524779
+Val n_exit 17094 0 0 0 0 0 0 0 `
+Val e_exit 17174 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17094
+HWT 0 0
+Color 7
+Short the acrid market`
+Symbol -`
+ThFl 524779
+Val n_exit 17095 0 0 0 0 0 0 0 `
+Val e_exit 17175 0 0 0 0 0 0 0 `
+Val s_exit 17093 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17095
+HWT 0 0
+Color 7
+Short the acrid market`
+Symbol -`
+ThFl 524779
+Val e_exit 17176 0 0 0 0 0 0 0 `
+Val s_exit 17094 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17096
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17097
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17098
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17099
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17100
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17101
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17102
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17103
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17104
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17105
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17106
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17107
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17108
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17109
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17110
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17111
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17112
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17113
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17114
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17115
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17116
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17117
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17118
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17119
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17120
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17121
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17122
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17123
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17124
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17125
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17126
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17127
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17128
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17129
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17130
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17131
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17132
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17133
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17134
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17135
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17136
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17137
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17138
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17139
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17140
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17141
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17142
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17143
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17144
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17145
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17146
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17147
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17148
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17149
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17150
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17151
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17152
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17153
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17154
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17155
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17156
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17157
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17158
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17159
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17160
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17161
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17162
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17163
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17164
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17165
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17166
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17167
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Det 0 0 32768
+END_THING
+
+THING 17168
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17169
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17170
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17171
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17172
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17173
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val w_exit 17092 0 0 0 0 0 0 0 `
+Val e_exit 17178 3 3 0 0 0 0 0 `
+Val s_exit 17333 3 3 0 0 0 0 0 `
+END_THING
+
+THING 17174
+HWT 0 0
+Color 7
+Short the acrid market`
+Symbol -`
+ThFl 524779
+Val n_exit 17175 0 0 0 0 0 0 0 `
+Val e_exit 17179 0 0 0 0 0 0 0 `
+Val w_exit 17093 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17175
+HWT 0 0
+Color 7
+Short the acrid market`
+Symbol -`
+ThFl 524779
+Val n_exit 17176 0 0 0 0 0 0 0 `
+Val e_exit 17180 0 0 0 0 0 0 0 `
+Val s_exit 17174 0 0 0 0 0 0 0 `
+Val w_exit 17094 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17176
+HWT 0 0
+Color 7
+Short the acrid market`
+Symbol -`
+ThFl 524779
+Val e_exit 17181 0 0 0 0 0 0 0 `
+Val s_exit 17175 0 0 0 0 0 0 0 `
+Val w_exit 17095 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17177
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17178
+HWT 0 0
+Color 7
+Short a little home`
+Symbol -`
+ThFl 524779
+Val w_exit 17173 3 3 0 0 0 0 0 `
+Val n_exit 17179 3 3 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17179
+HWT 0 0
+Color 7
+Short the acrid market`
+Symbol -`
+ThFl 524779
+Val s_exit 17178 3 3 0 0 0 0 0 `
+Val n_exit 17180 0 0 0 0 0 0 0 `
+Val w_exit 17174 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17180
+HWT 0 0
+Color 7
+Short the acrid market`
+Symbol -`
+ThFl 524779
+Val e_exit 17185 3 3 0 0 0 0 0 `
+Val n_exit 17181 0 0 0 0 0 0 0 `
+Val s_exit 17179 0 0 0 0 0 0 0 `
+Val w_exit 17175 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17181
+HWT 0 0
+Color 7
+Short the acrid market`
+Symbol -`
+ThFl 524779
+Val s_exit 17180 0 0 0 0 0 0 0 `
+Val w_exit 17176 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17182
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17183
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17184
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17185
+HWT 0 0
+Short The City`
+ThFl 524779
+Val w_exit 17180 3 3 0 0 0 0 0 `
+Flag Room 0 0 32768
+END_THING
+
+THING 17186
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17187
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17188
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17189
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17190
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17191
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17192
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17193
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17194
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17195
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17196
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17197
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17198
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17199
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17200
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17201
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17202
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17203
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17204
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17205
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17206
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17207
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17208
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17209
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17210
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17211
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17212
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17213
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17214
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17215
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17216
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17217
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17218
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17219
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17220
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17221
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17222
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17223
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17224
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17225
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17226
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17227
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17228
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17229
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17230
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17231
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17232
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17233
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17234
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17235
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17236
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17237
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17238
+HWT 0 0
+Color 7
+Short a large church`
+Symbol -`
+ThFl 524779
+Val n_exit 17239 0 0 0 0 0 0 0 `
+Val e_exit 17251 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17239
+HWT 0 0
+Color 7
+Short a large church`
+Symbol -`
+ThFl 524779
+Val n_exit 17240 0 0 0 0 0 0 0 `
+Val e_exit 17252 0 0 0 0 0 0 0 `
+Val s_exit 17238 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17240
+HWT 0 0
+Color 7
+Short a large church`
+Symbol -`
+ThFl 524779
+Val e_exit 17253 0 0 0 0 0 0 0 `
+Val s_exit 17239 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17241
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17242
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17243
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17244
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17245
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17246
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17247
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17248
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17249
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17250
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17251
+HWT 0 0
+Color 7
+Short a large church`
+Symbol -`
+ThFl 524779
+Val e_exit 17264 3 3 0 0 0 0 0 `
+Val n_exit 17252 0 0 0 0 0 0 0 `
+Val w_exit 17238 0 0 0 0 0 0 0 `
+Val u_exit 17472 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17252
+HWT 0 0
+Color 7
+Short a large church`
+Symbol -`
+ThFl 524779
+Val n_exit 17253 0 0 0 0 0 0 0 `
+Val s_exit 17251 0 0 0 0 0 0 0 `
+Val w_exit 17239 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17253
+HWT 0 0
+Color 7
+Short a large church`
+Symbol -`
+ThFl 524779
+Val s_exit 17252 0 0 0 0 0 0 0 `
+Val w_exit 17240 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17254
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17255
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17256
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17257
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17258
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17259
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17260
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17261
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17262
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17263
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17264
+HWT 0 0
+Color 7
+Short some holy grounds`
+Symbol -`
+ThFl 524779
+Val w_exit 17251 3 3 0 0 0 0 0 `
+Flag Room 0 0 262144
+END_THING
+
+THING 17265
+HWT 0 0
+Color 7
+Short some holy grounds`
+Symbol -`
+ThFl 524779
+Flag Room 0 0 262144
+END_THING
+
+THING 17266
+HWT 0 0
+Color 7
+Short some holy grounds`
+Symbol -`
+ThFl 524779
+Flag Room 0 0 262144
+END_THING
+
+THING 17267
+HWT 0 0
+Color 7
+Short a large tree`
+Symbol -`
+ThFl 524779
+Flag Room 0 0 16908288
+END_THING
+
+THING 17268
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17269
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17270
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17271
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17272
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17273
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17274
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17275
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17276
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17277
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17278
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17279
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17280
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17281
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17282
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17283
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17284
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17285
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17286
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17287
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17288
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17289
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17290
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17291
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17292
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17293
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17294
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17295
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17296
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17297
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17298
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17299
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17300
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17301
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17302
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17303
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17304
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17305
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17306
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17307
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17308
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17309
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17310
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17311
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17312
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17313
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17314
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17315
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17316
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17317
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17318
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17319
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17320
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17321
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17322
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17323
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17324
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17325
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17326
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17327
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17328
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17329
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17330
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val s_exit 17356 0 0 0 0 0 0 0 `
+Val w_exit 17088 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17331
+HWT 0 0
+Color 7
+Short a run-down home`
+Symbol -`
+ThFl 524779
+Val n_exit 17332 0 0 0 0 0 0 0 `
+Val w_exit 17089 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17332
+HWT 0 0
+Color 7
+Short a run-down home`
+Symbol -`
+ThFl 524779
+Val s_exit 17331 0 0 0 0 0 0 0 `
+Val w_exit 17090 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17333
+HWT 0 0
+Color 7
+Short a small house`
+Symbol -`
+ThFl 524779
+Val n_exit 17173 3 3 0 0 0 0 0 `
+Val e_exit 17337 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17334
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17335
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17336
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17337
+HWT 0 0
+Color 7
+Short a small house`
+Symbol -`
+ThFl 524779
+Val w_exit 17333 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17338
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17339
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17340
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17341
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17342
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17343
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17344
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17345
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17346
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17347
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17348
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17349
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17350
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17351
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17352
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17353
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17354
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17355
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17356 0 0 0 0 0 0 0 `
+Val w_exit 17086 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17356
+HWT 0 0
+Color 7
+Short a crowded neighborhood`
+Symbol -`
+ThFl 524779
+Val n_exit 17330 0 0 0 0 0 0 0 `
+Val s_exit 17355 0 0 0 0 0 0 0 `
+Val w_exit 17087 0 0 0 0 0 0 0 `
+END_THING
+
+THING 17357
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17358
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17359
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17360
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17361
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17362
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17363
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17364
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17365
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17366
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17367
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17368
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17369
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17370
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17371
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17372
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17373
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17374
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17375
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17376
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17377
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17378
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17379
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17380
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17381
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17382
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17383
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17384
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17385
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17386
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17387
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17388
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17389
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17390
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17391
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17392
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17393
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17394
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17395
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17396
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17397
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17398
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17399
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17400
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17401
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17402
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17403
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17404
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17405
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17406
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17407
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17408
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17409
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17410
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17411
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17412
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17413
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17414
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17415
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17416
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17417
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17418
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17419
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17420
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17421
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17422
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17423
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17424
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17425
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17426
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17427
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17428
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17429
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17430
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17431
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17432
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17433
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17434
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17435
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17436
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17437
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17438
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17439
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17440
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17441
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17442
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17443
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17444
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17445
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17446
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17447
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17448
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17449
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17450
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17451
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17452
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17453
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17454
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17455
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17456
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17457
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17458
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17459
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17460
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17461
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17462
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17463
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17464
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17465
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17466
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17467
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17468
+HWT 0 0
+Short The City`
+ThFl 524779
+Flag Room 0 0 32768
+END_THING
+
+THING 17469
+HWT 0 0
+Short a large church`
+ThFl 524779
+Val n_exit 17470 0 0 0 0 0 0 0 `
+Val e_exit 17472 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17470
+HWT 0 0
+Short a large church`
+ThFl 524779
+Val n_exit 17471 0 0 0 0 0 0 0 `
+Val e_exit 17473 0 0 0 0 0 0 0 `
+Val s_exit 17469 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17471
+HWT 0 0
+Short a large church`
+ThFl 524779
+Val e_exit 17474 0 0 0 0 0 0 0 `
+Val s_exit 17470 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17472
+HWT 0 0
+Short a large church`
+ThFl 524779
+Val n_exit 17473 0 0 0 0 0 0 0 `
+Val w_exit 17469 0 0 0 0 0 0 0 `
+Val d_exit 17251 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17473
+HWT 0 0
+Short a large church`
+ThFl 524779
+Val n_exit 17474 0 0 0 0 0 0 0 `
+Val s_exit 17472 0 0 0 0 0 0 0 `
+Val w_exit 17470 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+THING 17474
+HWT 0 0
+Short a large church`
+ThFl 524779
+Val s_exit 17473 0 0 0 0 0 0 0 `
+Val w_exit 17471 0 0 0 0 0 0 0 `
+Flag Room 0 0 1
+END_THING
+
+END_OF_AREA
+

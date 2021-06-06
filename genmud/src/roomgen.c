@@ -52,7 +52,7 @@ roomgen (THING *th, THING *room, char *arg)
 }
 
 void
-room_add_exit (THING *room, int dir, int to)
+room_add_exit (THING *room, int dir, int to, int exit_flags)
 {
   THING *nroom;
   VALUE *exit;
@@ -71,5 +71,7 @@ room_add_exit (THING *room, int dir, int to)
 	room->in->thing_flags |= TH_CHANGED;
     }  
   exit->val[0] = to;
+  exit->val[1] = exit_flags;
+  exit->val[2] = exit_flags;
   return;
 }

@@ -232,7 +232,7 @@ do_citybuild (THING *th, char* arg)
 	  (room->vnum < society->room_start ||
 	   room->vnum > (society->room_end)))
 	{
-	  //exit->val[1] |= EX_WALL;
+	  /* exit->val[1] |= EX_WALL; */
 	  
 	  /* Put the wall going the other way now, too. */
 	  

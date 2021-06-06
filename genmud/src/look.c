@@ -90,7 +90,10 @@ show_thing_to_thing (THING *th, THING *target, int flags)
 		       race->name);
 	    }
 	  else
-	    sprintf (buf2, "is some sort of %s.", target->type && target->type[0] && target->vnum != CORPSE_VNUM ? target->type : "thing");
+	    sprintf (buf2, "is some sort of %s.",
+		     (target->proto  && target->proto->type &&
+		      *target->proto->type ?
+		      target->proto->type : "thing"));
 	  strcat (buf, buf2);
 	  strcat (buf, show_condition (target, TRUE));
 	}
@@ -121,8 +124,11 @@ show_thing_to_thing (THING *th, THING *target, int flags)
     show_blood (th, target);
   if (IS_SET (flags, LOOK_SHOW_CONTENTS) && !IS_AREA (target))
     {
-      show_contents_list (th, target, flags);
-      
+      VALUE *lid;
+      if ((lid = FNV (target, VAL_EXIT_O)) == NULL ||
+	  !IS_SET (lid->val[1], EX_DOOR) ||
+	  !IS_SET (lid->val[1], EX_CLOSED))	
+	show_contents_list (th, target, flags);      
     }
   return;
 }

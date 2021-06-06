@@ -421,6 +421,7 @@ const struct flag_data pc2_flags[] =
   {"blank", " Blank", PC2_BLANK, "You get a blank line in front of your prompt."},
   {"noprompt", " Noprompt", PC2_NOPROMPT, "You don't see a prompt."},
   {"asciimap", " AsciiMap", PC2_ASCIIMAP, "You see an extended ascii map."},
+  {"number_dam", " NumberDam", PC2_NUMBER_DAM, "You see numerical damage messages."},
   {"none", "none", 0, "nothing"},
 };
 

@@ -790,6 +790,8 @@ mapgen_generate (char *arg)
       maxy -= ((y_len - MAPGEN_MAXY)/2 + 1);
     }
   
+  
+  
   /* So by now the size of the map should be ok.
      Now, recalculate the x_len and y_len. This will give us the 
      location of the center that we want. */
@@ -804,6 +806,12 @@ mapgen_generate (char *arg)
   
   map = new_mapgen();
   
+
+  map->min_x = minx;
+  map->max_x = maxx;
+  map->min_y = miny;
+  map->max_y = maxy;
+
   /* Set the number of rooms used. Not quite correct if we crop the map,
      but it is an overestimate, so it's ok. You could do a more precise
      cropping and recalc the rooms. Also, note that the mapgen struct will

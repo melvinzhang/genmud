@@ -50,23 +50,26 @@ prac_pct (THING *th, SPELL *spl)
 	strcat (buf, " ");
       return buf;
     }
+  /* THESE STRINGS BELOW HERE MUST ALL BE THE SAME LENGTH OR ELSE THE
+     COLUMNS WILL LOOK LIKE CRAP WHEN YOU SLIST SINCE THE WORDS WILL
+     HAVE MORE OR LESS SPACE BEFORE THE SECOND COLUMN! */
   if (pct == 0)
     return "(Unlearned)";
   else if (pct < 14)
-    return "(Beginner)";
+    return "(Beginner) ";
   else if (pct < 28)
-    return "(Poor)";
+    return "(Poor)     ";
   else if (pct < 44)
-    return "(Fair)";
+    return "(Fair)     ";
   else if (pct < 57)
-    return "(Good)";
+    return "(Good)     ";
   else if (pct < 71)
-    return "(Adept)";
+    return "(Adept)    ";
   else if (pct < 84)
     return "(Excellent)";
   else if (pct < 99)
-    return "(Superb)";
-  return "(Godly)";
+    return "(Superb)   ";
+  return   "(Godly)    ";
 }
   
 

@@ -752,7 +752,6 @@ act (char *buf, THING *th, THING *use, THING *vict, char *txt, int type)
   if (type == TO_VICT && !vict)
     return;
   
-  // if (nr (1,200) == 35) log_it (buf);
   /* The code makes 2 passes. First, it goes down the list of things
      in th->in ... (th->in->cont) and then it attempts to show them all
      the message. Then, if the type is not TO_CHAR, it then checks
@@ -1061,7 +1060,11 @@ act (char *buf, THING *th, THING *use, THING *vict, char *txt, int type)
 		  *s = UC(*s);
 		  break;
 		}
-	    }
+	    } 
+	  if (type == TO_COMBAT && current_damage_amount > 0 && 
+	      IS_PC (to) &&
+	      IS_PC2_SET (to, PC2_NUMBER_DAM))
+	    sprintf (actret + strlen (actret), " \x1b[1;31m[\x1b[1;37m%d\x1b[1;31m]", current_damage_amount);
 	  strcat (actret, "\x1b[0;37m\n\r");
 	  if (chan && IS_PC (to) && currchan >= 0 &&
 	      currchan < MAX_CHANNEL) /* Do scrollbacks */
@@ -1075,7 +1078,9 @@ act (char *buf, THING *th, THING *use, THING *vict, char *txt, int type)
               new_sback->text[MAX_SCROLLBACK_LENGTH-1] = '\n';
               new_sback->text[MAX_SCROLLBACK_LENGTH] = '\r';
 	      to->pc->sback[currchan][to->pc->sback_pos[currchan]] = new_sback;
-	    }
+	    }	  
+	  
+	 
 	  stt (actret, to);
           if (type == TO_CHAR || type == TO_VICT)
             break;

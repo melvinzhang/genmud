@@ -271,7 +271,7 @@ trigedit (THING *th, char *arg)
      for (i = 0; str_cmp ((char *) trigger_types[i], "max"); i++)
        if (!str_cmp (arg, (char *) trigger_types[i]))
 	 {
-	   trig->type = (i > 0 ? ( 1 << i) : 0);
+	   trig->type = (i > 0 ? (1 << (i-1)) : 0);
 	   stt ("Ok, trigger type set.\n\r", th);
 	   show_trigger (th);
 	   return;

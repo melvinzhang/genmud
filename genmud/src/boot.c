@@ -33,6 +33,7 @@ int startup_time = 0;
 int boot_time = 0;
 int current_time = 0;
 int total_memory_used = 0;
+int current_damage_amount = 0;
 int png_seed = 0;
 int png_count = 0;
 SOCIETY *society_list = NULL;
@@ -826,8 +827,20 @@ sanity_check_vars(void)
   if (!align_info[0])
     {
       align_info[0] = new_race();
-      align_info[0]->name = new_str ("Neutral");
+      align_info[0]->name = new_str ("Neutral"); 
     }
+  if (ALIGN_MAX > 1 && !align_info[1])
+    {
+      align_info[1] = new_race();
+      align_info[1]->name = new_str ("Evil");
+    }
+  if (ALIGN_MAX > 2 && !align_info[2])
+    {
+      align_info[2] = new_race();
+      align_info[2]->name = new_str ("Good");
+    }
+
+  
   if (!dam_list)
     {
       dam_list = new_damage();

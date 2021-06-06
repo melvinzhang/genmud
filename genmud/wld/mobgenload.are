@@ -2,7 +2,7 @@ THING 127000
 Name mobgenload.are`
 HpMv 0 10 5 5000
 HWT 0 0
-Timer 1
+Timer 12
 Short Mobgen Load Area`
 type Lonath`
 ThFl 1089531

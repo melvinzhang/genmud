@@ -1441,7 +1441,7 @@ Wear_Off The spell has worn off @1n.`
 Comp 0 0 0 0 0 
 Repeat 0 0 0
 Pre_Name Hide`
-Guilds 0 0 0 5 5 0 0 0 0 0 
+Guilds 0 4 0 4 5 0 0 0 0 0 
 Teachers 0 0 0 0 0 0 0 0 0 0 
 Stats 0 0 0 0 0 0 0 
 END_SPELL

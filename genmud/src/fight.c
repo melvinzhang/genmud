@@ -1066,7 +1066,7 @@ damage (THING *th, THING *vict, int dam, char *word)
     return TRUE;
   
   /* Check to see if combat can occur here or not. */
-
+  
   if (IS_ROOM_SET (vict->in, ROOM_PEACEFUL))
     {
       stop_fighting (vict);
@@ -1125,7 +1125,7 @@ damage (THING *th, THING *vict, int dam, char *word)
     }
   
   /* Defensive bonus for built up cities. */
-
+  
   if ((soc = FNV (vict, VAL_SOCIETY)) != NULL)
     {      
       if ((build = FNV (vict->in, VAL_BUILD)) != NULL &&
@@ -1148,7 +1148,7 @@ damage (THING *th, THING *vict, int dam, char *word)
   vict_hurt = flagbits (vict->flags, FLAG_HURT);
 
   /* Raw and outline on the victim increase damage. */
-
+  
   if (IS_SET (vict_hurt, AFF_RAW))
     dam *=2;
   
@@ -1156,17 +1156,17 @@ damage (THING *th, THING *vict, int dam, char *word)
     dam = (dam * (100 + LEVEL (th))/100);
   
   /* Weakness causes all attacks to do less damage. */
-
+  
   if (IS_SET (th_hurt, AFF_WEAK))
     dam /= 2;
- 
+  
   /* Lower hps = less dam done. */
   
   if (!IS_SET (th->thing_flags, TH_IS_ROOM | TH_IS_AREA | TH_NO_FIGHT) && 
       th->max_hp > 0)
     dam -= dam * ((th->max_hp - th->hp) * 2/3)/th->max_hp;
-      
-
+  
+  
   /* A society member inside of a built up area absorbs damage. */
   
   dam -= society_defensive_damage_reduction (vict, dam);
@@ -1177,9 +1177,9 @@ damage (THING *th, THING *vict, int dam, char *word)
       return FALSE;
     }
   
-
+  
   /* Powershields absorb damage. */
-
+  
   for (obj = vict->cont; obj; obj = obj->next_cont)
     {
       if (!IS_WORN(obj) || dam < 1)
@@ -1202,7 +1202,7 @@ damage (THING *th, THING *vict, int dam, char *word)
     }
   
   /* Combat stops any timed commands the player is attempting. */
-
+  
   if (dam > (5 + LEVEL (vict)/10))
     {
       if (vict->position > POSITION_MEDITATING)
@@ -1219,34 +1219,35 @@ damage (THING *th, THING *vict, int dam, char *word)
     th->pc->damage_total += dam;
   
   /* Remove damage from the victim. */
-
+  
   vict->hp -= dam;
- 
+  
   /* Update for the GUI client. */
   
   update_kde (vict, KDE_UPDATE_HMV);
-
+  
   /* Send the damage message to everyone. */
-
+  
   for (damg = dam_list; damg; damg = damg->next)
     {
       if (dam >= damg->low && dam <= damg->high)
 	break;
     }
   
-if (!damg)
+  if (!damg)
     damg = dam_list;
- 
- act (damg->message, th, NULL, vict, word, TO_COMBAT);
- 
- if (IS_PC (th) && (!IS_PC (vict) || DIFF_ALIGN (th->align, vict->align)))
-   {
-     int added = MIN (10 * LEVEL (th), dam *dam/2 + dam*3)*
-       find_remort_bonus_multiplier (th);
-     add_exp (th, added);
-     th->pc->fight_exp += added;
+  
+  current_damage_amount = dam;
+  act (damg->message, th, NULL, vict, word, TO_COMBAT);
+  current_damage_amount = 0;
+  if (IS_PC (th) && (!IS_PC (vict) || DIFF_ALIGN (th->align, vict->align)))
+    {
+      int added = MIN (10 * LEVEL (th), dam *dam/2 + dam*3)*
+	find_remort_bonus_multiplier (th);
+      add_exp (th, added);
+      th->pc->fight_exp += added;
     }
- 
+  
   if (vict->in && IS_ROOM (vict->in) &&
       vict->hp < vict->max_hp/2 && nr (1,50) == 2)
     {

@@ -2803,7 +2803,7 @@ settle_new_society_now (THING *th)
      generally settle more than 1 area away from them, so the
      overexpansion is lessened. */
   
-  // RBIT (newsoc->society_flags, SOCIETY_SETTLER);
+  /* RBIT (newsoc->society_flags, SOCIETY_SETTLER); */
   SBIT (newsoc->society_flags, SOCIETY_DESTRUCTIBLE);
   RBIT (newsoc->society_flags, SOCIETY_FIXED_ALIGN);
   /* Now make all mobs which were in the old society, but

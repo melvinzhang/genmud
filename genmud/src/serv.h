@@ -1240,7 +1240,7 @@ grep 					    them all visible to each
 #define PC2_ANSI         0x00004000  /* Do you want ansi colors? */
 #define PC2_BLANK        0x00008000  /* Blank line in front of prompt. */
 #define PC2_ASCIIMAP     0x00010000  /* Does this player see ascii map? */
-
+#define PC2_NUMBER_DAM   0x00020000  /* Players see number damage in hits. */
 /**********************************************************************/
 /* Internal player flags. These are not stored in any data structure,
    just make more of them if you need temporary internal flags for your
@@ -2420,6 +2420,7 @@ extern int lowest_vnum;
 extern int top_spell;
 extern int cons_hp;         /* Hps left in a thing during consider. */
 extern int currchan;            /* Current channel sent to act() yucky :P */
+extern int current_damage_amount; /* Used to show pc's damage amt's */
 extern char *nonstr;            /* Ptr to nothing_string */
 extern char nothing_string[1];  /* Used for string creation/destruction. */
 extern char prev_command[STD_LEN]; /* Last command (used for crashes.) */
