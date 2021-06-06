@@ -2,7 +2,7 @@ THING 108000
 Name objgen.are`
 HpMv 0 10 5 500
 HWT 0 0
-Timer 4
+Timer 12
 Short The Object Gen Area`
 type Lonath`
 ThFl 1089531
@@ -65,6 +65,7 @@ Glyphed
 Keen
 Beaded
 Glorious
+Solid
 `
 Short Descriptive name.`
 MIW 1
@@ -299,6 +300,7 @@ Recovery
 'the Mystic'
 Authority
 Glory
+Solidarity
 `
 Short Descriptive name.`
 END_THING
@@ -904,27 +906,27 @@ THING 108036
 Name metal_gen_names`
 HWT 0 0
 Desc Hecium & $8Hecium$7
-Panium & $APa$6ni$Aum$7
-Ribate & $6Ri$1ba$6te$7
-Stemium & $7St$3em$7ium$7
-Alesite & $FAlesite$7
-Sofite & $DSofite$7
-Teosate & $4Te$6os$4ate$7
-Itesium & $1Ite$Esium$7
-Getium & $8Get$4ium$7
-Cuhate & $ACuhate$7
-Eginate & $DEginate$7
-Nirogate & $2Ni$6rog$2ate$7
-Esogite & $EEs$6og$Eite$7
-Adhewium
-Timium & $9Ti$7mi$9um$7
-Icinium & $1Icinium$7
-Gipite & $DGipite$7
-Lelium & $9Le$Eli$9um$7
-Uhpewate
-Cehium & $DCehium$7
-Lafium & $6Lafium$7
-`
+Panium & $APa$6ni$Aum$7
+Ribate & $6Ri$1ba$6te$7
+Stemium & $7St$3em$7ium$7
+Alesite & $FAlesite$7
+Sofite & $DSofite$7
+Teosate & $4Te$6os$4ate$7
+Itesium & $1Ite$Esium$7
+Getium & $8Get$4ium$7
+Cuhate & $ACuhate$7
+Eginate & $DEginate$7
+Nirogate & $2Ni$6rog$2ate$7
+Esogite & $EEs$6og$Eite$7
+Adhewium
+Timium & $9Ti$7mi$9um$7
+Icinium & $1Icinium$7
+Gipite & $DGipite$7
+Lelium & $9Le$Eli$9um$7
+Uhpewate
+Cehium & $DCehium$7
+Lafium & $6Lafium$7
+`
 END_THING
 
 THING 108037

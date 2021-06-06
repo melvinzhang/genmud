@@ -194,12 +194,18 @@ snow_disaster (void)
       if (!IS_ROOM_SET (area, ROOM_ROUGH | ROOM_FIELD | ROOM_FOREST | ROOM_SNOW | ROOM_WATERY))
 	continue;
       
+      if (IS_ROOM_SET (area, ROOM_DESERT | ROOM_SWAMP))
+	continue;
+
       for (room = area->cont; room; room = room->next_cont)
 	{
 	  if (!IS_ROOM (room))
 	    continue;
 	  
 	  if (!IS_ROOM_SET (room, ROOM_FOREST | ROOM_FIELD | ROOM_EASYMOVE | ROOM_ROUGH))
+	    continue;
+
+	  if (IS_ROOM_SET (room, ROOM_DESERT| ROOM_SWAMP))
 	    continue;
 	  
 	  flg = new_flag();

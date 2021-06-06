@@ -1,4 +1,5 @@
-CFLAGS = -c -Wall -pedantic -O2
+CFLAGS = -c -Wall -pedantic -g
+LFLAGS = -lpthread -lcrypt
 
 
 OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
@@ -28,7 +29,6 @@ OBJS =  aff.o alias.o areagen.o areagen2.o auction.o bank.o battle.o \
 CC = gcc
 
 
-LFLAGS = -lpthread -lcrypt -O3
 
 .c.o: serv.h
 	$(CC) $(CFLAGS) $<

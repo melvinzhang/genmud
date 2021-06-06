@@ -26,7 +26,7 @@ THING *
 new_thing (void)
 {
   THING *newthing = NULL, *prev;
-  
+  int i;
   /* This first part is to store the track data so that we don't
      get null tracks. */
 
@@ -105,6 +105,11 @@ new_thing (void)
   newthing->wear_num = ITEM_WEAR_NONE;
   newthing->max_hp = 10;
   newthing->position = POSITION_STANDING;
+  for (i = 0; i < REALDIR_MAX; i++)
+    {
+      newthing->adj_room[i] = NULL;
+      newthing->adj_goodroom[i] = NULL;
+    }
   return (newthing);
 }
 

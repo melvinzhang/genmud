@@ -255,6 +255,7 @@ connect_to_game(FILE_DESC *fd, char *arg)
 	      return;
 	    }	    
 	  show_race (fd->th, race);
+	  do_help (fd->th, race->name);
 	  write_to_buffer ("Is this the race you want? ", fd);
 	  fd->th->pc->race = race->vnum;
 	  fd->connected = CON_CONFIRM_RACE;
@@ -293,6 +294,7 @@ connect_to_game(FILE_DESC *fd, char *arg)
 	      return;
 	    }	    
 	  show_align (fd->th, align);
+	  do_help (fd->th, align->name);
 	  write_to_buffer ("Is this the align you want? ", fd);
 	  fd->th->align = align->vnum;
 	  fd->th->pc->in_vnum = 100 + align->vnum;

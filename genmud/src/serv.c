@@ -774,7 +774,10 @@ write_fd_direct (FILE_DESC *fd, char *txt)
   int len;
   if (!fd || fd->r_socket < 1)
     return FALSE;
-  len = fd->write_pos-fd->write_buffer;
+  if (txt == fd->write_buffer)
+    len = fd->write_pos-fd->write_buffer;
+  else
+    len = strlen (txt);
   if (write (fd->r_socket, txt, len) >= 0)
     return TRUE;
   return FALSE;

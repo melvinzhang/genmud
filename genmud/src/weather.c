@@ -194,7 +194,7 @@ update_time_weather (void)
 	  else
 	    {
 	      sprintf (buf, "The clouds get thicker, and it starts to snow.\n\r");
-	      if (nr (1,10) == 2)
+	      if (nr (1,500) == 2)
 		snow_disaster();
 	      
 	    }
@@ -221,10 +221,11 @@ update_time_weather (void)
 	  new_weather = WEATHER_STORMY;
 	  if (wt_info->val[WVAL_TEMP] > 30)
 	    sprintf (buf, "The storm intensifies overhead! You should seek shelter!\n\r");
-	  else
+	  else 
 	    {
 	      sprintf (buf, "The snowstorm turns into a blizzard! You should seek shelter!\n\r");
-	      snow_disaster();
+	      if (nr (1,40) == 3)
+		snow_disaster();
 	    }
 	}
       break;

@@ -844,7 +844,8 @@ find_eq_to_wear (THING *th)
 	    wear_thing (th, obj);
 	  break;
 	}
-      else if (obj && nr (1,5) == 2 && obj->in == th)
+      else if (obj && nr (1,2) == 2 && obj->in == th &&
+	       obj->wear_loc == ITEM_WEAR_NONE)
 	{
 	  free_thing (obj);
 	  break;

@@ -87,7 +87,8 @@ set_up_map_room (THING *room)
   set_up_move_flags (room);
   room->exits = 0;
   room->goodroom_exits = 0;
-  for (i = 0; i < FLATDIR_MAX; i++)
+  room->move_flags = (flagbits (room->flags, FLAG_ROOM1) & BADROOM_BITS);
+  for (i = 0; i < REALDIR_MAX; i++)
     {
       /* Check if the exit in that dir exists, and if it
 	 is not hidden/wall, and if it leads to something
@@ -99,9 +100,18 @@ set_up_map_room (THING *room)
       if ((otherroom = find_track_room (room, i, BADROOM_BITS)) != NULL)
 	{
 	  room->exits |= (1 << i);
+	  room->adj_room[i] = otherroom;
 	  if ((otherroom = find_track_room (room, i, 0)) != NULL)
-	    room->goodroom_exits |= (1 << i);
-	}
+	    {
+	      room->goodroom_exits |= (1 << i);
+	      room->adj_goodroom[i] = otherroom;
+	    }
+	  else
+	    room->adj_goodroom[i] = NULL;
+	}      
+      else
+	room->adj_room[i] = NULL;
+      
     }
 
   /* Maybe add some stuff in here about other symbols for mountains

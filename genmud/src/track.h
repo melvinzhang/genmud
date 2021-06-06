@@ -24,20 +24,20 @@
 #define HUNT_MAX           13    /* Maximum kind of hunting. */
 
 #define MAX_HUNT_DEPTH         3000    /* Max depth hunting works... */
-#define MAX_SHORT_HUNT_DEPTH   40      /* Max depth you go on "short" 
-hunts. */
+#define MAX_SHORT_HUNT_DEPTH   100     /* Max depth you go on "short" hunts */
 #define SOCIETY_HUNT_DEPTH     6       /* Max depth society members hunt. 
 */
 #define TRACK_TICKS     (2*UPD_PER_SECOND) /* Takes 2 seconds to track. */
 
-/* This macro encapsulates tracking so that you check the room's goodroom
-   exits and exits first, then see if you need to even to into the
-   find track room function. (rdb = room dir bits) NO SANITY CHECKING
-   HERE SO USE AT YOUR OWN RISK! If the room->exits don't exist or if
-   there are no badroom bits available and the dir is actually ok 
-   and if the room is ok either. */
+/* This macro encapsulates the idea of checking if an adjacent room is a
+   goodroom or not and using it or else checking for other things using
+   find_track_room. */
 
-#define FTR(r,d,b)  (!IS_SET ((r)->exits, (1 << (d)))? NULL:find_track_room((r),(d),(b)))
+#define FTR(r,d,b)  ((!(b) && (r)->adj_goodroom[(d)]) ? \
+		     (r)->adj_goodroom[(d)] : \
+		     ((r)->adj_room[(d)] && \
+		     is_track_room ((r)->adj_room[(d)], (b))) ? \
+		     (r)->adj_room[(d)] : NULL)
 
 
 

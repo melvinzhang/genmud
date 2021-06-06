@@ -836,6 +836,8 @@ worldgen_generate_areas (int area_size)
 			{
 			  free_str (area->type);
 			  area->type = new_str ("outpost_gate");
+			  
+			  
 			}
 		    }
 		}

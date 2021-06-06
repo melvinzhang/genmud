@@ -380,21 +380,28 @@ update_thing (THING *th)
 	     warrior for a caste and that either the new
 	     room is in the same area where th was created or
 	     the random number comes up. */
-	  if (nr (1,12) == 3 && CAN_MOVE (th) &&  !is_hunting (th) &&
-	      !FIGHTING (th) && !IS_ROOM (th) && th->position >=
+	  if (nr (1,12) == 3 && 
+	      CAN_MOVE (th) &&  
+	      !is_hunting (th) &&
+	      !FIGHTING (th) && 
+	      !IS_ROOM (th) && 
+	      th->position >=
 	      POSITION_STANDING && 
 	      !IS_SET (actbits, ACT_SENTINEL | ACT_PRISONER) &&
 	      !RIDER(th) && th->in && 
 	      IS_ROOM (th->in) && th->proto &&
 	      (!soc || !IS_SET (soc->val[2], CASTE_WARRIOR) ||
-	       soc->val[3] != WARRIOR_SENTRY) &&
-	      ((room = FTR (th->in, (dir = nr (0, REALDIR_MAX-1)), 
-					th->move_flags)) != NULL &&
-	       (th->proto->in == room->in || nr (1,15) == 3)))
-	    move_dir (th, dir, 0);
-	  else if (nr (1,3) == 2)
-	    attack_stuff (th);
-	}  
+	       soc->val[3] != WARRIOR_SENTRY))
+	    { 
+	      dir = nr (0, REALDIR_MAX-1);
+	      if (((room = FTR (th->in, dir, th->move_flags)) != NULL)
+		  && (th->proto->in == room->in || nr (1,15) == 3))
+		move_dir (th, dir, 0);
+	      else if (nr (1,3) == 2)
+		attack_stuff (th);
+	      
+	    } 
+	}
       if (nr (1,70) == 2)
 	find_eq_to_wear (th);
     }
@@ -648,7 +655,7 @@ update_thing_hour (THING *th)
 #endif
       
       /* Update this thing's map. */
-
+      if (nr (1,10) == 2)
       set_up_map_room (th);
 
       /* Update city status. If the society that built a city here is gone,
@@ -1132,11 +1139,19 @@ update_fast (THING *th)
   if (th->in && th->in == room)
     {
       bool did_random_social = FALSE;
+      bool mob_attacked = FALSE;
+      bool can_attack = FALSE;
       warnmob = NULL;
+      if (nr (1,2) == 2)
+	can_attack = TRUE;
       for (mob = th->in->cont; mob; mob = mob->next_cont)
 	{
-	  if (CAN_FIGHT (mob) && nr (1,3) != 2)
-	    attack_stuff (mob);
+	  if (can_attack && CAN_FIGHT (mob) && nr (1,3) == 2 &&
+	      (!mob_attacked || nr (1,5) == 3))
+	    {
+	      mob_attacked = TRUE;
+	      attack_stuff (mob);
+	    }
 	  else if (nr (1,235) == 133 && CAN_TALK (mob) &&
 		   !did_random_social && mob->position > POSITION_SLEEPING)
 	    {

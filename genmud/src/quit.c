@@ -496,8 +496,10 @@ kill_exp (THING *killer, THING *vict)
 		  rth->pc->fight_exp = 0;
 		  rth->pc->pk[PK_KILLS]++;
 
-		  if (LEVEL (vict) > LEVEL (rth))
-		    rth->pc->pk[PK_KILLPTS] += (LEVEL (vict) - LEVEL (rth))/20;
+		  if (LEVEL (vict) > LEVEL (rth) &&
+		      LEVEL(vict) >= 50)
+		    rth->pc->pk[PK_KILLPTS] += 
+		      MIN(3, (LEVEL (vict) - LEVEL (rth) - 5)/5);
 		  
 		  update_trophies (rth, vict, num_points, lev_helpers);
 		  update_kde (rth, KDE_UPDATE_PK);
@@ -1388,7 +1390,8 @@ exp_to_level (int lev)
 {
   if (lev < 1 || lev > MORT_LEVEL)
     return 0;
-  return 10 * lev *lev *lev + 15 * lev * lev;
+  return lev *lev *lev *lev + 15 * lev * lev +
+    5 * lev * lev * lev;
 }
 
 

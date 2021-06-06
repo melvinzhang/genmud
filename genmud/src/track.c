@@ -455,10 +455,11 @@ hunt_thing (THING *th, int max_depth)
   int vnum, i, hunting_type, range, dist;
   char *nme;
   int actbits;
+  int dir;
   VALUE *feed, *exit, *ranged, *ammo, *soc;
   TRACK *trk = NULL;
   SOCIETY *society;
-  int goodroom_bits;  /* A list of room flags where this thing can go. */
+  int goodroom_bits = 0;  /* A list of room flags where this thing can go. */
   int track_hours = 4; /* Number of hours we make newly added tracks. */
   
  
@@ -643,17 +644,13 @@ hunt_thing (THING *th, int max_depth)
 		{
 		  for (exit = room->values; exit; exit = exit->next)
 		    {
-		      if (exit->type <= REALDIR_MAX &&  
-			  !IS_SET (exit->val[1], EX_WALL) &&
-			  (nroom = find_thing_num (exit->val[0])) != NULL &&
-			  is_track_room (nroom, goodroom_bits))
-			add_bfs (bfs_curr, nroom, exit->type - 1);
+		      if ((dir = exit->type - 1) < REALDIR_MAX &&
+			  (nroom = FTR (room, dir, goodroom_bits)) != NULL) 
+			add_bfs (bfs_curr, nroom, dir);
 		    }
-		}
-	      else 
-		{
-		  break;	      
-		}
+		}	      
+	      else
+		break;
 	      bfs_curr = bfs_curr->next;
 	    }
 	  if (vict)
@@ -710,11 +707,9 @@ hunt_thing (THING *th, int max_depth)
 		    {
 		      for (exit = room->values; exit; exit = exit->next)
 			{
-			 if (exit->type <= REALDIR_MAX &&  
-			     !IS_SET (exit->val[1], EX_WALL) &&
-			     (nroom = find_thing_num (exit->val[0])) != NULL &&
-			     is_track_room (nroom, goodroom_bits))
-			   add_bfs (bfs_curr, nroom, exit->type - 1);
+			  if ((dir = exit->type - 1) < REALDIR_MAX &&
+			      (nroom = FTR (room, dir, goodroom_bits)) != NULL)
+			    add_bfs (bfs_curr, nroom, exit->type - 1);
 			}
 		    }
 		  /* If we found no ally to help within the allotted
@@ -738,7 +733,7 @@ hunt_thing (THING *th, int max_depth)
 	    }
 	} /* End hunt society victim. */
       else /* General hunt by name or thing if we're already hunting. */
-	{
+	{ 	   
 	  /* Only search if you're not searching for a room. */
 	  tracks_ok = TRUE;
 	  while (bfs_curr && !vict)
@@ -824,11 +819,9 @@ hunt_thing (THING *th, int max_depth)
 		    { 
 		      for (exit = room->values; exit; exit = exit->next)
 			{
-			  if (exit->type <= REALDIR_MAX &&  
-			      !IS_SET (exit->val[1], EX_WALL) &&
-			      (nroom = find_thing_num (exit->val[0])) != NULL &&
-			      is_track_room (nroom, goodroom_bits))
-			    add_bfs (bfs_curr, nroom, exit->type - 1);
+			  if ((dir = exit->type - 1) < REALDIR_MAX &&
+			      (nroom = FTR (room, dir, goodroom_bits)) != NULL)
+			    add_bfs (bfs_curr, nroom, dir);
 			}
 		    }
 		}
@@ -839,10 +832,12 @@ hunt_thing (THING *th, int max_depth)
 		    track_hours += bfs_curr->depth/20;
 		  place_backtracks (vict, track_hours);
 		  break;
-		}	    
+		}	
+	   
 	      else
 		vict = NULL;
 	      bfs_curr = bfs_curr->next;
+	     
 	    } /* End of search for nonroom-nonsociety hunt. */
 	}
     }
@@ -905,7 +900,7 @@ hunt_thing (THING *th, int max_depth)
 							  This should piss off the players. */
 		    {
 		      int dir;
-		      for (i = 0; i < 5; i++)
+		      for (i = 0; i < REALDIR_MAX; i++)
 			{
 			  dir = nr (0, REALDIR_MAX-1);
 			  if ((exit = FNV (th->in, dir + 1)) != NULL &&
@@ -1193,6 +1188,7 @@ find_track_room (THING *croom, int dir, int goodroom_bits)
 {
   VALUE *exit; 
   THING *room;
+  
   if (!croom || dir >= REALDIR_MAX)
     return NULL;
   

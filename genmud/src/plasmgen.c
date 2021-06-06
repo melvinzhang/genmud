@@ -20,7 +20,6 @@ plasmgen_export (THING *area)
   int dx = 0, dy = 0, dz = 0;
   int color;
   
-  return;
   const char *colors[PLASMGEN_COLOR_MAX] = 
     {
       "gray",
@@ -34,6 +33,7 @@ plasmgen_export (THING *area)
       "brown",
     };
 
+  return;
   if (!area)
     return;
   

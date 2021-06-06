@@ -20,13 +20,13 @@ Spell 0 0 0 0 0
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
 AscendFrom -1
-HatedSociety 28
-Goals 52
+HatedSociety 0
+Goals 70
 Relic 0 0 1018
 Parts 0 0 0 0 
 HWT 0 0 0 0
-RawCurr 124500 668 307 138 135 112 108 551 
-RawWant 0 2480 7150 9365 11310 11025 10775 6485 
+RawCurr 124500 124486 124486 124486 124486 124476 124476 124476 
+RawWant 0 0 0 0 0 0 0 0 
 END_ALIGN
 ALIGN
 Name Good`
@@ -35,13 +35,13 @@ Spell 0 0 0 0 0
 RegenBonus 0 0 0
 NatSpells 0 0 0 0 
 AscendFrom -1
-HatedSociety 7
-Goals 41
+HatedSociety 1
+Goals 50
 Relic 0 0 1068
 Parts 0 0 0 0 
 HWT 0 0 0 0
-RawCurr 124500 683 323 185 180 171 176 488 
-RawWant 0 540 3725 8125 11120 11540 9825 2450 
+RawCurr 124500 124500 124500 124500 124500 124500 124500 124500 
+RawWant 0 0 0 0 0 0 0 0 
 END_ALIGN
 
 END_OF_ALIGNS

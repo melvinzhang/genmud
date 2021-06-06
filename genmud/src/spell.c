@@ -1112,6 +1112,7 @@ check_spell (THING *th, char *name, int vnum)
   /* Faster pracs once you're (somewhat) higher level than the spell. */
  
   if (LEVEL(th) < (spl->level+3)*15/14 &&
+      nr (1,5) == 3 &&
       nr (5,20) > (LEVEL(th) - spl->level) &&
       (pct * (MAX_TRAIN_PCT - pct) < 
        nr (1, MAX_TRAIN_PCT * MAX_TRAIN_PCT)))

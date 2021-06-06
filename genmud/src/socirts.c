@@ -528,12 +528,12 @@ find_dropoff_location (THING *th)
       (society = find_society_num (soc->val[0])) == NULL)
     return;
   if ((num_builder = find_num_members (society, CASTE_BUILDER)) < 1 ||
-      (builder = find_society_member_nearby (th, CASTE_BUILDER, 30 + (nr(1,10) == 2 ? 30 : 0))) == NULL)
+      (builder = find_society_member_nearby (th, CASTE_BUILDER, MAX_SHORT_HUNT_DEPTH/2 + (nr(1,10) == 2 ? (MAX_SHORT_HUNT_DEPTH/2) : 0))) == NULL)
     {
       stop_hunting (th, TRUE);
     }
   else
-    {
+    { 
       start_hunting (th, KEY (builder), HUNT_DROPOFF);
       if (th->fgt)
 	th->fgt->hunt_victim = builder;
@@ -1538,7 +1538,7 @@ THING *
 find_society_member_nearby (THING *th, int caste_flags, int max_depth)
 {
   THING *vict = NULL, *room, *nroom;
-  VALUE *soc, *soc2;
+  VALUE *soc, *soc2, *exit;
   int dir;
   int th_move_flags;
   /* Sanity checks. */
@@ -1558,7 +1558,7 @@ find_society_member_nearby (THING *th, int caste_flags, int max_depth)
   add_bfs (NULL, room, DIR_MAX);
  
   while (bfs_curr && (room = bfs_curr->room) != NULL)
-    {      
+    {    
       for (vict = room->cont; vict; vict = vict->next_cont)
 	{
 	  if (CAN_MOVE (vict) && 
@@ -1573,13 +1573,15 @@ find_society_member_nearby (THING *th, int caste_flags, int max_depth)
 	break;
       else if (!vict && bfs_curr->depth < max_depth)
 	{
-	  for (dir = 0; dir < REALDIR_MAX; dir++)
-	    if ((nroom = FTR (room, dir, th_move_flags)) != NULL)
-	      add_bfs (bfs_curr, nroom, dir);
+	  for (exit = room->values; exit; exit = exit->next)
+	    {
+	      if ((dir = exit->type-1) < REALDIR_MAX &&
+		  (nroom = FTR (room, dir, th_move_flags)) != NULL)
+		add_bfs (bfs_curr, nroom, dir);
+	    }
 	}
       bfs_curr = bfs_curr->next;
     }
-  
   clear_bfs_list ();
   return vict;
 }

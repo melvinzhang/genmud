@@ -623,16 +623,16 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
   /* This deals with worn objects casting spells so that everything
      works out ok. */
 
-  if (caster->in && spl->spell_type == TAR_OFFENSIVE &&
+  if (caster->in && spl->target_type == TAR_OFFENSIVE &&
       FIGHTING (caster->in) == vict && caster->wear_loc != ITEM_WEAR_NONE)
     th = caster->in;
   else
     th = caster;
   
-  if (spl->spell_type == TAR_OFFENSIVE &&
+  if (spl->target_type == TAR_OFFENSIVE &&
       th->in != vict->in &&
       (IS_ACT1_SET (vict, ACT_SENTINEL) ||
-       !CAN_MOVE(vict)))
+       !CAN_MOVE(vict)) && 0)
     return;
   
   if (IS_ROOM_SET (vict->in, ROOM_NOMAGIC))
@@ -673,7 +673,6 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
       stt ("You are cursed!\n\r", th);
       return;
     }
-
   /* If a spell is delayed, it actually does something when 
      the event finally gets called. */
   
@@ -785,87 +784,85 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
 	      newthing2->long_desc = new_str (newthing->long_desc);
 	    }
 	}
-      
-      /* This gives you knowledge about something. (identify) */
-      
-      if (IS_SET (spell_bits, SPELL_KNOWLEDGE))
+    }
+  /* This gives you knowledge about something. (identify) */
+  
+  if (IS_SET (spell_bits, SPELL_KNOWLEDGE))
+    {
+      if (targ == th->in)
 	{
-	  if (targ == th->in)
-	    {
-	      sprintf (buf, "You are in: %s\n\r", name_seen_by (targ, th));
-	      stt (buf, th);
-	      stt (show_flags (targ->flags, 0, (LEVEL(th) >= BLD_LEVEL ? TRUE : FALSE)), th);
-	      if (targ->in && IS_AREA (targ->in))
-		{
-		  sprintf (buf, "%s is located within %s.\n\r", 
-			   NAME (targ), NAME (targ->in));
-		  stt (buf, th);
-		}
-	      return;
-	    }
-	  
-	  /* Otherwise this thing must be in the same room as you or
-	     it must be in your inventory. */
-	  if (targ->in != th && targ->in != th->in)
-	    {
-	      stt ("The knowledge is obscured by the great distance...\n\r", th);
-	      return;
-	    }
-	  
-	  if (targ->in == th->in && !CAN_FIGHT (targ) && !CAN_MOVE (targ))
-	    {
-	      stt ("You cannot gain knowledge of this item without it being in your inventory.\n\r", th);
-	      return;
-	    }
-	  
-	  sprintf (buf, "----- This is %s. -----\n\r", NAME (targ));
+	  sprintf (buf, "You are in: %s\n\r", name_seen_by (targ, th));
 	  stt (buf, th);
-	  
-	  if (targ->in == th)
+	  stt (show_flags (targ->flags, 0, (LEVEL(th) >= BLD_LEVEL ? TRUE : FALSE)), th);
+	  if (targ->in && IS_AREA (targ->in))
 	    {
-	      sprintf (buf, "It weighs %d stone%s and %d pebble%s. It costs %d coin%s.\n\r", 
-		       targ->weight/WGT_MULT, 
-		       (targ->weight / WGT_MULT == 1 ? "" : "s"),
-		       targ->weight % WGT_MULT,
-		       (targ->weight % WGT_MULT == 1 ? "" : "s"),
-		       targ->cost,
-		       (targ->cost == 1 ? "" : "s"));
+	      sprintf (buf, "%s is located within %s.\n\r", 
+		       NAME (targ), NAME (targ->in));
 	      stt (buf, th);
 	    }
+	  return;
+	}
+      
+      /* Otherwise this thing must be in the same room as you or
+	 it must be in your inventory. */
+      if (targ->in != th && targ->in != th->in)
+	{
+	  stt ("The knowledge is obscured by the great distance...\n\r", th);
+	  return;
+	}
+      if (targ->in == th->in && !CAN_FIGHT (targ) && !CAN_MOVE (targ))
+	{
+	  stt ("You cannot gain knowledge of this item without it being in your inventory.\n\r", th);
+	  return;
+	}
+      
+      sprintf (buf, "----- This is %s. -----\n\r", NAME (targ));
+      stt (buf, th);
+      
+      if (targ->in == th)
+	{
+	  sprintf (buf, "It weighs %d stone%s and %d pebble%s. It costs %d coin%s.\n\r", 
+		   targ->weight/WGT_MULT, 
+		   (targ->weight / WGT_MULT == 1 ? "" : "s"),
+		   targ->weight % WGT_MULT,
+		   (targ->weight % WGT_MULT == 1 ? "" : "s"),
+		   targ->cost,
+		   (targ->cost == 1 ? "" : "s"));
+	  stt (buf, th);
+	}
+      else
+	{
+	  sprintf (buf, "This thing has %d/%d health points and %d/%d stamina points.\n\r",
+		   targ->hp, targ->max_hp, targ->mv, targ->max_mv);
+	  stt (buf, th);
+	}
+      
+      if (!IS_SET (targ->thing_flags, TH_NO_FIGHT))
+	stt ("This thing can fight.\n\r", th);
+      if (!IS_SET (targ->thing_flags, TH_NO_MOVE_SELF))
+	stt ("This thing can move itself.\n\r", th);
+      if (!IS_SET (targ->thing_flags, TH_NO_CONTAIN) &&
+	  targ->in == th)
+	{
+	  stt ("This thing can contain other things.\n\r", th);
+	  if (targ->size == 0)
+	    stt ("It can contain an unlimited number of things.\n\r", th);
 	  else
 	    {
-	      sprintf (buf, "This thing has %d/%d health points and %d/%d stamina points.\n\r",
-		       targ->hp, targ->max_hp, targ->mv, targ->max_mv);
-	      stt (buf, th);
+	      sprintf (buf, "It can contain %d stone%s, %d pebble%s of weight.\n\r", 
+		       targ->size / WGT_MULT, 
+		       (targ->size / WGT_MULT == 1 ? "" : "s"),
+		       targ->size % WGT_MULT, 
+		       (targ->size % WGT_MULT == 1 ? "" : "s"));
 	    }
-	  
-	  if (!IS_SET (targ->thing_flags, TH_NO_FIGHT))
-	    stt ("This thing can fight.\n\r", th);
-	  if (!IS_SET (targ->thing_flags, TH_NO_MOVE_SELF))
-	    stt ("This thing can move itself.\n\r", th);
-	  if (!IS_SET (targ->thing_flags, TH_NO_CONTAIN) &&
-	      targ->in == th)
-	    {
-	      stt ("This thing can contain other things.\n\r", th);
-	      if (targ->size == 0)
-		stt ("It can contain an unlimited number of things.\n\r", th);
-	      else
-		{
-		  sprintf (buf, "It can contain %d stone%s, %d pebble%s of weight.\n\r", 
-			   targ->size / WGT_MULT, 
-			   (targ->size / WGT_MULT == 1 ? "" : "s"),
-			   targ->size % WGT_MULT, 
-			   (targ->size % WGT_MULT == 1 ? "" : "s"));
-		}
-	    }      
-	  if (IS_SET (targ->thing_flags, TH_NO_TAKE_BY_OTHER))
-	    stt ("This thing cannot be picked up.\n\r", th);
-	  if (IS_SET (targ->thing_flags, TH_NO_DROP))
-	    stt ("This thing cannot be dropped.\n\r", th);
-	  stt (show_values (targ->values, 0, TRUE), th);
-	  stt (show_flags (targ->flags, 0, LEVEL (th) >= BLD_LEVEL), th);	   
-	  return;      
-	}
+	}      
+      if (IS_SET (targ->thing_flags, TH_NO_TAKE_BY_OTHER))
+	stt ("This thing cannot be picked up.\n\r", th);
+      if (IS_SET (targ->thing_flags, TH_NO_DROP))
+	stt ("This thing cannot be dropped.\n\r", th);
+      stt (show_values (targ->values, 0, TRUE), th);
+      stt (show_flags (targ->flags, 0, LEVEL (th) >= BLD_LEVEL), th);	   
+      return;      
     }
   
   for (; targ && (area || !done); targ = targn)
@@ -1302,7 +1299,7 @@ cast_spell (THING *caster, THING *vict, SPELL *spl, bool area, bool ranged, EVEN
                   if (!targ->in)
 		    continue;
 		  if (IS_SET (spell_bits, SPELL_TRANSPORT) &&
-		      spl->spell_type != TAR_OFFENSIVE &&
+		      spl->target_type != TAR_OFFENSIVE &&
 		      IS_HURT (targ, AFF_CURSE))
 		    {
 		      act ("@3n is cursed!\n\r", th, NULL, NULL, NULL, TO_CHAR);

@@ -258,6 +258,12 @@ areagen_generate_person (THING *area, int level_bonus)
   person->level += level_bonus;
   person->level -= nr (0, person->level/4);
   person->level += nr (0, person->level/5);
+
+  if (person->level > area->level*2/3)
+    person->level = nr (area->level*2/3, person->level);
+  if (person->level > area->level*6/5)
+    person->level = area->level *6/5;
+  
   if (proto->sex == SEX_NEUTER)
     person->sex = nr (SEX_FEMALE, SEX_MALE);
   else

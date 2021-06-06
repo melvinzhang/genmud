@@ -232,7 +232,7 @@ multi_hit (THING *th, THING *vict)
       
       if (!has_ranged && (rng = FNV (obj, VAL_RANGED)) != NULL)
 	has_ranged = TRUE;
-
+      
       if (obj->wear_loc == ITEM_WEAR_WIELD &&
 	  (wpn = FNV (obj, VAL_WEAPON)) != NULL  &&
 	  (!used_weapon || check_spell (th, NULL, 570 /* Multi Wield */)))
@@ -253,7 +253,7 @@ multi_hit (THING *th, THING *vict)
 	    num_hits++;
 	  if (!IS_HURT (th, AFF_SLOW)) /* Slow makes you hit less. */
 	    {
-
+	      
 	      /* Add in extra hits for haste and skills. */
 	      if (IS_AFF (th, AFF_HASTE) &&
 		  nr (1,3) != 1 &&
@@ -270,6 +270,16 @@ multi_hit (THING *th, THING *vict)
 	    }
 	  /* Now do the actual hits... */
   	  num_hits += nr (0, wpn->val[3]);
+
+	  /* Reduce mob hits somewhat. */
+	  if (!IS_PC (th))
+	    {
+	      if (used_weapon)
+		num_hits /= 2;
+	      if (num_hits > 3)
+		num_hits = nr (1,num_hits);
+	    }
+
 	  for (i = 0; i < num_hits && !has_killed; i++)
 	    {
 	      has_killed = one_hit (th, vict, obj, SP_ATT_NONE);
@@ -736,8 +746,8 @@ one_hit (THING *th, THING *vict, THING *weapon, int special)
   if (!IS_PC (th))
     {
       if (special != SP_ATT_ATTACK)
-	{
-	  dam += nr (LEVEL(th)/4, LEVEL(th)/2);
+	{	  
+	  dam += nr (LEVEL(th)/6, LEVEL(th)/3);
 	  dam -= 5;
 	  if (dam < 1)
 	    dam = 1;
@@ -1893,6 +1903,17 @@ get_killed (THING *vict, THING *killer)
 	      break;
 	    }
 	}
+      /* Most of the time mob vs mob fights end with corpse sac, otherwise
+	 most of the time its a corpse loot, otherwise it gets left alone
+	 1/12 of the time. */
+      if (!IS_PC (vict) && !IS_PC(killer))
+	{
+	  if (nr(1,3) != 2)
+	    do_sacrifice (killer, "corpse");
+	  else if (nr (1,4) != 4)
+	    do_get (killer, "all corpse");
+	}
+
     }
   
   /* Deal with society problems when something gets killed. */

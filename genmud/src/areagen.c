@@ -1769,7 +1769,6 @@ add_sector_details (THING *area)
   int i, j;
   int patch_count[SECTOR_PATCHTYPE_MAX];
   int sector_type;
-  
   if (!area || !IS_AREA (area))
     return;
   sector_type = flagbits (area->flags, FLAG_ROOM1);
@@ -1783,7 +1782,7 @@ add_sector_details (THING *area)
   
   for (i = 0; i < SECTOR_PATCHTYPE_MAX; i++)
     {	
-      patch_count[i] = nr (2, 2 + area->mv/DETAIL_DENSITY);
+      patch_count[i] = nr (0, area->mv/(2*DETAIL_DENSITY));
       
       if (sector_type == ROOM_WATERY)
 	patch_count[i] /= 2;
@@ -1970,9 +1969,9 @@ start_sector_patch (THING *area, int patch_type)
     return;
   
   strcpy (name, generate_patch_name (sector_type, patch_type));
-  max_depth = nr (2,4);
-  if (sector_type == ROOM_WATERY && max_depth > 3)
-    max_depth = 3;
+  max_depth = nr (2,5);
+  if (sector_type == ROOM_WATERY && max_depth > 4)
+    max_depth = 4;
   undo_marked(room);
   add_sector_patch (room, name, sector_type, patch_type , 1, max_depth);
   undo_marked(room);
